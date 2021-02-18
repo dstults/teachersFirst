@@ -1,0 +1,46 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "verify",
+            "type": "shell",
+            "command": "mvn verify",
+            "group": "build"
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "mvn clean jacoco:prepare-agent test jacoco:report",
+            "group": "test"
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "mvn clean",
+            "group": "build"
+        },
+        {
+            "label": "compile",
+            "type": "shell",
+            "command": "mvn compile",
+            "group": "build"
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "mvn install",
+            "group": "build"
+        },
+        {
+            "label": "clean+build",
+            "type": "shell",
+            "command": "mvn clean jacoco:prepare-agent test jacoco:report install",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
