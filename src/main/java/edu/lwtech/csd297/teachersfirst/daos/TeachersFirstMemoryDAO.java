@@ -1,26 +1,26 @@
-package edu.lwtech.csd297.skeleton.daos;
+package edu.lwtech.csd297.teachersfirst.daos;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.*;
 
-import edu.lwtech.csd297.skeleton.pojos.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 // Memory-based DAO class - stores objects in a List.  No persistance.
 
-public class SkeletonMemoryDAO implements DAO<Skeleton> {
+public class TeachersFirstMemoryDAO implements DAO<TeachersFirst> {
 
-    private static final Logger logger = LogManager.getLogger(SkeletonMemoryDAO.class.getName());
+    private static final Logger logger = LogManager.getLogger(TeachersFirstMemoryDAO.class.getName());
 
     private AtomicInteger nextListRecID;
-    private List<Skeleton> skeletonDB;      // Our "database" table
+    private List<TeachersFirst> teachersFirstDB;      // Our "database" table
 
     // ----------------------------------------------------------------
 
-    public SkeletonMemoryDAO() {
+    public TeachersFirstMemoryDAO() {
         this.nextListRecID = new AtomicInteger(1000);
-        this.skeletonDB = new ArrayList<>();
+        this.teachersFirstDB = new ArrayList<>();
     }
 
     // ----------------------------------------------------------------
@@ -36,10 +36,10 @@ public class SkeletonMemoryDAO implements DAO<Skeleton> {
 
     public void terminate() {
         logger.debug("Terminating MemoryDAO...");
-        skeletonDB = null;
+        teachersFirstDB = null;
     }
 
-    public int insert(Skeleton pojo) {
+    public int insert(TeachersFirst pojo) {
         if (pojo == null)
             throw new IllegalArgumentException("insert: cannot insert null object");
         if (pojo.getRecID() != -1)
@@ -47,19 +47,19 @@ public class SkeletonMemoryDAO implements DAO<Skeleton> {
         logger.debug("Inserting " + pojo + "...");
 
         pojo.setRecID(nextListRecID.incrementAndGet());
-        skeletonDB.add(pojo);
+        teachersFirstDB.add(pojo);
 
         logger.debug("Item successfully inserted!");
         return pojo.getRecID();
     }
 
-    public Skeleton retrieveByID(int id) {
+    public TeachersFirst retrieveByID(int id) {
         if (id < 0)
             throw new IllegalArgumentException("retrieveByID: id cannot be negative");
         logger.debug("Getting object with ID: {} ...", id);
 
-        Skeleton foundObject = null;
-        for (Skeleton pojo : skeletonDB) {
+        TeachersFirst foundObject = null;
+        for (TeachersFirst pojo : teachersFirstDB) {
             if (pojo.getRecID() == id) {
                 foundObject = pojo;
                 break;
@@ -68,38 +68,38 @@ public class SkeletonMemoryDAO implements DAO<Skeleton> {
         return foundObject;
     }
 
-    public Skeleton retrieveByIndex(int index) {
+    public TeachersFirst retrieveByIndex(int index) {
         // Note: indexes are zero-based
         if (index < 0)
             throw new IllegalArgumentException("retrieveByIndex: index cannot be negative");
         logger.debug("Getting object with index: {} ...", index);
 
-        return skeletonDB.get(index);
+        return teachersFirstDB.get(index);
     }
 
-    public List<Skeleton> retrieveAll() {
+    public List<TeachersFirst> retrieveAll() {
         logger.debug("Getting all POJOs ...");
-        return new ArrayList<>(skeletonDB);       // Return copy of DB collection
+        return new ArrayList<>(teachersFirstDB);       // Return copy of DB collection
     }
 
     public List<Integer> retrieveAllIDs() {
         logger.debug("Getting all IDs...");
 
         List<Integer> listIDs = new ArrayList<>();
-        for (Skeleton pojo : skeletonDB) {
+        for (TeachersFirst pojo : teachersFirstDB) {
             listIDs.add(pojo.getRecID());
         }
         return listIDs;
     }
 
-    public List<Skeleton> search(String keyword) {
+    public List<TeachersFirst> search(String keyword) {
         if (keyword == null)
             throw new IllegalArgumentException("search: keyword cannot be null");
         logger.debug("Searching for objects containing: '{}'", keyword);
 
         keyword = keyword.toLowerCase();
-        List<Skeleton> pojosFound = new ArrayList<>();
-        for (Skeleton pojo : skeletonDB) {
+        List<TeachersFirst> pojosFound = new ArrayList<>();
+        for (TeachersFirst pojo : teachersFirstDB) {
             if (pojo.getName().toLowerCase().contains(keyword)) {
                 pojosFound.add(pojo);
                 break;
@@ -110,17 +110,17 @@ public class SkeletonMemoryDAO implements DAO<Skeleton> {
     }
 
     public int size() {
-        return skeletonDB.size();
+        return teachersFirstDB.size();
     }
 
-    public boolean update(Skeleton pojo) {
+    public boolean update(TeachersFirst pojo) {
         if (pojo == null)
             throw new IllegalArgumentException("update: cannot update null object");
         logger.debug("Trying to update object with ID: {} ...", pojo.getRecID());
 
-        for (int i = 0; i < skeletonDB.size(); i++) {
-            if (skeletonDB.get(i).getRecID() == pojo.getRecID()) {
-                skeletonDB.set(i, pojo);
+        for (int i = 0; i < teachersFirstDB.size(); i++) {
+            if (teachersFirstDB.get(i).getRecID() == pojo.getRecID()) {
+                teachersFirstDB.set(i, pojo);
                 logger.debug("Successfully updated: {} !", pojo.getRecID());
                 return true;
             }
@@ -134,15 +134,15 @@ public class SkeletonMemoryDAO implements DAO<Skeleton> {
             throw new IllegalArgumentException("delete: id cannot be negative");
         logger.debug("Trying to delete object with ID: {} ...", id);
 
-        Skeleton pojoFound = null;
-        for (Skeleton pojo : skeletonDB) {
+        TeachersFirst pojoFound = null;
+        for (TeachersFirst pojo : teachersFirstDB) {
             if (pojo.getRecID() == id) {
                 pojoFound = pojo;
                 break;
             }
         }
         if (pojoFound != null) {
-            skeletonDB.remove(pojoFound);
+            teachersFirstDB.remove(pojoFound);
             logger.debug("Successfully deleted object with ID: {}", id);
         } else {
             logger.debug("Unable to delete object with ID: {}. List not found.", id);
@@ -154,9 +154,9 @@ public class SkeletonMemoryDAO implements DAO<Skeleton> {
     private void addDemoData() {
         logger.debug("Creating demo data...");
 
-        insert(new Skeleton("Fred", 66));
-        insert(new Skeleton("Amy", 43));
-        insert(new Skeleton("Juan", 22));
+        insert(new TeachersFirst("Fred", 66));
+        insert(new TeachersFirst("Amy", 43));
+        insert(new TeachersFirst("Juan", 22));
 
         logger.info(size() + " records inserted");
     }

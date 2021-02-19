@@ -1,17 +1,17 @@
-package edu.lwtech.csd297.skeleton.pojos;
+package edu.lwtech.csd297.teachersfirst.pojos;
 
-public class Skeleton {
+public class TeachersFirst {
 
     // Encapsulated member variables
     private int recID;              // Database ID (or -1 if it isn't in the database yet)
     private String name;
     private int age;
 
-    public Skeleton(String name, int age) {
+    public TeachersFirst(String name, int age) {
         this(-1, name, age);
     }
 
-    public Skeleton(int recID, String name, int age) {
+    public TeachersFirst(int recID, String name, int age) {
         if (recID < -1)
             throw new IllegalArgumentException("Invalid argument: recID < -1");
         if (name == null)

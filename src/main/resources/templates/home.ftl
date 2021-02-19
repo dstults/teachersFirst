@@ -6,17 +6,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <h1>Skeleton Servlet</h1>
+        <h1>TeachersFirst Servlet</h1>
 
         <table border="1">
             <tr>
                 <th>RecID</th><th>Name</th><th>Age</th>
             </tr>
-            <#list skeletons as skeleton>
+            <#list teachersFirsts as teachersFirst>
             <tr>
-                <td>${skeleton.recID}</td>
-                <td>${skeleton.name}</a></td>
-                <td>${skeleton.age}</td>
+                <td>${teachersFirst.recID}</td>
+                <td>${teachersFirst.name}</a></td>
+                <td>${teachersFirst.age}</td>
             </tr>
             </#list>
         </table><br />

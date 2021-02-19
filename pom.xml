@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.lwtech.csd297</groupId>
-    <artifactId>skeleton</artifactId>
+    <artifactId>teachersFirst</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>skeleton</name>
+    <name>teachersFirst</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -71,7 +71,7 @@
                     <version>3.2.2</version>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
-                        <warName>skeleton</warName>
+                        <warName>teachersFirst</warName>
                     </configuration>
                 </plugin>
                 <plugin>

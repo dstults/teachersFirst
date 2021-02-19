@@ -1,23 +1,23 @@
-package edu.lwtech.csd297.skeleton;
+package edu.lwtech.csd297.teachersfirst;
 
 import java.util.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.lwtech.csd297.skeleton.pojos.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-class SkeletonTests {
+class TeachersFirstTests {
 
-    Skeleton fred;
-    Skeleton amy;
-    Skeleton juan;
+    TeachersFirst fred;
+    TeachersFirst amy;
+    TeachersFirst juan;
 
     @BeforeEach
     void setUp() {
-        fred = new Skeleton("Fred", 66);
-        amy = new Skeleton("Amy", 43);
-        juan = new Skeleton("Juan", 22);
+        fred = new TeachersFirst("Fred", 66);
+        amy = new TeachersFirst("Amy", 43);
+        juan = new TeachersFirst("Juan", 22);
     }
 
     @Test
@@ -25,19 +25,19 @@ class SkeletonTests {
         Exception ex = null;
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Skeleton(-666, "Fred", 66); }
+            () -> { new TeachersFirst(-666, "Fred", 66); }
         );
         assertTrue(ex.getMessage().contains("recID"));
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Skeleton(123, null, 66); }
+            () -> { new TeachersFirst(123, null, 66); }
         );
         assertTrue(ex.getMessage().contains("name is null"));
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Skeleton(123, "", 66); }
+            () -> { new TeachersFirst(123, "", 66); }
         );
         assertTrue(ex.getMessage().contains("name is empty"));
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Skeleton(123, "Fred", -66); }
+            () -> { new TeachersFirst(123, "Fred", -66); }
         );
         assertTrue(ex.getMessage().contains("negative"));
     }

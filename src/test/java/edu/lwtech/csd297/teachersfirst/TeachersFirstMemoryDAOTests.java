@@ -1,38 +1,38 @@
-package edu.lwtech.csd297.skeleton;
+package edu.lwtech.csd297.teachersfirst;
 
 import java.util.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.lwtech.csd297.skeleton.daos.*;
-import edu.lwtech.csd297.skeleton.pojos.*;
+import edu.lwtech.csd297.teachersfirst.daos.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-class SkeletonMemoryDAOTests {
+class TeachersFirstMemoryDAOTests {
 
     private static final int FIRST_REC_ID = 1001;
 
-    private DAO<Skeleton> skeletonDAO;
+    private DAO<TeachersFirst> teachersFirstDAO;
 
-    private Skeleton john;
+    private TeachersFirst john;
 
     @BeforeEach
     void setUp() {
-        john = new Skeleton("John", 55);
+        john = new TeachersFirst("John", 55);
 
-        skeletonDAO = new SkeletonMemoryDAO();
-        skeletonDAO.initialize("");  // Params ignored for memory DAO
+        teachersFirstDAO = new TeachersFirstMemoryDAO();
+        teachersFirstDAO.initialize("");  // Params ignored for memory DAO
     }
 
     @AfterEach
     void tearDown() {
-        skeletonDAO.terminate();
+        teachersFirstDAO.terminate();
     }
 
     @Test
     void testInitialize() {
         Exception ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.initialize(null); }
+            () -> { teachersFirstDAO.initialize(null); }
         );
         assertTrue(ex.getMessage().contains("null"));
     }
@@ -41,18 +41,18 @@ class SkeletonMemoryDAOTests {
     void testInsert() {
         Exception ex = null;
 
-        assertEquals(3, skeletonDAO.size());
-        int listID = skeletonDAO.insert(john);        // Add a second copy of the roman list
+        assertEquals(3, teachersFirstDAO.size());
+        int listID = teachersFirstDAO.insert(john);        // Add a second copy of the roman list
         assertTrue(listID > 0);
-        assertEquals(4, skeletonDAO.size());
+        assertEquals(4, teachersFirstDAO.size());
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.insert(null); }
+            () -> { teachersFirstDAO.insert(null); }
         );
         assertTrue(ex.getMessage().contains("null"));
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.insert(john); }
+            () -> { teachersFirstDAO.insert(john); }
         );
         assertTrue(ex.getMessage().contains("already"));
 
@@ -62,13 +62,13 @@ class SkeletonMemoryDAOTests {
     void testRetrieveByID() {
         Exception ex = null;
 
-        Skeleton list = skeletonDAO.retrieveByID(FIRST_REC_ID);
+        TeachersFirst list = teachersFirstDAO.retrieveByID(FIRST_REC_ID);
         assertEquals(1001, list.getRecID());
-        list = skeletonDAO.retrieveByID(FIRST_REC_ID+1);
+        list = teachersFirstDAO.retrieveByID(FIRST_REC_ID+1);
         assertEquals(1002, list.getRecID());
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.retrieveByID(-666); }
+            () -> { teachersFirstDAO.retrieveByID(-666); }
         );
         assertTrue(ex.getMessage().contains("negative"));
     }
@@ -77,27 +77,27 @@ class SkeletonMemoryDAOTests {
     void testRetrieveByIndex() {
         Exception ex = null;
 
-        Skeleton list = skeletonDAO.retrieveByIndex(0);
+        TeachersFirst list = teachersFirstDAO.retrieveByIndex(0);
         assertEquals(FIRST_REC_ID, list.getRecID());
-        list = skeletonDAO.retrieveByIndex(1);
+        list = teachersFirstDAO.retrieveByIndex(1);
         assertEquals(FIRST_REC_ID+1, list.getRecID());
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.retrieveByIndex(-666); }
+            () -> { teachersFirstDAO.retrieveByIndex(-666); }
         );
         assertTrue(ex.getMessage().contains("negative"));
     }
 
     @Test
     void testRetrieveAll() {
-        List<Skeleton> allLists = new ArrayList<>();
-        allLists = skeletonDAO.retrieveAll();
+        List<TeachersFirst> allLists = new ArrayList<>();
+        allLists = teachersFirstDAO.retrieveAll();
         assertEquals(3, allLists.size());
     }
 
     @Test
     void testRetrieveAllIDs() {
-        List<Integer> ids = skeletonDAO.retrieveAllIDs();
+        List<Integer> ids = teachersFirstDAO.retrieveAllIDs();
         assertEquals(3, ids.size());
     }
 
@@ -105,13 +105,13 @@ class SkeletonMemoryDAOTests {
     void testSearch() {
         Exception ex = null;
 
-        List<Skeleton> lists = skeletonDAO.search("Fred");
+        List<TeachersFirst> lists = teachersFirstDAO.search("Fred");
         assertEquals(1, lists.size());
-        lists = skeletonDAO.search("NotHere");
+        lists = teachersFirstDAO.search("NotHere");
         assertEquals(0, lists.size());
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.search(null); }
+            () -> { teachersFirstDAO.search(null); }
         );
         assertTrue(ex.getMessage().contains("null"));
     }
@@ -120,16 +120,16 @@ class SkeletonMemoryDAOTests {
     void testUpdate() {
         Exception ex = null;
 
-        Skeleton skeleton = skeletonDAO.retrieveByID(FIRST_REC_ID);
-        skeleton.setAge(1);
-        skeletonDAO.update(skeleton);
-        skeleton = skeletonDAO.retrieveByID(FIRST_REC_ID);
-        assertEquals(1, skeleton.getAge());
+        TeachersFirst teachersFirst = teachersFirstDAO.retrieveByID(FIRST_REC_ID);
+        teachersFirst.setAge(1);
+        teachersFirstDAO.update(teachersFirst);
+        teachersFirst = teachersFirstDAO.retrieveByID(FIRST_REC_ID);
+        assertEquals(1, teachersFirst.getAge());
 
-        assertFalse(skeletonDAO.update(john));
+        assertFalse(teachersFirstDAO.update(john));
         
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.update(null); }
+            () -> { teachersFirstDAO.update(null); }
         );
         assertTrue(ex.getMessage().contains("null"));
     }
@@ -138,13 +138,13 @@ class SkeletonMemoryDAOTests {
     void testDelete() {
         Exception ex = null;
 
-        int fredID = skeletonDAO.search("Fred").get(0).getRecID();
-        skeletonDAO.delete(fredID);
-        assertNull(skeletonDAO.retrieveByID(fredID));
-        skeletonDAO.delete(666);
+        int fredID = teachersFirstDAO.search("Fred").get(0).getRecID();
+        teachersFirstDAO.delete(fredID);
+        assertNull(teachersFirstDAO.retrieveByID(fredID));
+        teachersFirstDAO.delete(666);
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { skeletonDAO.delete(-666); }
+            () -> { teachersFirstDAO.delete(-666); }
         );
         assertTrue(ex.getMessage().contains("negative"));
     }

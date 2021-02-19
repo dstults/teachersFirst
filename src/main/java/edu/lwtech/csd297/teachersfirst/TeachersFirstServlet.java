@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.skeleton;
+package edu.lwtech.csd297.teachersfirst;
 
 import java.io.*;
 import java.net.*;
@@ -10,20 +10,20 @@ import javax.servlet.annotation.*;
 import org.apache.logging.log4j.*;
 import freemarker.template.*;
 
-import edu.lwtech.csd297.skeleton.daos.*;
-import edu.lwtech.csd297.skeleton.pojos.*;
+import edu.lwtech.csd297.teachersfirst.daos.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-@WebServlet(name = "skeleton", urlPatterns = {"/*"}, loadOnStartup = 0)
-public class SkeletonServlet extends HttpServlet {
+@WebServlet(name = "teachersFirst", urlPatterns = {"/*"}, loadOnStartup = 0)
+public class TeachersFirstServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;        // Unused
-    private static final Logger logger = LogManager.getLogger(SkeletonServlet.class);
+    private static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
 
-    private static final String SERVLET_NAME = "skeleton";
+    private static final String SERVLET_NAME = "teachersFirst";
     private static final String RESOURCES_DIR = "/WEB-INF/classes";
     private static final Configuration freeMarkerConfig = new Configuration(Configuration.getVersion());
 
-    private DAO<Skeleton> skeletonDAO = null;
+    private DAO<TeachersFirst> teachersFirstDAO = null;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -52,10 +52,10 @@ public class SkeletonServlet extends HttpServlet {
         logger.info("Successfully initialized FreeMarker");
 
         logger.info("Initializing the DAOs...");
-        skeletonDAO = new SkeletonMemoryDAO();
+        teachersFirstDAO = new TeachersFirstMemoryDAO();
 
-        if (!skeletonDAO.initialize(""))
-            throw new UnavailableException("Unable to initialize the SkeletonDAO.");
+        if (!teachersFirstDAO.initialize(""))
+            throw new UnavailableException("Unable to initialize the TeachersFirstDAO.");
         logger.info("Successfully initialized the DAOs!");
 
         logger.warn("");
@@ -86,8 +86,8 @@ public class SkeletonServlet extends HttpServlet {
             // Process the GET command
             switch (command) {
                 case "home":
-                    List<Skeleton> skeletons = skeletonDAO.retrieveAll();
-                    templateDataMap.put("skeletons", skeletons);
+                    List<TeachersFirst> teachersFirsts = teachersFirstDAO.retrieveAll();
+                    templateDataMap.put("teachersFirsts", teachersFirsts);
                     templateName = "home.ftl";
                     break;
 
@@ -142,7 +142,7 @@ public class SkeletonServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        skeletonDAO.terminate();
+        teachersFirstDAO.terminate();
         logger.warn("-----------------------------------------");
         logger.warn("  " + SERVLET_NAME + " destroy() completed!");
         logger.warn("-----------------------------------------");
@@ -151,7 +151,7 @@ public class SkeletonServlet extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "skeleton Servlet";
+        return "teachersFirst Servlet";
     }
 
     // =================================================================
