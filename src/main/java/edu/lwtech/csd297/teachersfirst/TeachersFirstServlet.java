@@ -23,7 +23,7 @@ public class TeachersFirstServlet extends HttpServlet {
     private static final String RESOURCES_DIR = "/WEB-INF/classes";
     private static final Configuration freeMarkerConfig = new Configuration(Configuration.getVersion());
 
-    private DAO<TeachersFirst> teachersFirstDAO = null;
+    private DAO<Member> teachersFirstDAO = null;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -52,7 +52,7 @@ public class TeachersFirstServlet extends HttpServlet {
         logger.info("Successfully initialized FreeMarker");
 
         logger.info("Initializing the DAOs...");
-        teachersFirstDAO = new TeachersFirstMemoryDAO();
+        teachersFirstDAO = new MemberMemoryDAO();
 
         if (!teachersFirstDAO.initialize(""))
             throw new UnavailableException("Unable to initialize the TeachersFirstDAO.");
@@ -86,7 +86,7 @@ public class TeachersFirstServlet extends HttpServlet {
             // Process the GET command
             switch (command) {
                 case "home":
-                    List<TeachersFirst> teachersFirsts = teachersFirstDAO.retrieveAll();
+                    List<Member> teachersFirsts = teachersFirstDAO.retrieveAll();
                     templateDataMap.put("teachersFirsts", teachersFirsts);
                     templateName = "home.ftl";
                     break;
