@@ -1,0 +1,116 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html{
+    font-size: 10px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: black;
+}
+body{
+    width: 100%;
+    height: 100%;
+    background-color: #ffd9c6;
+}
+.landing-text{
+    position: static;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+    padding-bottom: 3rem;
+}
+.landing-text h1{
+    font-size: 7rem;
+    padding: 1rem;
+    user-select: none;
+}
+.landing-text h6{
+    font-size: 2rem;
+    font-weight: 300;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+header{
+    width: 100%;
+    margin-bottom: 5rem;
+    position: static;
+}
+.top-nav{
+    width: 100%;
+    background-color: #ffbb96;
+    position: static;
+}
+.nav-list{
+    list-style: none;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ul{
+    margin: auto;
+}
+li{
+    margin: 0.8rem;
+    padding-left: 2rem;
+}
+.nav-link{
+    font-family: 'Courier New', Courier, monospace, sans-serif;
+    font-size: 3rem;
+    padding: 1rem;
+}
+.nav-link:hover,
+.nav-link:focus{
+    font-weight: bold;
+}
+.services-buttons{
+    float: right;
+    padding-right: 20rem;
+    margin-bottom: 5rem;
+}
+.fake-buttons {
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.fake-buttons li{
+    display: inline;
+    list-style-type: none;
+    width: 30rem;
+}
+.fake-button{
+    background-color: #ffbb96;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 32px;
+}
+.fake-button:hover,
+.fake-button:focus{
+    background-color: #faa97d;
+}
+table{
+    margin-right: 10rem;
+    margin-left: 10rem;
+    width: 80%;
+    border-collapse: collapse;
+    font-size: 1.2rem;
+}
+table th{
+    font-size: 1.5rem;
+    background-color: #ffbb96;
+}
+table, td, th{
+    border: 1px solid black;
+    padding: 15px 20px;
+}
+
+footer{
+    padding-bottom: 5rem;
+}
+
