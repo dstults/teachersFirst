@@ -13,10 +13,10 @@ import freemarker.template.*;
 import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-@WebServlet(name = "teachersFirst", urlPatterns = {"/"}, loadOnStartup = 0)
+@WebServlet(name = "teachersFirst", urlPatterns = { "/" }, loadOnStartup = 0)
 public class TeachersFirstServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;        // Unused
+	private static final long serialVersionUID = 1L; // Unused
 	private static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
 
 	private static final String SERVLET_NAME = "teachersFirst";
@@ -72,22 +72,39 @@ public class TeachersFirstServlet extends HttpServlet {
 		logInfo += sanitizedQuery;
 
 		// Get the cmd parameter from the URI (defaults to 'home')
+		String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
 		String page = request.getParameter("page");
-		if (page == null) page = "home";
-		if (page != "health") logger.debug("IN - {}", logInfo); // Don't log "health" commands
+		// if (page == null) page = "appointments";
+		if (page != "health")
+			logger.debug("IN - {}", logInfo); // Don't log "health" commands
 
 		try {
 			// Initialize the variables that control Freemarker's output
-			// These should be changed to appropriate values inside of the corresponding case statement below
+			// These should be changed to appropriate values inside of the corresponding
+			// case statement below
 			String templateName = null;
 			Map<String, Object> templateDataMap = new HashMap<>();
+			List<Member> members = memberDAO.retrieveAll();
+			templateDataMap.put("members", members);
 
 			// Process the GET command
-			switch (page) {
-				case "home":
-					List<Member> members = memberDAO.retrieveAll();
-					templateDataMap.put("members", members);
-					templateName = "home.ftl";
+			switch (pagePath) {
+				case "/home":
+				case "/appointments":
+					templateName = "appointments.ftl";
+					break;
+				case "/messages":
+					templateName = "messages.ftl";
+					break;
+				case "/services":
+					templateName = "services.ftl";
+					break;
+				case "/calendar":
+					templateName = "calendar.ftl";
+					break;
+				case "/members":
+				case "/profile":
+					templateName = "members.ftl";
 					break;
 
 				case "health":
@@ -101,7 +118,8 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "test":
 					final String clientIp = request.getRemoteAddr();
 					templateDataMap.put("clientIp", clientIp);
-					final String clientHost = request.getRemoteHost() == clientIp ? "same as IP or resolution disabled" : request.getRemoteHost();
+					final String clientHost = request.getRemoteHost() == clientIp ? "same as IP or resolution disabled"
+							: request.getRemoteHost();
 					templateDataMap.put("clientHost", clientHost);
 					final String httpType = request.isSecure() ? "HTTPS" : "_http_";
 					templateDataMap.put("httpType", httpType);
@@ -143,7 +161,7 @@ public class TeachersFirstServlet extends HttpServlet {
 			logger.error("Unexpected runtime exception: ", e);
 			try {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-					"Oh no! Something went wrong. The appropriate authorities have been alerted.");
+						"Oh no! Something went wrong. The appropriate authorities have been alerted.");
 			} catch (IOException ex) {
 				logger.error("Unable to send 500 response code.", ex);
 			}
@@ -203,7 +221,7 @@ public class TeachersFirstServlet extends HttpServlet {
 		if (queryString == null)
 			return "";
 
-		try { 
+		try {
 			queryString = URLDecoder.decode(queryString, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// Should never happen
@@ -225,7 +243,7 @@ public class TeachersFirstServlet extends HttpServlet {
 			String next = allHeaderNames.nextElement();
 			Enumeration<String> values = request.getHeaders(next);
 			List<String> t = new ArrayList<>(); // should only ever have one value each but just in case
-			while (values.hasMoreElements()) { 
+			while (values.hasMoreElements()) {
 				t.add(values.nextElement());
 			}
 			result.put(next, t.toArray(new String[0]));

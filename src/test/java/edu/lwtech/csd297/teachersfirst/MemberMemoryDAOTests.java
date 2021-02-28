@@ -15,10 +15,12 @@ class MemberMemoryDAOTests {
     private DAO<Member> teachersFirstDAO;
 
     private Member john;
+    private Member fred;
 
     @BeforeEach
     void setUp() {
-        john = new Member("John", 55);
+        john = new Member("John", 55, "male", "green", "apples", true, false, false);
+        fred = new Member("Fred", 33, "female", "maroon", "rabbit meat", false, false, true);
 
         teachersFirstDAO = new MemberMemoryDAO();
         teachersFirstDAO.initialize("");  // Params ignored for memory DAO
@@ -41,10 +43,10 @@ class MemberMemoryDAOTests {
     void testInsert() {
         Exception ex = null;
 
-        assertEquals(3, teachersFirstDAO.size());
+        assertEquals(4, teachersFirstDAO.size());
         int listID = teachersFirstDAO.insert(john);        // Add a second copy of the roman list
         assertTrue(listID > 0);
-        assertEquals(4, teachersFirstDAO.size());
+        assertEquals(5, teachersFirstDAO.size());
 
         ex = assertThrows(IllegalArgumentException.class,
             () -> { teachersFirstDAO.insert(null); }
@@ -92,13 +94,13 @@ class MemberMemoryDAOTests {
     void testRetrieveAll() {
         List<Member> allLists = new ArrayList<>();
         allLists = teachersFirstDAO.retrieveAll();
-        assertEquals(3, allLists.size());
+        assertEquals(4, allLists.size());
     }
 
     @Test
     void testRetrieveAllIDs() {
         List<Integer> ids = teachersFirstDAO.retrieveAllIDs();
-        assertEquals(3, ids.size());
+        assertEquals(4, ids.size());
     }
 
     @Test
@@ -138,6 +140,11 @@ class MemberMemoryDAOTests {
     void testDelete() {
         Exception ex = null;
 
+		System.out.println("This is working! Look for me! ---------------------------------------------------------");
+		System.out.println("Size: " + teachersFirstDAO.size());
+		System.out.println("Fred Size: " + teachersFirstDAO.search("Fred").size());
+		System.out.println("Get: " + teachersFirstDAO.search("Fred").get(0));
+		System.out.println("RecID: " + teachersFirstDAO.search("Fred").get(0).getRecID());
         int fredID = teachersFirstDAO.search("Fred").get(0).getRecID();
         teachersFirstDAO.delete(fredID);
         assertNull(teachersFirstDAO.retrieveByID(fredID));

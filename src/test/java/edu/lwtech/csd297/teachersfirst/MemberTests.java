@@ -15,9 +15,9 @@ class MemberTests {
 
     @BeforeEach
     void setUp() {
-        fred = new Member("Fred", 66);
-        amy = new Member("Amy", 43);
-        juan = new Member("Juan", 22);
+		fred = new Member("Fred", 66, "male", "orange", "macaroni & cheese", false, true, true);
+		amy = new Member("Amy", 43, "female", "black", "pizza", true, true, false);
+		juan = new Member("Juan", 22, "male", "blue", "cheeseburgers", true, false, true);
     }
 
     @Test
@@ -25,19 +25,20 @@ class MemberTests {
         Exception ex = null;
 
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Member(-666, "Fred", 66); }
+            () -> { new Member(-666, "Fred", 66, "male", "orange", "macaroni & cheese", false, true, true); }
         );
         assertTrue(ex.getMessage().contains("recID"));
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Member(123, null, 66); }
+            () -> { new Member(123, null, 66, "male", "orange", "macaroni & cheese", false, true, true); }
         );
         assertTrue(ex.getMessage().contains("name is null"));
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Member(123, "", 66); }
+            () -> { new Member(123, "", 66, "male", "orange", "macaroni & cheese", false, true, true); }
         );
+		
         assertTrue(ex.getMessage().contains("name is empty"));
         ex = assertThrows(IllegalArgumentException.class,
-            () -> { new Member(123, "Fred", -66); }
+            () -> { new Member(123, "Fred", -66, "male", "orange", "macaroni & cheese", false, true, true); }
         );
         assertTrue(ex.getMessage().contains("negative"));
     }
