@@ -37,6 +37,10 @@ public class TeachersFirstServlet extends HttpServlet {
 		String resourcesDir = config.getServletContext().getRealPath(RESOURCES_DIR);
 		logger.info("resourcesDir = {}", resourcesDir);
 
+		logger.info("Populating the IP whitelist...");
+		Security.populateWhitelist();
+		logger.info("Successfully populated the IP whitelist!");
+
 		logger.info("Initializing FreeMarker...");
 		PageLoader.initializeFreeMarker(resourcesDir);
 		logger.info("Successfully initialized FreeMarker");
@@ -104,10 +108,10 @@ public class TeachersFirstServlet extends HttpServlet {
 					break;
 
 				default:
-				logger.debug("====================== Debug Me ======================");
-				logger.debug("Sanitized Query: {}", sanitizedQuery);
-				logger.debug("Page Path: {}", pagePath);
-				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+					logger.debug("====================== Debug Me ======================");
+					logger.debug("Sanitized Query: {}", sanitizedQuery);
+					logger.debug("Page Path: {}", pagePath);
+					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 					return;
 			}
 

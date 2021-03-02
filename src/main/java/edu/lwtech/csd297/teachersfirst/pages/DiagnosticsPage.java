@@ -14,9 +14,17 @@ public class DiagnosticsPage extends PageLoader {
 
 	@Override
 	public void LoadPage() {
+		
+		// Get initial bit to verify ID and operation
+		final String clientIp = request.getRemoteAddr();
+
+		// Check if whitelisted
+		if (!Security.isWhitelisted(clientIp)) {
+			SendFake404("Unauthorized user attempted to access diagnostics page.");
+			return;
+		}
 
 		// Get needed information dump data
-		final String clientIp = request.getRemoteAddr();
 		final String clientHost = request.getRemoteHost() == clientIp ? "same as IP or resolution disabled" : request.getRemoteHost();
 		final String httpType = request.isSecure() ? "HTTPS" : "_http_";
 		final String pathInfo = request.getPathInfo() == null ? "" : request.getPathInfo();

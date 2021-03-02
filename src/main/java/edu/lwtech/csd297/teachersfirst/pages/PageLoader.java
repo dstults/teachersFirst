@@ -7,13 +7,14 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
+
 import freemarker.template.*;
 import edu.lwtech.csd297.teachersfirst.*;
 import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public abstract class PageLoader {
-	
+
 	// Declarations
 
 	protected HttpServletRequest request;
@@ -29,7 +30,8 @@ public abstract class PageLoader {
 	protected static DAO<Member> memberDAO = null;
 	protected static final List<DAO<?>> allDAOs = new ArrayList<>();
 
-	// Static Methods (basically meta-constructors/destructors for class-internal variables)
+	// Static Methods (basically meta-constructors/destructors for class-internal
+	// variables)
 
 	public static void initializeFreeMarker(String resourcesDir) throws ServletException {
 		String templateDir = resourcesDir + "/templates";
@@ -41,16 +43,19 @@ public abstract class PageLoader {
 			throw new UnavailableException(msg);
 		}
 	}
+
 	public static void initializeDAOs() throws ServletException {
 		memberDAO = new MemberMemoryDAO();
 		allDAOs.add(memberDAO);
-		if (!memberDAO.initialize("")) throw new UnavailableException("Unable to initialize the memberDAO.");
+		if (!memberDAO.initialize(""))
+			throw new UnavailableException("Unable to initialize the memberDAO.");
 	}
+
 	public static void terminateDAOs() {
 		// memberDAO.terminate();
 		for (DAO<?> iDAO : allDAOs) {
 			iDAO.terminate();
-		}		
+		}
 	}
 
 	// Constructors
@@ -66,8 +71,24 @@ public abstract class PageLoader {
 
 	// Protected Methods (shared magic between all pages)
 
+	protected void SendFake404(String description) {
+		logger.debug("====================== SECURITY ALERT ======================");
+		logger.debug("Description: {}", description);
+		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
+		logger.debug("Sanitized Query: {}", sanitizedQuery);
+		final String pathInfo = request.getPathInfo() == null ? "" : request.getPathInfo();
+		logger.debug("Page Path: {}", pathInfo);
+		try {
+			this.response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		} catch (IOException e) {
+			logger.error("Unable to send fake 404 response code.", e);
+		}
+	}
+
 	protected void TrySendResponse() {
+
 		if (templateName == null) {
+
 			// Send 404 error response
 			try {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -75,22 +96,23 @@ public abstract class PageLoader {
 				logger.error("Unable to send 404 response code.", e);
 			}
 			return;
+
+		} else {
+
+			// Process template:
+			logger.debug("Processing Template: " + templateName);
+
+			try (PrintWriter out = response.getWriter()) {
+				Template view = freeMarkerConfig.getTemplate(templateName);
+				view.process(templateDataMap, out);
+			} catch (TemplateException | MalformedTemplateNameException e) {
+				logger.error("Template Error: ", e);
+			} catch (IOException e) {
+				logger.error("IO Error: ", e);
+			}
+
 		}
-
-		processTemplate(response, templateName, templateDataMap);
-	}
-
-	private static void processTemplate(HttpServletResponse response, String template, Map<String, Object> model) {
-		logger.debug("Processing Template: " + template);
-
-		try (PrintWriter out = response.getWriter()) {
-			Template view = freeMarkerConfig.getTemplate(template);
-			view.process(model, out);
-		} catch (TemplateException | MalformedTemplateNameException e) {
-			logger.error("Template Error: ", e);
-		} catch (IOException e) {
-			logger.error("IO Error: ", e);
-		}
+		
 	}
 
 }
