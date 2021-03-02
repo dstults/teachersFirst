@@ -55,7 +55,7 @@ public class TeachersFirstServlet extends HttpServlet {
 		long startTime = System.currentTimeMillis();
 
 		String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + request.getRequestURI();
-		final String sanitizedQuery = getSanitizedQueryString(request);
+		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
 		logInfo += sanitizedQuery;
 
 		// Get the cmd parameter from the URI (defaults to 'home')
@@ -70,20 +70,25 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "/":
 				case "/home":
 				case "/appointments":
-					new AppointmentsPage(request, response).LoadPage(sanitizedQuery);
+					new AppointmentsPage(request, response).LoadPage();
 					break;
-				case "/messages":
-					new MessagesPage(request, response).LoadPage(sanitizedQuery);
+				case "/make_appointment":
+					new MakeAppointmentPage(request, response).LoadPage();
+					break;
+				case "/openings":
+					new OpeningsPage(request, response).LoadPage();
 					break;
 				case "/services":
-					new ServicesPage(request, response).LoadPage(sanitizedQuery);
+					new ServicesPage(request, response).LoadPage();
 					break;
 				case "/calendar":
-					new CalendarPage(request, response).LoadPage(sanitizedQuery);
+					new CalendarPage(request, response).LoadPage();
+					break;
+				case "/profile":
+					new ProfilePage(request, response).LoadPage();
 					break;
 				case "/members":
-				case "/profile":
-					new MembersPage(request, response).LoadPage(sanitizedQuery);
+					new MembersPage(request, response).LoadPage();
 					break;
 
 				case "/health":
@@ -95,7 +100,7 @@ public class TeachersFirstServlet extends HttpServlet {
 					return;
 
 				case "/test":
-					new DiagnosticsPage(request, response).LoadPage(sanitizedQuery);
+					new DiagnosticsPage(request, response).LoadPage();
 					break;
 
 				default:
@@ -154,25 +159,6 @@ public class TeachersFirstServlet extends HttpServlet {
 			}
 		}
 		return i;
-	}
-
-	private String getSanitizedQueryString(HttpServletRequest request) {
-		String queryString = request.getQueryString();
-		if (queryString == null)
-			return "";
-
-		try {
-			queryString = URLDecoder.decode(queryString, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// Should never happen
-			throw new IllegalStateException(e);
-		}
-		queryString = sanitizedString(queryString);
-		return queryString;
-	}
-
-	private String sanitizedString(String s) {
-		return s.replaceAll("[\n|\t]", "_");
 	}
 
 }

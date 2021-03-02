@@ -13,7 +13,8 @@ public class CalendarPage extends PageLoader {
 	// Page-specific
 
 	@Override
-	public void LoadPage(String sanitizedQuery) {
+	public void LoadPage() {
+		templateDataMap.put("title", "Calendar");
 		
 		// Should only show members that it should show based on who's querying...
 		final List<Member> members = memberDAO.retrieveAll();

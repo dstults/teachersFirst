@@ -62,7 +62,7 @@ public abstract class PageLoader {
 
 	// Public Abstracts (entry point into child objects)
 
-	public abstract void LoadPage(String sanitizedQuery);
+	public abstract void LoadPage();
 
 	// Protected Methods (shared magic between all pages)
 

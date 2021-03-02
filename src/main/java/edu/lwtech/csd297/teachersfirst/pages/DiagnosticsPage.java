@@ -13,7 +13,7 @@ public class DiagnosticsPage extends PageLoader {
 	// Page-specific
 
 	@Override
-	public void LoadPage(String sanitizedQuery) {
+	public void LoadPage() {
 
 		// Get needed information dump data
 		final String clientIp = request.getRemoteAddr();
@@ -21,6 +21,7 @@ public class DiagnosticsPage extends PageLoader {
 		final String httpType = request.isSecure() ? "HTTPS" : "_http_";
 		final String pathInfo = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String uriPath = request.getRequestURI() == null ? "" : request.getRequestURI();
+		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
 		final Map<String, String[]> paramMap = request.getParameterMap();
 		final Map<String, String[]> headerItems = dumpHeaderToMap(request);
 
