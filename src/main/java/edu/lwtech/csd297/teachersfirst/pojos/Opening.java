@@ -15,15 +15,19 @@ public class Opening {
 			int startYear, int startMonth, int startDay, int startHour, int startMinute, 
 			int endYear, int endMonth, int endDay, int endHour, int endMinute,
 			int teacherID, String teacherName) 
-	{
-		
+	{		
 		this.teacherID = teacherID;
-        this.teacherName = teacherName;
+    this.teacherName = teacherName;
 		this.startDate = newDate(startYear,startMonth,startDay,startHour,startMinute);
 		this.endDate = newDate(endYear,endMonth,endDay,endHour,endMinute);
-		
-		//System.out.println(startDate);System.out.println(endDate);System.out.println(teacherID);
-	}
+  }
+
+    public Opening(Date startDate, Date endDate, int teacherID, String teacherName){
+        this.teacherID = teacherID;
+        this.teacherName = teacherName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 	
 	private static Date newDate(int year, int month, int day, int hour, int minute) {
 		Calendar cal = Calendar.getInstance();
@@ -63,6 +67,19 @@ public class Opening {
 
     public String getName(){
         return this.teacherName;
+    }
+
+    public Appointment newAppointment(Date startDate, int duration, int studentID){
+        Appointment newAppointment = new Appointment(startDate, addMinutes(startDate, duration), studentID, this.teacherID);
+        //check other appoints from the appointment dao
+		//approve or disapprove
+        return newAppointment;
+    }
+
+    public Date addMinutes(Date date, int minutes){
+        int currentMinutes = date.getMinutes();
+        date.setMinutes(currentMinutes + minutes);
+        return date;
     }
 
 }
