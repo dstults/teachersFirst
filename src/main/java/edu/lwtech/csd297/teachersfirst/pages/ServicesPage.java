@@ -35,7 +35,7 @@ public class ServicesPage extends PageLoader {
 	// Page-specific
 
 	@Override
-	public void LoadPage() {
+	public void loadPage() {
 		templateDataMap.put("title", "Services");
 		
 		// Dummy data for display
@@ -50,7 +50,7 @@ public class ServicesPage extends PageLoader {
 		templateDataMap.put("services", services);
 
 		// Go
-		TrySendResponse();
+		trySendResponse();
 	}
 
 }

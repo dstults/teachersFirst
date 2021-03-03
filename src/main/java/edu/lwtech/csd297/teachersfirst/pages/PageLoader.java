@@ -22,13 +22,11 @@ public abstract class PageLoader {
 	protected static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
 
 	protected String templateName = null;
-	protected Map<String, Object> templateDataMap = new HashMap<>();
+	protected Map<String, Object> templateDataMap;
 
 	// Static Declarations (shared variables to handle freemarker and DAOs)
 
 	protected static final Configuration freeMarkerConfig = new Configuration(Configuration.getVersion());
-	protected static DAO<Member> memberDAO = null;
-	protected static final List<DAO<?>> allDAOs = new ArrayList<>();
 
 	// Static Methods (basically meta-constructors/destructors for class-internal
 	// variables)
@@ -60,18 +58,43 @@ public abstract class PageLoader {
 
 	// Constructors
 
-	PageLoader(HttpServletRequest request, HttpServletResponse response) {
+	protected PageLoader(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
+		templateDataMap = new HashMap<>();
+
+		// Handle session / cookies
+		String userIdRaw = getSessionValue("USER_ID", "0");
+		int userId = userIdRaw != null && userIdRaw != "" ? Integer.parseInt(userIdRaw) : 0;
+		String userName = getSessionValue("USER_NAME", "Stranger");
+		String message = getGetValue("message", "");
+
+		templateDataMap.put("showWelcome", true);
+		templateDataMap.put("userId", userId);
+		templateDataMap.put("userName", userName);
+		templateDataMap.put("message", message);
 	}
 
-	// Public Abstracts (entry point into child objects)
+	// Public entry point
 
-	public abstract void LoadPage();
+	public abstract void loadPage();
 
 	// Protected Methods (shared magic between all pages)
 
-	protected void SendFake404(String description) {
+	protected String getGetValue(String keyName, String defaultValue) {
+		if (request.getParameter(keyName) == null) return defaultValue;
+		if (request.getParameter(keyName) == "") return defaultValue;
+		return request.getParameter(keyName);
+	}
+
+	protected String getSessionValue(String sessionArg, String defaultValue) {
+		if (request.getSession().getAttribute(sessionArg) == null) return defaultValue;
+		if (request.getSession().getAttribute(sessionArg).toString() == null) return defaultValue;
+		if (request.getSession().getAttribute(sessionArg).toString() == "") return defaultValue;
+		return request.getSession().getAttribute(sessionArg).toString();
+	}
+
+	protected void sendFake404(String description) {
 		logger.debug("====================== SECURITY ALERT ======================");
 		logger.debug("Description: {}", description);
 		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
@@ -85,7 +108,7 @@ public abstract class PageLoader {
 		}
 	}
 
-	protected void TrySendResponse() {
+	protected void trySendResponse() {
 
 		if (templateName == null) {
 

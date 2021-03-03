@@ -23,6 +23,19 @@
 				<li>
 					<a href="/members" class="nav-link">Members</a>
 				</li>
+				<#if showWelcome && userId gt 0>
+				<li>
+					Welcome, ${userName}<br><a href="/logout" style="color: blue;">Log Out</a>
+				</li>
+				<#elseif showWelcome>
+				<li>
+					<a href="/login" class="nav-link" style="color: blue;">Log In</a>
+				</li>
+				</#if>
 			</ul>
 		</nav>
 	</header>
+
+	<#if message != "">
+	<p class="banner">${message}</p>
+	</#if>

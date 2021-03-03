@@ -50,7 +50,8 @@ public class Security {
 
 	public static boolean checkPassword(int uid, String password) {
 		// should perform sql query, for now, just does this
-		return password == "Password01";
+		logger.debug(uid + " attempted to log in with password: " + password);
+		return password.equals("Password01");
 	}
 
 }

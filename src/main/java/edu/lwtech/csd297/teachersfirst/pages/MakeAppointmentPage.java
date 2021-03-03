@@ -14,7 +14,7 @@ public class MakeAppointmentPage extends PageLoader {
 	// Page-specific
 
 	@Override
-	public void LoadPage() {
+	public void loadPage() {
 		templateDataMap.put("title", "Profile");
 
 		// Get Data
@@ -29,7 +29,7 @@ public class MakeAppointmentPage extends PageLoader {
 		templateDataMap.put("endTime", endTime);
 
 		// Go
-		TrySendResponse();
+		trySendResponse();
 	}
 
 }

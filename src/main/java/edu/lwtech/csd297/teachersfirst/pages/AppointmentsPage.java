@@ -40,13 +40,13 @@ public class AppointmentsPage extends PageLoader {
 	// Page-specific
 
 	@Override
-	public void LoadPage() {
+	public void loadPage() {
 		templateDataMap.put("title", "Appointments");
 
 		// Should only get info for one member...
 		//final Member member = memberDAO.retrieveAll();
 		//templateDataMap.put("member", member);
-		final List<Member> members = memberDAO.retrieveAll();
+		final List<Member> members = DataManager.getMemberDAO().retrieveAll();
 
 		// Should get all appointments for said member...
 		//final List<Appointment> appointments = appointmentDAO.retrieveAll();
@@ -61,7 +61,7 @@ public class AppointmentsPage extends PageLoader {
 		templateName = "appointments.ftl";
 
 		// Go
-		TrySendResponse();
+		trySendResponse();
 	}
 
 }

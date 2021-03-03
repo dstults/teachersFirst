@@ -2,12 +2,15 @@ package edu.lwtech.csd297.teachersfirst;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 
+import edu.lwtech.csd297.teachersfirst.actions.*;
 import edu.lwtech.csd297.teachersfirst.pages.*;
 
 @WebServlet(name = "teachersFirst", urlPatterns = { "/" }, loadOnStartup = 0)
@@ -46,7 +49,7 @@ public class TeachersFirstServlet extends HttpServlet {
 		logger.info("Successfully initialized FreeMarker");
 
 		logger.info("Initializing the DAOs...");
-		PageLoader.initializeDAOs();
+		DataManager.initializeDAOs();
 		logger.info("Successfully initialized the DAOs!");
 
 		logger.warn("");
@@ -57,42 +60,47 @@ public class TeachersFirstServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		long startTime = System.currentTimeMillis();
-
-		String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + request.getRequestURI();
-		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
-		logInfo += sanitizedQuery;
-
-		// Get the cmd parameter from the URI (defaults to 'home')
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
-		//String page = request.getParameter("page");
-		// if (page == null) page = "appointments";
-		//if (page != "health") logger.debug("IN - {}", logInfo); // Don't log "health" commands
+		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
+		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
+		if (pagePath != "/health") // Don't log "health" commands
+			logger.debug("IN - {}", logInfo);
 
 		try {
 			switch (pagePath) {
 				case "":
-				case "/":
 				case "/home":
+					//TODO: should redirect to / or /appointments, respectively
+				case "/":
 				case "/appointments":
-					new AppointmentsPage(request, response).LoadPage();
+					new AppointmentsPage(request, response).loadPage();
 					break;
 				case "/make_appointment":
-					new MakeAppointmentPage(request, response).LoadPage();
+					new MakeAppointmentPage(request, response).loadPage();
 					break;
 				case "/openings":
-					new OpeningsPage(request, response).LoadPage();
+					new OpeningsPage(request, response).loadPage();
 					break;
 				case "/services":
-					new ServicesPage(request, response).LoadPage();
+					new ServicesPage(request, response).loadPage();
 					break;
 				case "/calendar":
-					new CalendarPage(request, response).LoadPage();
+					new CalendarPage(request, response).loadPage();
 					break;
 				case "/profile":
-					new ProfilePage(request, response).LoadPage();
+					new ProfilePage(request, response).loadPage();
 					break;
 				case "/members":
-					new MembersPage(request, response).LoadPage();
+					new MembersPage(request, response).loadPage();
+					break;
+				case "/register":
+					new RegisterPage(request, response).loadPage();
+					break;
+				case "/login":
+					new LoginPage(request, response).loadPage();
+					break;
+				case "/logout":
+					new LogoutPage(request, response).loadPage();
 					break;
 
 				case "/health":
@@ -104,7 +112,7 @@ public class TeachersFirstServlet extends HttpServlet {
 					return;
 
 				case "/test":
-					new DiagnosticsPage(request, response).LoadPage();
+					new DiagnosticsPage(request, response).loadPage();
 					break;
 
 				default:
@@ -122,8 +130,7 @@ public class TeachersFirstServlet extends HttpServlet {
 		} catch (RuntimeException e) {
 			logger.error("Unexpected runtime exception: ", e);
 			try {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-						"Oh no! Something went wrong. The appropriate authorities have been alerted.");
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Oh no! Something went wrong. The appropriate parties have been alerted.");
 			} catch (IOException ex) {
 				logger.error("Unable to send 500 response code.", ex);
 			}
@@ -134,12 +141,60 @@ public class TeachersFirstServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-		doGet(request, response);
+		long startTime = System.currentTimeMillis();
+		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
+		final Map<String, String[]> paramMap = request.getParameterMap();
+		String parameters = "";
+		String comma = "";
+		for (String key : paramMap.keySet()) {
+			for (String value : paramMap.get(key)) {
+				parameters += comma + "{" + key + ": " + value + "}";
+				comma = ", ";
+			}
+		}		
+		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + parameters;
+		logger.debug("IN - {}", logInfo); // Don't log "health" commands
+		final String action = request.getParameter("action") == null ? "" : request.getParameter("action");
+
+		try {
+			switch (action) {
+				case "log_in":
+					new LogInAction(request, response).RunAction();
+					break;
+				case "log_out":
+					new LogOutAction(request, response).RunAction();
+					break;
+				case "register_new_member":
+					new NewMemberAction(request, response).RunAction();
+					break;
+
+				default:
+					logger.debug("====================== Debug Me ======================");
+					logger.debug("Post Parameters: {}", parameters);
+					logger.debug("Page Path: {}", pagePath);
+					response.sendError(HttpServletResponse.SC_NOT_FOUND);
+					return;
+			}
+
+
+		} catch (IOException e) {
+			// Typically, this is because the connection was closed prematurely
+			logger.debug("Unexpected I/O exception: ", e);
+		} catch (RuntimeException e) {
+			logger.error("Unexpected runtime exception: ", e);
+			try {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Oh no! Something went wrong. The appropriate parties have been alerted.");
+			} catch (IOException ex) {
+				logger.error("Unable to send 500 response code.", ex);
+			}
+		}
+		long time = System.currentTimeMillis() - startTime;
+		logger.info("OUT- {} {}ms", logInfo, time);
 	}
 
 	@Override
 	public void destroy() {
-		PageLoader.terminateDAOs();
+		DataManager.terminateDAOs();
 		logger.warn("-----------------------------------------");
 		logger.warn("  " + SERVLET_NAME + " destroy() completed!");
 		logger.warn("-----------------------------------------");

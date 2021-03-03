@@ -13,14 +13,14 @@ public class DiagnosticsPage extends PageLoader {
 	// Page-specific
 
 	@Override
-	public void LoadPage() {
+	public void loadPage() {
 		
 		// Get initial bit to verify ID and operation
 		final String clientIp = request.getRemoteAddr();
 
 		// Check if whitelisted
 		if (!Security.isWhitelisted(clientIp)) {
-			SendFake404("Unauthorized user attempted to access diagnostics page.");
+			sendFake404("Unauthorized user attempted to access diagnostics page.");
 			return;
 		}
 
@@ -45,7 +45,7 @@ public class DiagnosticsPage extends PageLoader {
 		templateDataMap.put("headerItems", headerItems);
 
 		// Go
-		TrySendResponse();
+		trySendResponse();
 	}
 
 	private Map<String, String[]> dumpHeaderToMap(HttpServletRequest request) {

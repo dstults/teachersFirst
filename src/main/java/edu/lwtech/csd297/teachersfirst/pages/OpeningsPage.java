@@ -31,7 +31,7 @@ public class OpeningsPage extends PageLoader {
 	// Page-specific
 
 	@Override
-	public void LoadPage() {
+	public void loadPage() {
 		templateDataMap.put("title", "Openings");
 
 		// Should only show members that it should show based on who's querying...
@@ -47,7 +47,6 @@ public class OpeningsPage extends PageLoader {
 		openings.add(new DummyOpening("Fred", "12:00 pm", "6:00 pm"));
 		openings.add(new DummyOpening("Darren", "1:00 pm", "8:00 pm"));
 		days.add(openings);
-		logger.debug("temp1");
 		for(int i = 0; i < 4; i++) {
 			openings = new LinkedList<>();
 			openings.add(new DummyOpening("Fred", "6:00 pm", "9:00 pm"));
@@ -55,16 +54,14 @@ public class OpeningsPage extends PageLoader {
 			if (i % 2 == 1) openings.add(new DummyOpening("Edmund", "5:00 pm", "9:00 pm"));
 			days.add(openings);
 		}
-		logger.debug("temp2");
 		openings = new LinkedList<>();
 		days.add(openings);
 		openings = new LinkedList<>();
 		days.add(openings);
-		logger.debug("temp3 " + days.size());
 		templateDataMap.put("days", days);
 
 		// Go
-		TrySendResponse();
+		trySendResponse();
 	}
 
 }
