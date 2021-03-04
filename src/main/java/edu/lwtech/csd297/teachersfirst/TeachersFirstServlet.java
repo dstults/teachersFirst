@@ -103,6 +103,10 @@ public class TeachersFirstServlet extends HttpServlet {
 					new LogoutPage(request, response).loadPage();
 					break;
 
+				case "/dynamic.css":
+					new DynamicCssFile(request, response).loadPage();
+					break;
+					
 				case "/health":
 					try {
 						response.sendError(HttpServletResponse.SC_OK, "OK");

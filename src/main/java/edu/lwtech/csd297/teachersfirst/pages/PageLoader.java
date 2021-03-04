@@ -10,8 +10,6 @@ import org.apache.logging.log4j.*;
 
 import freemarker.template.*;
 import edu.lwtech.csd297.teachersfirst.*;
-import edu.lwtech.csd297.teachersfirst.daos.*;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public abstract class PageLoader {
 
@@ -42,20 +40,6 @@ public abstract class PageLoader {
 		}
 	}
 
-	public static void initializeDAOs() throws ServletException {
-		memberDAO = new MemberMemoryDAO();
-		allDAOs.add(memberDAO);
-		if (!memberDAO.initialize(""))
-			throw new UnavailableException("Unable to initialize the memberDAO.");
-	}
-
-	public static void terminateDAOs() {
-		// memberDAO.terminate();
-		for (DAO<?> iDAO : allDAOs) {
-			iDAO.terminate();
-		}
-	}
-
 	// Constructors
 
 	protected PageLoader(HttpServletRequest request, HttpServletResponse response) {
@@ -69,6 +53,8 @@ public abstract class PageLoader {
 		String userName = getSessionValue("USER_NAME", "Stranger");
 		String message = getGetValue("message", "");
 
+		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
+		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);
 		templateDataMap.put("showWelcome", true);
 		templateDataMap.put("userId", userId);
 		templateDataMap.put("userName", userName);

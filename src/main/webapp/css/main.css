@@ -11,7 +11,7 @@ html{
 body{
     width: 100%;
     height: 100%;
-    background-color: #ffd9c6;
+    background-color: var(--backgroundColor);  /* #ffd9c6 */
 }
 .landing-text{
     position: static;
@@ -40,7 +40,7 @@ header{
 }
 .top-nav{
     width: 100%;
-    background-color: #ffbb96;
+    background-color: var(--primaryHighlight);  /* #ffbb96 */
     position: static;
 }
 .nav-list{
@@ -85,20 +85,20 @@ li{
     width: 30rem;
 }
 .fake-button{
-    background-color: #ffbb96;
+    background-color: var(--primaryHighlight); /* #ffbb96 */
     border: none;
     border-radius: 8px;
     padding: 15px 32px;
 }
 .app-fake-button{
-    background-color: #ffbb96;
+    background-color: var(--primaryHighlight); /* #ffbb96 */
     border: none;
     border-radius: 8px;
     padding: 15px 60px;
 }
 .fake-button:hover,
 .fake-button:focus{
-    background-color: #faa97d;
+    background-color: var(--primaryHighlightDark); /* #faa97d */
 }
 table{
     margin-right: 10rem;
@@ -109,7 +109,7 @@ table{
 }
 table th{
     font-size: 1.5rem;
-    background-color: #ffbb96;
+    background-color: var(--primaryHighlight); /* #ffbb96 */
 }
 table, td, th{
     border: 1px solid black;

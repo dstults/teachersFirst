@@ -1,7 +1,7 @@
 	<header>
 		<div class="landing-text">
-			<h1>Name of the website</h1>
-			<h6>Very short one sentence description</h6>
+			<h1>${websiteTitle}</h1>
+			<h6>${websiteSubtitle}</h6>
 		</div>
 		<nav class="top-nav">
 			<ul class="nav-list">

@@ -9,6 +9,13 @@ import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class DataManager {
 	
+	public static String primaryHighlight = "#ffbb96";
+	public static String primaryHighlightDark = "#faa97d";
+	public static String backgroundColor = "#ffd9c6";
+
+	public static String websiteTitle = "CoolTutors";
+	public static String websiteSubtitle = "The coolest tutors on the web!";
+
 	public static final List<DAO<?>> allDAOs = new ArrayList<>();
 	private static DAO<Member> memberDAO = null;
 
