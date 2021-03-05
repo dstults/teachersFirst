@@ -17,7 +17,7 @@ public class Opening {
 			int teacherID, String teacherName) 
 	{		
 		this.teacherID = teacherID;
-    this.teacherName = teacherName;
+    	this.teacherName = teacherName;
 		this.startDate = newDate(startYear,startMonth,startDay,startHour,startMinute);
 		this.endDate = newDate(endYear,endMonth,endDay,endHour,endMinute);
   }
