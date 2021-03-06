@@ -12,39 +12,46 @@ public class NewMemberAction extends ActionRunner {
 
 	@Override
 	public void RunAction() {
-		String name = getPostValue("name", "");
+		String loginName = getPostValue("loginName", "");
 		String password1 = getPostValue("password", "");
 		String password2 = getPostValue("confirm_password", "");
-		String age = getPostValue("age", "");
-		int ageVal = Integer.parseInt(age);
+		String name = getPostValue("name", "");
+		String ageString = getPostValue("age", "");
+		int ageValue = Integer.parseInt(ageString);
 		String gender = getPostValue("gender", "");
-		String food = getPostValue("food", "");
-		String color = getPostValue("color", "");
 
-		if (name == null || name == "" || password1 == null || password1 == "") {
-			this.SendRedirectToPage("/register?message=Please enter a valid user name and password.");
+		if (loginName == null || loginName == "") {
+			this.SendRedirectToPage("/register?message=Please provide a valid login name.");
+			return;
+		}
+		if (password1 == null || password1 == "") {
+			this.SendRedirectToPage("/register?message=Please provide a valid password.");
+			return;
+		}
+		if (name == null || name == "") {
+			this.SendRedirectToPage("/register?message=Please provide a valid display name.");
 			return;
 		}
 		if (password2 == null || password2 == "" || !password2.equals(password1)) {
 			this.SendRedirectToPage("/register?message=Passwords do not match!");
 			return;
 		}
-		if (ageVal < 4 || ageVal > 130) {
+		if (ageValue < 4 || ageValue > 130) {
 			this.SendRedirectToPage("/register?message=Age must be between 4 and 130.");
 			return;
 		}
-		if (gender == null || (!gender.equals("Male") && !gender.equals("Female") && !gender.equals("Unset"))) {
-			this.SendRedirectToPage("/register?message=Please enter a valid gender.");
-			return;
-		}
-		if (food == null || food == "" || color == null || color == "") {
-			this.SendRedirectToPage("/register?message=Please enter a favorite food and color.");
+		if (gender == null)
+			this.SendRedirectToPage("/register?message=Please provide a valid gender (m/f/blank).");
+		gender = gender.toLowerCase().substring(0, 1);
+		if (!gender.equals("m") && !gender.equals("f") && !gender.equals("")) {
+			this.SendRedirectToPage("/register?message=Please provide a valid gender (m/f/blank).");
 			return;
 		}
 
 		logger.debug(name + " attempting to register in with password: " + password1);
 		if (Security.checkPassword(1, "Password01")) {
-			Member member = new Member(name, ageVal, gender, color, food, true, false, false);
+			//TODO: Hash password either in JS or here
+			Member member = new Member(loginName, password1, name, ageValue, gender, "", true, false, false);
 			DataManager.getMemberDAO().insert(member);
 			logger.info(DataManager.getMemberDAO().size() + " records total");
 			logger.debug("Registered new member: [{}]", member);

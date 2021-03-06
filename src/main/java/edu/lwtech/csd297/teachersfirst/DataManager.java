@@ -18,19 +18,23 @@ public class DataManager {
 
 	public static final List<DAO<?>> allDAOs = new ArrayList<>();
 	private static DAO<Member> memberDAO = null;
+	private static DAO<Service> serviceDAO = null;
 
 	// Meta constructors and destructors
 
 	public static void initializeDAOs() throws ServletException {
-		memberDAO = new MemberMemoryDAO();
-		allDAOs.add(memberDAO);
-		if (!memberDAO.initialize(""))
-			throw new UnavailableException("Unable to initialize the memberDAO.");
+		DataManager.memberDAO = new MemberMemoryDAO();
+		if (!DataManager.memberDAO.initialize("")) throw new UnavailableException("Unable to initialize the memberDAO.");
+		DataManager.allDAOs.add(DataManager.memberDAO);
+
+		DataManager.serviceDAO = new ServiceMemoryDAO();
+		if (!DataManager.serviceDAO.initialize("")) throw new UnavailableException("Unable to initialize the serviceDAO.");
+		DataManager.allDAOs.add(DataManager.serviceDAO);
 	}
 
 	public static void terminateDAOs() {
 		// memberDAO.terminate();
-		for (DAO<?> iDAO : allDAOs) {
+		for (DAO<?> iDAO : DataManager.allDAOs) {
 			iDAO.terminate();
 		}
 	}
@@ -38,7 +42,11 @@ public class DataManager {
 	// methods
 
 	public static DAO<Member> getMemberDAO() {
-		return memberDAO;
+		return DataManager.memberDAO;
+	}
+
+	public static DAO<Service> getServiceDAO() {
+		return DataManager.serviceDAO;
 	}
 
 }

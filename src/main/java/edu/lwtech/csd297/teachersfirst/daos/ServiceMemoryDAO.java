@@ -9,18 +9,18 @@ import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 // Memory-based DAO class - stores objects in a List.  No persistance.
 
-public class MemberMemoryDAO implements DAO<Member> {
+public class ServiceMemoryDAO implements DAO<Service> {
 
-	private static final Logger logger = LogManager.getLogger(MemberMemoryDAO.class.getName());
+	private static final Logger logger = LogManager.getLogger(ServiceMemoryDAO.class.getName());
 
 	private AtomicInteger nextListRecID;
-	private List<Member> studentDB;
+	private List<Service> serviceDB;
 
 	// ----------------------------------------------------------------
 
-	public MemberMemoryDAO() {
+	public ServiceMemoryDAO() {
 		this.nextListRecID = new AtomicInteger(1000);
-		this.studentDB = new ArrayList<>();
+		this.serviceDB = new ArrayList<>();
 	}
 
 	// ----------------------------------------------------------------
@@ -36,30 +36,30 @@ public class MemberMemoryDAO implements DAO<Member> {
 
 	public void terminate() {
 		logger.debug("Terminating MemoryDAO...");
-		studentDB = null;
+		this.serviceDB = null;
 	}
 
-	public int insert(Member pojo) {
+	public int insert(Service pojo) {
 		if (pojo == null)
 			throw new IllegalArgumentException("insert: cannot insert null object");
 		if (pojo.getRecID() != -1)
 			throw new IllegalArgumentException("insert: object is already in database (recID != -1)");
 		logger.debug("Inserting " + pojo + "...");
 
-		pojo.setRecID(nextListRecID.incrementAndGet());
-		studentDB.add(pojo);
+		pojo.setRecID(this.nextListRecID.incrementAndGet());
+		this.serviceDB.add(pojo);
 
 		logger.debug("Item successfully inserted!");
 		return pojo.getRecID();
 	}
 
-	public Member retrieveByID(int id) {
+	public Service retrieveByID(int id) {
 		if (id < 0)
 			throw new IllegalArgumentException("retrieveByID: id cannot be negative");
 		logger.debug("Getting object with ID: {} ...", id);
 
-		Member foundObject = null;
-		for (Member pojo : studentDB) {
+		Service foundObject = null;
+		for (Service pojo : this.serviceDB) {
 			if (pojo.getRecID() == id) {
 				foundObject = pojo;
 				break;
@@ -68,38 +68,38 @@ public class MemberMemoryDAO implements DAO<Member> {
 		return foundObject;
 	}
 
-	public Member retrieveByIndex(int index) {
+	public Service retrieveByIndex(int index) {
 		// Note: indexes are zero-based
 		if (index < 0)
 			throw new IllegalArgumentException("retrieveByIndex: index cannot be negative");
 		logger.debug("Getting object with index: {} ...", index);
 
-		return studentDB.get(index);
+		return this.serviceDB.get(index);
 	}
 
-	public List<Member> retrieveAll() {
+	public List<Service> retrieveAll() {
 		logger.debug("Getting all POJOs ...");
-		return new ArrayList<>(studentDB); // Return copy of DB collection
+		return new ArrayList<>(this.serviceDB); // Return copy of DB collection
 	}
 
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all IDs...");
 
 		List<Integer> listIDs = new ArrayList<>();
-		for (Member pojo : studentDB) {
+		for (Service pojo : this.serviceDB) {
 			listIDs.add(pojo.getRecID());
 		}
 		return listIDs;
 	}
 
-	public List<Member> search(String keyword) {
+	public List<Service> search(String keyword) {
 		if (keyword == null)
 			throw new IllegalArgumentException("search: keyword cannot be null");
 		logger.debug("Searching for objects containing: '{}'", keyword);
 
 		keyword = keyword.toLowerCase();
-		List<Member> pojosFound = new ArrayList<>();
-		for (Member pojo : studentDB) {
+		List<Service> pojosFound = new ArrayList<>();
+		for (Service pojo : this.serviceDB) {
 			if (pojo.getName().toLowerCase().contains(keyword)) {
 				pojosFound.add(pojo);
 				break;
@@ -110,17 +110,17 @@ public class MemberMemoryDAO implements DAO<Member> {
 	}
 
 	public int size() {
-		return studentDB.size();
+		return this.serviceDB.size();
 	}
 
-	public boolean update(Member pojo) {
+	public boolean update(Service pojo) {
 		if (pojo == null)
 			throw new IllegalArgumentException("update: cannot update null object");
 		logger.debug("Trying to update object with ID: {} ...", pojo.getRecID());
 
-		for (int i = 0; i < studentDB.size(); i++) {
-			if (studentDB.get(i).getRecID() == pojo.getRecID()) {
-				studentDB.set(i, pojo);
+		for (int i = 0; i < this.serviceDB.size(); i++) {
+			if (this.serviceDB.get(i).getRecID() == pojo.getRecID()) {
+				this.serviceDB.set(i, pojo);
 				logger.debug("Successfully updated: {} !", pojo.getRecID());
 				return true;
 			}
@@ -134,15 +134,15 @@ public class MemberMemoryDAO implements DAO<Member> {
 			throw new IllegalArgumentException("delete: id cannot be negative");
 		logger.debug("Trying to delete object with ID: {} ...", id);
 
-		Member pojoFound = null;
-		for (Member pojo : studentDB) {
+		Service pojoFound = null;
+		for (Service pojo : serviceDB) {
 			if (pojo.getRecID() == id) {
 				pojoFound = pojo;
 				break;
 			}
 		}
 		if (pojoFound != null) {
-			studentDB.remove(pojoFound);
+			this.serviceDB.remove(pojoFound);
 			logger.debug("Successfully deleted object with ID: {}", id);
 		} else {
 			logger.debug("Unable to delete object with ID: {}. List not found.", id);
@@ -154,16 +154,12 @@ public class MemberMemoryDAO implements DAO<Member> {
 	private void addDemoData() {
 		logger.debug("Creating demo data...");
 
-		insert(new Member("debug", "Password01", "Debug Student-Instructor-Admin", 31, "female", "", true, true, true));
-		insert(new Member("darren", "Password01", "Darren Instructor-Admin", 66, "male", "", false, true, true));
-		insert(new Member("tanya", "Password01", "Tanya Student-Instructor", 43, "female", "", true, true, false));
-		insert(new Member("edmund", "Password01", "Edmund Student-Admin", 22, "male", "", true, false, true));
-		insert(new Member("fred", "Password01", "Fred Admin", 28, "male", "", false, false, true));
-		insert(new Member("susan", "Password01", "Susan Instructor", 36, "female", "", false, true, false));
-		insert(new Member("ben", "Password01", "Ben Student", 18, "male", "", true, false, false));
-		insert(new Member("betty", "Password01", "Betty Student", 17, "female", "", true, false, false));
+		this.insert(new Service("Pilates", "Pilates is a method of exercise that consists of low-impact flexibility and muscular strength and endurance movements. Use it to stay super trim!", "Fred, Edmund"));
+		this.insert(new Service("Phonetics", "Learn how to make all the sounds with your mouth and talk like a charismatic expert! IPA is your friend!", "Darren"));
+		this.insert(new Service("Database Repair", "Fix all the errors in your SQL, learn how to avoid them in the future, never get escaped again!", "Edmund, Tanya"));
+		this.insert(new Service("Extreme E-Biking", "Pretend you're biking when you're really not! Hear someone yell at you in a crowded room from the spacious comfort of your home!", "Fred, Darren"));
 
-		logger.info(size() + " records inserted");
+		logger.info(this.size() + " records inserted");
 	}
 
 }
