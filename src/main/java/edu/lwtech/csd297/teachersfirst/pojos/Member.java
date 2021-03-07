@@ -33,7 +33,7 @@ public class Member {
 	public Member(String loginName, String passwordHash, String displayName, String gender, String teacherNotes,
 					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
-		this(-1, loginName, passwordHash, displayName, DateHelpers.ToTimestamp("1800/01/01 01:01:01"), gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, passwordHash, displayName, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 	// no record id, yes birthdate -- used in code
@@ -119,7 +119,7 @@ public class Member {
 	}
 
 	public int getAge() {
-		return DateHelpers.CalculateAgeFrom(this.birthdate);
+		return DateHelpers.calculateAgeFrom(this.birthdate);
 	}
 
 	public String getGender() {
@@ -181,7 +181,7 @@ public class Member {
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {
 		//TODO: validate integers
 
-		setBirthdate(DateHelpers.ToTimestamp(years, months, days, hours, minutes, seconds));
+		setBirthdate(DateHelpers.toTimestamp(years, months, days, hours, minutes, seconds));
 	}
 
 	public void setBirthdate(Timestamp birthdate) {

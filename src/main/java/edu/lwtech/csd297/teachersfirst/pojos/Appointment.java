@@ -18,8 +18,8 @@ public class Appointment {
 			int startYear, int startMonth, int startDay, int startHour, int startMinute,
 			int endYear, int endMonth, int endDay, int endHour, int endMinute) {
 
-		this(-1, studentID, teacherID, DateHelpers.ToTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0),
-				DateHelpers.ToTimestamp(endYear, endMonth, endDay, endHour, endMinute, 0));
+		this(-1, studentID, teacherID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0),
+				DateHelpers.toTimestamp(endYear, endMonth, endDay, endHour, endMinute, 0));
 	}
 	
 	public Appointment(int studentID, int teacherID, Timestamp startTime, Timestamp endTime) {
@@ -67,7 +67,7 @@ public class Appointment {
 		return this.startTime;
 	}
 	
-	public Timestamp getEndDate() {
+	public Timestamp getEndTime() {
 		return this.endTime;
 	}
 

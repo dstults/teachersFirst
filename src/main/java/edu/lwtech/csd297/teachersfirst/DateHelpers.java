@@ -3,16 +3,32 @@ package edu.lwtech.csd297.teachersfirst;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateHelpers {
 
-	public static Timestamp ToTimestamp(int year, int month, int day, int hour, int minute, int second) {
-		return ToTimestamp(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second);
+	public static final long millisecondsPerDay = 86_400_000;
+	public static final String homeZoneId = "America/Los_Angeles";
+	public static final ZoneId homeZone = ZoneId.of(homeZoneId);
+
+	public static Timestamp toTimestamp(Calendar cal) {
+		return new Timestamp(cal.getTimeInMillis());
 	}
 
-	public static Timestamp ToTimestamp(String myDate) {
+	public static Timestamp toTimestamp(int year, int month, int day, int hour, int minute, int second) {
+		return toTimestamp(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second);
+	}
+
+	public static Timestamp toTimestamp(String myDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date;
 		try {
@@ -27,7 +43,7 @@ public class DateHelpers {
 		return new Timestamp(timeInMillis);
 	}
 
-	public static int CalculateAgeFrom(Timestamp birthdate) {
+	public static int calculateAgeFrom(Timestamp birthdate) {
 		// Thanks to: https://howtodoinjava.com/java/calculate-age-from-date-of-birth/
 		int years = 0;
 		int months = 0;
@@ -84,6 +100,45 @@ public class DateHelpers {
 		}
 		
 		return years;
+	}
+
+	public static LocalDateTime previousSunday() {
+		final LocalDate today = LocalDate.now(homeZone);
+		return today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)).atStartOfDay();
+		
+		/* Doesn't do timezones:
+        Calendar cal = Calendar.getInstance();
+        int diff = Calendar.SUNDAY - cal.get(Calendar.DAY_OF_WEEK);
+		if (diff > 7) diff -= 7;
+        cal.add(Calendar.DAY_OF_MONTH, diff);
+        return new Timestamp(cal.getTimeInMillis()); */
+	}
+
+	public static LocalDateTime nextSaturday() {
+		final LocalDate today = LocalDate.now(homeZone);
+		return today.with(TemporalAdjusters.next(DayOfWeek.SATURDAY)).atTime(23, 59, 59); // LocalTime.MAX looks ugly when stringified
+
+		/* Doesn't do timezones natively:
+		Calendar cal = Calendar.getInstance();
+		int diff = Calendar.SATURDAY - cal.get(Calendar.DAY_OF_WEEK);
+		if (diff <= 0) diff += 7;
+		cal.add(Calendar.DAY_OF_MONTH, diff);
+		return new Timestamp(cal.getTimeInMillis()); */
+	}
+
+	public static String toDateString(Timestamp ts) {
+		LocalDate date = Instant.ofEpochMilli(ts.getTime() * 1000).atZone(homeZone).toLocalDate();
+		return date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+	}
+
+	public static String getDateTimeString() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		LocalDateTime now = LocalDateTime.now();  
+		return dtf.format(now);
+	}
+
+	public static String getSystemTimeZone() {
+		return ZoneId.systemDefault().toString();
 	}
 
 }

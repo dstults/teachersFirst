@@ -20,8 +20,8 @@ class MemberMemoryDAOTests {
 
 	@BeforeEach
 	void setUp() {
-		john = new Member("john", "Password01", "John", DateHelpers.ToTimestamp("1992/02/25 00:00:00"), "m", "", "111-111-1111", "", "john@lwtech.edu", true, false, false);
-		fred = new Member("fred", "Password01", "Fred", DateHelpers.ToTimestamp("1957/04/15 00:00:00"), "m", "", "123-123-1234", "", "fred@lwtech.edu", false, false, true);
+		john = new Member("john", "Password01", "John", DateHelpers.toTimestamp("1992/02/25 00:00:00"), "m", "", "111-111-1111", "", "john@lwtech.edu", true, false, false);
+		fred = new Member("fred", "Password01", "Fred", DateHelpers.toTimestamp("1957/04/15 00:00:00"), "m", "", "123-123-1234", "", "fred@lwtech.edu", false, false, true);
 
 		memberDAO = new MemberMemoryDAO();
 		memberDAO.initialize("");

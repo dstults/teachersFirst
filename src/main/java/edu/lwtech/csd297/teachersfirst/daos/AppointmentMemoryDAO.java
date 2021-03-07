@@ -45,7 +45,6 @@ public class AppointmentMemoryDAO implements DAO<Appointment> {
 		logger.debug("Inserting " + pojo + "...");
 
 		pojo.setRecID(nextListRecID.incrementAndGet());
-		logger.debug("Almost done ...");
 		appointmentDB.add(pojo);
 
 		logger.debug("Item successfully inserted!");
@@ -152,12 +151,12 @@ public class AppointmentMemoryDAO implements DAO<Appointment> {
 	private void addDemoData() {
 		logger.debug("Creating demo data...");
 
-		insert(new Appointment(5, 8, DateHelpers.ToTimestamp("2020/03/21 15:40:00"), DateHelpers.ToTimestamp("2020/03/21 16:20:00")));
-		insert(new Appointment(3, 6, DateHelpers.ToTimestamp("2020/07/06 23:30:00"), DateHelpers.ToTimestamp("2020/07/07 00:30:00")));
-		insert(new Appointment(1, 3, DateHelpers.ToTimestamp("2020/08/01 12:00:00"), DateHelpers.ToTimestamp("2020/08/01 13:00:00")));
-		insert(new Appointment(2, 5, DateHelpers.ToTimestamp("2021/01/15 15:30:00"), DateHelpers.ToTimestamp("2021/01/15 16:10:00")));
-		insert(new Appointment(7, 3, DateHelpers.ToTimestamp(2021, 2, 20, 4, 30, 0), DateHelpers.ToTimestamp(2021, 2, 20, 6, 30, 0)));
-        insert(new Appointment(7, 3, DateHelpers.ToTimestamp(2021, 2, 24, 2, 0, 0), DateHelpers.ToTimestamp(2021, 2, 24, 3, 0, 0)));
+		insert(new Appointment(5, 8, DateHelpers.toTimestamp("2020/03/21 15:40:00"), DateHelpers.toTimestamp("2020/03/21 16:20:00")));
+		insert(new Appointment(3, 6, DateHelpers.toTimestamp("2020/07/06 23:30:00"), DateHelpers.toTimestamp("2020/07/07 00:30:00")));
+		insert(new Appointment(1, 3, DateHelpers.toTimestamp("2020/08/01 12:00:00"), DateHelpers.toTimestamp("2020/08/01 13:00:00")));
+		insert(new Appointment(2, 5, DateHelpers.toTimestamp("2021/01/15 15:30:00"), DateHelpers.toTimestamp("2021/01/15 16:10:00")));
+		insert(new Appointment(7, 3, DateHelpers.toTimestamp(2021, 2, 20, 4, 30, 0), DateHelpers.toTimestamp(2021, 2, 20, 6, 30, 0)));
+        insert(new Appointment(7, 3, DateHelpers.toTimestamp(2021, 2, 24, 2, 0, 0), DateHelpers.toTimestamp(2021, 2, 24, 3, 0, 0)));
 
 		logger.info(size() + " records inserted");
 	}
