@@ -7,6 +7,7 @@ html{
     font-size: 10px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: black;
+    margin-bottom: 5rem;
 }
 body{
     width: 100%;
@@ -14,7 +15,7 @@ body{
     background-color: var(--backgroundColor);  /* #ffd9c6 */
 }
 .landing-text{
-    position: static;
+    margin: auto;
     width: 100%;
     text-align: center;
     z-index: 1;
@@ -24,10 +25,22 @@ body{
     font-size: 7rem;
     padding: 1rem;
     user-select: none;
+    width: fit-content;
+    margin: auto;
 }
 .landing-text h6{
     font-size: 2rem;
     font-weight: 300;
+    width: fit-content;
+    margin: auto;
+}
+.login-logout{
+    float: right;
+    margin-top: -10rem;
+    margin-right: 5rem;
+    width: 20%;
+    font-family: 'Courier New', Courier, monospace, sans-serif;
+    font-size: 3rem;
 }
 a{
     text-decoration: none;
@@ -67,10 +80,23 @@ li{
 .nav-link:focus{
     font-weight: bold;
 }
-.services-buttons{
+.appointments-buttons{
     float: right;
     padding-right: 20rem;
     margin-bottom: 5rem;
+}
+.openings-buttons{
+    float: right;
+    padding-right: 20rem;
+}
+.openings-text{
+    width: 100%;
+    margin: auto;
+    margin-bottom: 2rem;
+    padding-top: 5rem;
+}
+.openings-text h1{
+    text-align: center;
 }
 .fake-buttons {
     color: black;
@@ -78,7 +104,6 @@ li{
     text-decoration: none;
     font-size: 16px;
 }
-
 .fake-buttons li{
     display: inline;
     list-style-type: none;
@@ -95,6 +120,10 @@ li{
     border: none;
     border-radius: 8px;
     padding: 15px 60px;
+}
+.app-fake-button:hover,
+.app-fake-button:focus{
+    background-color: var(--primaryHighlightDark); /* #faa97d */
 }
 .fake-button:hover,
 .fake-button:focus{
@@ -115,11 +144,72 @@ table, td, th{
     border: 1px solid black;
     padding: 15px 20px;
 }
-
-footer{
-    padding-bottom: 5rem;
+.login{
+    margin: auto;
+    font-size: 2rem;
+    width: 25%;
+    text-align: center;
 }
-
+.logout{
+    width: 100%;
+    text-align: center;
+    line-height: 200%;
+    font-size: 2rem;
+}
+label{
+    display: block;
+    font-weight: bold;
+    float: left;
+}
+input[type=text], input[type=password]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0 0 0;
+    display: inline-block;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 2rem;
+}
+input[type=submit]{
+    background-color: var(--primaryHighlight);
+    border: none;
+    padding: 15px 60px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: bold;
+}
+input[type=submit]:hover{
+    background-color: var(--primaryHighlightDark);
+}
+.register{
+    margin: auto;
+    font-size: 2rem;
+    width: 30%;
+    text-align: center;
+}
+.field-divided{
+    width: 49%;
+}
+.required{
+    color: red;
+}
+input[type=radio]{
+    border-radius: 50%;
+    position: relative;
+    float: left;
+    display: block;
+    margin: 8px 8px 0 0;
+}
+.radio{
+    font-weight: lighter;
+    margin-right: 1.5rem;
+}
+.gender{
+    display: block;
+    margin-right: 2rem;
+}
 
 
 .calendar-explanation{
