@@ -14,13 +14,13 @@ public class MemberMemoryDAO implements DAO<Member> {
 	private static final Logger logger = LogManager.getLogger(MemberMemoryDAO.class.getName());
 
 	private AtomicInteger nextListRecID;
-	private List<Member> studentDB;
+	private List<Member> memberDB;
 
 	// ----------------------------------------------------------------
 
 	public MemberMemoryDAO() {
 		this.nextListRecID = new AtomicInteger(1000);
-		this.studentDB = new ArrayList<>();
+		this.memberDB = new ArrayList<>();
 	}
 
 	// ----------------------------------------------------------------
@@ -36,7 +36,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 
 	public void terminate() {
 		logger.debug("Terminating MemoryDAO...");
-		studentDB = null;
+		memberDB = null;
 	}
 
 	public int insert(Member pojo) {
@@ -47,7 +47,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 		logger.debug("Inserting " + pojo + "...");
 
 		pojo.setRecID(nextListRecID.incrementAndGet());
-		studentDB.add(pojo);
+		memberDB.add(pojo);
 
 		logger.debug("Item successfully inserted!");
 		return pojo.getRecID();
@@ -59,7 +59,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 		logger.debug("Getting object with ID: {} ...", id);
 
 		Member foundObject = null;
-		for (Member pojo : studentDB) {
+		for (Member pojo : memberDB) {
 			if (pojo.getRecID() == id) {
 				foundObject = pojo;
 				break;
@@ -74,19 +74,19 @@ public class MemberMemoryDAO implements DAO<Member> {
 			throw new IllegalArgumentException("retrieveByIndex: index cannot be negative");
 		logger.debug("Getting object with index: {} ...", index);
 
-		return studentDB.get(index);
+		return memberDB.get(index);
 	}
 
 	public List<Member> retrieveAll() {
 		logger.debug("Getting all POJOs ...");
-		return new ArrayList<>(studentDB); // Return copy of DB collection
+		return new ArrayList<>(memberDB); // Return copy of DB collection
 	}
 
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all IDs...");
 
 		List<Integer> listIDs = new ArrayList<>();
-		for (Member pojo : studentDB) {
+		for (Member pojo : memberDB) {
 			listIDs.add(pojo.getRecID());
 		}
 		return listIDs;
@@ -99,7 +99,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 
 		keyword = keyword.toLowerCase();
 		List<Member> pojosFound = new ArrayList<>();
-		for (Member pojo : studentDB) {
+		for (Member pojo : memberDB) {
 			if (pojo.getName().toLowerCase().contains(keyword)) {
 				pojosFound.add(pojo);
 				break;
@@ -110,7 +110,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 	}
 
 	public int size() {
-		return studentDB.size();
+		return memberDB.size();
 	}
 
 	public boolean update(Member pojo) {
@@ -118,9 +118,9 @@ public class MemberMemoryDAO implements DAO<Member> {
 			throw new IllegalArgumentException("update: cannot update null object");
 		logger.debug("Trying to update object with ID: {} ...", pojo.getRecID());
 
-		for (int i = 0; i < studentDB.size(); i++) {
-			if (studentDB.get(i).getRecID() == pojo.getRecID()) {
-				studentDB.set(i, pojo);
+		for (int i = 0; i < memberDB.size(); i++) {
+			if (memberDB.get(i).getRecID() == pojo.getRecID()) {
+				memberDB.set(i, pojo);
 				logger.debug("Successfully updated: {} !", pojo.getRecID());
 				return true;
 			}
@@ -135,14 +135,14 @@ public class MemberMemoryDAO implements DAO<Member> {
 		logger.debug("Trying to delete object with ID: {} ...", id);
 
 		Member pojoFound = null;
-		for (Member pojo : studentDB) {
+		for (Member pojo : memberDB) {
 			if (pojo.getRecID() == id) {
 				pojoFound = pojo;
 				break;
 			}
 		}
 		if (pojoFound != null) {
-			studentDB.remove(pojoFound);
+			memberDB.remove(pojoFound);
 			logger.debug("Successfully deleted object with ID: {}", id);
 		} else {
 			logger.debug("Unable to delete object with ID: {}. List not found.", id);
@@ -154,14 +154,14 @@ public class MemberMemoryDAO implements DAO<Member> {
 	private void addDemoData() {
 		logger.debug("Creating demo data...");
 
-		insert(new Member("debug", "Password01", "Debug Student-Instructor-Admin", 31, "female", "", true, true, true));
-		insert(new Member("darren", "Password01", "Darren Instructor-Admin", 66, "male", "", false, true, true));
-		insert(new Member("tanya", "Password01", "Tanya Student-Instructor", 43, "female", "", true, true, false));
-		insert(new Member("edmund", "Password01", "Edmund Student-Admin", 22, "male", "", true, false, true));
-		insert(new Member("fred", "Password01", "Fred Admin", 28, "male", "", false, false, true));
-		insert(new Member("susan", "Password01", "Susan Instructor", 36, "female", "", false, true, false));
-		insert(new Member("ben", "Password01", "Ben Student", 18, "male", "", true, false, false));
-		insert(new Member("betty", "Password01", "Betty Student", 17, "female", "", true, false, false));
+		insert(new Member("debug", "Password01", "Debug Student-Instructor-Admin", "f", "", "111-111-1111", "", "debug@lwtech.edu", true, true, true));
+		insert(new Member("darren", "Password01", "Darren Instructor-Admin", "m", "", "222-111-1111", "", "darren@lwtech.edu", false, true, true));
+		insert(new Member("tanya", "Password01", "Tanya Student-Instructor", "f", "", "333-111-1111", "", "tanya@lwtech.edu", true, true, false));
+		insert(new Member("edmund", "Password01", "Edmund Student-Admin", "m", "", "444-111-1111", "", "edmund@lwtech.edu", true, false, true));
+		insert(new Member("fred", "Password01", "Fred Admin", "m", "", "555-111-1111", "", "fred@lwtech.edu", false, false, true));
+		insert(new Member("susan", "Password01", "Susan Instructor", "f", "666-111-1111", "", "susan@lwtech.edu", "", false, true, false));
+		insert(new Member("ben", "Password01", "Ben Student", "m", "", "777-111-1111", "", "ben@lwtech.edu", true, false, false));
+		insert(new Member("betty", "Password01", "Betty Student", "f", "", "888-111-1111", "", "betty@lwtech.edu", true, false, false));
 
 		logger.info(size() + " records inserted");
 	}

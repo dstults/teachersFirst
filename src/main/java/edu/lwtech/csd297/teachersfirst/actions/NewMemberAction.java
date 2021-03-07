@@ -16,10 +16,12 @@ public class NewMemberAction extends ActionRunner {
 		String password1 = getPostValue("password", "");
 		String password2 = getPostValue("confirm_password", "");
 		String name = getPostValue("name", "");
-		String ageString = getPostValue("age", "");
-		int ageValue = Integer.parseInt(ageString);
 		String gender = getPostValue("gender", "");
+		String phone1 = getPostValue("phone1", "");
+		String phone2 = getPostValue("phone2", "");
+		String email = getPostValue("email", "");
 
+		//TODO: Must check to make sure string input does not exceed database lengths
 		if (loginName == null || loginName == "") {
 			this.SendRedirectToPage("/register?message=Please provide a valid login name.");
 			return;
@@ -36,10 +38,6 @@ public class NewMemberAction extends ActionRunner {
 			this.SendRedirectToPage("/register?message=Passwords do not match!");
 			return;
 		}
-		if (ageValue < 4 || ageValue > 130) {
-			this.SendRedirectToPage("/register?message=Age must be between 4 and 130.");
-			return;
-		}
 		if (gender == null)
 			this.SendRedirectToPage("/register?message=Please provide a valid gender (m/f/blank).");
 		gender = gender.toLowerCase().substring(0, 1);
@@ -47,11 +45,14 @@ public class NewMemberAction extends ActionRunner {
 			this.SendRedirectToPage("/register?message=Please provide a valid gender (m/f/blank).");
 			return;
 		}
+		if (phone1 == null) phone1 = "";
+		if (phone2 == null) phone2 = "";
+		if (email == null) email = "";
 
 		logger.debug(name + " attempting to register in with password: " + password1);
 		if (Security.checkPassword(1, "Password01")) {
 			//TODO: Hash password either in JS or here
-			Member member = new Member(loginName, password1, name, ageValue, gender, "", true, false, false);
+			Member member = new Member(loginName, password1, name, null, gender, "", phone1, phone2, email, true, false, false);
 			DataManager.getMemberDAO().insert(member);
 			logger.info(DataManager.getMemberDAO().size() + " records total");
 			logger.debug("Registered new member: [{}]", member);

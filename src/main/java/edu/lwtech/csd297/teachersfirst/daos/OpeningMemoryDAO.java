@@ -7,7 +7,7 @@ import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-public class OpeningMemoryDAO {
+public class OpeningMemoryDAO implements DAO<Opening> {
     private static final Logger logger = LogManager.getLogger(OpeningMemoryDAO.class.getName());
 
 	private AtomicInteger nextListRecID;
@@ -151,7 +151,7 @@ public class OpeningMemoryDAO {
 	private void addDemoData() {
 		logger.debug("Creating demo data...");
 
-		insert(new Opening(2021,4,15,4,30,2021,5,15,6,30,44,"Michael"));
+		//insert(new Opening(2021,4,15,4,30,2021,5,15,6,30,44,"Michael"));
 
 		logger.info(size() + " records inserted");
 	}
