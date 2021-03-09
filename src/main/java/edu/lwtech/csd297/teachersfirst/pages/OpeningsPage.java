@@ -15,16 +15,19 @@ public class OpeningsPage extends PageLoader {
 	public class PrettifiedOpening {
 
 		private String instructor;
+		private String date;
 		private String startTime;
 		private String endTime;
 
-		public PrettifiedOpening(String instructor, String startTime, String endTime) {
+		public PrettifiedOpening(String instructor, String date, String startTime, String endTime) {
 			this.instructor = instructor;
+			this.date = date;
 			this.startTime = startTime;
 			this.endTime = endTime;
 		}
 
 		public String getInstructor() { return instructor; }
+		public String getDate() { return date; }
 		public String getStartTime() { return startTime; }
 		public String getEndTime() { return endTime; }
 	}
@@ -71,13 +74,17 @@ public class OpeningsPage extends PageLoader {
 			endTime = startTime.plusDays(1).minusSeconds(1);
 			logger.debug(startTime.toString());
 			logger.debug(endTime.toString());
+			String dateToday = startTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+
 			// scan all openings for any that fall within the day
 			for (Opening iOpening : allOpenings) {
 				if (iOpening.getStartTime().toLocalDateTime().compareTo(startTime) >= 0 && 
 						iOpening.getStartTime().toLocalDateTime().compareTo(endTime) < 0) {
 
 					openings.add(new PrettifiedOpening(members.get(iOpening.getTeacherID()).getDisplayName(), 
-							iOpening.getStartTime().toString(), iOpening.getEndTime().toString()));
+							dateToday,	
+							iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")), 
+							iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"))));
 				}
 			}
 		}

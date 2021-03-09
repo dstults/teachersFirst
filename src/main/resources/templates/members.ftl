@@ -5,16 +5,17 @@
 
 <table>
 	<tr>
-		<th>Record ID</th><th>Member</th><th>Age</th><th>Gender</th><th>Favorite Color</th><th>Favorite Food</th>
+		<th>Rec ID</th><th>Username</th><th>Teacher Notes</th><th>Birthdate</th><th>Gender</th><th>Phone</th><th>Email</th>
 	</tr>
 	<#list members as member>
 		<tr>
 			<td>${member.recID}</td>
-			<td>${member.name}</td>
-			<td>${member.age}</td>
+			<td>${member.loginName}</td>
+			<td>${member.teacherNotes}</td>
+			<td>${member.birthdate}</td>
 			<td>${member.gender}</td>
-			<td>${member.favoriteColor}</td>
-			<td>${member.favoriteFood}</td>
+			<td>${member.phone1}</td>
+			<td>${member.email}</td>
 		</tr>
 	</#list>
 </table>

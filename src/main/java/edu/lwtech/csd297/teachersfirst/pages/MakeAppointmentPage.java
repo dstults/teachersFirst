@@ -22,11 +22,22 @@ public class MakeAppointmentPage extends PageLoader {
 		final String startTime = request.getParameter("startTime") == null ? "" : request.getParameter("startTime");
 		final String endTime = request.getParameter("endTime") == null ? "" : request.getParameter("endTime");
 
+		LinkedList<String> durations = new LinkedList<String>();
+		for (int i = 15; i <= 120; i += 15) {
+			if (i >= 60) {
+				durations.add((i / 60) + " hour " + (i % 60) + " minutes");
+			}
+			else {
+				durations.add(i + " minutes");
+			}
+		}
+
 		// FreeMarker
 		templateName = "makeAppointment.ftl";
 		templateDataMap.put("instructor", instructor);
 		templateDataMap.put("startTime", startTime);
 		templateDataMap.put("endTime", endTime);
+		templateDataMap.put("durations", durations);
 
 		// Go
 		trySendResponse();

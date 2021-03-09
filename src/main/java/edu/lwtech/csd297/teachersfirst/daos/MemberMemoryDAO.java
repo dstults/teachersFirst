@@ -159,7 +159,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 		insert(new Member("tanya", "Password01", "Tanya Student-Instructor", "f", "", "333-111-1111", "", "tanya@lwtech.edu", true, true, false));
 		insert(new Member("edmund", "Password01", "Edmund Student-Admin", "m", "", "444-111-1111", "", "edmund@lwtech.edu", true, false, true));
 		insert(new Member("fred", "Password01", "Fred Admin", "m", "", "555-111-1111", "", "fred@lwtech.edu", false, false, true));
-		insert(new Member("susan", "Password01", "Susan Instructor", "f", "666-111-1111", "", "susan@lwtech.edu", "", false, true, false));
+		insert(new Member("susan", "Password01", "Susan Instructor", "f", "", "666-111-1111", "", "susan@lwtech.edu", false, true, false));
 		insert(new Member("ben", "Password01", "Ben Student", "m", "", "777-111-1111", "", "ben@lwtech.edu", true, false, false));
 		insert(new Member("betty", "Password01", "Betty Student", "f", "", "888-111-1111", "", "betty@lwtech.edu", true, false, false));
 

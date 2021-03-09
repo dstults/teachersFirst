@@ -19,8 +19,8 @@
 			<td>${appointment.recID}</td>
 			<td>${appointment.startTime}</td>
 			<td>${appointment.endTime}</td>
-			<td>${appointment.attendees}</td>
-			<td>${appointment.instructors}</td>
+			<td>${appointment.studentID}</td>
+			<td>${appointment.teacherID}</td>
 			<td>${appointment.service}</td>
 		</tr>
 	</#list>

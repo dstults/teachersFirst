@@ -34,6 +34,8 @@
 		</nav>
 	</header>
 
-	<#if message != "">
-	<p class="banner">${message}</p>
-	</#if>
+<#if message != "">
+	<div class="banner">
+		<p>${message}</p>
+	</div>
+</#if>

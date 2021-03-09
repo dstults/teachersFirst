@@ -15,7 +15,7 @@
 		<input type="submit" value="Login">
 	</form>
 	<#else>
-		<p>You're already logged in! Click <a href="/logout" style="color: blue;">here</a> to <a href="/logout" style="color: blue;">log out</a>.</p>
+		<p>You're already logged in!<br> <a href="/logout" style="color: blue;">Click here to log out</a>.</p>
 	</#if>
 </div>
 </body>

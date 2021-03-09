@@ -144,11 +144,33 @@ table, td, th{
     border: 1px solid black;
     padding: 15px 20px;
 }
+.make-appointment{
+    margin: auto;
+    width: fit-content;
+    font-size: 2rem;
+    text-align: left;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 200%;
+}
+.make-appointment input[type=submit]{
+    display: block;
+    margin-top: 1rem;
+}
+.select{
+    display: block;
+    float: left;
+    margin-left: 8px;
+}
 .login{
     margin: auto;
     font-size: 2rem;
     width: 25%;
     text-align: center;
+}
+.login p{
+    line-height: 200%;
+    margin-top: 8rem;
 }
 .logout{
     width: 100%;
@@ -209,6 +231,35 @@ input[type=radio]{
 .gender{
     display: block;
     margin-right: 2rem;
+}
+.profile-page{
+    margin: auto;
+    text-align: center;
+    line-height: 200%;
+    font-size: 2rem;
+}
+.profile-page p{
+    display: block;
+}
+.banner{
+    background-color: var(--primaryHighlight);
+    animation: error_flash 1s linear 0.2s;
+    text-align: center;
+    font-size: 1.8rem;
+    width: fit-content;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: auto;
+    margin-top: -3rem;
+    margin-bottom: 3rem;
+}
+@keyframes error_flash {
+    14.3% { background-color: red; }
+    28.6% { background-color: var(--primaryHighlight); }
+    42.9% { background-color: red; }
+    57.1% { background-color: var(--primaryHighlight); }
+    71.4% { background-color: red; }
+    85.7% { background-color: var(--primaryHighlight); }
 }
 
 
