@@ -66,10 +66,25 @@ class MemberTests {
 	}
 
 	@Test
+	void testGetLoginName(){
+		assertEquals("amy", amy.getLoginName());
+	}
+
+	@Test
+	void testGetPasswordHash(){
+		assertEquals("Password01", amy.getPasswordHash());
+	}
+
+	@Test
 	void testGetDisplayName() {
 		assertEquals("Fred", fred.getDisplayName());
 		assertEquals("Amy", amy.getDisplayName());
 		assertEquals("Juan", juan.getDisplayName());
+	}
+
+	@Test
+	void testGetBirthDate(){
+		assertEquals("1992-02-25 00:00:00.0", juan.getBirthdate().toString());
 	}
 
 	@Test
