@@ -41,6 +41,7 @@ body{
     width: 20%;
     font-family: 'Courier New', Courier, monospace, sans-serif;
     font-size: 3rem;
+    line-height: 150%;
 }
 a{
     text-decoration: none;

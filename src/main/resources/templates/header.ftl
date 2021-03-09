@@ -4,9 +4,10 @@
 			<h6>${websiteSubtitle}</h6>
 			<div class="login-logout">
 				<#if showWelcome && userId gt 0>
-					<p>Welcome, ${userName}<br><a href="/logout" style="color: blue;">Log Out</a></p>
+					<p style="line-height: 100%;">Welcome, ${userName}<br><a href="/logout" style="color: blue;">Log Out</a></p>
 				<#elseif showWelcome>
 					<a href="/login" style="color: blue;">Log In</a>
+					<br><a href="/register" style="color: blue;">Register</a>
 				</#if>
 			</div>
 		</div>

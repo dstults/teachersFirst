@@ -12,6 +12,10 @@
 			<input type="text" name="lastName" class="field-divided" placeholder="Last name"/>
 			<br><br>
 
+			<label for="username">Username: <span class="required">*</span></label>
+			<input type="text" name="loginName">
+			<br><br>
+
 			<label for="password">Password: <span class="required">*</span></label>
 			<input type="password" name="password">
 			<br><br>
@@ -28,14 +32,6 @@
 			<input type="radio" name="gender" value="Male"><label for="Male" class="radio">Male</label>
 			<input type="radio" name="gender" value="Female"><label for="Female" class="radio">Female</label>
 			<input type="radio" name="gender" value="Other" checked><label for="Other" class="radio">Other</label>
-			<br><br>
-
-			<label for="color">Favorite Color: </label>
-			<input type="text" name="color">
-			<br><br>
-
-			<label for="food">Favorite Food: </label>
-			<input type="text" name="food">
 			<br><br>
 
 			<input type="submit" value="Register">
