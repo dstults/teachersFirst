@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.*;
 
+import edu.lwtech.csd297.teachersfirst.DataManager;
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
@@ -152,22 +153,24 @@ public class OpeningMemoryDAO implements DAO<Opening> {
 	private void addDemoData() {
 		logger.debug("Creating demo data...");
 
-		insert(new Opening(3, DateHelpers.toTimestamp("2021/03/04 12:00:00"), DateHelpers.toTimestamp("2021/03/04 13:00:00")));
-		insert(new Opening(2, DateHelpers.toTimestamp("2021/03/05 12:00:00"), DateHelpers.toTimestamp("2021/03/05 13:00:00")));
-		insert(new Opening(4, DateHelpers.toTimestamp("2021/03/06 12:00:00"), DateHelpers.toTimestamp("2021/03/06 13:00:00")));
-		insert(new Opening(3, DateHelpers.toTimestamp("2021/03/07 12:00:00"), DateHelpers.toTimestamp("2021/03/07 13:00:00")));
-		insert(new Opening(2, DateHelpers.toTimestamp("2021/03/08 12:00:00"), DateHelpers.toTimestamp("2021/03/08 13:00:00")));
-		insert(new Opening(4, DateHelpers.toTimestamp("2021/03/09 12:00:00"), DateHelpers.toTimestamp("2021/03/09 13:00:00")));
-		insert(new Opening(3, DateHelpers.toTimestamp("2021/03/12 02:00:00"), DateHelpers.toTimestamp("2021/03/12 08:00:00")));
-		insert(new Opening(2, DateHelpers.toTimestamp("2021/03/12 07:00:00"), DateHelpers.toTimestamp("2021/03/12 17:00:00")));
-		insert(new Opening(4, DateHelpers.toTimestamp("2021/03/12 16:00:00"), DateHelpers.toTimestamp("2021/03/13 00:00:00")));
-		insert(new Opening(3, DateHelpers.toTimestamp("2021/03/12 23:00:00"), DateHelpers.toTimestamp("2021/03/13 06:00:00")));
-		insert(new Opening(2, DateHelpers.toTimestamp("2021/03/16 07:00:00"), DateHelpers.toTimestamp("2021/03/16 10:00:00")));
-		insert(new Opening(4, DateHelpers.toTimestamp("2021/03/17 11:00:00"), DateHelpers.toTimestamp("2021/03/17 14:00:00")));
-		insert(new Opening(3, DateHelpers.toTimestamp("2021/03/23 09:00:00"), DateHelpers.toTimestamp("2021/03/23 18:00:00")));
-		insert(new Opening(2, DateHelpers.toTimestamp("2021/03/24 11:00:00"), DateHelpers.toTimestamp("2021/03/24 21:00:00")));
-		insert(new Opening(4, DateHelpers.toTimestamp("2021/03/25 09:00:00"), DateHelpers.toTimestamp("2021/03/25 18:00:00")));
-		insert(new Opening(5, 2021, 4, 15, 4, 30, 2021, 5, 15, 6, 30));
+		List<Member> members = DataManager.getMemberDAO().retrieveAll();
+
+		insert(new Opening(members.get(2).getRecID(), DateHelpers.toTimestamp("2021/03/04 12:00:00"), DateHelpers.toTimestamp("2021/03/04 13:00:00")));
+		insert(new Opening(members.get(1).getRecID(), DateHelpers.toTimestamp("2021/03/05 12:00:00"), DateHelpers.toTimestamp("2021/03/05 13:00:00")));
+		insert(new Opening(members.get(3).getRecID(), DateHelpers.toTimestamp("2021/03/06 12:00:00"), DateHelpers.toTimestamp("2021/03/06 13:00:00")));
+		insert(new Opening(members.get(2).getRecID(), DateHelpers.toTimestamp("2021/03/07 12:00:00"), DateHelpers.toTimestamp("2021/03/07 13:00:00")));
+		insert(new Opening(members.get(1).getRecID(), DateHelpers.toTimestamp("2021/03/08 12:00:00"), DateHelpers.toTimestamp("2021/03/08 13:00:00")));
+		insert(new Opening(members.get(3).getRecID(), DateHelpers.toTimestamp("2021/03/09 12:00:00"), DateHelpers.toTimestamp("2021/03/09 13:00:00")));
+		insert(new Opening(members.get(2).getRecID(), DateHelpers.toTimestamp("2021/03/12 02:00:00"), DateHelpers.toTimestamp("2021/03/12 08:00:00")));
+		insert(new Opening(members.get(1).getRecID(), DateHelpers.toTimestamp("2021/03/12 07:00:00"), DateHelpers.toTimestamp("2021/03/12 17:00:00")));
+		insert(new Opening(members.get(3).getRecID(), DateHelpers.toTimestamp("2021/03/12 16:00:00"), DateHelpers.toTimestamp("2021/03/13 00:00:00")));
+		insert(new Opening(members.get(2).getRecID(), DateHelpers.toTimestamp("2021/03/12 23:00:00"), DateHelpers.toTimestamp("2021/03/13 06:00:00")));
+		insert(new Opening(members.get(1).getRecID(), DateHelpers.toTimestamp("2021/03/16 07:00:00"), DateHelpers.toTimestamp("2021/03/16 10:00:00")));
+		insert(new Opening(members.get(3).getRecID(), DateHelpers.toTimestamp("2021/03/17 11:00:00"), DateHelpers.toTimestamp("2021/03/17 14:00:00")));
+		insert(new Opening(members.get(2).getRecID(), DateHelpers.toTimestamp("2021/03/23 09:00:00"), DateHelpers.toTimestamp("2021/03/23 18:00:00")));
+		insert(new Opening(members.get(1).getRecID(), DateHelpers.toTimestamp("2021/03/24 11:00:00"), DateHelpers.toTimestamp("2021/03/24 21:00:00")));
+		insert(new Opening(members.get(3).getRecID(), DateHelpers.toTimestamp("2021/03/25 09:00:00"), DateHelpers.toTimestamp("2021/03/25 18:00:00")));
+		insert(new Opening(members.get(4).getRecID(), 2021, 4, 15, 4, 30, 2021, 5, 15, 6, 30));
 
 		logger.info(size() + " records inserted");
 	}

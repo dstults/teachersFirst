@@ -6,6 +6,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.daos.DAO;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class OpeningsPage extends PageLoader {
@@ -53,7 +54,7 @@ public class OpeningsPage extends PageLoader {
 
 		// Should only show members that it should show based on who's querying...
 		final List<Opening> allOpenings = DataManager.getOpeningDAO().retrieveAll();
-		final List<Member> members = DataManager.getMemberDAO().retrieveAll();
+		final DAO<Member> memberDAO = DataManager.getMemberDAO();
 		List<List<PrettifiedOpening>> days = new LinkedList<>();
 		LocalDateTime startTime;
 		LocalDateTime endTime;
@@ -81,10 +82,12 @@ public class OpeningsPage extends PageLoader {
 				if (iOpening.getStartTime().toLocalDateTime().compareTo(startTime) >= 0 && 
 						iOpening.getStartTime().toLocalDateTime().compareTo(endTime) < 0) {
 
-					openings.add(new PrettifiedOpening(members.get(iOpening.getTeacherID()).getDisplayName(), 
+					openings.add(new PrettifiedOpening(
+							memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName(), 
 							dateToday,	
 							iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")), 
-							iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"))));
+							iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")))
+					);
 				}
 			}
 		}

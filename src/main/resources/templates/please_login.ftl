@@ -1,0 +1,1 @@
+			<p>You must be <a href="/login">logged in</a> to view this page.</p>

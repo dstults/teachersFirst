@@ -8,33 +8,33 @@ public class Appointment {
     
 	private int recID;
 	private int studentID;
-	private int teacherID;
+	private int instructorID;
 	private Timestamp startTime;
 	private Timestamp endTime;
 
 	// ----------------------------------------------------------------
 	
-	public Appointment(int studentID, int teacherID,
+	public Appointment(int studentID, int instructorID,
 			int startYear, int startMonth, int startDay, int startHour, int startMinute,
 			int endYear, int endMonth, int endDay, int endHour, int endMinute) {
 
-		this(-1, studentID, teacherID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0),
+		this(-1, studentID, instructorID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0),
 				DateHelpers.toTimestamp(endYear, endMonth, endDay, endHour, endMinute, 0));
 	}
 	
-	public Appointment(int studentID, int teacherID, Timestamp startTime, Timestamp endTime) {
+	public Appointment(int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
 
-		this(-1, studentID, teacherID, startTime, endTime);
+		this(-1, studentID, instructorID, startTime, endTime);
 	}
 
-	public Appointment(int recID, int studentID, int teacherID, Timestamp startTime, Timestamp endTime) {
+	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		//TODO: input validation
 		
 		this.recID = recID;
 		this.studentID = studentID;
-		this.teacherID = teacherID;
+		this.instructorID = instructorID;
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
@@ -59,8 +59,8 @@ public class Appointment {
 		return this.studentID;
 	}
 	
-	public int getTeacherID() {
-		return this.teacherID;
+	public int getInstructorID() {
+		return this.instructorID;
 	}
 	
 	public Timestamp getStartTime() {
@@ -79,7 +79,7 @@ public class Appointment {
 
 	@Override
 	public String toString() {
-		return "Appointment/" + this.studentID + ">" + this.teacherID + "@" + this.startTime.toString() + "-" + this.endTime.toString();
+		return "Appointment/" + this.studentID + ">" + this.instructorID + "@" + this.startTime.toString() + "-" + this.endTime.toString();
 	}
 
 }

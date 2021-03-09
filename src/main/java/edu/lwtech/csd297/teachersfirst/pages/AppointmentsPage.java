@@ -1,37 +1,38 @@
 package edu.lwtech.csd297.teachersfirst.pages;
 
-import java.sql.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.daos.*;
 public class AppointmentsPage extends PageLoader {
 
-	// Placeholder
-	public class DummyAppointment {
+	public class PrettifiedAppointment {
 
-		private int recID;
-		private Timestamp startTime;
-		private Timestamp endTime;
-		private String attendees;
-		private String instructors;
-		private String service;
+		private int id;
+		private String instructor;
+		private String student;
+		private String date;
+		private String startTime;
+		private String endTime;
 
-		public DummyAppointment(int recID, Timestamp startTime, Timestamp endTime, String attendees, String instructors, String service) {
-			this.recID = recID;
+		public PrettifiedAppointment(int id, String instructor, String student, String date, String startTime, String endTime) {
+			this.id = id;
+			this.instructor = instructor;
+			this.student = student;
+			this.date = date;
 			this.startTime = startTime;
 			this.endTime = endTime;
-			this.attendees = attendees;
-			this.instructors = instructors;
-			this.service = service;
 		}
-		public int getRecID() { return recID; }
-		public Timestamp getStartTime() { return startTime; }
-		public Timestamp getEndTime() { return endTime; }
-		public String getAttendees() { return attendees; }
-		public String getInstructors() { return instructors; }
-		public String getService() { return service; }
+
+		public int getId() { return id; }
+		public String getInstructor() { return instructor; }
+		public String getStudent() { return student; }
+		public String getDate() { return date; }
+		public String getStartTime() { return startTime; }
+		public String getEndTime() { return endTime; }
 	}
 
 	// Constructor
@@ -43,11 +44,30 @@ public class AppointmentsPage extends PageLoader {
 	public void loadPage() {
 		templateDataMap.put("title", "Appointments");
 
-		// Should only get info for one member...
-		final List<Appointment> appointments = DataManager.getAppointmentDAO().retrieveAll();
-
-		// Should get all appointments for said member...
-		//final List<Appointment> appointments = appointmentDAO.retrieveAll();
+		final DAO<Member> memberDAO = DataManager.getMemberDAO();
+		final List<Appointment> appointmentDAO = DataManager.getAppointmentDAO().retrieveAll();
+		final List<PrettifiedAppointment> appointments = new ArrayList<PrettifiedAppointment>();
+		
+		if (uid > 0) {
+			
+			boolean isAdmin = memberDAO.retrieveByID(uid).isAdmin();
+			String instructorName;
+			String studentName;
+			String date;
+			String startTime;
+			String endTime;
+			for (Appointment appointment : appointmentDAO) {
+				if (isAdmin || appointment.getStudentID() == uid || appointment.getInstructorID() == uid) {
+					instructorName = memberDAO.retrieveByID(appointment.getInstructorID()).getDisplayName();
+					studentName = memberDAO.retrieveByID(appointment.getStudentID()).getDisplayName();
+					date = appointment.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+					startTime = appointment.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+					endTime = appointment.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+					appointments.add(new PrettifiedAppointment(appointment.getRecID(), instructorName, studentName, date, startTime, endTime));
+				}
+			}
+	
+		}
 
 		// FreeMarker
 		templateDataMap.put("appointments", appointments);

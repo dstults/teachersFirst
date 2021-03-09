@@ -154,14 +154,14 @@ public class MemberMemoryDAO implements DAO<Member> {
 	private void addDemoData() {
 		logger.debug("Creating demo data...");
 
-		insert(new Member("debug", "Password01", "Debug Student-Instructor-Admin", "f", "", "111-111-1111", "", "debug@lwtech.edu", true, true, true));
-		insert(new Member("darren", "Password01", "Darren Instructor-Admin", "m", "", "222-111-1111", "", "darren@lwtech.edu", false, true, true));
-		insert(new Member("tanya", "Password01", "Tanya Student-Instructor", "f", "", "333-111-1111", "", "tanya@lwtech.edu", true, true, false));
-		insert(new Member("edmund", "Password01", "Edmund Student-Admin", "m", "", "444-111-1111", "", "edmund@lwtech.edu", true, false, true));
-		insert(new Member("fred", "Password01", "Fred Admin", "m", "", "555-111-1111", "", "fred@lwtech.edu", false, false, true));
-		insert(new Member("susan", "Password01", "Susan Instructor", "f", "", "666-111-1111", "", "susan@lwtech.edu", false, true, false));
-		insert(new Member("ben", "Password01", "Ben Student", "m", "", "777-111-1111", "", "ben@lwtech.edu", true, false, false));
-		insert(new Member("betty", "Password01", "Betty Student", "f", "", "888-111-1111", "", "betty@lwtech.edu", true, false, false));
+		insert(new Member("debug", "Password01", "Null User", "f", "", "111-111-1111", "", "debug@lwtech.edu", false, false, false));
+		insert(new Member("darren", "Password01", "Darren S.", "m", "", "222-111-1111", "", "darren@lwtech.edu", false, true, true));
+		insert(new Member("tanya", "Password01", "Tanya F.", "f", "", "333-111-1111", "", "tanya@lwtech.edu", true, true, false));
+		insert(new Member("edmund", "Password01", "Edmund P.", "m", "", "444-111-1111", "", "edmund@lwtech.edu", true, false, true));
+		insert(new Member("fred", "Password01", "Fred A.", "m", "", "555-111-1111", "", "fred@lwtech.edu", false, false, true));
+		insert(new Member("susan", "Password01", "Susan I.", "f", "", "666-111-1111", "", "susan@lwtech.edu", false, true, false));
+		insert(new Member("ben", "Password01", "Ben S.", "m", "", "777-111-1111", "", "ben@lwtech.edu", true, false, false));
+		insert(new Member("betty", "Password01", "Betty S.", "f", "", "888-111-1111", "", "betty@lwtech.edu", true, false, false));
 
 		logger.info(size() + " records inserted");
 	}

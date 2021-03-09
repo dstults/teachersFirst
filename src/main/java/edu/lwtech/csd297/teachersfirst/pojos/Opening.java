@@ -8,32 +8,32 @@ import edu.lwtech.csd297.teachersfirst.DateHelpers;
 public class Opening {
 
 	private int recID;
-	private int teacherID;
+	private int instructorID;
 	private Timestamp startTime;
 	private Timestamp endTime;
 
 	// ----------------------------------------------------------------	
 
-	public Opening(int teacherID,
+	public Opening(int instructorID,
 			int startYear, int startMonth, int startDay, int startHour, int startMinute,
 			int endYear, int endMonth, int endDay, int endHour, int endMinute) {
 
-		this(-1, teacherID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0), 
+		this(-1, instructorID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0), 
 				DateHelpers.toTimestamp(endYear, endMonth, endDay, endHour, endMinute, 0));
 	}
 
-	public Opening(int teacherID, Timestamp startTime, Timestamp endTime) {
+	public Opening(int instructorID, Timestamp startTime, Timestamp endTime) {
 
-		this(-1, teacherID, startTime, endTime);
+		this(-1, instructorID, startTime, endTime);
 	}
 
-	public Opening(int recID, int teacherID, Timestamp startTime, Timestamp endTime) {
+	public Opening(int recID, int instructorID, Timestamp startTime, Timestamp endTime) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		//TODO: input validation
 
 		this.recID = recID;
-		this.teacherID = teacherID;
+		this.instructorID = instructorID;
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
@@ -64,8 +64,8 @@ public class Opening {
 		return this.endTime;
 	}
 	
-	public int getTeacherID() {
-		return this.teacherID;
+	public int getInstructorID() {
+		return this.instructorID;
 	}
 
 	public String getName() {
@@ -76,7 +76,7 @@ public class Opening {
 
 	@Override
 	public String toString() {
-		return "Opening/" + this.teacherID + "@" + this.startTime.toString() + "-" + this.endTime.toString();
+		return "Opening/" + this.instructorID + "@" + this.startTime.toString() + "-" + this.endTime.toString();
 	}
 
 }

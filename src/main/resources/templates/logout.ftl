@@ -3,9 +3,6 @@
 <body>
 <#include "header.ftl">
 <div class="logout">
-	<p>User ID: ${userId}</p>
-	<p>User Name: ${userName}</p>
-
 	<#if userId lte 0>
 	<p>You're not logged in!</p>
 	<#else>
@@ -16,3 +13,4 @@
 	</#if>
 </div>
 </body>
+</html>
