@@ -21,7 +21,7 @@
 		<p>Available from: ${openingStartTime}</p>
 		<p>Available till: ${openingEndTime}</p>
 
-		<label for="appointmentStartTime">Choose a start time:</label>
+		<label for="appointmentStartTime">Choose a start time: </label>
 		<select name="appointmentStartTime" id="appointmentStartTime">
 			<#list possibleStartTimes as possibleStartTime>
 				<#if possibleStartTime = defaultStartTime>

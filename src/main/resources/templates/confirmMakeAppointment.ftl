@@ -8,6 +8,7 @@
 <#else>
 
 <div class="fixed-width-subpage">
+	<div class="confirm-appointment" style="width: 80%;">
 
 	<p>Please confirm that you'd like to make an appointment:</p>
 	<p>Student: ${studentName}</p>
@@ -15,7 +16,7 @@
 	<p>Date: ${date}</p>
 	<p>Starting: ${appointmentStartTime}</p>
 	<p>Ending: ${appointmentEndTime}</p>
-	<br>
+	<br style="line-height: 90%;">
 	<p>Does everything look correct?</p>
 	<p>Wait, I need to fix something: <a href="/make_appointment?studentId=${studentId}&instructorId=${instructorId}&date=${date}&openingStartTime=${openingStartTime}&openingEndTime=${openingEndTime}&appointmentStartTime=${appointmentStartTime}&appointmentEndTime=${appointmentEndTime}">Go back.</a></p>
 
@@ -26,9 +27,9 @@
 		<input type="hidden" name="date" value="${date}">
 		<input type="hidden" name="appointmentStartTime" value="${appointmentStartTime}">
 		<input type="hidden" name="appointmentEndTime" value="${appointmentEndTime}">
-		<input type="submit" value="Make appointment">
+		<input type="submit" value="Confirm appointment">
 	</form>
-
+	</div>
 </div>
 
 </#if>

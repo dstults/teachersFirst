@@ -55,7 +55,7 @@ body{
 .slightly-lower {
 	top: 50px;
 }
-a{
+header a, .fake-buttons a{
     text-decoration: none;
     color: black;
 }
@@ -151,7 +151,7 @@ table, th, td{
     padding: 15px 20px;
 	text-align: center;
 }
-.make-appointment{
+.make-appointment, .confirm-appointment{
     margin: auto;
     width: fit-content;
     font-size: 2rem;
@@ -160,7 +160,10 @@ table, th, td{
     font-weight: bold;
     line-height: 200%;
 }
-.make-appointment input[type=submit]{
+.make-appointment label{
+    margin-right: 1rem;
+}
+.make-appointment input[type=submit], .confirm-appointment input[type=submit]{
     display: block;
     margin-top: 1rem;
 }
@@ -202,6 +205,15 @@ input[type=submit]{
 input[type=submit]:hover{
     background-color: var(--primaryHighlightDark);
 }
+.please-login{
+    background-color: var(--primaryHighlight);
+    text-align: center;
+    font-size: 1.8rem;
+    width: fit-content;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: auto;
+}
 
 /* utilized by forms */
 .fixed-width-subpage {
@@ -212,7 +224,6 @@ input[type=submit]:hover{
 }
 .fixed-width-subpage p{
     line-height: 200%;
-    margin-top: 8rem;
 }
 .required{
     color: red;
@@ -234,9 +245,12 @@ input[type=radio]{
 }
 .profile-page{
     margin: auto;
-    text-align: center;
-    line-height: 200%;
+    width: fit-content;
     font-size: 2rem;
+    text-align: left;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 200%;
 }
 .profile-page p{
     display: block;

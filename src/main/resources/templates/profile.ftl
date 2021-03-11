@@ -12,10 +12,10 @@
 <#else>
 
 	<div class="profile-page">
-		<p>Record ID: ${member.recID}</p>
+		<#if isAdmin><p>Record ID: ${member.recID}</p></#if>
 		<p>Username: ${member.loginName}</p>
 		<p>Your name: ${member.displayName}</p>
-		<p>Birthdate: ${member.birthdate}</p>
+		<#if isAdmin><p>${member.birthdate}</p></#if>
 		<p>Gender: ${member.gender}</p>
 		<p>Teacher notes: ${member.teacherNotes}</p>
 		<p>Phone number: ${member.phone1}</p>
