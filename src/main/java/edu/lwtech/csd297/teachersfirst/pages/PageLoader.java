@@ -50,17 +50,15 @@ public abstract class PageLoader {
 		templateDataMap = new HashMap<>();
 
 		// Handle session / cookies
-		String userIdRaw = getSessionValue("USER_ID", "0");
-		int userId = userIdRaw != null && userIdRaw != "" ? Integer.parseInt(userIdRaw) : 0;
-		uid = userId; // for use later amid pages
+		uid = Security.getUserId(request);
 		boolean isAdmin = false;
 		boolean isInstructor = false;
 		boolean isStudent = false;
 		if (uid > 0) {
 			Member member = DataManager.getMemberDAO().retrieveByID(uid);
-			isAdmin = member.isAdmin();
-			isInstructor = member.isInstructor();
-			isStudent = member.isStudent();
+			isAdmin = member.getIsAdmin();
+			isInstructor = member.getIsInstructor();
+			isStudent = member.getIsStudent();
 		}
 		String userName = getSessionValue("USER_NAME", "Stranger");
 		String message = getGetValue("message", "");
@@ -68,7 +66,7 @@ public abstract class PageLoader {
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
 		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);
 		templateDataMap.put("showWelcome", true);
-		templateDataMap.put("userId", userId);
+		templateDataMap.put("userId", uid);
 		templateDataMap.put("userName", userName);
 		templateDataMap.put("isAdmin", isAdmin);
 		templateDataMap.put("isInstructor", isInstructor);

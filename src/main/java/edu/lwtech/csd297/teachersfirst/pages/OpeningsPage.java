@@ -15,19 +15,22 @@ public class OpeningsPage extends PageLoader {
 
 	public class PrettifiedOpening {
 
-		private String instructor;
+		private String instructorName;
+		private String instructorId;
 		private String date;
 		private String startTime;
 		private String endTime;
 
-		public PrettifiedOpening(String instructor, String date, String startTime, String endTime) {
-			this.instructor = instructor;
+		public PrettifiedOpening(String instructorName, String instructorId, String date, String startTime, String endTime) {
+			this.instructorName = instructorName;
+			this.instructorId = instructorId;
 			this.date = date;
 			this.startTime = startTime;
 			this.endTime = endTime;
 		}
 
-		public String getInstructor() { return instructor; }
+		public String getInstructorName() { return instructorName; }
+		public String getInstructorId() { return instructorId; }
 		public String getDate() { return date; }
 		public String getStartTime() { return startTime; }
 		public String getEndTime() { return endTime; }
@@ -59,12 +62,6 @@ public class OpeningsPage extends PageLoader {
 		LocalDateTime startTime;
 		LocalDateTime endTime;
 
-		//for (String zone : ZoneId.getAvailableZoneIds()) {
-			//String zone2 = zone.toLowerCase();
-			//if (zone2.contains("pst") || zone2.contains("pacific") || zone2.contains("pdt") || zone2.contains("los"))
-				//logger.debug(zone);
-		//}
-
 		// This would really benefit from specific SQL query optimization
 		for (int day = 0; day < 7; day++) {
 			// make a new list for each day and add it to days list
@@ -83,32 +80,16 @@ public class OpeningsPage extends PageLoader {
 						iOpening.getStartTime().toLocalDateTime().compareTo(endTime) < 0) {
 
 					openings.add(new PrettifiedOpening(
-							memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName(), 
-							dateToday,	
-							iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")), 
+							memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName(),
+							Integer.toString(iOpening.getInstructorID()), // Freemarker likes to add commmas, I could add ?c to it too
+							dateToday,
+							iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
 							iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")))
 					);
 				}
 			}
 		}
 		
-		/*
-		openings.add(new DummyOpening("Fred", "12:00 pm", "6:00 pm"));
-		openings.add(new DummyOpening("Darren", "1:00 pm", "8:00 pm"));
-		days.add(openings);
-		for(int i = 0; i < 4; i++) {
-			openings = new LinkedList<>();
-			openings.add(new DummyOpening("Fred", "6:00 pm", "9:00 pm"));
-			if (i % 2 == 0) openings.add(new DummyOpening("Tanya", "2:00 pm", "5:00 pm"));
-			if (i % 2 == 1) openings.add(new DummyOpening("Edmund", "5:00 pm", "9:00 pm"));
-			days.add(openings);
-		}
-		openings = new LinkedList<>();
-		days.add(openings);
-		openings = new LinkedList<>();
-		days.add(openings);
-		*/
-
 		// FreeMarker
 		templateName = "openings.ftl";
 		templateDataMap.put("startDate", sundayString);

@@ -71,4 +71,18 @@ public class Security {
 		request.getSession().setAttribute("USER_NAME", member.getDisplayName());
 	}
 
+	// This has its own process to ensure security
+	public static int getUserId(HttpServletRequest request) {
+		if (request.getSession().getAttribute("USER_ID") == null) return 0;
+		if (request.getSession().getAttribute("USER_ID").toString() == null) return 0;
+		if (request.getSession().getAttribute("USER_ID").toString().isEmpty()) return 0;
+		String uid = request.getSession().getAttribute("USER_ID").toString();
+		try {
+			return Integer.parseInt(uid);
+		} catch (NumberFormatException e) {
+			logger.fatal("SECURITY RISK: Invalid data stored in session's USER_ID value!");
+		}
+		return 0;
+	}
+
 }

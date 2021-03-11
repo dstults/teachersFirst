@@ -27,7 +27,7 @@
 				<td>
 					<#list day as openingData>
 						<#if openingData?has_content>
-							<br><a style="color: blue;" href="/make_appointment?instructor=${openingData.instructor}&date=${openingData.date}&startTime=${openingData.startTime}&endTime=${openingData.endTime}">${openingData.instructor}:<br>${openingData.startTime} - ${openingData.endTime}<br></a>
+							<br><a style="color: blue;" href="/make_appointment?instructorId=${openingData.instructorId}&date=${openingData.date}&openingStartTime=${openingData.startTime}&openingEndTime=${openingData.endTime}">${openingData.instructorName}:<br>${openingData.startTime} - ${openingData.endTime}<br></a>
 						<#else>
 							No openings!
 						</#if>

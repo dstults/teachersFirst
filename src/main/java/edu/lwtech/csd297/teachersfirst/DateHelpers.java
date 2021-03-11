@@ -141,4 +141,31 @@ public class DateHelpers {
 		return ZoneId.systemDefault().toString();
 	}
 
+	public static String convertMinutesToHM(int minutes) {
+		if (minutes >= 120) {
+			return (minutes / 60) + " hours " + (minutes % 60) + " minutes";
+		} else if (minutes >= 60) {
+			return (minutes / 60) + " hour " + (minutes % 60) + " minutes";
+		} else {
+			return minutes + " minutes";
+		}
+	}
+
+	public static String convertDateStartTimeAndDurationToEndTime(String date, String startTime, String duration) {
+		final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+		final LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, timeFormatter);
+		String[] durationVals = duration.split(" ");
+		int minutes;
+		try {
+			if (durationVals.length > 2) {
+				minutes = 60 * Integer.parseInt(durationVals[0]) + Integer.parseInt(durationVals[2]);
+			} else {
+				minutes = Integer.parseInt(durationVals[0]);
+			}
+		} catch (NumberFormatException e) {
+			return "";
+		}
+		return startDateTime.plusMinutes(minutes).format(DateTimeFormatter.ofPattern("HH:mm"));
+	}
+
 }

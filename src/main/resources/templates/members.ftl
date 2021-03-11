@@ -11,20 +11,20 @@
 		<tr>
 			<th>Rec ID</th>
 			<th>Username</th>
-			<#if isAdmin><th>Birthdate</th><#else><th>Age</th></#if>
+			<#if isAdmin><th>Birthdate</th></#if>
+			<th>Age</th>
 			<th>Gender</th>
 			<th>Contact</th>
 			<#if isAdmin || isInstructor><th>Notes</th></#if>
 		</tr>
 		<#list members as member>
 			<tr>
-				<td>${member.recID}</td>
-				<td>${member.displayName}</td>
+				<td>${member.recID?c}</td>
+				<td><a href="/profile?memberId=${member.recID?c}">${member.displayName}</a></td>
 				<#if isAdmin>
 				<td>${member.birthdate}</td>
-				<#else>
-					<#if member.age > 130><td>-</td><#else><td>${member.age}</td></#if>
 				</#if>
+				<#if member.age gt 130><td>-</td><#else><td>${member.age}</td></#if>
 				<td>${member.gender}</td>
 				<td>${member.phone1}<br>${member.email}</td>
 				<#if isAdmin || isInstructor><td>${member.teacherNotes}</td></#if>

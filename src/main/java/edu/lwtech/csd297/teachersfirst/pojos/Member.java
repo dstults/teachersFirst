@@ -37,10 +37,10 @@ public class Member {
 	}
 
 	// no record id, yes birthdate -- used in code
-	public Member(String loginName, String passwordHash, String displayName, Timestamp timestamp, String gender, String teacherNotes,
+	public Member(String loginName, String passwordHash, String displayName, Timestamp birthdate, String gender, String teacherNotes,
 					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
-		this(-1, loginName, passwordHash, displayName, timestamp, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 	// everything
@@ -142,15 +142,15 @@ public class Member {
 		return this.email;
 	}
 
-	public boolean isStudent() {
+	public boolean getIsStudent() {
 		return this.isStudent;
 	}
 
-	public boolean isInstructor() {
+	public boolean getIsInstructor() {
 		return this.isInstructor;
 	}
 
-	public boolean isAdmin() {
+	public boolean getIsAdmin() {
 		return this.isAdmin;
 	}
 

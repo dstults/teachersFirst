@@ -16,10 +16,14 @@
 			<ul class="top-nav-list">
 				<li><a href="/services" class="nav-link">Services</a></li>
 				<li><a href="/openings" class="nav-link">Openings</a></li>
+				<#if userId gt 0>
 				<li><a href="/appointments" class="nav-link">Appointments</a></li>
 				<li><a href="/calendar" class="nav-link">Calendar</a></li>
 				<li><a href="/profile" class="nav-link">Profile</a></li>
+				<#if isAdmin || isInstructor>
 				<li><a href="/members" class="nav-link">Members</a></li>
+				</#if>
+				</#if>
 			</ul>
 		</nav>
 	</header>

@@ -5,6 +5,10 @@
 
 <#if userId lte 0>
 	<#include "please_login.ftl">
+<#elseif !member?has_content>
+	<div class="profile-page">
+		<p>No user data to show.</p>
+	</div>
 <#else>
 
 	<div class="profile-page">

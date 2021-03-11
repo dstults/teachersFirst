@@ -50,7 +50,7 @@ public class AppointmentsPage extends PageLoader {
 		
 		if (uid > 0) {
 			
-			boolean isAdmin = memberDAO.retrieveByID(uid).isAdmin();
+			boolean isAdmin = memberDAO.retrieveByID(uid).getIsAdmin();
 			String instructorName;
 			String studentName;
 			String date;
