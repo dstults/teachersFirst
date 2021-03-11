@@ -15,6 +15,19 @@ We've got you covered! For the low low price of free you can have your very own 
 
 Get yours today!
 
-### Screenshots:
+### Roadmap to Success
+ - v0.0 Getting started
+ - v0.1 Member pojos, view, and registration
+ - v0.2 Opening and Appointment pojos and views, and registration
+ - v0.3 Basic functions look like they work in unison as designed <--- Expected by end of Sprint 3
+ - v0.4 Cookie integration & database integration & basic admin/edit functions
+ - v0.5 Error validation and Transaction logging with fundamental credits <--- Expected by end of Sprint 4
+ - v0.7 Full admin features and polish to Minimal Viable Product <--- Expected by end of Sprint 5
 
-TODO: Add screenshots
+#### End of quarter!
+Expect that the minimal viable product has been reached and is ready for rapid deployment.
+
+## In the future:
+ - v0.8 Review system
+ - v0.9 Credit economy fully integrated
+ - v1.0 Professional initial release

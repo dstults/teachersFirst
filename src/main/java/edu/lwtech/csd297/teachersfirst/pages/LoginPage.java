@@ -15,10 +15,10 @@ public class LoginPage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Log In");
-		String name = getGetValue("name", "");
+		String loginName = getGetValue("loginName", "");
 
 		// FreeMarker
-		templateDataMap.put("name", name);
+		templateDataMap.put("loginName", loginName);
 		templateName = "login.ftl";
 
 		// Go
