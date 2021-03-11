@@ -153,11 +153,11 @@ public class AppointmentMemoryDAO implements DAO<Appointment> {
 		List<Member> members = DataManager.getMemberDAO().retrieveAll();
 
 		insert(new Appointment(members.get(5).getRecID(), members.get(4).getRecID(), DateHelpers.toTimestamp("2020/03/21 15:40:00"), DateHelpers.toTimestamp("2020/03/21 16:20:00")));
-		insert(new Appointment(members.get(3).getRecID(), members.get(6).getRecID(), DateHelpers.toTimestamp("2020/07/06 23:30:00"), DateHelpers.toTimestamp("2020/07/07 00:30:00")));
+		insert(new Appointment(members.get(6).getRecID(), members.get(3).getRecID(), DateHelpers.toTimestamp("2020/07/06 23:30:00"), DateHelpers.toTimestamp("2020/07/07 00:30:00")));
 		insert(new Appointment(members.get(1).getRecID(), members.get(3).getRecID(), DateHelpers.toTimestamp("2020/08/01 12:00:00"), DateHelpers.toTimestamp("2020/08/01 13:00:00")));
-		insert(new Appointment(members.get(2).getRecID(), members.get(5).getRecID(), DateHelpers.toTimestamp("2021/01/15 15:30:00"), DateHelpers.toTimestamp("2021/01/15 16:10:00")));
+		insert(new Appointment(members.get(5).getRecID(), members.get(2).getRecID(), DateHelpers.toTimestamp("2021/01/15 15:30:00"), DateHelpers.toTimestamp("2021/01/15 16:10:00")));
 		insert(new Appointment(members.get(7).getRecID(), members.get(3).getRecID(), DateHelpers.toTimestamp(2021, 2, 20, 4, 30, 0), DateHelpers.toTimestamp(2021, 2, 20, 6, 30, 0)));
-        insert(new Appointment(members.get(7).getRecID(), members.get(3).getRecID(), DateHelpers.toTimestamp(2021, 2, 24, 2, 0, 0), DateHelpers.toTimestamp(2021, 2, 24, 3, 0, 0)));
+        insert(new Appointment(members.get(7).getRecID(), members.get(1).getRecID(), DateHelpers.toTimestamp(2021, 2, 24, 2, 0, 0), DateHelpers.toTimestamp(2021, 2, 24, 3, 0, 0)));
 
 		logger.info(size() + " records inserted");
 	}

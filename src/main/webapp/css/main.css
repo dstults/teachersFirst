@@ -14,6 +14,9 @@ body{
     height: 100%;
     background-color: var(--backgroundColor);
 }
+a{
+    text-decoration: none;
+}
 .landing-text{
     margin: auto;
     width: 100%;
@@ -55,13 +58,13 @@ body{
 .slightly-lower {
 	top: 50px;
 }
-header a, .fake-buttons a{
-    text-decoration: none;
-    color: black;
-}
 header{
     width: 100%;
     margin-bottom: 5rem;
+}
+header a, .fake-buttons a{
+    text-decoration: none;
+    color: black;
 }
 .top-nav-list{
 	margin: 0 auto;
@@ -86,6 +89,8 @@ li{
 }
 .nav-link:hover, .nav-link:focus, .mouseover:hover, .mouseover:focus {
     font-weight: bold;
+	transform: scale(1.1);
+	transition: all 0.1s ease-in-out;
 }
 .appointments-buttons{
     float: right;
@@ -281,7 +286,7 @@ input[type=radio]{
 	overflow: hidden;
 	width: 80%;
     padding-bottom: 5rem;
-	background-color: #ffbb96;
+	background-color: var(--backgroundColorDark);
 	color: black;
     margin: auto;
 }
@@ -350,7 +355,7 @@ input[type=radio]{
 	padding-top: 10px;
 }
 .calendar td:hover{
-	background-color: #faa97d;
+	background-color: var(--backgroundColor);
     cursor: pointer;
 }
 

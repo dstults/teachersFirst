@@ -9,11 +9,22 @@ import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class DataManager {
 	
-	public static String primaryHighlight = "#ffbb96";
-	public static String primaryHighlightDark = "#faa97d";
-	public static String backgroundColor = "#ffd9c6";
+	public static String primaryHighlightAdmin = "#96bbff";
+	public static String primaryHighlightDarkAdmin = "#7da9fa";
+	public static String backgroundColorAdmin = "#c6d9ff";
+	public static String backgroundColorDarkAdmin = "#96bbff"; // same as primary highlight?
 
-	public static String websiteTitle = "CoolTutors";
+	public static String primaryHighlightInstructor = "#bbff96";
+	public static String primaryHighlightDarkInstructor = "#a9fa7d";
+	public static String backgroundColorInstructor = "#d9ffc6";
+	public static String backgroundColorDarkInstructor = "#bbff96"; // same as primary highlight?
+
+	public static String primaryHighlightGeneral = "#ffbb96";
+	public static String primaryHighlightDarkGeneral = "#faa97d";
+	public static String backgroundColorGeneral = "#ffd9c6";
+	public static String backgroundColorDarkGeneral = "#ffbb96"; // same as primary highlight?
+
+	public static String websiteTitle = "CoolTutors.org";
 	public static String websiteSubtitle = "The coolest tutors on the web!";
 
 	public static final List<DAO<?>> allDAOs = new ArrayList<>();

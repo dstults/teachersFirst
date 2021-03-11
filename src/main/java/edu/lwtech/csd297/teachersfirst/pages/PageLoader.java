@@ -23,6 +23,9 @@ public abstract class PageLoader {
 	protected String templateName = null;
 	protected Map<String, Object> templateDataMap;
 	protected int uid;
+	protected boolean isAdmin = false;
+	protected boolean isInstructor = false;
+	protected boolean isStudent = false;
 
 	// Static Declarations (shared variables to handle freemarker and DAOs)
 
@@ -51,9 +54,6 @@ public abstract class PageLoader {
 
 		// Handle session / cookies
 		uid = Security.getUserId(request);
-		boolean isAdmin = false;
-		boolean isInstructor = false;
-		boolean isStudent = false;
 		if (uid > 0) {
 			Member member = DataManager.getMemberDAO().retrieveByID(uid);
 			isAdmin = member.getIsAdmin();

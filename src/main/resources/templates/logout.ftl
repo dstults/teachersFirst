@@ -7,8 +7,9 @@
 	<p>You're not logged in!</p>
 	<#else>
 	<p>
-		Click here to logout:
-		<form method="post" action="/"><input type="hidden" name="action" value="log_out"><input type="submit" value="Logout"></form>
+		Click here to log out:
+		<br>
+		<form method="post" action="/"><input type="hidden" name="action" value="log_out"><input type="submit" value="Log Out"></form>
 	</p>
 	</#if>
 </div>

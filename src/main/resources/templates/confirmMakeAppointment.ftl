@@ -27,7 +27,7 @@
 		<input type="hidden" name="date" value="${date}">
 		<input type="hidden" name="appointmentStartTime" value="${appointmentStartTime}">
 		<input type="hidden" name="appointmentEndTime" value="${appointmentEndTime}">
-		<input type="submit" value="Confirm appointment">
+		<input type="submit" value="Confirm Appointment">
 	</form>
 	</div>
 </div>
