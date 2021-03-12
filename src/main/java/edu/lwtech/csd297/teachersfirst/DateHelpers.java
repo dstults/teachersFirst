@@ -43,6 +43,14 @@ public class DateHelpers {
 		return new Timestamp(timeInMillis);
 	}
 
+	public static String toSqlDatetimeString(Timestamp timestamp) {
+		return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	}
+
+	public static String toSqlDatetimeString(LocalDateTime localDateTime) {
+		return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	}
+
 	public static int calculateAgeFrom(Timestamp birthdate) {
 		// Thanks to: https://howtodoinjava.com/java/calculate-age-from-date-of-birth/
 		int years = 0;
