@@ -30,7 +30,10 @@ public class Appointment {
 	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
-		//TODO: input validation
+		if (studentID < -1) throw new IllegalArgumentException("Invalid argument: studentID < -1");
+		if (instructorID < -1) throw new IllegalArgumentException("Invalid argument: instructorID < -1");
+		if (startTime == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
+		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
 		
 		this.recID = recID;
 		this.studentID = studentID;
@@ -80,6 +83,23 @@ public class Appointment {
 	@Override
 	public String toString() {
 		return "Appointment/" + this.studentID + ">" + this.instructorID + "@" + this.startTime.toString() + "-" + this.endTime.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false; // can't be same as null
+		if (obj == this) return true; // same as self is automatically true
+		if (!(obj instanceof Appointment)) return false; // must be same type of object
+
+		Appointment other = (Appointment) obj; // cast to compare fields
+		if (this.recID != other.recID) return false;
+		if (this.studentID != other.studentID) return false;
+		if (this.instructorID != other.instructorID) return false;
+		if (!this.startTime.equals(other.startTime)) return false;
+		if (!this.endTime.equals(other.endTime)) return false;
+
+		// no failures, good match
+		return true;
 	}
 
 }
