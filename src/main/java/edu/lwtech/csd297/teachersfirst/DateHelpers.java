@@ -28,6 +28,23 @@ public class DateHelpers {
 		return toTimestamp(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second);
 	}
 
+	public static Timestamp fromSQL(String sqlDatetime) {
+		///String choppedDecisecond = sqlDatetime.split(".")[0];
+		String choppedDecisecond = sqlDatetime.substring(0, sqlDatetime.length() - 2);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date;
+		try {
+			date = sdf.parse(choppedDecisecond);
+		} catch (ParseException e) {
+			// This cannot be called during testing
+			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
+			e.printStackTrace();
+			return null;
+		}
+		long timeInMillis = date.getTime();
+		return new Timestamp(timeInMillis);
+	}
+
 	public static Timestamp toTimestamp(String myDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date;

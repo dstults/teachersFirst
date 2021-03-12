@@ -37,8 +37,13 @@ public class DataManager {
 
 	public static void initializeDAOs() throws ServletException {
 
-		DataManager.memberDAO = new MemberMemoryDAO();
-		if (!DataManager.memberDAO.initialize("")) throw new UnavailableException("Unable to initialize the memberDAO.");
+		String initParams = "jdbc:mariadb://lwtech-csd297.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/mercer";
+
+        initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
+        initParams += "&user=mercer&password=mercer-rox";    
+
+		DataManager.memberDAO = new MemberSqlDAO();
+		if (!DataManager.memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
 		DataManager.allDAOs.add(DataManager.memberDAO);
 
 		DataManager.serviceDAO = new ServiceMemoryDAO();
