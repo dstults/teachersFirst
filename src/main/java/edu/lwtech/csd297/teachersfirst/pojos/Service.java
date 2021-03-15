@@ -2,12 +2,12 @@ package edu.lwtech.csd297.teachersfirst.pojos;
 
 import java.util.*;
 
-public class Service {
+public class Service implements IJsonnable {
 
 	private int recID; // Database ID (or -1 if it isn't in the database yet)
 	private String name;
 	private String description;
-	private String teachers;
+	private String instructors;
 
 	public Service(String name, String description, String teachers) {
 
@@ -34,7 +34,7 @@ public class Service {
 		this.recID = recID;
 		this.name = name;
 		this.description = description;
-		this.teachers = teachers;
+		this.instructors = teachers;
 	}
 
 	public int getRecID() {
@@ -75,15 +75,24 @@ public class Service {
 		this.description = description;
 	}
 
-	public String getTeachers() {
-		return this.teachers;
+	public String getInstructors() {
+		return this.instructors;
+	}
+
+	public List<String> getInstructorList() {
+		List<String> instructors = new ArrayList<>();
+		String[] instructorsSplit = this.instructors.split(",");
+		for (String s : instructorsSplit) {
+			instructors.add(s.trim());
+		}
+		return instructors;
 	}
 
 	public void setTeachers(String teachers) {
 		if (teachers == null)
 			throw new IllegalArgumentException("Invalid argument: name is null");
 
-		this.teachers = teachers;
+		this.instructors = teachers;
 	}
 
 	// ----------------------------------------------------------------
@@ -93,7 +102,7 @@ public class Service {
 		String record = "(R:" + this.recID + ") ";
 		String descript = " (D:" + this.description.substring(0, Math.min(this.description.length(), 24)) + ")";
 
-		return record + this.name + "/" + this.teachers + descript;
+		return record + this.name + "/" + this.instructors + descript;
 	}
 
 	@Override
@@ -106,11 +115,19 @@ public class Service {
 		if (this.recID != other.recID) return false;
 		if (!this.name.equals(other.name)) return false;
 		if (!this.description.equals(other.description)) return false;
-		if (!this.teachers.equals(other.teachers)) return false;
+		if (!this.instructors.equals(other.instructors)) return false;
 
 		// no failures, good match
 		return true;
 	}
 
+	@Override
+	public String toJson() {
+		return "{\"recId\":\"" + this.recID +
+		"\",\"name\":\"" + this.name +
+		"\",\"description\":\"" + this.description +
+		"\",\"instructors\":\"" + this.instructors +
+		"\"}";
+	}
 
 }

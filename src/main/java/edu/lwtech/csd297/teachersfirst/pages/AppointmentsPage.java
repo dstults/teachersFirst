@@ -33,7 +33,7 @@ public class AppointmentsPage extends PageLoader {
 		public String getDate() { return date; }
 		public String getStartTime() { return startTime; }
 		public String getEndTime() { return endTime; }
-		public String toJson() {
+		@Override public String toJson() {
 			return "{\"id\":\"" + this.id +
 					"\",\"student\":\"" + this.student +
 					"\",\"date\":\"" + this.date +
@@ -56,7 +56,7 @@ public class AppointmentsPage extends PageLoader {
 		final List<PrettifiedAppointment> futureAppointments = new ArrayList<PrettifiedAppointment>();		
 		final List<PrettifiedAppointment> pastAppointments= new ArrayList<PrettifiedAppointment>();
 		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
-		logger.debug("Json Mode: " + (jsonMode ? "true" : "false"));
+		//logger.debug("Json Mode: " + (jsonMode ? "true" : "false"));
 		String filterMemberIdString = QueryHelpers.getGet(request, "memberId");
 		int filterMemberId;
 		if (!filterMemberIdString.isEmpty() && isAdmin) {
@@ -105,24 +105,9 @@ public class AppointmentsPage extends PageLoader {
 
 		// Go
 		if (jsonMode) {
-			int i = 0;
-			//TODO: 2 JSON arrays -- can't cast to List<IJsonnable> and use JSONUtils so we do it manually for now:
-			StringBuilder sb = new StringBuilder("{");
-			for (PrettifiedAppointment appointment : futureAppointments) {
-				if (i > 0) sb.append(",");
-				sb.append(appointment.toJson());
-				i++;
-			}
-			sb.append("},{");
-			i = 0;
-			for (PrettifiedAppointment appointment : pastAppointments) {
-				if (i > 0) sb.append(",");
-				sb.append(appointment.toJson());
-				i++;
-			}
-			sb.append("}");
-			logger.debug("Json: " + sb.toString());
-			trySendJson(sb.toString());
+			String json = JsonUtils.BuildArrays(futureAppointments, pastAppointments);
+			//logger.debug("Json: " + json);
+			trySendJson(json);
 		} else {
 
 			// FreeMarker
