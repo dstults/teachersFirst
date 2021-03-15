@@ -44,7 +44,7 @@ public class MemberSqlDAO implements DAO<Member> {
             return -1;
         }
 
-        String query = "INSERT INTO Members (loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO Members (loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?)";
 
         int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getBirthdate(), member.getGender(), member.getTeacherNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsAdmin());
         
@@ -60,7 +60,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
-        if (rows != null) {
+        if (rows != null && rows.size() > 0) {
             logger.debug("Found member!");
         } else {
             logger.debug("Did not find member.");
@@ -79,7 +79,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
-        if (rows != null) {
+        if (rows != null && rows.size() > 0) {
             logger.debug("Found member!");
         } else {
             logger.debug("Did not find member.");
@@ -94,11 +94,11 @@ public class MemberSqlDAO implements DAO<Member> {
     public Member retrieveByLoginNameAndPassword(String loginName, String passwordHash) {
         logger.debug("Trying to get Member with login name and password: " + loginName + " " + passwordHash);
         
-        String query = "SELECT * FROM Members WHERE loginName='" + loginName +"' AND passwordHash= SHA1('"+passwordHash+"');";
+        String query = "SELECT * FROM Members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('"+passwordHash+"');";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
-        if (rows != null) {
+        if (rows != null && rows.size() > 0) {
             logger.debug("Found member!");
         } else {
             logger.debug("Did not find member.");
@@ -123,7 +123,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
-        if (rows == null) {
+        if (rows == null || rows.size() == 0) {
             logger.debug("Did not find member.");
             return null;
         }
