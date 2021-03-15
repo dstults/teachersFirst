@@ -124,4 +124,14 @@ public abstract class PageLoader {
 		
 	}
 
+	protected void trySendJson(String json) {
+		// send json:
+		logger.debug("Attempting to send json...");
+		try (ServletOutputStream out = response.getOutputStream()) {
+			out.println(json);
+		} catch (IOException e) {
+			logger.error("IO Error: ", e);
+		}
+	}
+
 }

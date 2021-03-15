@@ -54,6 +54,14 @@ public class QueryHelpers {
 		return getGet(request, keyName, defaultValue);
 	}
 
+	public static boolean getGetBool(HttpServletRequest request, String keyName) {
+		if (request.getParameter(keyName) == null) return false; // /appointments => should return false
+		if (request.getParameter(keyName).isEmpty()) return true; // /appointments?json => should return true
+		if (request.getParameter(keyName).toString().equals("0")) return false; // /appointments?json=0 => should return false
+		if (request.getParameter(keyName).toString().toLowerCase().equals("false")) return false; // /appointments?json=FALSE => should return false
+		return true; // anything else should return true
+	}
+
 	public static String getGet(HttpServletRequest request, String keyName, String defaultValue) {
 		if (request.getParameter(keyName) == null) return defaultValue;
 		if (request.getParameter(keyName).isEmpty()) return defaultValue;

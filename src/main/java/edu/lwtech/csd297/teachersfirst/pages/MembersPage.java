@@ -18,7 +18,14 @@ public class MembersPage extends PageLoader {
 		templateDataMap.put("title", "Members");
 
 		// Should only show members that it should show based on who's querying...
-		final List<Member> members = DataManager.getMemberDAO().retrieveAll();
+		final List<Member> members;  // let's play effectively final games...
+
+		if (uid > 0) {
+			if (isAdmin || isInstructor) members = DataManager.getMemberDAO().retrieveAll();
+			else members = List.of(DataManager.getMemberDAO().retrieveByID(uid));
+		} else {
+			members = null;
+		}
 		
 		// FreeMarker
 		templateName = "members.ftl";
