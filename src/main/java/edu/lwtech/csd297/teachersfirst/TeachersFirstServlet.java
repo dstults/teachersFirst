@@ -87,9 +87,6 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "/openings":
 					new OpeningsPage(request, response).loadPage();
 					break;
-				case "/calendar":
-					new CalendarPage(request, response).loadPage();
-					break;
 				case "/profile":
 					new ProfilePage(request, response).loadPage();
 					break;

@@ -12,17 +12,17 @@ public class DataManager {
 	public static String primaryHighlightAdmin = "#96bbff";
 	public static String primaryHighlightDarkAdmin = "#7da9fa";
 	public static String backgroundColorAdmin = "#c6d9ff";
-	public static String backgroundColorDarkAdmin = "#96bbff"; // same as primary highlight?
+	public static String backgroundColorLightAdmin = "#dde5ff";
 
 	public static String primaryHighlightInstructor = "#bbff96";
 	public static String primaryHighlightDarkInstructor = "#a9fa7d";
 	public static String backgroundColorInstructor = "#d9ffc6";
-	public static String backgroundColorDarkInstructor = "#bbff96"; // same as primary highlight?
+	public static String backgroundColorLightInstructor = "#e5ffdd";
 
 	public static String primaryHighlightGeneral = "#ffbb96";
 	public static String primaryHighlightDarkGeneral = "#faa97d";
 	public static String backgroundColorGeneral = "#ffd9c6";
-	public static String backgroundColorDarkGeneral = "#ffbb96"; // same as primary highlight?
+	public static String backgroundColorLightGeneral = "#ffe5dd";
 
 	public static String websiteTitle = "CoolTutors.org";
 	public static String websiteSubtitle = "The coolest tutors on the web!";

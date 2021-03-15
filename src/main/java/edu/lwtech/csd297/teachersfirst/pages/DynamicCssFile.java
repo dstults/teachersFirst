@@ -23,21 +23,21 @@ public class DynamicCssFile extends PageLoader {
 			templateDataMap.putIfAbsent("primaryHighlight", DataManager.primaryHighlightAdmin);
 			templateDataMap.putIfAbsent("primaryHighlightDark", DataManager.primaryHighlightDarkAdmin);
 			templateDataMap.putIfAbsent("backgroundColor", DataManager.backgroundColorAdmin);
-			templateDataMap.putIfAbsent("backgroundColorDark", DataManager.backgroundColorDarkAdmin);
+			templateDataMap.putIfAbsent("backgroundColorLight", DataManager.backgroundColorLightAdmin);
 		} else if (isInstructor) {
 			templateDataMap.putIfAbsent("primaryHighlight", DataManager.primaryHighlightInstructor);
 			templateDataMap.putIfAbsent("primaryHighlightDark", DataManager.primaryHighlightDarkInstructor);
 			templateDataMap.putIfAbsent("backgroundColor", DataManager.backgroundColorInstructor);
-			templateDataMap.putIfAbsent("backgroundColorDark", DataManager.backgroundColorDarkInstructor);
+			templateDataMap.putIfAbsent("backgroundColorLight", DataManager.backgroundColorLightInstructor);
 		} else {
 			templateDataMap.putIfAbsent("primaryHighlight", DataManager.primaryHighlightGeneral);
 			templateDataMap.putIfAbsent("primaryHighlightDark", DataManager.primaryHighlightDarkGeneral);
 			templateDataMap.putIfAbsent("backgroundColor", DataManager.backgroundColorGeneral);	
-			templateDataMap.putIfAbsent("backgroundColorDark", DataManager.backgroundColorDarkGeneral);
+			templateDataMap.putIfAbsent("backgroundColorLight", DataManager.backgroundColorLightGeneral);
 		}
 
 		// Go
-		trySendResponse();
+		trySendResponse("text/css");
 	}
 
 }

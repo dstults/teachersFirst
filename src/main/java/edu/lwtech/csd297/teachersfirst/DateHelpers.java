@@ -162,7 +162,7 @@ public class DateHelpers {
 
 	public static LocalDateTime nextSaturday() {
 		final LocalDate today = LocalDate.now(homeZone);
-		return today.with(TemporalAdjusters.next(DayOfWeek.SATURDAY)).atTime(23, 59, 59); // LocalTime.MAX looks ugly when stringified
+		return today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)).atTime(23, 59, 59); // LocalTime.MAX looks ugly when stringified
 
 		/* Doesn't do timezones natively:
 		Calendar cal = Calendar.getInstance();

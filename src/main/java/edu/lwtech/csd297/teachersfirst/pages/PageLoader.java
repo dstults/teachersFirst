@@ -95,6 +95,10 @@ public abstract class PageLoader {
 	}
 
 	protected void trySendResponse() {
+		trySendResponse("");
+	}
+
+	protected void trySendResponse(String headerOverwrite) {
 
 		if (templateName == null) {
 
@@ -110,7 +114,9 @@ public abstract class PageLoader {
 
 			// Process template:
 			logger.debug("Processing Template: " + templateName);
-
+			if (headerOverwrite != "") {
+				response.setHeader("Content-Type", headerOverwrite);
+			}
 			try (PrintWriter out = response.getWriter()) {
 				Template view = freeMarkerConfig.getTemplate(templateName);
 				view.process(templateDataMap, out);

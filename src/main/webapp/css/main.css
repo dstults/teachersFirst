@@ -162,6 +162,45 @@ table, th, td{
     padding: 15px 20px;
 	text-align: center;
 }
+.calendar-date {
+	font-size: 400%;
+	color: var(--primaryHighlight);
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: auto;
+	bottom: auto;
+}
+table.openings-calendar {
+	width: auto;
+	table-layout: fixed;
+	border: 2px solid black;
+	box-shadow: 2px 2px 2px black;
+}
+table.openings-calendar th {
+	font-size: 200%;
+}
+table.openings-calendar tr {
+	min-height: 100px;
+	height: 100px;
+}
+table.openings-calendar th, table.openings-calendar td {
+	padding: 0;
+	position: relative;
+	max-width: 170px;
+	width: 170px;
+}
+table.openings-calendar div {
+	position: relative;
+	background-color: rgba(0, 0, 255, 20%);
+	color: blue;
+	margin: 0 7px 0 65px;
+	border-top: 1px solid rgba(0, 0, 0, 50%);
+	border-bottom: 1px solid rgba(0, 0, 0, 50%);
+}
+table.openings-calendar div.highlight {
+	background-color: yellow;
+}
 .make-appointment, .confirm-appointment{
     margin: auto;
     width: fit-content;
@@ -280,93 +319,28 @@ input[type=radio]{
     margin-bottom: 3rem;
 }
 
-.calendar-explanation{
-    text-align: center;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-size: 2rem;
-    margin-top: -2rem;
-    margin-bottom: 2rem;
-}
-.calendar{
-	border-radius: 4px;
-	overflow: hidden;
-	width: 80%;
-    padding-bottom: 5rem;
-	background-color: var(--backgroundColorDark);
-	color: black;
-    margin: auto;
-}
-.calendar table{
-    margin: auto;
-}
-.calendar h2, .calendar h3{
-	font-size: 2rem;
-	text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 1rem;
-}
-.calendar .col{
-	position: relative;
-	height: 100%;
-}
-.calendar tr{
-	margin: 0px;
-    width: 100%;
-}
-.calendar .dates-col{
-	width: 100%;
-}
-.calendar .dates-col h2{
-	color: black;
-    margin-top: 1rem;
-}
-.calendar table{
-    width: 80%;
-    font-size: 1.2rem;
-}
-.calendar .weekdays{
-    width: 100%;
-}
-.calendar table,
-.calendar th,
-.calendar td{
-	border: none;
-    padding: 20px 25px;
-}
-.calendar th a,
-.calendar td a{
-	color: black;
-    width: 100px;
-    text-align: center;
-}
-.calendar th a{
-	width: 100px;
-	text-align: center;
-	margin-bottom: 20px;
-	font-size: 1.5rem;
-}
-.calendar td{
-	width: 100px;
-    text-align: center;
-}
-.calendar td a{
-	width: 100px;
-	height: 24px;
-	text-align: center;
-	margin: auto auto;
-	font-size: 1.5rem;
-	font-weight: bold;
-	border-radius: 12px;
-	margin-bottom: 10px;
-	padding-top: 10px;
-}
-.calendar td:hover{
-	background-color: var(--backgroundColor);
-    cursor: pointer;
-}
 
+/* Floats */
+.aleft {
+	text-align: left;
+}
+.aright {
+	text-align: right;
+}
+.fleft {
+	float: left;
+}
+.fright {
+	float: right;
+}
 
 /* Colors */
+.graybg {
+	background-color: var(--primaryHighlightDark);
+}
+.whitebg {
+	background-color: var(--backgroundColorLight);
+}
 .gray {
 	color: gray;
 }

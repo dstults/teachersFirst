@@ -6,10 +6,7 @@
 	<div class="openings-buttons">
 		<ul class="fake-buttons">
 			<li>
-				<a href="#favorites" class="fake-button">My favorites</a>
-			</li>
-			<li>
-				<a href="#search" class="fake-button">Search openings</a>
+				<a href="javascript:openFilter();" class="fake-button">Search openings</a>
 			</li>
 		</ul>
 	</div>
@@ -18,24 +15,38 @@
 		<h1>Teacher openings for ${startDate} to ${endDate}:</h1>
 	</div>
 
-	<table>
+	<table class="openings-calendar">
 		<tr>
-			<th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th>
+			<th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th>
 		</tr>
+		<#list weeks as days>
 		<tr>
 			<#list days as day>
-				<td>
-					<#list day as openingData>
-						<#if openingData?has_content>
-							<br><a style="color: blue;" href="/make_appointment?instructorId=${openingData.instructorId}&date=${openingData.date}&openingStartTime=${openingData.startTime}&openingEndTime=${openingData.endTime}">${openingData.instructorName}:<br>${openingData.startTime} - ${openingData.endTime}<br></a>
-						<#else>
-							No openings!
-						</#if>
-					</#list>
-				</td>
+			<td class="${day.color}">
+				<p class="calendar-date">${day.name}</p>
+				<#if day.openings?has_content && day.openings?size != 0>
+				<#list day.openings as opening>
+				<a href="/make_appointment?instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}"><div class="${opening.highlight}">
+					<p class="aleft">${opening.instructorName}:</p>
+					<p class="aright">${opening.startTime} - ${opening.endTime}</p>
+				</div></a>
+				</#list>
+				<#else>
+				
+				</#if>
+			</td>
 			</#list>
 		</tr>
+		</#list>
 	</table>
 	
 </body>
+<script>
+const openFilter = () => {
+	let instructor = prompt("Please enter a name to filter by.", "");
+	if (instructor != null) {
+		window.location.href = "/openings?instructorName=" + instructor;
+	}
+}
+</script>
 </html>

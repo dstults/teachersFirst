@@ -22,36 +22,44 @@ public class NewOpeningsAction extends ActionRunner {
 			return;
 		}
 
-		String instructorName = QueryHelpers.getPost(request, "instructor");
+		String instructorIdString = QueryHelpers.getPost(request, "instructorId");
+		int instructorIdInt;
+		try {
+			instructorIdInt = Integer.parseInt(instructorIdString);
+		} catch (NumberFormatException e) {
+			instructorIdInt = 0;
+		}
+		final boolean instructorExists = DataManager.getMemberDAO().retrieveByID(instructorIdInt) != null;
 		String startDate = QueryHelpers.getPost(request, "startDate");
 		String endDate = QueryHelpers.getPost(request, "startDate");
 		String daysOfWeek = QueryHelpers.getPost(request, "daysOfWeek"); // SuMoTuWdThFrSa
 		String startTime = QueryHelpers.getPost(request, "startTime");
 		String endTime = QueryHelpers.getPost(request, "endTime");
 
-		//TODO: Must check to make sure string input does not exceed database lengths
-		if (instructorName.isEmpty()) {
-			this.SendRedirectToPage("/register?message=Please provide a valid instructor name.");
+		final String retryString = "instructorId=" + instructorIdString + "&startDate=" + startDate + "&endDate=" + endDate + "&daysOfWeek=" + daysOfWeek + "&startTime=" + startTime + "&endTime=" + endTime + "&";
+
+		if (instructorExists) {
+			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid instructor ID.");
 			return;
 		}
 		if (startDate.isEmpty()) {
-			this.SendRedirectToPage("/register?message=Please provide a valid start date.");
+			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid start date.");
 			return;
 		}
 		if (endDate.isEmpty()) {
-			this.SendRedirectToPage("/register?message=Please provide a valid end date.");
+			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid end date.");
 			return;
 		}
 		if (daysOfWeek.isEmpty() ) {
-			this.SendRedirectToPage("/register?message=Please provide days of the week.");
+			this.SendRedirectToPage("/register?" + retryString + "message=Please provide days of the week.");
 			return;
 		}
 		if (startTime.isEmpty()) {
-			this.SendRedirectToPage("/register?message=Please provide a valid start time.");
+			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid start time.");
 			return;
 		}
 		if (endTime.isEmpty()) {
-			this.SendRedirectToPage("/register?message=Please provide a valid end time.");
+			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid end time.");
 			return;
 		}
 

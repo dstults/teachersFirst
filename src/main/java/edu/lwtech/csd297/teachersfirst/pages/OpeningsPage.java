@@ -13,6 +13,20 @@ public class OpeningsPage extends PageLoader {
 
 	// Helper class
 
+	public class PrettifiedDay {
+		private final String name;
+		private final String color;
+		private final List<PrettifiedOpening> openings;
+		public PrettifiedDay(String name, String color, List<PrettifiedOpening> openings) {
+			this.name = name;
+			this.color = color;
+			this.openings = openings;
+		}
+		public String getName() { return this.name; }
+		public String getColor() { return this.color; }
+		public List<PrettifiedOpening> getOpenings() { return this.openings; }
+	}
+
 	public class PrettifiedOpening {
 
 		private String instructorName;
@@ -20,13 +34,15 @@ public class OpeningsPage extends PageLoader {
 		private String date;
 		private String startTime;
 		private String endTime;
+		private boolean highlight;
 
-		public PrettifiedOpening(String instructorName, String instructorId, String date, String startTime, String endTime) {
+		public PrettifiedOpening(String instructorName, String instructorId, String date, String startTime, String endTime, boolean highlight) {
 			this.instructorName = instructorName;
 			this.instructorId = instructorId;
 			this.date = date;
 			this.startTime = startTime;
 			this.endTime = endTime;
+			this.highlight = highlight;
 		}
 
 		public String getInstructorName() { return instructorName; }
@@ -34,6 +50,7 @@ public class OpeningsPage extends PageLoader {
 		public String getDate() { return date; }
 		public String getStartTime() { return startTime; }
 		public String getEndTime() { return endTime; }
+		public String getHighlight() { return highlight ? "highlight" : ""; }
 	}
 
 	// Constructor
@@ -45,8 +62,12 @@ public class OpeningsPage extends PageLoader {
 	public void loadPage() {
 		templateDataMap.put("title", "Openings");
 
+		final String instructorName = QueryHelpers.getGet(request, "instructorName").toLowerCase();
+
 		LocalDateTime sundayTime = DateHelpers.previousSunday();
 		LocalDateTime saturdayTime = DateHelpers.nextSaturday();
+		final int weekTotal = 5;
+		saturdayTime = saturdayTime.plusWeeks(weekTotal - 1); // -1 because base-0
 		String sundayString = sundayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		String saturdayString = saturdayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
@@ -58,33 +79,47 @@ public class OpeningsPage extends PageLoader {
 		// Should only show members that it should show based on who's querying...
 		final List<Opening> allOpenings = DataManager.getOpeningDAO().retrieveAll();
 		final DAO<Member> memberDAO = DataManager.getMemberDAO();
-		List<List<PrettifiedOpening>> days = new LinkedList<>();
+		List<List<PrettifiedDay>> weeks = new LinkedList<>();
+		List<PrettifiedDay> thisWeek = null;
+		PrettifiedDay today;
 		LocalDateTime startTime;
 		LocalDateTime endTime;
 
 		// This would really benefit from specific SQL query optimization
-		for (int day = 0; day < 7; day++) {
-			// make a new list for each day and add it to days list
-			List<PrettifiedOpening> openings = new LinkedList<>();
-			days.add(openings);
+		for (int day = 0; day < 7 * weekTotal; day++) {
+			// once every week
+			if (day % 7 == 0) {
+				thisWeek = new LinkedList<>();
+				weeks.add(thisWeek);
+			}
 			// get specific start and end milliseconds of scanned day
 			startTime = sundayTime.plusDays(day);
 			endTime = startTime.plusDays(1).minusSeconds(1);
-			logger.debug(startTime.toString());
-			logger.debug(endTime.toString());
+			//logger.debug(startTime.toString());
+			//logger.debug(endTime.toString());
+			String dateName = startTime.format(DateTimeFormatter.ofPattern("dd"));
+			String dateColor = DateHelpers.isInThePast(endTime) ? "graybg" : "whitebg";
 			String dateToday = startTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+			List<PrettifiedOpening> openingsToday = new ArrayList<>();
+			today = new PrettifiedDay(dateName, dateColor, openingsToday);
+			thisWeek.add(today);
 
 			// scan all openings for any that fall within the day
 			for (Opening iOpening : allOpenings) {
 				if (iOpening.getStartTime().toLocalDateTime().compareTo(startTime) >= 0 && 
 						iOpening.getStartTime().toLocalDateTime().compareTo(endTime) < 0) {
 
-					openings.add(new PrettifiedOpening(
-							memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName(),
-							Integer.toString(iOpening.getInstructorID()), // Freemarker likes to add commmas, I could add ?c to it too
-							dateToday,
-							iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-							iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")))
+					String iName = memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName();
+					boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
+					logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
+
+					openingsToday.add(new PrettifiedOpening(
+						iName,
+						Integer.toString(iOpening.getInstructorID()), // Freemarker likes to add commmas, I could add ?c to it too
+						dateToday,
+						iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+						iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+						iHighlight)
 					);
 				}
 			}
@@ -94,7 +129,7 @@ public class OpeningsPage extends PageLoader {
 		templateName = "openings.ftl";
 		templateDataMap.put("startDate", sundayString);
 		templateDataMap.put("endDate", saturdayString);
-		templateDataMap.put("days", days);
+		templateDataMap.put("weeks", weeks);
 
 		// Go
 		trySendResponse();
