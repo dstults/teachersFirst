@@ -10,11 +10,11 @@
 		<input type="hidden" name="action" value="register_new_member">
 
 		<label for="full_name">Display Name (how others see you): <span class="required">*</span></label>
-		<input type="text" name="displayName" placeholder="Jane Doe"/> 
+		<input type="text" name="displayName" value="${displayName}" placeholder="Jane Doe"/> 
 		<br><br>
 
 		<label for="username">Login Name (this is private): <span class="required">*</span></label>
-		<input type="text" name="loginName" placeholder="jdoe93">
+		<input type="text" name="loginName" value="${loginName}" placeholder="jdoe93">
 		<br><br>
 
 		<label for="password">Password: <span class="required">*</span></label>
@@ -26,23 +26,35 @@
 		<br><br> 
 
 		<label for="gender" class="gender">Gender:	</label>
-		<input type="radio" name="gender" value="m"><label for="Male" class="radio">Male</label>
-		<input type="radio" name="gender" value="f"><label for="Female" class="radio">Female</label>
-		<input type="radio" name="gender" value="" checked><label for="Other" class="radio">Other/Unspecified</label>
+		<#if gender == "m">
+			<input type="radio" name="gender" value="m" checked><label for="Male" class="radio">Male</label>
+		<#else>
+			<input type="radio" name="gender" value="m"><label for="Male" class="radio">Male</label>
+		</#if>
+		<#if gender == "f">
+			<input type="radio" name="gender" value="f" checked><label for="Female" class="radio">Female</label>
+		<#else>
+			<input type="radio" name="gender" value="f"><label for="Female" class="radio">Female</label>
+		</#if>
+		<#if gender == "other">
+			<input type="radio" name="gender" value="other" checked><label for="Other" class="radio">Other/Unspecified</label>
+		<#else>
+			<input type="radio" name="gender" value="other"><label for="Other" class="radio">Other/Unspecified</label>
+		</#if>
 		<br><br>
 
 		<p><span class="required">*</span> Please provide at least one form of contact:</p>
 
 		<label for="age">Phone 1: </label>
-		<input type="text" name="phone1" placeholder="425-555-5555">
+		<input type="text" name="phone1" value="${phone1}" placeholder="425-555-5555">
 		<br><br>
 
 		<label for="age">Phone 2: </label>
-		<input type="text" name="phone2">
+		<input type="text" name="phone2" value="${phone2}">
 		<br><br>
 
 		<label for="age">Email: </label>
-		<input type="email" name="email" placeholder="jdoe@gmail.com">
+		<input type="email" name="email" value="${email}" placeholder="jdoe@gmail.com">
 		<br><br>
 
 		<input type="submit" value="Register">

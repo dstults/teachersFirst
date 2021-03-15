@@ -15,7 +15,7 @@ public class LogInAction extends ActionRunner {
 		String password = QueryHelpers.getPost(request, "password");
 
 		if (loginName == null || loginName.isEmpty() || password == null || password.isEmpty()) {
-			this.SendRedirectToPage("/login?name=" + loginName + "&message=Please enter a valid user name and password.");
+			this.SendRedirectToPage("/login?loginName=" + loginName + "&message=Please enter a valid user name and password.");
 			return;
 		}
 
@@ -25,7 +25,7 @@ public class LogInAction extends ActionRunner {
 			this.SendRedirectToPage("/appointments");
 			return;
 		} else {
-			this.SendRedirectToPage("/login?name=" + loginName + "&message=Could not log you in.");
+			this.SendRedirectToPage("/login?loginName=" + loginName + "&message=Could not log you in.");
 			return;
 		}
 	}
