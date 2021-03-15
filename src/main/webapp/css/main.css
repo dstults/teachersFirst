@@ -92,10 +92,16 @@ li{
 	transform: scale(1.1);
 	transition: all 0.1s ease-in-out;
 }
+.appointments-text{
+    margin: auto;
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 2.5rem;
+    display: block;
+}
 .appointments-buttons{
     float: right;
     padding-right: 20rem;
-    margin-bottom: 5rem;
 }
 .openings-buttons{
     float: right;
