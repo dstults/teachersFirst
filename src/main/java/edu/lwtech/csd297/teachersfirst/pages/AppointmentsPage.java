@@ -44,33 +44,45 @@ public class AppointmentsPage extends PageLoader {
 	public void loadPage() {
 		templateDataMap.put("title", "Appointments");
 
+		// key variables
 		final DAO<Member> memberDAO = DataManager.getMemberDAO();
 		final List<Appointment> appointmentDAO = DataManager.getAppointmentDAO().retrieveAll();
-		final List<PrettifiedAppointment> appointments = new ArrayList<PrettifiedAppointment>();
+		final List<PrettifiedAppointment> futureAppointments = new ArrayList<PrettifiedAppointment>();
+		final List<PrettifiedAppointment> pastAppointments = new ArrayList<PrettifiedAppointment>();
 		
+		// make sure we're logged in
 		if (uid > 0) {
 			
+			// temp vars for more readable code below
 			boolean isAdmin = memberDAO.retrieveByID(uid).getIsAdmin();
 			String instructorName;
 			String studentName;
 			String date;
 			String startTime;
 			String endTime;
+			
+			// check all DAOs
 			for (Appointment appointment : appointmentDAO) {
+				// make sure we're either an admin (sees everything) or in one of the appointments
 				if (isAdmin || appointment.getStudentID() == uid || appointment.getInstructorID() == uid) {
 					instructorName = memberDAO.retrieveByID(appointment.getInstructorID()).getDisplayName();
 					studentName = memberDAO.retrieveByID(appointment.getStudentID()).getDisplayName();
 					date = appointment.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 					startTime = appointment.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
 					endTime = appointment.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-					appointments.add(new PrettifiedAppointment(appointment.getRecID(), instructorName, studentName, date, startTime, endTime));
+					if (DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
+						pastAppointments.add(new PrettifiedAppointment(appointment.getRecID(), instructorName, studentName, date, startTime, endTime));
+					} else {
+						futureAppointments.add(new PrettifiedAppointment(appointment.getRecID(), instructorName, studentName, date, startTime, endTime));
+					}
 				}
 			}
 	
 		}
 
 		// FreeMarker
-		templateDataMap.put("appointments", appointments);
+		templateDataMap.put("pastAppointments", pastAppointments);
+		templateDataMap.put("futureAppointments", futureAppointments);
 		templateName = "appointments.ftl";
 
 		// Go

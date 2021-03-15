@@ -127,6 +127,10 @@ public class DateHelpers {
 		return years;
 	}
 
+	public static boolean isInThePast(LocalDateTime comparedDateTime) {
+		return comparedDateTime.compareTo(LocalDateTime.now()) < 0;
+	}
+
 	public static LocalDateTime previousSunday() {
 		final LocalDate today = LocalDate.now(homeZone);
 		return today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)).atStartOfDay();

@@ -64,7 +64,9 @@ public class MakeAppointmentPage extends PageLoader {
 			List<String> possibleStartTimes = new ArrayList<String>();
 			List<String> possibleDurations = new ArrayList<String>();
 			int i = 0;
-			while (currentDateTime.compareTo(endDateTime) < 0 && possibleStartTimes.size() <= 40) { // limit 40: someone can and will place start and end times really far apart...
+			 
+			// Limit 40: someone can and will place start and end times really far apart...
+			while (currentDateTime.compareTo(endDateTime) < 0 && possibleStartTimes.size() <= 40) {
 				possibleStartTimes.add(currentDateTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 				currentDateTime = currentDateTime.plusMinutes(15);
 				i += 15;
