@@ -3,6 +3,7 @@ package edu.lwtech.csd297.teachersfirst.pages;
 import java.util.*;
 import javax.servlet.http.*;
 
+import edu.lwtech.csd297.teachersfirst.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class LoginPage extends PageLoader {
@@ -15,7 +16,7 @@ public class LoginPage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Log In");
-		String loginName = getGetValue("loginName", "");
+		String loginName = QueryHelpers.getGet(request, "loginName");
 
 		// FreeMarker
 		templateDataMap.put("loginName", loginName);

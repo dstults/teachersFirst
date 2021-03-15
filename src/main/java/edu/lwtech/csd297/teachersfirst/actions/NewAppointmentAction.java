@@ -19,7 +19,7 @@ public class NewAppointmentAction extends ActionRunner {
 			return;
 		}
 
-		final String studentIdString = getPostValue("studentId", "");
+		final String studentIdString = QueryHelpers.getPost(request, "studentId");
 		int studentIdInt;
 		try {
 			studentIdInt = Integer.parseInt(studentIdString);
@@ -27,7 +27,7 @@ public class NewAppointmentAction extends ActionRunner {
 			studentIdInt = 0;
 		}
 		final boolean studentExists = DataManager.getMemberDAO().retrieveByID(studentIdInt) != null;
-		final String instructorIdString = getPostValue("instructorId", "");
+		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
 		int instructorIdInt;
 		try {
 			instructorIdInt = Integer.parseInt(instructorIdString);
@@ -35,9 +35,9 @@ public class NewAppointmentAction extends ActionRunner {
 			instructorIdInt = 0;
 		}
 		final boolean instructorExists = DataManager.getMemberDAO().retrieveByID(instructorIdInt) != null;
-		final String dateString = getPostValue("date", "");
-		final String startTimeString = getPostValue("appointmentStartTime", "");
-		final String endTimeString = getPostValue("appointmentEndTime", "");
+		final String dateString = QueryHelpers.getPost(request, "date");
+		final String startTimeString = QueryHelpers.getPost(request, "appointmentStartTime");
+		final String endTimeString = QueryHelpers.getPost(request, "appointmentEndTime");
 
 		if (!studentExists) {
 			this.SendRedirectToPage("/openings?message=Student with ID %5B" + studentIdInt + "%5D does not exist!");

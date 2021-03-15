@@ -16,7 +16,7 @@ public class ProfilePage extends PageLoader {
 	public void loadPage() {
 		templateDataMap.put("title", "Profile");
 
-		final String memberIdString = request.getParameter("memberId") == null ? Integer.toString(uid) : request.getParameter("memberId");
+		final String memberIdString = QueryHelpers.getGet(request, "memberId", Integer.toString(uid));
 		int memberId;
 		try {
 			memberId = Integer.parseInt(memberIdString);

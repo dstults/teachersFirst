@@ -22,12 +22,12 @@ public class NewOpeningsAction extends ActionRunner {
 			return;
 		}
 
-		String instructorName = getPostValue("instructor", "");
-		String startDate = getPostValue("startDate", "");
-		String endDate = getPostValue("startDate", "");
-		String daysOfWeek = getPostValue("daysOfWeek", ""); // SuMoTuWdThFrSa
-		String startTime = getPostValue("startTime", "");
-		String endTime = getPostValue("endTime", "");
+		String instructorName = QueryHelpers.getPost(request, "instructor");
+		String startDate = QueryHelpers.getPost(request, "startDate");
+		String endDate = QueryHelpers.getPost(request, "startDate");
+		String daysOfWeek = QueryHelpers.getPost(request, "daysOfWeek"); // SuMoTuWdThFrSa
+		String startTime = QueryHelpers.getPost(request, "startTime");
+		String endTime = QueryHelpers.getPost(request, "endTime");
 
 		//TODO: Must check to make sure string input does not exceed database lengths
 		if (instructorName.isEmpty()) {

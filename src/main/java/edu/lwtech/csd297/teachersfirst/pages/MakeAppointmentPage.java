@@ -21,7 +21,7 @@ public class MakeAppointmentPage extends PageLoader {
 		if (uid > 0) {
 			
 			// Get Opening / Previous Data
-			final String studentIdString = request.getParameter("studentId") == null ? Integer.toString(uid) : request.getParameter("studentId");
+			final String studentIdString = QueryHelpers.getGet(request, "studentId", Integer.toString(uid)); // sets default to self
 			int studentIdInt;
 			try {
 				studentIdInt = Integer.parseInt(studentIdString);
@@ -29,7 +29,7 @@ public class MakeAppointmentPage extends PageLoader {
 				studentIdInt = 0;
 			}
 			final String studentName = studentIdInt > 0 ? DataManager.getMemberDAO().retrieveByID(studentIdInt).getDisplayName() : "";
-			final String instructorIdString = request.getParameter("instructorId") == null ? "" : request.getParameter("instructorId");
+			final String instructorIdString = QueryHelpers.getGet(request, "instructorId");
 			int instructorIdInt;
 			try {
 				instructorIdInt = Integer.parseInt(instructorIdString);
@@ -37,12 +37,12 @@ public class MakeAppointmentPage extends PageLoader {
 				instructorIdInt = 0;
 			}
 			final String instructorName = instructorIdInt > 0 ? DataManager.getMemberDAO().retrieveByID(instructorIdInt).getDisplayName() : "";
-			final String dateString = request.getParameter("date") == null ? "" : request.getParameter("date");
-			final String openingStartTimeString = request.getParameter("openingStartTime") == null ? "" : request.getParameter("openingStartTime");
-			final String openingEndTimeString = request.getParameter("openingEndTime") == null ? "" : request.getParameter("openingEndTime");
-			final String appointmentStartTimeString = request.getParameter("appointmentStartTime") == null ? "" : request.getParameter("appointmentStartTime");
-			final String appointmentEndTimeString = request.getParameter("appointmentEndTime") == null ? "" : request.getParameter("appointmentEndTime");
-			//final String appointmentDuration = request.getParameter("appointmentDuration") == null ? "" : request.getParameter("appointmentDuration");
+			final String dateString = QueryHelpers.getGet(request, "date");
+			final String openingStartTimeString = QueryHelpers.getGet(request, "openingStartTime");
+			final String openingEndTimeString = QueryHelpers.getGet(request, "openingEndTime");
+			final String appointmentStartTimeString = QueryHelpers.getGet(request, "appointmentStartTime");
+			final String appointmentEndTimeString = QueryHelpers.getGet(request, "appointmentEndTime");
+			//final String appointmentDuration = QueryHelpers.getGet(request, "appointmentDuration");
 			
 			// If thrown here on a "go back", assign these:
 			String defaultStartTime = "";

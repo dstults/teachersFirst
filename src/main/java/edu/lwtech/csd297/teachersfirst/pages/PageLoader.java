@@ -60,8 +60,8 @@ public abstract class PageLoader {
 			isInstructor = member.getIsInstructor();
 			isStudent = member.getIsStudent();
 		}
-		String userName = getSessionValue("USER_NAME", "Stranger");
-		String message = getGetValue("message", "");
+		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+		String message = QueryHelpers.getGet(request, "message");
 
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
 		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);
@@ -80,23 +80,10 @@ public abstract class PageLoader {
 
 	// Protected Methods (shared magic between all pages)
 
-	protected String getGetValue(String keyName, String defaultValue) {
-		if (request.getParameter(keyName) == null) return defaultValue;
-		if (request.getParameter(keyName).isEmpty()) return defaultValue;
-		return request.getParameter(keyName);
-	}
-
-	protected String getSessionValue(String sessionArg, String defaultValue) {
-		if (request.getSession().getAttribute(sessionArg) == null) return defaultValue;
-		if (request.getSession().getAttribute(sessionArg).toString() == null) return defaultValue;
-		if (request.getSession().getAttribute(sessionArg).toString().isEmpty()) return defaultValue;
-		return request.getSession().getAttribute(sessionArg).toString();
-	}
-
 	protected void sendFake404(String description) {
 		logger.debug("====================== SECURITY ALERT ======================");
 		logger.debug("Description: {}", description);
-		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
+		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
 		logger.debug("Sanitized Query: {}", sanitizedQuery);
 		final String pathInfo = request.getPathInfo() == null ? "" : request.getPathInfo();
 		logger.debug("Page Path: {}", pathInfo);

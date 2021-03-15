@@ -11,8 +11,8 @@ public class LogInAction extends ActionRunner {
 
 	@Override
 	public void RunAction() {
-		String loginName = getPostValue("loginName", "");
-		String password = getPostValue("password", "");
+		String loginName = QueryHelpers.getPost(request, "loginName");
+		String password = QueryHelpers.getPost(request, "password");
 
 		if (loginName == null || loginName.isEmpty() || password == null || password.isEmpty()) {
 			this.SendRedirectToPage("/login?name=" + loginName + "&message=Please enter a valid user name and password.");

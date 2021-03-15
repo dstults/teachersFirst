@@ -61,7 +61,7 @@ public class TeachersFirstServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
-		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
+		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
 		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
 		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
 			logger.debug("IN - {}", logInfo);
@@ -154,13 +154,13 @@ public class TeachersFirstServlet extends HttpServlet {
 		String comma = "";
 		for (String key : paramMap.keySet()) {
 			for (String value : paramMap.get(key)) {
-				parameters += comma + "{" + key + ": " + value + "}";
+				parameters += comma + "{" + QueryHelpers.sanitizeForLog(key) + ": " + QueryHelpers.sanitizeForLog(value) + "}";
 				comma = ", ";
 			}
 		}		
 		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + parameters;
 		logger.debug("IN - {}", logInfo); // Don't log "health" commands
-		final String action = request.getParameter("action") == null ? "" : request.getParameter("action");
+		final String action = request.getParameter("action") == null ? "" : QueryHelpers.sanitizeForLog(request.getParameter("action"));
 
 		try {
 			switch (action) {

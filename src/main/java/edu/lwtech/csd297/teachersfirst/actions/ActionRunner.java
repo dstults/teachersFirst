@@ -29,12 +29,6 @@ public abstract class ActionRunner {
 
 	// Protected Methods (shared magic between all actions)
 
-	protected String getPostValue(String keyName, String defaultValue) {
-		if (request.getParameter(keyName) == null) return defaultValue;
-		if (request.getParameter(keyName).isEmpty()) return defaultValue;
-		return request.getParameter(keyName);
-	}
-
 	protected void SendRedirectToPage(String nextPage) {
 		try {
 			response.sendRedirect(nextPage);

@@ -22,17 +22,17 @@ public class NewMemberAction extends ActionRunner {
 			return;
 		}
 
-		String loginName = getPostValue("loginName", "");
-		String password1 = getPostValue("password1", "");
-		String password2 = getPostValue("password2", "");
-		String displayName = getPostValue("displayName", "");
-		String gender = getPostValue("gender", "");
-		/* String birthYear = getPostValue("b_year", "");
-		String birthMonth = getPostValue("b_month", "");
-		String birthDay = getPostValue("b_day", ""); */
-		String phone1 = getPostValue("phone1", "");
-		String phone2 = getPostValue("phone2", "");
-		String email = getPostValue("email", "");
+		String loginName = QueryHelpers.getPost(request, "loginName");
+		String password1 = QueryHelpers.getPost(request, "password1");
+		String password2 = QueryHelpers.getPost(request, "password2");
+		String displayName = QueryHelpers.getPost(request, "displayName");
+		String gender = QueryHelpers.getPost(request, "gender");
+		/* String birthYear = QueryHelpers.getPost(request, "b_year");
+		String birthMonth = QueryHelpers.getPost(request, "b_month");
+		String birthDay = QueryHelpers.getPost(request, "b_day"); */
+		String phone1 = QueryHelpers.getPost(request, "phone1");
+		String phone2 = QueryHelpers.getPost(request, "phone2");
+		String email = QueryHelpers.getPost(request, "email");
 
 		final String retryString = "loginName=" + loginName + "&displayName=" + displayName + "&gender=" + gender + "&phone1=" + phone1 + "&phone2=" + phone2 + "&email=" + email + "&";
 
