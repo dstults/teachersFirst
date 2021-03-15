@@ -77,7 +77,8 @@ public class AppointmentsPage extends PageLoader {
 					}
 				}
 			}
-	
+
+			Collections.reverse(pastAppointments);
 		}
 
 		// FreeMarker
