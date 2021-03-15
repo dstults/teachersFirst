@@ -90,6 +90,25 @@ public class MemberSqlDAO implements DAO<Member> {
         Member member = convertRowToMember(row);
         return member;
     }
+
+    public Member retrieveByLoginNameAndPassword(String loginName, String passwordHash) {
+        logger.debug("Trying to get Member with login name and password: " + loginName + " " + passwordHash);
+        
+        String query = "SELECT * FROM Members WHERE loginName='" + loginName +"' AND passwordHash= SHA1('"+passwordHash+"');";
+
+        List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+        
+        if (rows != null) {
+            logger.debug("Found member!");
+        } else {
+            logger.debug("Did not find member.");
+            return null;
+        }
+        
+        SQLRow row = rows.get(0);
+        Member member = convertRowToMember(row);
+        return member;
+    }
 	
     public Member retrieveByIndex(int index) {
         logger.debug("Trying to get Member with index: " + index);

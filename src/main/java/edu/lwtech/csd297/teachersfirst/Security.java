@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.*;
 
+import edu.lwtech.csd297.teachersfirst.daos.MemberSqlDAO;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class Security {
@@ -53,11 +54,11 @@ public class Security {
 
 
 	public static Member checkPassword(String loginName, String password) {
-		List<Member> memberDAO = DataManager.getMemberDAO().retrieveAll();
-		for (Member member : memberDAO) {
-			if (member.getLoginName().equals(loginName) && member.getPasswordHash().equals(password)) {
-				return member;
-			}
+		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		Member member = memberDAO.retrieveByLoginNameAndPassword(loginName, password);
+
+		if(member != null){
+			return member;
 		}
 		// should perform sql query, for now, just does this
 		logger.debug(loginName + " failed to log in with password: " + password);
