@@ -1,6 +1,9 @@
 package edu.lwtech.csd297.teachersfirst.actions;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
 
 import javax.servlet.http.*;
 
@@ -30,42 +33,100 @@ public class NewOpeningsAction extends ActionRunner {
 			instructorIdInt = 0;
 		}
 		final boolean instructorExists = DataManager.getMemberDAO().retrieveByID(instructorIdInt) != null;
-		String startDate = QueryHelpers.getPost(request, "startDate");
-		String endDate = QueryHelpers.getPost(request, "startDate");
-		String daysOfWeek = QueryHelpers.getPost(request, "daysOfWeek"); // SuMoTuWdThFrSa
-		String startTime = QueryHelpers.getPost(request, "startTime");
-		String endTime = QueryHelpers.getPost(request, "endTime");
+		String startDateString = QueryHelpers.getPost(request, "startDate");
+		String endDateString = QueryHelpers.getPost(request, "endDate");
+		String daysOfWeekString = QueryHelpers.getPost(request, "daysOfWeek").toLowerCase(); // SuMoTuWdThFrSa
+		String startTimeString = QueryHelpers.getPost(request, "startTime");
+		String endTimeString = QueryHelpers.getPost(request, "endTime");
 
-		final String retryString = "instructorId=" + instructorIdString + "&startDate=" + startDate + "&endDate=" + endDate + "&daysOfWeek=" + daysOfWeek + "&startTime=" + startTime + "&endTime=" + endTime + "&";
+		final String retryString = "instructorId=" + instructorIdString + "&startDate=" + startDateString + "&endDate=" + endDateString + "&daysOfWeek=" + daysOfWeekString + "&startTime=" + startTimeString + "&endTime=" + endTimeString + "&";
 
-		if (instructorExists) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid instructor ID.");
+		final int startHour;
+		final int startMinute;
+		try {
+			final String[] timeInfo = startTimeString.split(":");
+			if (timeInfo.length != 2) throw new NumberFormatException();
+			startHour = Integer.parseInt(timeInfo[0]);
+			startMinute = Integer.parseInt(timeInfo[1]);
+		} catch (NumberFormatException e) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Could not parse start time: %5B" + startTimeString + "%5D !");
 			return;
 		}
-		if (startDate.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid start date.");
+		final int endHour;
+		final int endMinute;
+		try {
+			final String[] timeInfo = endTimeString.split(":");
+			if (timeInfo.length != 2) throw new NumberFormatException();
+			endHour = Integer.parseInt(timeInfo[0]);
+			endMinute = Integer.parseInt(timeInfo[1]);
+		} catch (NumberFormatException e) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Could not parse end time: %5B" + endTimeString + "%5D !");
 			return;
 		}
-		if (endDate.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid end date.");
+
+		if (!instructorExists) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid instructor ID.");
 			return;
 		}
-		if (daysOfWeek.isEmpty() ) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide days of the week.");
+		if (startDateString.isEmpty()) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid start date.");
 			return;
 		}
-		if (startTime.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid start time.");
+		if (endDateString.isEmpty()) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid end date.");
 			return;
 		}
-		if (endTime.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid end time.");
+		if (daysOfWeekString.isEmpty() ) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide days of the week.");
+			return;
+		}
+		if (startTimeString.isEmpty()) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid start time.");
+			return;
+		}
+		if (endTimeString.isEmpty()) {
+			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid end time.");
+			return;
+		}
+		
+		// Get days of the week that will be opened up:
+		List<DayOfWeek> openedDays = new ArrayList<>();
+		DayOfWeek dayOfWeek;		
+		if(daysOfWeekString.contains("su")) openedDays.add(DayOfWeek.SUNDAY);
+		if(daysOfWeekString.contains("mo")) openedDays.add(DayOfWeek.MONDAY);
+		if(daysOfWeekString.contains("tu")) openedDays.add(DayOfWeek.TUESDAY);
+		if(daysOfWeekString.contains("we")) openedDays.add(DayOfWeek.WEDNESDAY);
+		if(daysOfWeekString.contains("th")) openedDays.add(DayOfWeek.THURSDAY);
+		if(daysOfWeekString.contains("fr")) openedDays.add(DayOfWeek.FRIDAY);
+		if(daysOfWeekString.contains("sa")) openedDays.add(DayOfWeek.SATURDAY);
+		if (openedDays.size() == 0) {
+			this.SendRedirectToPage("/new_opening?" + retryString + "message=Couldn't parse your days of the week.");
 			return;
 		}
 
 		logger.debug("Attempting to create batch openings ...");
-		
+		DAO<Opening> openingDAO = DataManager.getOpeningDAO();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy"); 		
+		LocalDate startDate = LocalDate.parse(startDateString, formatter);
+		LocalDate today = startDate.plusDays(0);
+		LocalDate endDate = LocalDate.parse(endDateString, formatter);
+		Timestamp startDateTime;
+		Timestamp endDateTime;
 
+		//logger.debug("Start: " + startDate.toString());
+		//logger.debug("End:   " + endDate.toString());
+		while (today.compareTo(endDate) <= 0) {
+			//logger.debug("Today: " + today.toString());
+			dayOfWeek = today.getDayOfWeek();
+			if (openedDays.contains(dayOfWeek)) {
+				startDateTime = DateHelpers.toTimestamp(today.atTime(startHour, startMinute));
+				endDateTime = DateHelpers.toTimestamp(today.atTime(endHour, endMinute));
+				openingDAO.insert(new Opening(instructorIdInt, startDateTime, endDateTime));
+			}
+			today = today.plusDays(1);
+		}
+
+		this.SendRedirectToPage("/openings?message=Openings made, good job!");
 		return;
 	}
 	

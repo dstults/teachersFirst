@@ -87,6 +87,9 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "/openings":
 					new OpeningsPage(request, response).loadPage();
 					break;
+				case "/new_openings":
+					new NewOpeningsPage(request, response).loadPage();
+					break;
 				case "/profile":
 					new ProfilePage(request, response).loadPage();
 					break;
@@ -170,7 +173,7 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "register_new_member":
 					new NewMemberAction(request, response).RunAction();
 					break;
-				case "make_openings":
+				case "new_openings":
 					new NewOpeningsAction(request, response).RunAction();
 					break;
 				case "make_appointment":

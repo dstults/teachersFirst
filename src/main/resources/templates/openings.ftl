@@ -9,6 +9,13 @@
 				<a href="javascript:openFilter();" class="fake-button">Search openings</a>
 			</li>
 		</ul>
+		<#if isAdmin || isInstructor>
+		<ul class="fake-buttons">
+			<li>
+				<a href="javascript:makeOpenings();" class="fake-button">Make New Openings</a>
+			</li>
+		</ul>
+		</#if>
 	</div>
 
 	<div class="openings-text">
@@ -48,5 +55,8 @@ const openFilter = () => {
 		window.location.href = "/openings?instructorName=" + instructor;
 	}
 }
+<#if isAdmin || isInstructor>
+const makeOpenings = () => window.location.href = "/new_openings";
+</#if>
 </script>
 </html>

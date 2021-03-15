@@ -106,8 +106,7 @@ public class OpeningsPage extends PageLoader {
 
 			// scan all openings for any that fall within the day
 			for (Opening iOpening : allOpenings) {
-				if (iOpening.getStartTime().toLocalDateTime().compareTo(startTime) >= 0 && 
-						iOpening.getStartTime().toLocalDateTime().compareTo(endTime) < 0) {
+				if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
 
 					String iName = memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName();
 					boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);

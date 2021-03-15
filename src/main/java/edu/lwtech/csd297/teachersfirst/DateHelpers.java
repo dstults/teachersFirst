@@ -28,6 +28,59 @@ public class DateHelpers {
 		return toTimestamp(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second);
 	}
 
+	public static Timestamp toTimestamp(LocalDateTime ldt) {
+		return Timestamp.valueOf(ldt);
+	}
+
+	public static Timestamp toTimestamp(String dateTimeString) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date;
+		try {
+			date = sdf.parse(dateTimeString);
+		} catch (ParseException e) {
+			// This cannot be called during testing
+			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
+			e.printStackTrace();
+			return null;
+		}
+		long timeInMillis = date.getTime();
+		return new Timestamp(timeInMillis);
+	}
+
+	public static Timestamp toTimestampRounded(String myDate, boolean almostMidnight) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date;
+		try {
+			if (almostMidnight) {
+				date = sdf.parse(myDate + " 23:59:59");
+			} else {
+				date = sdf.parse(myDate + " 00:00:00");
+			}
+		} catch (ParseException e) {
+			// This cannot be called during testing
+			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
+			e.printStackTrace();
+			return null;
+		}
+		long timeInMillis = date.getTime();
+		return new Timestamp(timeInMillis);
+	}
+
+	public static Timestamp toTimestampDateOnly(String myDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date;
+		try {
+			date = sdf.parse(myDate + " 00:00:00");
+		} catch (ParseException e) {
+			// This cannot be called during testing
+			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
+			e.printStackTrace();
+			return null;
+		}
+		long timeInMillis = date.getTime();
+		return new Timestamp(timeInMillis);
+	}
+
 	public static Timestamp fromSqlDatetimeToTimestamp(String sqlDatetime) {
 		///String choppedDecisecond = sqlDatetime.split(".")[0];
 		String choppedDecisecond = sqlDatetime.substring(0, sqlDatetime.length() - 2);
@@ -52,21 +105,6 @@ public class DateHelpers {
 		Date date;
 		try {
 			date = sdf.parse(sqlDate);
-		} catch (ParseException e) {
-			// This cannot be called during testing
-			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
-			e.printStackTrace();
-			return null;
-		}
-		long timeInMillis = date.getTime();
-		return new Timestamp(timeInMillis);
-	}
-
-	public static Timestamp toTimestamp(String myDate) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date;
-		try {
-			date = sdf.parse(myDate);
 		} catch (ParseException e) {
 			// This cannot be called during testing
 			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
@@ -146,6 +184,14 @@ public class DateHelpers {
 
 	public static boolean isInThePast(LocalDateTime comparedDateTime) {
 		return comparedDateTime.compareTo(LocalDateTime.now()) < 0;
+	}
+
+	public static boolean dateIsBetweenDateAndDate(LocalDate time, LocalDate start, LocalDate finish) {
+		return time.compareTo(start) >= 0 && time.compareTo(finish) <= 0; // includes last day
+	}
+
+	public static boolean timeIsBetweenTimeAndTime(LocalDateTime time, LocalDateTime start, LocalDateTime finish) {
+		return time.compareTo(start) >= 0 && time.compareTo(finish) < 0; // excludes last second
 	}
 
 	public static LocalDateTime previousSunday() {
