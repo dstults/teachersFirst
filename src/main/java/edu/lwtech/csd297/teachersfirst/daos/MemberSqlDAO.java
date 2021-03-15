@@ -5,7 +5,7 @@ import java.util.*;
 
 import org.apache.logging.log4j.*;
 
-import edu.lwtech.csd297.teachersfirst.DateHelpers;
+import edu.lwtech.csd297.teachersfirst.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class MemberSqlDAO implements DAO<Member> {
@@ -44,9 +44,9 @@ public class MemberSqlDAO implements DAO<Member> {
             return -1;
         }
 
-        String query = "INSERT INTO Members (recID, loginName, passwordHash, displayName, birthdate, teacherNotes, gender, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO Members (loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getBirthdate(), member.getGender(), member.getTeacherNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsStudent());
+        int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getBirthdate(), member.getGender(), member.getTeacherNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsAdmin());
         
         logger.debug("Member successfully inserted with ID = " + recID);
         return recID;
@@ -71,7 +71,26 @@ public class MemberSqlDAO implements DAO<Member> {
         Member member = convertRowToMember(row);
         return member;
     }
-    
+
+    public Member retrieveByLoginName(String loginName) {
+        logger.debug("Trying to get Member with login name: " + loginName);
+        
+        String query = "SELECT * FROM Members WHERE loginName='" + loginName +"'";
+
+        List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+        
+        if (rows != null) {
+            logger.debug("Found member!");
+        } else {
+            logger.debug("Did not find member.");
+            return null;
+        }
+        
+        SQLRow row = rows.get(0);
+        Member member = convertRowToMember(row);
+        return member;
+    }
+	
     public Member retrieveByIndex(int index) {
         logger.debug("Trying to get Member with index: " + index);
         
@@ -174,7 +193,7 @@ public class MemberSqlDAO implements DAO<Member> {
     public int size() {
         logger.debug("Getting the number of rows...");
 
-        String query = "SELECT count(*) FROM Members";
+        String query = "SELECT count(*) AS cnt FROM Members";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         if (rows == null) {
@@ -182,7 +201,7 @@ public class MemberSqlDAO implements DAO<Member> {
             return 0;
         }
 
-        String value = rows.get(0).getItem();
+        String value = rows.get(0).getItem("cnt");
         return Integer.parseInt(value);
     }    
 
@@ -195,7 +214,7 @@ public class MemberSqlDAO implements DAO<Member> {
         String passwordHash = row.getItem("passwordHash");
         String displayName = row.getItem("displayName");
         
-        Timestamp birthdate = DateHelpers.fromSQL(row.getItem("birthdate"));
+        Timestamp birthdate = DateHelpers.fromSqlDateToTimestamp(row.getItem("birthdate"));
 
         String gender = row.getItem("gender");
         String teacherNotes = row.getItem("teacherNotes");

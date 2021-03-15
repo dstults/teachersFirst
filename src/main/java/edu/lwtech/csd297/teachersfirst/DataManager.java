@@ -38,7 +38,6 @@ public class DataManager {
 	public static void initializeDAOs() throws ServletException {
 
 		String initParams = "jdbc:mariadb://lwtech-csd297.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/mercer";
-
         initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
         initParams += "&user=mercer&password=mercer-rox";    
 

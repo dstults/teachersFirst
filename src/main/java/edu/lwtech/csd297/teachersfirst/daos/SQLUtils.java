@@ -135,21 +135,21 @@ class SQLUtils {
 			// Create the new statement object, specifying the recID return column as well
 			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 			
-			stmt.setInt(1, recID);
-			stmt.setString(2, loginName);
-			stmt.setString(3, passwordHash);
-			stmt.setString(4, displayName);
-			stmt.setTimestamp(5, birthdate);
-			stmt.setString(6, gender);
-			stmt.setString(7, teacherNotes);
-			stmt.setString(8, phone1);
-			stmt.setString(9, phone2);
-			stmt.setString(10, email);
-			stmt.setInt(11, isStudent ? 1 : 0);
-			stmt.setInt(12, isInstructor ? 1 : 0);
-			stmt.setInt(13, isAdmin ? 1 : 0);
+			stmt.setString(1, loginName);
+			stmt.setString(2, passwordHash);
+			stmt.setString(3, displayName);
+			stmt.setTimestamp(4, birthdate);
+			stmt.setString(5, gender);
+			stmt.setString(6, teacherNotes);
+			stmt.setString(7, phone1);
+			stmt.setString(8, phone2);
+			stmt.setString(9, email);
+			stmt.setInt(10, isStudent ? 1 : 0);
+			stmt.setInt(11, isInstructor ? 1 : 0);
+			stmt.setInt(12, isAdmin ? 1 : 0);
 			
 			// Execute the INSERT statement
+			logger.debug("ATTEMPTING INSERT: " + stmt.toString());
 			stmt.executeUpdate();
 			
 			// Get the new recID value from the query results and return it to the caller

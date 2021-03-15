@@ -76,7 +76,8 @@ public class NewMemberAction extends ActionRunner {
 
 		//Member member = new Member(loginName, password1, displayName, birthdate, gender, "", phone1, phone2, email, true, false, false);
 		Member member = new Member(loginName, password1, displayName, gender, "", phone1, phone2, email, true, false, false);
-		DataManager.getMemberDAO().insert(member);
+		int newMemberRecordId = DataManager.getMemberDAO().insert(member);
+		member.setRecID(newMemberRecordId);
 		logger.info(DataManager.getMemberDAO().size() + " records total");
 		logger.debug("Registered new member: [{}]", member);
 		
