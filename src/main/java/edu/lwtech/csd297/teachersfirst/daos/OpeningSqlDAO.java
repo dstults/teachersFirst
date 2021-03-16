@@ -44,9 +44,9 @@ public class OpeningSqlDAO implements DAO<Opening> {
             return -1;
         }
 
-        String query = "INSERT INTO Openings (recID, instructorID, startTime, endTime) VALUES (?,?,?,?)";
+        String query = "INSERT INTO Openings (instructorID, startTime, endTime) VALUES (?,?,?)";
 
-        int recID = SQLUtils.executeSQLInsert(conn, query, opening.getRecID(), opening.getInstructorID(), opening.getStartTime(), opening.getEndTime());    
+        int recID = SQLUtils.executeSqlOpeningInsert(conn, query, opening.getRecID(), opening.getInstructorID(), opening.getStartTime(), opening.getEndTime());    
         
         logger.debug("Opening successfully inserted with ID = " + recID);
         return recID;

@@ -117,8 +117,8 @@ class SQLUtils {
     }
 
 
-    // Member Insert
-    public static int executeSqlMemberInsert(Connection conn,
+	// Member Insert
+	public static int executeSqlMemberInsert(Connection conn,
 			String query,
 			int recID, String loginName, String passwordHash,
 			String displayName, Timestamp birthdate, String gender,
@@ -149,7 +149,7 @@ class SQLUtils {
 			stmt.setInt(12, isAdmin ? 1 : 0);
 			
 			// Execute the INSERT statement
-			logger.debug("ATTEMPTING INSERT: " + stmt.toString());
+			//logger.debug("ATTEMPTING INSERT: " + stmt.toString());
 			stmt.executeUpdate();
 			
 			// Get the new recID value from the query results and return it to the caller
@@ -162,75 +162,71 @@ class SQLUtils {
 		}
 
 		return newID;
-    }
+	}
 
 
-    //Opening Insert
-    public static int executeSQLInsert(Connection conn, String query, int recID, int instructorID,
-            Timestamp startTime, Timestamp endTime) {
-                logger.debug("Executing SQL Insert: " + query);
+	//Opening Insert
+	public static int executeSqlOpeningInsert(Connection conn, String query, int recID, int instructorID,
+			Timestamp startTime, Timestamp endTime) {
+				logger.debug("Executing SQL Insert: " + query);
 
-                int newID = -1;
-                String[] returnColumns = new String[] { String.valueOf(recID) };
-        
-                try {
-                    // Create the new statement object, specifying the recID return column as well
-                    PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
+				int newID = -1;
+				String[] returnColumns = new String[] { String.valueOf(recID) };
+				
+				try {
+					// Create the new statement object, specifying the recID return column as well
+					PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 
-                    stmt.setInt(1, recID);
-                    stmt.setInt(2, instructorID);
-                    stmt.setTimestamp(3, startTime);
-                    stmt.setTimestamp(4, endTime);
+					stmt.setInt(1, instructorID);
+					stmt.setTimestamp(2, startTime);
+					stmt.setTimestamp(3, endTime);
+					
+					// Execute the INSERT statement
+					stmt.executeUpdate();
+					
+					// Get the new recID value from the query results and return it to the caller
+					ResultSet keys = stmt.getGeneratedKeys();
+					keys.next();
+					newID = keys.getInt(1);
+				} catch (SQLException e) {
+					logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
+					return -1;
+				}
+		
+				return newID;
+	}
 
-        
-                    // Execute the INSERT statement
-                    stmt.executeUpdate();
-                    
-                    // Get the new recID value from the query results and return it to the caller
-                    ResultSet keys = stmt.getGeneratedKeys();
-                    keys.next();
-                    newID = keys.getInt(1);
-                } catch (SQLException e) {
-                    logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
-                    return -1;
-                }
-        
-                return newID;
-    }
-
-    // Appointment Insert
-    public static int executeSQLInsert(Connection conn, String query, int recID, int studentID, int instructorID,
-            Timestamp startTime, Timestamp endTime) {
-                logger.debug("Executing SQL Insert: " + query);
-
-                int newID = -1;
-                String[] returnColumns = new String[] { String.valueOf(recID) };
-        
-                try {
-                    // Create the new statement object, specifying the recID return column as well
-                    PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
-                    
-                    stmt.setInt(1, recID);
-                    stmt.setInt(2, instructorID);
-                    stmt.setInt(3, instructorID);
-                    stmt.setTimestamp(4, startTime);
-                    stmt.setTimestamp(5, endTime);
-
-        
-                    // Execute the INSERT statement
-                    stmt.executeUpdate();
-                    
-                    // Get the new recID value from the query results and return it to the caller
-                    ResultSet keys = stmt.getGeneratedKeys();
-                    keys.next();
-                    newID = keys.getInt(1);
-                } catch (SQLException e) {
-                    logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
-                    return -1;
-                }
-        
-                return newID;
-    }
+	// Appointment Insert
+	public static int executeSqlAppointmentInsert(Connection conn, String query, int recID, int studentID, int instructorID,
+			Timestamp startTime, Timestamp endTime) {
+				logger.debug("Executing SQL Insert: " + query);
+				
+				int newID = -1;
+				String[] returnColumns = new String[] { String.valueOf(recID) };
+				
+				try {
+					// Create the new statement object, specifying the recID return column as well
+					PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
+					
+					stmt.setInt(1, studentID);
+					stmt.setInt(2, instructorID);
+					stmt.setTimestamp(3, startTime);
+					stmt.setTimestamp(4, endTime);
+					
+					// Execute the INSERT statement
+					stmt.executeUpdate();
+					
+					// Get the new recID value from the query results and return it to the caller
+					ResultSet keys = stmt.getGeneratedKeys();
+					keys.next();
+					newID = keys.getInt(1);
+				} catch (SQLException e) {
+					logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
+					return -1;
+				}
+		
+				return newID;
+	}
 
     public static void disconnect(Connection conn) {
         try {
