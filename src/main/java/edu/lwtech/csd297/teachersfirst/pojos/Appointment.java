@@ -7,8 +7,8 @@ import edu.lwtech.csd297.teachersfirst.*;
 public class Appointment {
     
 	private int recID;
-	private int studentID;
-	private int instructorID;
+	private int studentId;
+	private int instructorId;
 	private Timestamp startTime;
 	private Timestamp endTime;
 
@@ -36,8 +36,8 @@ public class Appointment {
 		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
 		
 		this.recID = recID;
-		this.studentID = studentID;
-		this.instructorID = instructorID;
+		this.studentId = studentID;
+		this.instructorId = instructorID;
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
@@ -59,13 +59,17 @@ public class Appointment {
 	// ----------------------------------------------------------------
 
 	public int getStudentID() {
-		return this.studentID;
+		return this.studentId;
 	}
 	
 	public int getInstructorID() {
-		return this.instructorID;
+		return this.instructorId;
 	}
 	
+	public boolean getIsMyAppointment(int memberId) {
+		return this.studentId == memberId || this.instructorId == memberId;
+	}
+
 	public Timestamp getStartTime() {
 		return this.startTime;
 	}
@@ -82,7 +86,7 @@ public class Appointment {
 
 	@Override
 	public String toString() {
-		return "Appointment/" + this.studentID + ">" + this.instructorID + "@" + this.startTime.toString() + "-" + this.endTime.toString();
+		return "Appointment/" + this.studentId + ">" + this.instructorId + "@" + this.startTime.toString() + "-" + this.endTime.toString();
 	}
 
 	@Override
@@ -93,8 +97,8 @@ public class Appointment {
 
 		Appointment other = (Appointment) obj; // cast to compare fields
 		if (this.recID != other.recID) return false;
-		if (this.studentID != other.studentID) return false;
-		if (this.instructorID != other.instructorID) return false;
+		if (this.studentId != other.studentId) return false;
+		if (this.instructorId != other.instructorId) return false;
 		if (!this.startTime.equals(other.startTime)) return false;
 		if (!this.endTime.equals(other.endTime)) return false;
 

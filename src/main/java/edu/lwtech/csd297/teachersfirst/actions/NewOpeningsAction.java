@@ -21,7 +21,7 @@ public class NewOpeningsAction extends ActionRunner {
 		// This should not be possible for anyone not logged in.
 		final int uid = Security.getUserId(request);
 		if (uid <= 0) {
-			this.SendRedirectToPage("/services?message=Please sign in or register to use those features!");
+			this.SendRedirectToPage("/services?message=Please sign in or register to use this feature!");
 			return;
 		}
 

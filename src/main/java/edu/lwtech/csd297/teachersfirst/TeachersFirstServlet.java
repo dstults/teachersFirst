@@ -179,6 +179,9 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "make_appointment":
 					new NewAppointmentAction(request, response).RunAction();
 					break;
+				case "delete_appointment":
+					new DeleteAppointmentAction(request, response).RunAction();
+					break;
 
 				default:
 					logger.debug("====================== Debug Me ======================");

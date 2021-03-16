@@ -15,7 +15,7 @@ public class NewAppointmentAction extends ActionRunner {
 		// This should not be possible for anyone not logged in.
 		final int uid = Security.getUserId(request);
 		if (uid <= 0) {
-			this.SendRedirectToPage("/services?message=Please sign in or register to use those features!");
+			this.SendRedirectToPage("/services?message=Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -27,6 +27,10 @@ public class NewAppointmentAction extends ActionRunner {
 			studentIdInt = 0;
 		}
 		final boolean studentExists = DataManager.getMemberDAO().retrieveByID(studentIdInt) != null;
+		if (!studentExists) {
+			this.SendRedirectToPage("/openings?message=Student with ID %5B" + studentIdInt + "%5D does not exist!");
+			return;
+		}
 		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
 		int instructorIdInt;
 		try {
@@ -34,18 +38,19 @@ public class NewAppointmentAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			instructorIdInt = 0;
 		}
+
 		final boolean instructorExists = DataManager.getMemberDAO().retrieveByID(instructorIdInt) != null;
+		if (!instructorExists) {
+			this.SendRedirectToPage("/openings?message=Instructor with ID %5B" + instructorIdInt + "%5D does not exist!");
+			return;
+		} else if (studentIdInt == instructorIdInt) {
+			this.SendRedirectToPage("/openings?message=Student ID and Instructor ID both " + studentIdInt + " -- appointments can not be made with self.");
+			return;
+		}
+
 		final String dateString = QueryHelpers.getPost(request, "date");
 		final String startTimeString = QueryHelpers.getPost(request, "appointmentStartTime");
 		final String endTimeString = QueryHelpers.getPost(request, "appointmentEndTime");
-
-		if (!studentExists) {
-			this.SendRedirectToPage("/openings?message=Student with ID %5B" + studentIdInt + "%5D does not exist!");
-			return;
-		} else if (!instructorExists) {
-			this.SendRedirectToPage("/openings?message=Instructor with ID %5B" + instructorIdInt + "%5D does not exist!");
-			return;
-		}
 
 		int month = 1;
 		int day = 1;

@@ -12,33 +12,46 @@ public class AppointmentsPage extends PageLoader {
 	public class PrettifiedAppointment implements IJsonnable {
 
 		private int id;
+		private int instructorId;
 		private String instructor;
+		private int studentId;
 		private String student;
 		private String date;
 		private String startTime;
 		private String endTime;
+		private boolean isMyAppointment;
 
-		public PrettifiedAppointment(int id, String instructor, String student, String date, String startTime, String endTime) {
+		public PrettifiedAppointment(int id, int instructorId, String instructor, int studentId, String student, String date, String startTime, String endTime, boolean isMyAppointment) {
 			this.id = id;
+			this.instructorId = instructorId;
 			this.instructor = instructor;
+			this.studentId = studentId;
 			this.student = student;
 			this.date = date;
 			this.startTime = startTime;
 			this.endTime = endTime;
+			this.isMyAppointment = isMyAppointment;
 		}
 
 		public int getId() { return id; }
+		public int getInstructorId() { return instructorId; }
 		public String getInstructor() { return instructor; }
+		public int getStudentId() { return studentId; }
 		public String getStudent() { return student; }
 		public String getDate() { return date; }
 		public String getStartTime() { return startTime; }
 		public String getEndTime() { return endTime; }
+		public boolean getIsMyAppointment() { return isMyAppointment; }
 		@Override public String toJson() {
 			return "{\"id\":\"" + this.id +
+					"\",\"instructorId\":\"" + this.instructorId +
+					"\",\"instructor\":\"" + this.instructor +
+					"\",\"studentId\":\"" + this.studentId +
 					"\",\"student\":\"" + this.student +
 					"\",\"date\":\"" + this.date +
 					"\",\"startTime\":\"" + this.startTime +
 					"\",\"endTime\":\"" + this.endTime +
+					"\",\"isMyAppointment\":\"" + this.isMyAppointment +
 					"\"}";
 		}
 	}
@@ -86,16 +99,34 @@ public class AppointmentsPage extends PageLoader {
 			// check all DAOs
 			for (Appointment appointment : appointmentDAO) {
 				// make sure we're either an admin (sees everything) or in one of the appointments
-				if ((isAdmin && filterMemberId == -1) || appointment.getStudentID() == filterMemberId || appointment.getInstructorID() == filterMemberId) {
+				if ((isAdmin && filterMemberId == -1) || appointment.getIsMyAppointment(uid)) {
 					instructorName = memberDAO.retrieveByID(appointment.getInstructorID()).getDisplayName();
 					studentName = memberDAO.retrieveByID(appointment.getStudentID()).getDisplayName();
 					date = appointment.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 					startTime = appointment.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
 					endTime = appointment.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
 					if (DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-						pastAppointments.add(new PrettifiedAppointment(appointment.getRecID(), instructorName, studentName, date, startTime, endTime));
+						pastAppointments.add(
+							new PrettifiedAppointment(
+								appointment.getRecID(),
+								appointment.getInstructorID(),
+								instructorName,
+								appointment.getStudentID(),
+								studentName, date, startTime, endTime,
+								appointment.getIsMyAppointment(uid)
+							)
+						);
 					} else {
-						futureAppointments.add(new PrettifiedAppointment(appointment.getRecID(), instructorName, studentName, date, startTime, endTime));
+						futureAppointments.add(
+							new PrettifiedAppointment(
+								appointment.getRecID(),
+								appointment.getInstructorID(),
+								instructorName,
+								appointment.getStudentID(),
+								studentName, date, startTime, endTime,
+								appointment.getIsMyAppointment(uid)
+							)
+						);
 					}
 				}
 			}
