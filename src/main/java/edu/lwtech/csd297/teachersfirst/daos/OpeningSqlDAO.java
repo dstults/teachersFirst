@@ -174,7 +174,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
     public int size() {
         logger.debug("Getting the number of rows...");
 
-        String query = "SELECT count(*) FROM Openings";
+        String query = "SELECT count(*) as cnt FROM Openings";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         if (rows == null) {
@@ -182,7 +182,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
             return 0;
         }
 
-        String value = rows.get(0).getItem();
+        String value = rows.get(0).getItem("cnt");
         return Integer.parseInt(value);
     }    
 
@@ -192,8 +192,8 @@ public class OpeningSqlDAO implements DAO<Opening> {
         logger.debug("Converting " + row + " to Opening...");
         int recID = Integer.parseInt(row.getItem("recID"));
         int instructorID = Integer.parseInt(row.getItem("instructorID"));
-        Timestamp startTime = DateHelpers.toTimestamp(row.getItem("startTime"));
-        Timestamp endTime = DateHelpers.toTimestamp(row.getItem("endTime"));
+        Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));
+        Timestamp endTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("endTime"));
         return new Opening(recID, instructorID, startTime, endTime);
     }
 }
