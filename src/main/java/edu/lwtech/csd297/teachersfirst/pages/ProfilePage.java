@@ -27,7 +27,8 @@ public class ProfilePage extends PageLoader {
 
 		// Make sure logged in
 		if (uid > 0) {
-			Member browsingUser = DataManager.getMemberDAO().retrieveByID(uid);
+			boolean isSelf = memberId == uid;
+			templateDataMap.put("isSelf", isSelf);
 
 			// Try to get member data
 			try {
@@ -37,7 +38,7 @@ public class ProfilePage extends PageLoader {
 			}
 
 			// Check authority to view: user is self, student is viewing instructor, or instructor/admin sees all
-			if (browsingUser.getIsAdmin() || browsingUser.getIsInstructor() || uid == memberId || (browsingUser.getIsStudent() && member.getIsInstructor())) {
+			if (isAdmin || isInstructor || uid == memberId || (isStudent && member.getIsInstructor())) {
 				// OK
 			} else {
 				member = null; // clear this back out

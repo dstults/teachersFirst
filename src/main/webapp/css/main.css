@@ -1,53 +1,56 @@
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 html{
-    font-size: 10px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: black;
-    margin-bottom: 5rem;
+	font-size: 10px;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	color: black;
+	margin-bottom: 5rem;
 }
 body{
-    width: 100%;
-    height: 100%;
-    background-color: var(--backgroundColor);
+	width: 100%;
+	height: 100%;
+	background-color: var(--backgroundColor);
 }
-a{
-    text-decoration: none;
+img {
+	width: 100%;
+}
+a {
+	text-decoration: none;
 }
 .landing-text{
-    margin: auto;
-    width: 100%;
-    text-align: center;
-    z-index: 1;
-    padding-bottom: 3rem;
+	margin: auto;
+	width: 100%;
+	text-align: center;
+	z-index: 1;
+	padding-bottom: 3rem;
 }
 .landing-text h1{
-    font-size: 7rem;
-    padding: 1rem;
-    user-select: none;
-    width: fit-content;
-    margin: auto;
+	font-size: 7rem;
+	padding: 1rem;
+	user-select: none;
+	width: fit-content;
+	margin: auto;
 }
 .landing-text h6{
-    font-size: 2rem;
-    font-weight: 300;
-    width: fit-content;
-    margin: auto;
+	font-size: 2rem;
+	font-weight: 300;
+	width: fit-content;
+	margin: auto;
 }
 .top-right-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 20%;
-    font-family: 'Courier New', Courier, monospace, sans-serif;
-    font-size: 2rem;
-    line-height: 140%;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 20%;
+	font-family: 'Courier New', Courier, monospace, sans-serif;
+	font-size: 2rem;
+	line-height: 140%;
 	width: 15rem;
 	border: 1px solid black;
-    background-color: var(--primaryHighlight);
+	background-color: var(--primaryHighlight);
 }
 .welcome-text {
 	background-color: none;
@@ -59,109 +62,115 @@ a{
 	top: 50px;
 }
 header{
-    width: 100%;
-    margin-bottom: 5rem;
+	width: 100%;
+	margin-bottom: 5rem;
 }
 header a, .fake-buttons a{
-    text-decoration: none;
-    color: black;
+	text-decoration: none;
+	color: black;
 }
 .top-nav-list{
 	margin: 0 auto;
 	padding: 0.7rem 0.4rem;
-    background-color: var(--primaryHighlight);
-    list-style: none;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
+	background-color: var(--primaryHighlight);
+	list-style: none;
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
 	text-align: center;
 }
 li{
 	display: inline;
-    margin: 0 0.8rem;
-    padding-left: 2rem;
+	margin: 0 0.8rem;
+	padding-left: 2rem;
 }
 .nav-link{
-    font-family: 'Courier New', Courier, monospace, sans-serif;
-    font-size: 3rem;
-    padding: 1rem;
+	font-family: 'Courier New', Courier, monospace, sans-serif;
+	font-size: 3rem;
+	padding: 1rem;
 }
 .nav-link:hover, .nav-link:focus, .mouseover:hover, .mouseover:focus {
-    font-weight: bold;
+	font-weight: bold;
 	transform: scale(1.1);
 	transition: all 0.1s ease-in-out;
 }
 .appointments-text{
-    margin: auto;
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 2.5rem;
-    display: block;
+	margin: auto;
+	margin-top: 2rem;
+	text-align: center;
+	font-size: 2.5rem;
+	display: block;
 }
 .appointments-buttons{
-    float: right;
-    padding-right: 20rem;
+	float: right;
+	padding-right: 20rem;
 }
 .openings-buttons{
-    float: right;
-    padding-right: 20rem;
+	float: right;
+	padding-right: 20rem;
 }
 .openings-text{
-    width: 100%;
-    margin: auto;
-    margin-bottom: 2rem;
-    padding-top: 5rem;
+	width: 100%;
+	margin: auto;
+	margin-bottom: 2rem;
+	padding-top: 5rem;
 }
 .openings-text h1{
-    text-align: center;
+	text-align: center;
 }
 .fake-buttons {
-    color: black;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
+	color: black;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
 }
 .fake-buttons li{
-    display: inline;
-    list-style-type: none;
-    width: 30rem;
+	display: inline;
+	list-style-type: none;
+	width: 30rem;
 }
 .fake-button{
-    background-color: var(--primaryHighlight);
-    border: none;
-    border-radius: 8px;
-    padding: 15px 32px;
+	background-color: var(--primaryHighlight);
+	border: none;
+	border-radius: 8px;
+	padding: 15px 32px;
 }
 .app-fake-button{
-    background-color: var(--primaryHighlight);
-    border: none;
-    border-radius: 8px;
-    padding: 15px 60px;
+	background-color: var(--primaryHighlight);
+	border: none;
+	border-radius: 8px;
+	padding: 15px 60px;
 }
 .app-fake-button:hover,
 .app-fake-button:focus{
-    background-color: var(--primaryHighlightDark);
+	background-color: var(--primaryHighlightDark);
 }
 .fake-button:hover,
 .fake-button:focus{
-    background-color: var(--primaryHighlightDark);
+	background-color: var(--primaryHighlightDark);
 }
-table {
+
+/* screen-wide tables */
+
+table.info-list {
 	margin: 1rem auto;
-    width: 90%;
-    border-collapse: collapse;
-    font-size: 1.2rem;
+	width: 90%;
+	border-collapse: collapse;
+	font-size: 1.2rem;
 }
-table th{
-    font-size: 1.5rem;
-    background-color: var(--primaryHighlight);
+table.info-list th{
+	font-size: 1.5rem;
+	background-color: var(--primaryHighlight);
 }
-table, th, td{
-    border: 1px solid black;
-    padding: 15px 20px;
+table.info-list, table.info-list th, table.info-list td{
+	border: 1px solid black;
+	padding: 15px 20px;
 	text-align: center;
 }
+
+/* calendar page */
+
 .calendar-date {
 	font-size: 400%;
 	color: var(--primaryHighlight);
@@ -173,6 +182,7 @@ table, th, td{
 }
 table.openings-calendar {
 	width: auto;
+	margin: 1rem auto;
 	table-layout: fixed;
 	border: 2px solid black;
 	box-shadow: 2px 2px 2px black;
@@ -201,126 +211,174 @@ table.openings-calendar div {
 table.openings-calendar div.highlight {
 	background-color: yellow;
 }
-.make-appointment, .confirm-appointment{
-    margin: auto;
-    width: fit-content;
-    font-size: 2rem;
-    text-align: left;
-    font-size: 2rem;
-    font-weight: bold;
-    line-height: 200%;
+
+
+/* profile page */
+
+.profile-page {
+	font-size: 2rem;
+	text-align: left;
 }
-.make-appointment label{
-    margin-right: 1rem;
+table.profile-outer {
+	table-layout: fixed;
+	padding: 15px 10px;
+	width: 100%;
+	border: 2px solid black;
+	box-shadow: 2px 2px 2px black;
 }
-.make-appointment input[type=submit], .confirm-appointment input[type=submit]{
-    display: block;
-    margin-top: 1rem;
+table.profile-outer td {
+	width: 50%;
 }
-.select{
-    display: block;
-    float: left;
-    margin-left: 8px;
+table.profile-inner {
+	table-layout: fixed;
+	border: none;
+	width: 90%;
+	margin: 10px auto;
 }
-.logout{
-    width: 100%;
-    text-align: center;
-    line-height: 200%;
-    font-size: 2rem;
-}
-label{
-    display: block;
-    font-weight: bold;
-    float: left;
-}
-input[type=text], input[type=password], input[type=email] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0 0 0;
-    display: inline-block;
-    border: none;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 2rem;
-}
-input[type=submit]{
-    background-color: var(--primaryHighlight);
-    border: none;
-    padding: 15px 60px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 2rem;
-    font-weight: bold;
-}
-input[type=submit]:hover{
-    background-color: var(--primaryHighlightDark);
-}
-.please-login{
-    background-color: var(--primaryHighlight);
-    text-align: center;
-    font-size: 1.8rem;
-    width: fit-content;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin: auto;
+table.profile-inner td {
+	border: none;
 }
 
-/* utilized by forms */
-.fixed-width-subpage {
-    margin: auto;
-    font-size: 2rem;
-    width: 520px;
-    text-align: center;
+/* make/confirm appointment page */
+
+.make-appointment, .confirm-appointment{
+	margin: auto;
+	width: fit-content;
+	font-size: 2rem;
+	text-align: left;
+	font-size: 2rem;
+	font-weight: bold;
+	line-height: 200%;
 }
+.make-appointment label{
+	margin-right: 1rem;
+}
+.make-appointment input[type=submit], .confirm-appointment input[type=submit]{
+	display: block;
+	margin-top: 1rem;
+}
+.select{
+	display: block;
+	float: left;
+	margin-left: 8px;
+}
+.logout{
+	width: 100%;
+	text-align: center;
+	line-height: 200%;
+	font-size: 2rem;
+}
+label {
+	display: block;
+	font-weight: bold;
+	float: left;
+}
+input[type=text], input[type=password], input[type=email] {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0 0 0;
+	display: inline-block;
+	border: none;
+	border-radius: 4px;
+	box-sizing: border-box;
+	font-size: 2rem;
+}
+input[type=submit] {
+	background-color: var(--primaryHighlight);
+	border: none;
+	padding: 15px 60px;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 2rem;
+	font-weight: bold;
+}
+input[type=submit]:hover {
+	background-color: var(--primaryHighlightDark);
+}
+.please-login{
+	background-color: var(--primaryHighlight);
+	text-align: center;
+	font-size: 1.8rem;
+	width: fit-content;
+	padding: 10px 15px;
+	border-radius: 8px;
+	margin: auto;
+}
+
+/* generics */
+
+.fixed-width-subpage {
+	margin: 0 auto;
+	font-size: 2rem;
+	width: 550px;
+	text-align: center;
+}
+.fixed-width-subpage-wide {
+	margin: 0 auto;
+	font-size: 2rem;
+	min-width: 750px;
+	width: 80%;
+	max-width: 1000px;
+	text-align: center;
+}
+
 .fixed-width-subpage p{
-    line-height: 200%;
+	line-height: 200%;
 }
 .required{
-    color: red;
+	color: red;
 }
 input[type=radio]{
-    border-radius: 50%;
-    position: relative;
-    float: left;
-    display: block;
-    margin: 8px 8px 0 0;
+	border-radius: 50%;
+	position: relative;
+	float: left;
+	display: block;
+	margin: 8px 8px 0 0;
 }
 .radio{
-    font-weight: lighter;
-    margin-right: 1.5rem;
+	font-weight: lighter;
+	margin-right: 1.5rem;
 }
 .gender{
-    display: block;
-    margin-right: 2rem;
-}
-.profile-page{
-    margin: auto;
-    width: fit-content;
-    font-size: 2rem;
-    text-align: left;
-    font-size: 2rem;
-    font-weight: bold;
-    line-height: 200%;
-}
-.profile-page p{
-    display: block;
+	display: block;
+	margin-right: 2rem;
 }
 
 .banner{
-    background-color: var(--primaryHighlight);
-    animation: error_flash 1s linear 0.2s;
-    text-align: center;
-    font-size: 1.8rem;
-    width: fit-content;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin: auto;
-    margin-top: -3rem;
-    margin-bottom: 3rem;
+	background-color: var(--primaryHighlight);
+	animation: error_flash 1s linear 0.2s;
+	text-align: center;
+	font-size: 1.8rem;
+	width: fit-content;
+	padding: 10px 15px;
+	border-radius: 8px;
+	margin: auto;
+	margin-top: -3rem;
+	margin-bottom: 3rem;
 }
 
+/* Simple formatting */
 
-/* Floats */
+.bold-left {
+	font-weight: bold;
+	text-align: left;
+	margin: 0;
+}
+.normal-paragraph {
+	font-weight: normal;
+	text-align: left;
+	text-indent: 50px;
+	margin: 0;
+}
+.italic {
+	font-style: italic;
+}
+.bold {
+	font-weight: bold;
+}
+
+/* Floats and alignments */
+
 .aleft {
 	text-align: left;
 }
@@ -334,7 +392,8 @@ input[type=radio]{
 	float: right;
 }
 
-/* Colors */
+/* Colors and Designs */
+
 .graybg {
 	background-color: var(--primaryHighlightDark);
 }
@@ -353,15 +412,18 @@ input[type=radio]{
 .faded {
 	opacity: 50%;
 }
+.extra-side-padding {
+	padding: 8px 32px;
+}
 
 
 /* Animations */
 
 @keyframes error_flash {
-    14.3% { background-color: red; }
-    28.6% { background-color: var(--primaryHighlight); }
-    42.9% { background-color: red; }
-    57.1% { background-color: var(--primaryHighlight); }
-    71.4% { background-color: red; }
-    85.7% { background-color: var(--primaryHighlight); }
+	14.3% { background-color: red; }
+	28.6% { background-color: var(--primaryHighlight); }
+	42.9% { background-color: red; }
+	57.1% { background-color: var(--primaryHighlight); }
+	71.4% { background-color: red; }
+	85.7% { background-color: var(--primaryHighlight); }
 }

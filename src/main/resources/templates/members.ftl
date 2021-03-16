@@ -7,7 +7,7 @@
 	<#include "please_login.ftl">
 <#else>
 
-	<table>
+	<table class="info-list">
 		<tr>
 			<th>Rec ID</th>
 			<th>Username</th>

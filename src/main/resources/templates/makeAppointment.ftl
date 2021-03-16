@@ -15,8 +15,8 @@
 		<input type="hidden" name="openingStartTime" value="${openingStartTime}">
 		<input type="hidden" name="openingEndTime" value="${openingEndTime}">
 
-		<p>Student: ${studentName}</p>
-		<p>Instructor: ${instructorName}</p>
+		<p>Student: <a href="/profile?memberId=${studentId}">${studentName}</a></p>
+		<p>Instructor: <a href="/profile?memberId=${instructorId}">${instructorName}</a></p>
 		<p>Date: ${date}</p>
 		<p>Available from: ${openingStartTime}</p>
 		<p>Available till: ${openingEndTime}</p>

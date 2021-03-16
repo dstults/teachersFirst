@@ -4,7 +4,7 @@
 <body>
 <#include "header.ftl">
 
-<table>
+<table class="info-list">
 	<tr>
 		<th>Service Name</th><th>Description</th><th>Teachers</th>
 	</tr>

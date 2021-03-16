@@ -1,6 +1,8 @@
 package edu.lwtech.csd297.teachersfirst.pojos;
 
 import java.sql.Timestamp;
+import java.time.*;
+import java.time.format.*;
 
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
 
@@ -118,12 +120,33 @@ public class Member {
 		return this.birthdate;
 	}
 
+	public LocalDate getBirthDate() {
+		return this.birthdate.toLocalDateTime().toLocalDate();
+	}
+
+	public String getBirthDateFormatted() {
+		return this.birthdate.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+	}
+
 	public int getAge() {
 		return DateHelpers.calculateAgeFrom(this.birthdate);
 	}
 
 	public String getGender() {
 		return this.gender;
+	}
+
+	public String getGenderWord() {
+		switch (this.gender) {
+			case "m":
+				return "Male";
+			case "f":
+				return "Female";
+			case "":
+				return "Other/Unspecified";
+			default:
+				return "[ " + this.gender + " ]";
+		}
 	}
 
 	public String getTeacherNotes() {

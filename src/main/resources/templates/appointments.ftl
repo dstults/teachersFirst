@@ -16,7 +16,7 @@
 	</div>
 
 	<h2 class="appointments-text" style="margin-top: 11rem;">Upcoming appointments</h2>
-	<table>
+	<table class="info-list">
 		<tr>
 			<#if isAdmin><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th>
 		</tr>
@@ -35,7 +35,7 @@
 	</table>
 
 	<h2 class="appointments-text">Previous appointments</h2>
-	<table>
+	<table class="info-list">
 		<tr>
 			<#if isAdmin><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th>
 		</tr>
