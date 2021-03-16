@@ -49,8 +49,8 @@ public class DataManager {
 		if (!DataManager.serviceDAO.initialize("")) throw new UnavailableException("Unable to initialize the serviceDAO.");
 		DataManager.allDAOs.add(DataManager.serviceDAO);
 
-		DataManager.appointmentDAO = new AppointmentMemoryDAO();
-		if (!DataManager.appointmentDAO.initialize("")) throw new UnavailableException("Unable to initialize the appointmentDAO.");
+		DataManager.appointmentDAO = new AppointmentSqlDAO();
+		if (!DataManager.appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
 		DataManager.allDAOs.add(DataManager.appointmentDAO);
 
 		DataManager.openingDAO = new OpeningSqlDAO();

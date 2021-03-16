@@ -98,7 +98,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
     public List<Appointment> retrieveAll() {
         logger.debug("Getting all Appointments...");
         
-        String query = "SELECT recID, instructorID, startTime, endTime";
+        String query = "SELECT recID, studentID, instructorID, startTime, endTime";
         query += " FROM Appointments ORDER BY recID";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
@@ -174,7 +174,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
     public int size() {
         logger.debug("Getting the number of rows...");
 
-        String query = "SELECT count(*) FROM Appointments";
+        String query = "SELECT count(*) as cnt FROM Appointments";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         if (rows == null) {
@@ -182,7 +182,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
             return 0;
         }
 
-        String value = rows.get(0).getItem();
+        String value = rows.get(0).getItem("cnt");
         return Integer.parseInt(value);
     }    
 
@@ -193,8 +193,8 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
         int recID = Integer.parseInt(row.getItem("recID"));
         int studentID = Integer.parseInt(row.getItem("studentID"));
         int instructorID = Integer.parseInt(row.getItem("instructorID"));
-        Timestamp startTime = DateHelpers.toTimestamp(row.getItem("startTime"));
-        Timestamp endTime = DateHelpers.toTimestamp(row.getItem("endTime"));
+        Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));
+        Timestamp endTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("endTime"));
         return new Appointment(recID,studentID, instructorID, startTime, endTime);
     }
 }
