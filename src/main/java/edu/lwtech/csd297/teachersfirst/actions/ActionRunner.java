@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
-import edu.lwtech.csd297.teachersfirst.pojos.JsonUtils;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public abstract class ActionRunner {
 
@@ -18,6 +18,9 @@ public abstract class ActionRunner {
 	protected HttpServletResponse response;
 	protected boolean jsonMode;
 	protected int uid;
+	protected boolean isAdmin;
+	protected boolean isInstructor;
+	protected boolean isStudent;
 	protected static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
 
 	// Constructors
@@ -27,6 +30,12 @@ public abstract class ActionRunner {
 		this.response = response;
 		jsonMode = QueryHelpers.getGetBool(request, "json");
 		uid = Security.getUserId(request);
+		if (uid > 0) {
+			Member member = DataManager.getMemberDAO().retrieveByID(uid);
+			isAdmin = member.getIsAdmin();
+			isInstructor = member.getIsInstructor();
+			isStudent = member.getIsStudent();
+		}
 	}
 
 	// Public entry point

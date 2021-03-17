@@ -105,23 +105,25 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "/logout":
 					new LogoutPage(request, response).loadPage();
 					break;
+
 				case "/log_in": // intentionally different - debug/json use
 					new LogInAction(request, response).RunAction(); // action, not page
-					return; // return, not break
+					return; // don't log
 				case "/log_out": // intentionally different - debug/json use
 					new LogOutAction(request, response).RunAction(); // action, not page
-					return; // return, not break
+					return; // don't log
 
 				case "/dynamic.css":
 					new DynamicCssFile(request, response).loadPage();
-					return; // don't log!
+					return; // don't log
+
 				case "/health":
 					try {
 						response.sendError(HttpServletResponse.SC_OK, "OK");
 					} catch (IOException e) {
 						logger.error("IO Error sending health response: ", e);
 					}
-					return; // don't log!
+					return; // don't log
 
 				case "/test":
 					new DiagnosticsPage(request, response).loadPage();
@@ -188,13 +190,16 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "delete_appointment":
 					new DeleteAppointmentAction(request, response).RunAction();
 					break;
+				case "delete_opening":
+					new DeleteOpeningAction(request, response).RunAction();
+					break;
 
 				default:
 					logger.debug("====================== Debug Me ======================");
 					logger.debug("Post Parameters: {}", parameters);
 					logger.debug("Page Path: {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					return;
+					return; // use above log instead
 			}
 
 

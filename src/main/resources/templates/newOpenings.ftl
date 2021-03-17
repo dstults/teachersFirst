@@ -14,13 +14,13 @@
 		<input type="text" name="instructorId" value="${instructorId}" placeholder="startDate">
 
 		<select name="daysOfWeek" id="daysOfWeek">
-			<option value="Sunday">Sunday</option>
-			<option value="Monday">Monday</option>
-			<option value="Tuesday">Tuesday</option>
-			<option value="Wednesday">Wednesday</option>
-			<option value="Thursday">Thursday</option>
-			<option value="Friday">Friday</option>
-			<option value="Saturday">Saturday</option>
+			<option value="Su">Sunday</option>
+			<option value="Mo">Monday</option>
+			<option value="Tu">Tuesday</option>
+			<option value="We">Wednesday</option>
+			<option value="Th">Thursday</option>
+			<option value="Fr">Friday</option>
+			<option value="Sa">Saturday</option>
 		</select>
 
 		<input type="text" name="startDate" value="${startDate}" placeholder="startDate">

@@ -67,18 +67,18 @@
 
 </body>
 <script>
-	const confirmDeleteAppointment = (appointmentId) => {
-		if (confirm('Are you sure you want to delete appointment ID #' + appointmentId + ' ?')) {
-			const xhr = new XMLHttpRequest();
-			xhr.open('POST', '/');
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.onload = function() {
-				if (xhr.status === 200) {
-					window.location.href = xhr.responseURL;
-				}
+const confirmDeleteAppointment = (appointmentId) => {
+	if (confirm('Are you sure you want to delete appointment ID #' + appointmentId + ' ?')) {
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				window.location.href = xhr.responseURL;
 			}
-			xhr.send('action=delete_appointment&appointmentId=' + appointmentId);
 		}
+		xhr.send('action=delete_appointment&appointmentId=' + appointmentId);
 	}
+}
 </script>
 </html>

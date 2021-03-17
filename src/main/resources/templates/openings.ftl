@@ -8,14 +8,12 @@
 			<li>
 				<a href="javascript:openFilter();" class="fake-button">Search openings</a>
 			</li>
-		</ul>
-		<#if isAdmin || isInstructor>
-		<ul class="fake-buttons">
+			<#if isAdmin || isInstructor>
 			<li>
 				<a href="javascript:makeOpenings();" class="fake-button">Make New Openings</a>
 			</li>
+			</#if>
 		</ul>
-		</#if>
 	</div>
 
 	<div class="openings-text">
@@ -33,10 +31,17 @@
 				<p class="calendar-date">${day.name}</p>
 				<#if day.openings?has_content && day.openings?size != 0>
 				<#list day.openings as opening>
+				<#if isAdmin || (isInstructor && opening.instructorId == userId)>
+				<div class="${opening.highlight}">
+					<p class="aleft"><a href="javascript:confirmDeleteOpening(${opening.id?c});" class="red bold">X </a><a href="/make_appointment?openingId=${opening.id}&instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}">${opening.instructorName}:</p>
+					<p class="aright">${opening.startTime} - ${opening.endTime}</a></p>
+				</div>
+				<#else>
 				<a href="/make_appointment?openingId=${opening.id}&instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}"><div class="${opening.highlight}">
 					<p class="aleft">${opening.instructorName}:</p>
 					<p class="aright">${opening.startTime} - ${opening.endTime}</p>
 				</div></a>
+				</#if>
 				</#list>
 				<#else>
 				
@@ -57,6 +62,19 @@ const openFilter = () => {
 }
 <#if isAdmin || isInstructor>
 const makeOpenings = () => window.location.href = "/new_openings";
+const confirmDeleteOpening = (openingId) => {
+	if (confirm('Are you sure you want to delete opening ID #' + openingId + ' ?')) {
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				window.location.href = xhr.responseURL;
+			}
+		}
+		xhr.send('action=delete_opening&openingId=' + openingId);
+	}
+}
 </#if>
 </script>
 </html>
