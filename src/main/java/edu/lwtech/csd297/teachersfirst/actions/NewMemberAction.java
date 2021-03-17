@@ -16,9 +16,8 @@ public class NewMemberAction extends ActionRunner {
 	public void RunAction() {
 
 		// This version of this process requites that you're not signed in.
-		final int uid = Security.getUserId(request);
 		if (uid > 0) {
-			this.SendRedirectToPage("/services?message=Please sign out before trying to register a new account!");
+			this.SendPostReply("/services", "", "Please sign out before trying to register a new account!");
 			return;
 		}
 
@@ -34,29 +33,29 @@ public class NewMemberAction extends ActionRunner {
 		String phone2 = QueryHelpers.getPost(request, "phone2");
 		String email = QueryHelpers.getPost(request, "email");
 
-		final String retryString = "loginName=" + loginName + "&displayName=" + displayName + "&gender=" + gender + "&phone1=" + phone1 + "&phone2=" + phone2 + "&email=" + email + "&";
+		final String retryString = "loginName=" + loginName + "&displayName=" + displayName + "&gender=" + gender + "&phone1=" + phone1 + "&phone2=" + phone2 + "&email=" + email;
 
 		//TODO: Must check to make sure string input does not exceed database lengths
 		if (loginName.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid login name.");
+			this.SendPostReply("/register", retryString, "Please provide a valid login name.");
 			return;
 		}
 		if (password1.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid password.");
+			this.SendPostReply("/register", retryString, "Please provide a valid password.");
 			return;
 		}
 		if (displayName.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid display name.");
+			this.SendPostReply("/register", retryString, "Please provide a valid display name.");
 			return;
 		}
 		if (password2.isEmpty() || !password2.equals(password1)) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Passwords do not match!");
+			this.SendPostReply("/register", retryString, "Passwords do not match!");
 			return;
 		}
 		// trim and lcase gender string -- if it's not empty, which is valid
 		if (gender.length() > 0) gender = gender.toLowerCase().substring(0, 1);
 		if (!gender.equals("m") && !gender.equals("f") && !gender.equals("")) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid gender (m/f/blank).");
+			this.SendPostReply("/register", retryString, "Please provide a valid gender (m/f/blank).");
 			return;
 		}
 
@@ -66,7 +65,7 @@ public class NewMemberAction extends ActionRunner {
 		List<Member> members = DataManager.getMemberDAO().retrieveAll();
 		for (Member member : members) {
 			if (member.getLoginName() == loginName) {
-				this.SendRedirectToPage("/register?" + retryString + "message=Login name '" + loginName + "' already taken, please try another.");
+				this.SendPostReply("/register", retryString, "Login name '" + loginName + "' already taken, please try another.");
 				return;
 			}
 		}
@@ -83,7 +82,7 @@ public class NewMemberAction extends ActionRunner {
 		
 		// Log user into session
 		Security.login(request, member);
-		this.SendRedirectToPage("/appointments?message=Welcome new user!");
+		this.SendPostReply("/appointments", "", "Welcome new user!");
 		return;
 	}
 	

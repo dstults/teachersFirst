@@ -11,23 +11,30 @@ public class LogInAction extends ActionRunner {
 
 	@Override
 	public void RunAction() {
+		if (uid > 0) {
+			this.SendPostReply("/appointments", "", "You're already logged in!");
+			return;
+		}
+
 		String loginName = QueryHelpers.getPost(request, "loginName");
 		String password = QueryHelpers.getPost(request, "password");
 
 		if (loginName == null || loginName.isEmpty() || password == null || password.isEmpty()) {
-			this.SendRedirectToPage("/login?loginName=" + loginName + "&message=Please enter a valid user name and password.");
+			this.SendPostReply("/login", "loginName=" + loginName, "Please enter a valid user name and password.");
 			return;
 		}
 
 		Member member = Security.checkPassword(loginName, password);
 		if (member != null) {
 			Security.login(request, member);
-			this.SendRedirectToPage("/appointments");
+			this.SendPostReply("/appointments", "", "Welcome back, " + member.getDisplayName());
 			return;
 		} else {
-			this.SendRedirectToPage("/login?loginName=" + loginName + "&message=Could not log you in.");
+			this.SendPostReply("/login", "loginName=" + loginName, "Could not log you in.");
 			return;
 		}
 	}
+
+
 	
 }

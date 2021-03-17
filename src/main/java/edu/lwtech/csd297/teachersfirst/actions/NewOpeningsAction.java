@@ -19,9 +19,8 @@ public class NewOpeningsAction extends ActionRunner {
 	public void RunAction() {
 
 		// This should not be possible for anyone not logged in.
-		final int uid = Security.getUserId(request);
 		if (uid <= 0) {
-			this.SendRedirectToPage("/services?message=Please sign in or register to use this feature!");
+			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -39,7 +38,7 @@ public class NewOpeningsAction extends ActionRunner {
 		String startTimeString = QueryHelpers.getPost(request, "startTime");
 		String endTimeString = QueryHelpers.getPost(request, "endTime");
 
-		final String retryString = "instructorId=" + instructorIdString + "&startDate=" + startDateString + "&endDate=" + endDateString + "&daysOfWeek=" + daysOfWeekString + "&startTime=" + startTimeString + "&endTime=" + endTimeString + "&";
+		final String retryString = "instructorId=" + instructorIdString + "&startDate=" + startDateString + "&endDate=" + endDateString + "&daysOfWeek=" + daysOfWeekString + "&startTime=" + startTimeString + "&endTime=" + endTimeString;
 
 		final int startHour;
 		final int startMinute;
@@ -49,7 +48,7 @@ public class NewOpeningsAction extends ActionRunner {
 			startHour = Integer.parseInt(timeInfo[0]);
 			startMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Could not parse start time: %5B" + startTimeString + "%5D !");
+			this.SendPostReply("/new_openings", retryString, "Could not parse start time: %5B" + startTimeString + "%5D !");
 			return;
 		}
 		final int endHour;
@@ -60,32 +59,32 @@ public class NewOpeningsAction extends ActionRunner {
 			endHour = Integer.parseInt(timeInfo[0]);
 			endMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Could not parse end time: %5B" + endTimeString + "%5D !");
+			this.SendPostReply("/new_openings", retryString, "Could not parse end time: %5B" + endTimeString + "%5D !");
 			return;
 		}
 
 		if (!instructorExists) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid instructor ID.");
+			this.SendPostReply("/new_openings", retryString, "Please provide a valid instructor ID.");
 			return;
 		}
 		if (startDateString.isEmpty()) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid start date.");
+			this.SendPostReply("/new_openings", retryString, "Please provide a valid start date.");
 			return;
 		}
 		if (endDateString.isEmpty()) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid end date.");
+			this.SendPostReply("/new_openings", retryString, "Please provide a valid end date.");
 			return;
 		}
 		if (daysOfWeekString.isEmpty() ) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide days of the week.");
+			this.SendPostReply("/new_openings", retryString, "Please provide days of the week.");
 			return;
 		}
 		if (startTimeString.isEmpty()) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid start time.");
+			this.SendPostReply("/new_openings", retryString, "Please provide a valid start time.");
 			return;
 		}
 		if (endTimeString.isEmpty()) {
-			this.SendRedirectToPage("/new_openings?" + retryString + "message=Please provide a valid end time.");
+			this.SendPostReply("/new_openings", retryString, "Please provide a valid end time.");
 			return;
 		}
 		
@@ -100,7 +99,7 @@ public class NewOpeningsAction extends ActionRunner {
 		if(daysOfWeekString.contains("fr")) openedDays.add(DayOfWeek.FRIDAY);
 		if(daysOfWeekString.contains("sa")) openedDays.add(DayOfWeek.SATURDAY);
 		if (openedDays.size() == 0) {
-			this.SendRedirectToPage("/new_opening?" + retryString + "message=Couldn't parse your days of the week.");
+			this.SendPostReply("/new_opening", retryString, "Couldn't parse your days of the week.");
 			return;
 		}
 
@@ -126,7 +125,7 @@ public class NewOpeningsAction extends ActionRunner {
 			today = today.plusDays(1);
 		}
 
-		this.SendRedirectToPage("/openings?message=Openings made, good job!");
+		this.SendPostReply("/openings", "", "Openings made, good job!");
 		return;
 	}
 	

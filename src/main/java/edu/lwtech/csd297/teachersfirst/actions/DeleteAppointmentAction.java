@@ -13,9 +13,8 @@ public class DeleteAppointmentAction extends ActionRunner {
 	public void RunAction() {
 
 		// This should not be possible for anyone not logged in.
-		final int uid = Security.getUserId(request);
 		if (uid <= 0) {
-			this.SendRedirectToPage("/services?message=Please sign in or register to use this feature!");
+			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -28,7 +27,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 		}
 		final Appointment appointment = DataManager.getAppointmentDAO().retrieveByID(appointmentIdInt);
 		if (appointment == null) {
-			this.SendRedirectToPage("/appointments?message=Appointment " + appointmentIdInt + " not found!");
+			this.SendPostReply("/appointments", "", "Appointment " + appointmentIdInt + " not found!");
 			return;
 		}
 		logger.debug("Attempting to delete appointment " + appointment.toString() + " ...");
@@ -37,7 +36,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		logger.debug("Deleted appointment ID: [{}]", appointmentIdInt);
 		
-		this.SendRedirectToPage("/appointments?message=Appointment " + appointmentIdInt + " deleted!");
+		this.SendPostReply("/appointments", "", "Appointment " + appointmentIdInt + " deleted!");
 		return;
 	}
 	

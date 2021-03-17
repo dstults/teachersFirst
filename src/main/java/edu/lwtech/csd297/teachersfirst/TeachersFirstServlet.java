@@ -105,6 +105,12 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "/logout":
 					new LogoutPage(request, response).loadPage();
 					break;
+				case "/log_in": // intentionally different - debug/json use
+					new LogInAction(request, response).RunAction(); // action, not page
+					return; // return, not break
+				case "/log_out": // intentionally different - debug/json use
+					new LogOutAction(request, response).RunAction(); // action, not page
+					return; // return, not break
 
 				case "/dynamic.css":
 					new DynamicCssFile(request, response).loadPage();

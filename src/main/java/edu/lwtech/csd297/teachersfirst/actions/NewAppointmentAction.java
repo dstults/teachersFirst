@@ -13,9 +13,8 @@ public class NewAppointmentAction extends ActionRunner {
 	public void RunAction() {
 
 		// This should not be possible for anyone not logged in.
-		final int uid = Security.getUserId(request);
 		if (uid <= 0) {
-			this.SendRedirectToPage("/services?message=Please sign in or register to use this feature!");
+			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -28,7 +27,7 @@ public class NewAppointmentAction extends ActionRunner {
 		}
 		final boolean studentExists = DataManager.getMemberDAO().retrieveByID(studentIdInt) != null;
 		if (!studentExists) {
-			this.SendRedirectToPage("/openings?message=Student with ID %5B" + studentIdInt + "%5D does not exist!");
+			this.SendPostReply("/openings", "", "Student with ID %5B" + studentIdInt + "%5D does not exist!");
 			return;
 		}
 		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
@@ -41,10 +40,10 @@ public class NewAppointmentAction extends ActionRunner {
 
 		final boolean instructorExists = DataManager.getMemberDAO().retrieveByID(instructorIdInt) != null;
 		if (!instructorExists) {
-			this.SendRedirectToPage("/openings?message=Instructor with ID %5B" + instructorIdInt + "%5D does not exist!");
+			this.SendPostReply("/openings", "", "Instructor with ID %5B" + instructorIdInt + "%5D does not exist!");
 			return;
 		} else if (studentIdInt == instructorIdInt) {
-			this.SendRedirectToPage("/openings?message=Student ID and Instructor ID both " + studentIdInt + " -- appointments can not be made with self.");
+			this.SendPostReply("/openings", "", "Student ID and Instructor ID both " + studentIdInt + " -- appointments can not be made with self.");
 			return;
 		}
 
@@ -62,7 +61,7 @@ public class NewAppointmentAction extends ActionRunner {
 			day = Integer.parseInt(dateInfo[1]);
 			year = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendRedirectToPage("/openings?message=Could not parse date: %5B" + dateString + "%5D !");
+			this.SendPostReply("/openings", "", "Could not parse date: %5B" + dateString + "%5D !");
 			return;
 		}
 
@@ -74,12 +73,12 @@ public class NewAppointmentAction extends ActionRunner {
 			startHour = Integer.parseInt(timeInfo[0]);
 			startMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendRedirectToPage("/openings?message=Could not parse start time: %5B" + startTimeString + "%5D L:" + startTimeString.split(":").length + " !");
+			this.SendPostReply("/openings", "", "Could not parse start time: %5B" + startTimeString + "%5D L:" + startTimeString.split(":").length + " !");
 			return;
 		}
 
 		if (startMinute != 0 && startMinute != 15 && startMinute != 30 && startMinute != 45) {
-			this.SendRedirectToPage("/openings?message=Start minute %5B" + startMinute + "%5D not allowed, must be multiple of 15!");
+			this.SendPostReply("/openings", "", "Start minute %5B" + startMinute + "%5D not allowed, must be multiple of 15!");
 			return;
 		}
 
@@ -91,12 +90,12 @@ public class NewAppointmentAction extends ActionRunner {
 			endHour = Integer.parseInt(timeInfo[0]);
 			endMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendRedirectToPage("/openings?message=Could not parse end time: %5B" + endTimeString + "%5D !");
+			this.SendPostReply("/openings", "", "Could not parse end time: %5B" + endTimeString + "%5D !");
 			return;
 		}
 
 		if (endMinute != 0 && endMinute != 15 && endMinute != 30 && endMinute != 45) {
-			this.SendRedirectToPage("/openings?message=End minute %5B" + endMinute + "%5D not allowed, must be multiple of 15!");
+			this.SendPostReply("/openings", "", "End minute %5B" + endMinute + "%5D not allowed, must be multiple of 15!");
 			return;
 		}
 
@@ -108,7 +107,7 @@ public class NewAppointmentAction extends ActionRunner {
 			endDay++;
 		}
 		if (endTime - 720 > startTime) {
-			this.SendRedirectToPage("/openings?message=Appointments must not be longer than 12 hours! Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
+			this.SendPostReply("/openings", "", "Appointments must not be longer than 12 hours! Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
 			return;
 		}
 
@@ -123,7 +122,7 @@ public class NewAppointmentAction extends ActionRunner {
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		logger.debug("Created new appointment: [{}]", appointment);
 		
-		this.SendRedirectToPage("/appointments?message=Appointment created!");
+		this.SendPostReply("/appointments", "", "Appointment created!");
 		return;
 	}
 	
