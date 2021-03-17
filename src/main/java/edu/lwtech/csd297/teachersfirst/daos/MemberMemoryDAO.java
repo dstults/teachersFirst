@@ -106,7 +106,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 				break;
 			}
 		}
-		logger.debug("Found {} objects with the keyword '{}'!", pojosFound.size(), keyword);
+		//logger.debug("Found {} objects with the keyword '{}'!", pojosFound.size(), keyword);
 		return pojosFound;
 	}
 

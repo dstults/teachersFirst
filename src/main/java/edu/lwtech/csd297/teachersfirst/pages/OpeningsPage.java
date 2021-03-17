@@ -133,7 +133,7 @@ public class OpeningsPage extends PageLoader {
 
 					String iName = memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName();
 					boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
-					logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
+					//logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
 
 					openingsToday.add(new PrettifiedOpening(
 						iOpening.getRecID(),

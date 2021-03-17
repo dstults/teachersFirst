@@ -18,10 +18,11 @@
 	<p>Ending: ${appointmentEndTime}</p>
 	<br style="line-height: 90%;">
 	<p>Does everything look correct?</p>
-	<p>Wait, I need to fix something: <a href="/make_appointment?studentId=${studentId}&instructorId=${instructorId}&date=${date}&openingStartTime=${openingStartTime}&openingEndTime=${openingEndTime}&appointmentStartTime=${appointmentStartTime}&appointmentEndTime=${appointmentEndTime}">Go back.</a></p>
+	<p>Wait, I need to fix something: <a href="/make_appointment?openingId=${openingId}&studentId=${studentId}&instructorId=${instructorId}&date=${date}&openingStartTime=${openingStartTime}&openingEndTime=${openingEndTime}&appointmentStartTime=${appointmentStartTime}&appointmentEndTime=${appointmentEndTime}">Go back.</a></p>
 
 	<form method="post" action="/">
 		<input type="hidden" name="action" value="make_appointment">
+		<input type="hidden" name="openingId" value="${openingId}">
 		<input type="hidden" name="studentId" value="${studentId}">
 		<input type="hidden" name="instructorId" value="${instructorId}">
 		<input type="hidden" name="date" value="${date}">

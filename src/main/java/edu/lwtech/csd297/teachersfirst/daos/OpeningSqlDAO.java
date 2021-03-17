@@ -53,7 +53,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
     }
 
     public Opening retrieveByID(int recID) {
-        logger.debug("Trying to get Opening with ID: " + recID);
+        //logger.debug("Trying to get Opening with ID: " + recID);
         
         String query = "SELECT recID, instructorID, startTime, endTime";
         query += " FROM Openings WHERE recID=" + recID;
@@ -61,7 +61,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
         if (rows != null) {
-            logger.debug("Found opening!");
+            //logger.debug("Found opening!");
         } else {
             logger.debug("Did not find opening.");
             return null;
@@ -73,7 +73,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
     }
     
     public Opening retrieveByIndex(int index) {
-        logger.debug("Trying to get Opening with index: " + index);
+        //logger.debug("Trying to get Opening with index: " + index);
         
         index++;                                    // SQL uses 1-based indexes
 
@@ -189,7 +189,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
     // =====================================================================
 
     private Opening convertRowToOpening(SQLRow row) {
-        logger.debug("Converting " + row + " to Opening...");
+        //logger.debug("Converting " + row + " to Opening...");
         int recID = Integer.parseInt(row.getItem("recID"));
         int instructorID = Integer.parseInt(row.getItem("instructorID"));
         Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));

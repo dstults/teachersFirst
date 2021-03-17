@@ -18,16 +18,16 @@
 	<h2 class="appointments-text" style="margin-top: 11rem;">Upcoming appointments</h2>
 	<table class="info-list">
 		<tr>
-			<#if isAdmin><th></th><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th>
+			<th></th><#if isAdmin><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th>
 		</tr>
 		<#list futureAppointments as appointment>
-			<#if appointment.isMyAppointment>
+			<#if isAdmin && appointment.isMyAppointment>
 			<tr class="soft-highlight">
 			<#else>
 			<tr>
 			</#if>
-				<#if isAdmin>
 				<td><a href="javascript:confirmDeleteAppointment(${appointment.id?c});" class="red bold">X</a></td>
+				<#if isAdmin>
 				<td>${appointment.id?c}</td>
 				</#if>
 				<td>${appointment.date}</td>
@@ -45,7 +45,7 @@
 			<#if isAdmin><th></th><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th>
 		</tr>
 		<#list pastAppointments as appointment>
-			<#if appointment.isMyAppointment>
+			<#if isAdmin && appointment.isMyAppointment>
 			<tr class="soft-highlight">
 			<#else>
 			<tr>

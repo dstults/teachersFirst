@@ -1,8 +1,13 @@
 package edu.lwtech.csd297.teachersfirst.actions;
 
+import java.sql.Timestamp;
+import java.time.*;
+import java.util.*;
+
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class NewAppointmentAction extends ActionRunner {
@@ -18,6 +23,19 @@ public class NewAppointmentAction extends ActionRunner {
 			return;
 		}
 
+		final String openingIdString = QueryHelpers.getPost(request, "openingId");
+		int openingIdInt;
+		try {
+			openingIdInt = Integer.parseInt(openingIdString);
+		} catch (NumberFormatException e) {
+			openingIdInt = 0;
+		}
+		final Opening referralOpening = DataManager.getOpeningDAO().retrieveByID(openingIdInt);
+		if (referralOpening == null) {
+			this.SendPostReply("/openings", "", "Opening with ID %5B" + openingIdString + "%5D does not exist!");
+			return;
+		}
+
 		final String studentIdString = QueryHelpers.getPost(request, "studentId");
 		int studentIdInt;
 		try {
@@ -25,9 +43,8 @@ public class NewAppointmentAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			studentIdInt = 0;
 		}
-		final boolean studentExists = DataManager.getMemberDAO().retrieveByID(studentIdInt) != null;
-		if (!studentExists) {
-			this.SendPostReply("/openings", "", "Student with ID %5B" + studentIdInt + "%5D does not exist!");
+		if (DataManager.getMemberDAO().retrieveByID(studentIdInt) == null) {
+			this.SendPostReply("/openings", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
 		}
 		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
@@ -38,12 +55,11 @@ public class NewAppointmentAction extends ActionRunner {
 			instructorIdInt = 0;
 		}
 
-		final boolean instructorExists = DataManager.getMemberDAO().retrieveByID(instructorIdInt) != null;
-		if (!instructorExists) {
-			this.SendPostReply("/openings", "", "Instructor with ID %5B" + instructorIdInt + "%5D does not exist!");
+		if (DataManager.getMemberDAO().retrieveByID(instructorIdInt) == null) {
+			this.SendPostReply("/openings", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
 		} else if (studentIdInt == instructorIdInt) {
-			this.SendPostReply("/openings", "", "Student ID and Instructor ID both " + studentIdInt + " -- appointments can not be made with self.");
+			this.SendPostReply("/openings", "", "Student ID and Instructor ID both " + studentIdString + " -- appointments can not be made with self.");
 			return;
 		}
 
@@ -106,14 +122,52 @@ public class NewAppointmentAction extends ActionRunner {
 			endTime += 1440;
 			endDay++;
 		}
+		if (startTime > 1440 || endTime > 1440) {
+			this.SendPostReply("/openings", "", "Invalid start time or end time. Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
+			return;
+		}
 		if (endTime - 720 > startTime) {
 			this.SendPostReply("/openings", "", "Appointments must not be longer than 12 hours! Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
 			return;
 		}
 
-		//TODO: Must check to make sure input string lengths do not exceed database lengths
-		//TODO: Must check if there is a valid opening that is within the scope
-		//TODO: Must check if there is a conflicting appointment already scheduled
+		LocalDateTime startTimeLdt = LocalDateTime.of(year, month, day, startHour, startMinute, 0);
+		LocalDateTime endTimeLdt = LocalDateTime.of(year, month, day, endHour, endMinute, 0);
+
+		// Make sure within scope of openings
+		if (!DateHelpers.timeIsBetweenTimeAndTime(
+				startTimeLdt,
+				referralOpening.getStartTime().toLocalDateTime(),
+				referralOpening.getEndTime().toLocalDateTime()) &&
+			!DateHelpers.timeIsBetweenTimeAndTime(
+				endTimeLdt,
+				referralOpening.getStartTime().toLocalDateTime(),
+				referralOpening.getEndTime().toLocalDateTime())) {
+
+				this.SendPostReply("/openings", "", "Appointment not within scope of opening!");
+			return;
+		}
+
+		// Make sure no conflicting appointments
+		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
+		for(Appointment appointment : allAppointments) {
+			if (DateHelpers.timeIsBetweenTimeAndTime(
+					startTimeLdt.plusMinutes(1),
+					appointment.getStartTime().toLocalDateTime(),
+					appointment.getEndTime().toLocalDateTime()) ||
+				DateHelpers.timeIsBetweenTimeAndTime(
+					endTimeLdt.minusMinutes(1),
+					appointment.getStartTime().toLocalDateTime(),
+					appointment.getEndTime().toLocalDateTime()) ||
+				DateHelpers.timeIsBetweenTimeAndTime( // catches edge case of iAppointment being inside potential new one
+					appointment.getStartTime().toLocalDateTime().plusMinutes(1),
+					startTimeLdt,
+					endTimeLdt)) {
+
+				this.SendPostReply("/openings", "", "Appointment conflicts with appointment: %5B" + appointment.getRecID() + "%5D!");
+				return;
+			}
+		}
 
 		logger.debug("Attempting to create new appointment ...");
 		

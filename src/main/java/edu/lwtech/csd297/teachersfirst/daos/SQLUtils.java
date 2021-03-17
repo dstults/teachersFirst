@@ -37,7 +37,7 @@ class SQLUtils {
     }
 
     public static List<SQLRow> executeSQL(Connection conn, String query, String... arguments) {
-        logger.debug("Executing SQL statement: " + query);
+        //logger.debug("Executing SQL statement: " + query);
 
         try {
             // Create the new statement object
@@ -71,7 +71,7 @@ class SQLUtils {
                 List<SQLRow> rows = new ArrayList<>();
                 while (sqlResults.next()) {
                     SQLRow row = new SQLRow(columns, sqlResults);
-                    logger.debug(row.toString());
+                    //logger.debug(row.toString());
                     rows.add(row);
                 }
 
@@ -87,7 +87,7 @@ class SQLUtils {
 
     // Default Insert
     public static int executeSQLInsert(Connection conn, String query, String recID, String... arguments) {
-        logger.debug("Executing SQL Insert: " + query);
+        //logger.debug("Executing SQL Insert: " + query);
 
         int newID = -1;
         String[] returnColumns = new String[] { recID };
@@ -126,7 +126,7 @@ class SQLUtils {
 			String phone1, String phone2, String email,
 			boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
-		logger.debug("Executing SQL Insert: " + query);
+		//logger.debug("Executing SQL Insert: " + query);
 
 		int newID = -1;
 		String[] returnColumns = new String[] { String.valueOf(recID) };
@@ -168,7 +168,7 @@ class SQLUtils {
 	//Opening Insert
 	public static int executeSqlOpeningInsert(Connection conn, String query, int recID, int instructorID,
 			Timestamp startTime, Timestamp endTime) {
-				logger.debug("Executing SQL Insert: " + query);
+				//logger.debug("Executing SQL Insert: " + query);
 
 				int newID = -1;
 				String[] returnColumns = new String[] { String.valueOf(recID) };
@@ -199,7 +199,7 @@ class SQLUtils {
 	// Appointment Insert
 	public static int executeSqlAppointmentInsert(Connection conn, String query, int recID, int studentID, int instructorID,
 			Timestamp startTime, Timestamp endTime) {
-				logger.debug("Executing SQL Insert: " + query);
+				//logger.debug("Executing SQL Insert: " + query);
 				
 				int newID = -1;
 				String[] returnColumns = new String[] { String.valueOf(recID) };

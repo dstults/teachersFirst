@@ -187,11 +187,11 @@ public class DateHelpers {
 	}
 
 	public static boolean dateIsBetweenDateAndDate(LocalDate time, LocalDate start, LocalDate finish) {
-		return time.compareTo(start) >= 0 && time.compareTo(finish) <= 0; // includes last day
+		return time.compareTo(start) >= 0 && time.compareTo(finish) <= 0;
 	}
 
 	public static boolean timeIsBetweenTimeAndTime(LocalDateTime time, LocalDateTime start, LocalDateTime finish) {
-		return time.compareTo(start) >= 0 && time.compareTo(finish) < 0; // excludes last second
+		return time.compareTo(start) >= 0 && time.compareTo(finish) <= 0;
 	}
 
 	public static LocalDateTime previousSunday() {

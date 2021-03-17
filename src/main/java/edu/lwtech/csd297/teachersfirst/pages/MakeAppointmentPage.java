@@ -6,6 +6,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class MakeAppointmentPage extends PageLoader {
 
@@ -21,6 +22,7 @@ public class MakeAppointmentPage extends PageLoader {
 		if (uid > 0) {
 			
 			// Get Opening / Previous Data
+			final String openingIdString = QueryHelpers.getPost(request, "openingId");
 			final String studentIdString = QueryHelpers.getGet(request, "studentId", Integer.toString(uid)); // sets default to self
 			int studentIdInt;
 			try {
@@ -64,7 +66,7 @@ public class MakeAppointmentPage extends PageLoader {
 			List<String> possibleStartTimes = new ArrayList<String>();
 			List<String> possibleDurations = new ArrayList<String>();
 			int i = 0;
-			 
+			
 			// Limit 40: someone can and will place start and end times really far apart...
 			while (currentDateTime.compareTo(endDateTime) < 0 && possibleStartTimes.size() <= 40) {
 				possibleStartTimes.add(currentDateTime.format(DateTimeFormatter.ofPattern("HH:mm")));
@@ -74,6 +76,7 @@ public class MakeAppointmentPage extends PageLoader {
 			}
 
 			// FreeMarker
+			templateDataMap.put("openingId", openingIdString);
 			templateDataMap.put("studentId", studentIdString);
 			templateDataMap.put("studentName", studentName);
 			templateDataMap.put("instructorId", instructorIdString);

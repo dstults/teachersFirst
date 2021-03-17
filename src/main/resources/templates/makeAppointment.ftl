@@ -9,6 +9,7 @@
 
 <div class="make-appointment">
 	<form method="get" action="/confirm_make_appointment">
+		<input type="hidden" name="openingId" value="${openingId}">
 		<input type="hidden" name="studentId" value="${studentId}">
 		<input type="hidden" name="instructorId" value="${instructorId}">
 		<input type="hidden" name="date" value="${date}">

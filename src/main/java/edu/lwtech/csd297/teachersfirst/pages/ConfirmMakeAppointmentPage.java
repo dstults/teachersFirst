@@ -23,6 +23,7 @@ public class ConfirmMakeAppointmentPage extends PageLoader {
 		if (uid > 0) {
 			
 			// Get Data
+			final String openingIdString = QueryHelpers.getPost(request, "openingId");
 			final String studentIdString = QueryHelpers.getGet(request, "studentId"); // no defaults -- this is confirmation page -- no auto-changes allowed
 			int studentIdInt;
 			try {
@@ -47,6 +48,7 @@ public class ConfirmMakeAppointmentPage extends PageLoader {
 			final String appointmentEndTimeString = DateHelpers.convertDateStartTimeAndDurationToEndTime(dateString, appointmentStartTimeString, appointmentDuration);
 			
 			// FreeMarker
+			templateDataMap.put("openingId", openingIdString);
 			templateDataMap.put("studentId", studentIdString);
 			templateDataMap.put("studentName", studentName);
 			templateDataMap.put("instructorId", instructorIdString);

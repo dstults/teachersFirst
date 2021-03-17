@@ -53,7 +53,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
     }
 
     public Appointment retrieveByID(int recID) {
-        logger.debug("Trying to get Appointment with ID: " + recID);
+        //logger.debug("Trying to get Appointment with ID: " + recID);
         
         String query = "SELECT recID, studentID, instructorID, startTime, endTime";
         query += " FROM Appointments WHERE recID=" + recID;
@@ -61,7 +61,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
         if (rows != null) {
-            logger.debug("Found appointment!");
+            //logger.debug("Found appointment!");
         } else {
             logger.debug("Did not find appointment.");
             return null;
@@ -73,7 +73,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
     }
     
     public Appointment retrieveByIndex(int index) {
-        logger.debug("Trying to get Appointment with index: " + index);
+        //logger.debug("Trying to get Appointment with index: " + index);
         
         index++;                                    // SQL uses 1-based indexes
 
@@ -189,7 +189,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
     // =====================================================================
 
     private Appointment convertRowToAppointment(SQLRow row) {
-        logger.debug("Converting " + row + " to Appointment...");
+        //logger.debug("Converting " + row + " to Appointment...");
         int recID = Integer.parseInt(row.getItem("recID"));
         int studentID = Integer.parseInt(row.getItem("studentID"));
         int instructorID = Integer.parseInt(row.getItem("instructorID"));

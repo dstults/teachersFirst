@@ -53,7 +53,7 @@ public class MemberSqlDAO implements DAO<Member> {
     }
 
     public Member retrieveByID(int recID) {
-        logger.debug("Trying to get Member with ID: " + recID);
+        //logger.debug("Trying to get Member with ID: " + recID);
         
         String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, teacherNotes, gender, phone1, phone2, email, isStudent, isInstructor, isAdmin";
         query += " FROM Members WHERE recID=" + recID;
@@ -61,7 +61,7 @@ public class MemberSqlDAO implements DAO<Member> {
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
         if (rows != null && rows.size() > 0) {
-            logger.debug("Found member!");
+            //logger.debug("Found member!");
         } else {
             logger.debug("Did not find member.");
             return null;
@@ -73,14 +73,14 @@ public class MemberSqlDAO implements DAO<Member> {
     }
 
     public Member retrieveByLoginName(String loginName) {
-        logger.debug("Trying to get Member with login name: " + loginName);
+        //logger.debug("Trying to get Member with login name: " + loginName);
         
         String query = "SELECT * FROM Members WHERE loginName='" + loginName +"'";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
         if (rows != null && rows.size() > 0) {
-            logger.debug("Found member!");
+            //logger.debug("Found member!");
         } else {
             logger.debug("Did not find member.");
             return null;
@@ -92,14 +92,14 @@ public class MemberSqlDAO implements DAO<Member> {
     }
 
     public Member retrieveByLoginNameAndPassword(String loginName, String passwordHash) {
-        logger.debug("Trying to get Member with login name and password: " + loginName + " " + passwordHash);
+        //logger.debug("Trying to get Member with login name and password: " + loginName + " " + passwordHash);
         
         String query = "SELECT * FROM Members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('"+passwordHash+"');";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
         if (rows != null && rows.size() > 0) {
-            logger.debug("Found member!");
+            //logger.debug("Found member!");
         } else {
             logger.debug("Did not find member.");
             return null;
@@ -111,7 +111,7 @@ public class MemberSqlDAO implements DAO<Member> {
     }
 	
     public Member retrieveByIndex(int index) {
-        logger.debug("Trying to get Member with index: " + index);
+        //logger.debug("Trying to get Member with index: " + index);
         
         index++;                                    // SQL uses 1-based indexes
 
@@ -227,7 +227,7 @@ public class MemberSqlDAO implements DAO<Member> {
     // =====================================================================
 
     private Member convertRowToMember(SQLRow row) {
-        logger.debug("Converting " + row + " to Member...");
+        //logger.debug("Converting " + row + " to Member...");
         int recID = Integer.parseInt(row.getItem("recID"));
         String loginName = row.getItem("loginName");
         String passwordHash = row.getItem("passwordHash");

@@ -33,7 +33,7 @@
 				<p class="calendar-date">${day.name}</p>
 				<#if day.openings?has_content && day.openings?size != 0>
 				<#list day.openings as opening>
-				<a href="/make_appointment?instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}"><div class="${opening.highlight}">
+				<a href="/make_appointment?openingId=${opening.id}&instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}"><div class="${opening.highlight}">
 					<p class="aleft">${opening.instructorName}:</p>
 					<p class="aright">${opening.startTime} - ${opening.endTime}</p>
 				</div></a>
