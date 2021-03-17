@@ -57,7 +57,7 @@ public class Member {
 		//TODO: SHA1 Password Hash should be 40 chars long -- need hashing first
 		if (displayName == null) throw new IllegalArgumentException("Invalid argument: displayName is null");
 		if (displayName.isEmpty()) throw new IllegalArgumentException("Invalid argument: displayName is empty");
-		if (birthdate == null) throw new IllegalArgumentException("Null argument: birthdate is null");
+		if (birthdate == null) throw new IllegalArgumentException("Invalid argument: birthdate is null");
 		if (gender == null) throw new IllegalArgumentException("Invalid argument: gender is null");
 		// gender can be empty string
 		if (teacherNotes == null) throw new IllegalArgumentException("Invalid argument: teacherNotes is null");
