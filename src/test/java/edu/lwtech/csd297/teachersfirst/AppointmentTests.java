@@ -83,6 +83,13 @@ class AppointmentTests {
 	}
 
 	@Test
+	void testGetIsMyAppointment(){
+		assertTrue(Alex.getIsMyAppointment(5));
+		assertTrue(Alex.getIsMyAppointment(55));
+		assertFalse(Alex.getIsMyAppointment(9));
+	}
+
+	@Test
 	void testGetInstructorID(){
 		assertEquals(43, Jamie.getInstructorID());
 	}

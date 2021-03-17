@@ -47,10 +47,8 @@ public class Opening {
 	}
 
 	public void setRecID(int recID) {
-		if (recID <= 0)
-			throw new IllegalArgumentException("setRecID: recID cannot be negative.");
-		if (this.recID != -1)
-			throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1).");
+		if (recID <= 0) { throw new IllegalArgumentException("setRecID: recID cannot be negative."); }
+		if (this.recID != -1) { throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1)."); }
 
 		this.recID = recID;
 	}
