@@ -16,7 +16,7 @@ public class MakeAppointmentPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		templateDataMap.put("title", "Profile");
+		templateDataMap.put("title", "Make Appointment");
 
 		if (uid > 0) {
 			
