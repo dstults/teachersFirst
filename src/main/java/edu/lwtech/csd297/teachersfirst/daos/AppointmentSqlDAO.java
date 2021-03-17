@@ -44,7 +44,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
             return -1;
         }
 
-        String query = "INSERT INTO Appointments (studentID instructorID, startTime, endTime) VALUES (?,?,?,?)";
+        String query = "INSERT INTO Appointments (studentID, instructorID, startTime, endTime) VALUES (?,?,?,?)";
 
         int recID = SQLUtils.executeSqlAppointmentInsert(conn, query, appointment.getRecID(), appointment.getStudentID(), appointment.getInstructorID(), appointment.getStartTime(), appointment.getEndTime());    
         
