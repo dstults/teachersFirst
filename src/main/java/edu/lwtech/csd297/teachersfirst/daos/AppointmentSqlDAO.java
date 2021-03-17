@@ -55,7 +55,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
     public Appointment retrieveByID(int recID) {
         logger.debug("Trying to get Appointment with ID: " + recID);
         
-        String query = "SELECT recID, studentID instructorID, startTime, endTime";
+        String query = "SELECT recID, studentID, instructorID, startTime, endTime";
         query += " FROM Appointments WHERE recID=" + recID;
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
