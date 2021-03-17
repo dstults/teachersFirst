@@ -13,9 +13,9 @@ public class AppointmentsPage extends PageLoader {
 
 		private int id;
 		private int instructorId;
-		private String instructor;
+		private String instructorName;
 		private int studentId;
-		private String student;
+		private String studentName;
 		private String date;
 		private String startTime;
 		private String endTime;
@@ -24,9 +24,9 @@ public class AppointmentsPage extends PageLoader {
 		public PrettifiedAppointment(int id, int instructorId, String instructor, int studentId, String student, String date, String startTime, String endTime, boolean isMyAppointment) {
 			this.id = id;
 			this.instructorId = instructorId;
-			this.instructor = instructor;
+			this.instructorName = instructor;
 			this.studentId = studentId;
-			this.student = student;
+			this.studentName = student;
 			this.date = date;
 			this.startTime = startTime;
 			this.endTime = endTime;
@@ -35,9 +35,9 @@ public class AppointmentsPage extends PageLoader {
 
 		public int getId() { return id; }
 		public int getInstructorId() { return instructorId; }
-		public String getInstructor() { return instructor; }
+		public String getInstructorName() { return instructorName; }
 		public int getStudentId() { return studentId; }
-		public String getStudent() { return student; }
+		public String getStudentName() { return studentName; }
 		public String getDate() { return date; }
 		public String getStartTime() { return startTime; }
 		public String getEndTime() { return endTime; }
@@ -45,9 +45,9 @@ public class AppointmentsPage extends PageLoader {
 		@Override public String toJson() {
 			return "{\"id\":\"" + this.id +
 					"\",\"instructorId\":\"" + this.instructorId +
-					"\",\"instructor\":\"" + this.instructor +
+					"\",\"instructorName\":\"" + this.instructorName +
 					"\",\"studentId\":\"" + this.studentId +
-					"\",\"student\":\"" + this.student +
+					"\",\"studentName\":\"" + this.studentName +
 					"\",\"date\":\"" + this.date +
 					"\",\"startTime\":\"" + this.startTime +
 					"\",\"endTime\":\"" + this.endTime +

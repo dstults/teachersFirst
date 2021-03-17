@@ -33,8 +33,8 @@
 				<td>${appointment.date}</td>
 				<td>${appointment.startTime}</td>
 				<td>${appointment.endTime}</td>
-				<td><a href="/profile?memberId=${appointment.studentId}">${appointment.student}</a></td>
-				<td><a href="/profile?memberId=${appointment.instructorId}">${appointment.instructor}</a></td>
+				<td><a href="/profile?memberId=${appointment.studentId}">${appointment.studentName}</a></td>
+				<td><a href="/profile?memberId=${appointment.instructorId}">${appointment.instructorName}</a></td>
 			</tr>
 		</#list>
 	</table>
@@ -57,8 +57,8 @@
 				<td>${appointment.date}</td>
 				<td>${appointment.startTime}</td>
 				<td>${appointment.endTime}</td>
-				<td><a href="/profile?memberId=${appointment.studentId}">${appointment.student}</a></td>
-				<td><a href="/profile?memberId=${appointment.instructorId}">${appointment.instructor}</a></td>
+				<td><a href="/profile?memberId=${appointment.studentId}">${appointment.studentName}</a></td>
+				<td><a href="/profile?memberId=${appointment.instructorId}">${appointment.instructorName}</a></td>
 			</tr>
 		</#list>
 	</table>
