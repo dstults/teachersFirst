@@ -22,7 +22,7 @@
 		<p>Available till: ${openingEndTime}</p>
 
 		<label for="appointmentStartTime">Choose a start time: </label>
-		<select name="appointmentStartTime" id="appointmentStartTime">
+		<select name="appointmentStartTime" id="appointmentStartTime" onchange="adjustDurations(this);">
 			<#list possibleStartTimes as possibleStartTime>
 				<#if possibleStartTime = defaultStartTime>
 				<option value="${possibleStartTime}" selected="selected">${possibleStartTime}</option>
@@ -51,4 +51,29 @@
 </#if>
 
 </body>
+<script>
+	//const startTimes = [<#list possibleStartTimes as possibleStartTime>'${possibleStartTime}',</#list>];
+	const durations = [<#list possibleDurations as possibleDuration>'${possibleDuration}',</#list>];
+
+	const adjustDurations = (timeSelector) => {
+		const timeIndex = timeSelector.selectedIndex;
+		const durationMaxIndex = durations.length - timeIndex;
+		const durationSelector = document.getElementById('appointmentDuration');
+		const durationIndex = durationSelector.selectedIndex;
+		
+		durationSelector.options.length = 0;
+		let newOption;
+		for (let i = 0; i < durationMaxIndex; i++) {
+			newOption = document.createElement('Option');
+			newOption.text = durations[i];
+			durationSelector.options.add(newOption);
+		}
+		durationSelector.options[0].selected = false;
+		if (durationIndex >= durationMaxIndex) {
+			durationSelector.options[durationMaxIndex - 1].selected = true;
+		} else {
+			durationSelector.options[durationIndex].selected = true;
+		}
+	}
+</script>
 </html>
