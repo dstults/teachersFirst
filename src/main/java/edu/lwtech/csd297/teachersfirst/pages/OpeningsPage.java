@@ -13,44 +13,66 @@ public class OpeningsPage extends PageLoader {
 
 	// Helper class
 
-	public class PrettifiedDay {
+	public class PrettifiedDay implements IJsonnable {
+		
 		private final String name;
 		private final String color;
 		private final List<PrettifiedOpening> openings;
+		
 		public PrettifiedDay(String name, String color, List<PrettifiedOpening> openings) {
 			this.name = name;
 			this.color = color;
 			this.openings = openings;
 		}
+		
 		public String getName() { return this.name; }
 		public String getColor() { return this.color; }
 		public List<PrettifiedOpening> getOpenings() { return this.openings; }
+		@Override public String toJson() {
+			return "{\"name\":\"" + this.name +
+					"\",\"color\":\"" + this.color +
+					"\",\"openings\":" + JsonUtils.BuildArrays(openings) +
+					"}";
+		}
 	}
 
-	public class PrettifiedOpening {
+	public class PrettifiedOpening implements IJsonnable {
 
+		private int id;
+		private int instructorId;
 		private String instructorName;
-		private String instructorId;
 		private String date;
 		private String startTime;
 		private String endTime;
 		private boolean highlight;
 
-		public PrettifiedOpening(String instructorName, String instructorId, String date, String startTime, String endTime, boolean highlight) {
-			this.instructorName = instructorName;
+		public PrettifiedOpening(int id, int instructorId, String instructorName, String date, String startTime, String endTime, boolean highlight) {
+			this.id = id;
 			this.instructorId = instructorId;
+			this.instructorName = instructorName;
 			this.date = date;
 			this.startTime = startTime;
 			this.endTime = endTime;
 			this.highlight = highlight;
 		}
 
+		public int getId() { return id; }
+		public int getInstructorId() { return instructorId; }
 		public String getInstructorName() { return instructorName; }
-		public String getInstructorId() { return instructorId; }
 		public String getDate() { return date; }
 		public String getStartTime() { return startTime; }
 		public String getEndTime() { return endTime; }
 		public String getHighlight() { return highlight ? "highlight" : ""; }
+		@Override public String toJson() {
+			return "{\"id\":\"" + this.id +
+					"\",\"instructorId\":\"" + this.instructorId +
+					"\",\"instructorName\":\"" + this.instructorName +
+					"\",\"date\":\"" + this.date +
+					"\",\"startTime\":\"" + this.startTime +
+					"\",\"endTime\":\"" + this.endTime +
+					"\",\"highlight\":\"" + this.highlight +
+					"\"}";
+		}
 	}
 
 	// Constructor
@@ -61,6 +83,7 @@ public class OpeningsPage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Openings");
+		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		final String instructorName = QueryHelpers.getGet(request, "instructorName").toLowerCase();
 
@@ -113,8 +136,9 @@ public class OpeningsPage extends PageLoader {
 					logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
 
 					openingsToday.add(new PrettifiedOpening(
+						iOpening.getRecID(),
+						iOpening.getInstructorID(), // Freemarker likes to add commmas, I could add ?c to it too
 						iName,
-						Integer.toString(iOpening.getInstructorID()), // Freemarker likes to add commmas, I could add ?c to it too
 						dateToday,
 						iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
 						iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
@@ -124,14 +148,29 @@ public class OpeningsPage extends PageLoader {
 			}
 		}
 		
-		// FreeMarker
-		templateName = "openings.ftl";
-		templateDataMap.put("startDate", sundayString);
-		templateDataMap.put("endDate", saturdayString);
-		templateDataMap.put("weeks", weeks);
 
 		// Go
-		trySendResponse();
+		if (jsonMode) {
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+			sb.append("[");
+			for (List<? extends IJsonnable> week : weeks) {
+				if (i > 0) sb.append(",");
+				sb.append(JsonUtils.BuildArrays(week));
+				i++;
+			}
+			sb.append("]");
+			String json = sb.toString();
+			//logger.debug("Json: " + json);
+			trySendJson(json);
+		} else {
+			// FreeMarker
+			templateName = "openings.ftl";
+			templateDataMap.put("startDate", sundayString);
+			templateDataMap.put("endDate", saturdayString);
+			templateDataMap.put("weeks", weeks);
+			trySendResponse();
+		}
 	}
 
 }
