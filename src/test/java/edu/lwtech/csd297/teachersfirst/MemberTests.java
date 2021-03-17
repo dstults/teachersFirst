@@ -1,6 +1,9 @@
 package edu.lwtech.csd297.teachersfirst;
 
 import java.util.*;
+
+import javax.faces.view.ViewScoped;
+
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +94,7 @@ class MemberTests {
 	}
 
 	@Test
-	void testGetId() {
+	void testGetRecID() {
 		assertEquals(-1, fred.getRecID());
 		assertEquals(-1, amy.getRecID());
 		assertEquals(-1, juan.getRecID());
@@ -117,7 +120,9 @@ class MemberTests {
 
 	@Test
 	void testGetLoginName(){
+		assertEquals("fred", fred.getLoginName());
 		assertEquals("amy", amy.getLoginName());
+		assertEquals("juan", juan.getLoginName());
 	}
 
 	@Test
@@ -171,21 +176,58 @@ class MemberTests {
 	}
 
 	@Test
-	void testIsStudent(){
+	void testGetIsStudent(){
 		assertTrue(juan.getIsStudent());
 	}
 
 	@Test
-	void testIsInstructor(){
+	void testGetIsInstructor(){
 		assertTrue(amy.getIsInstructor());
 	}
 
 	@Test
-	void testIsAdmin(){
+	void testGetIsAdmin(){
 		assertTrue(fred.getIsAdmin());
 	}
 
 	@Test
+	void testSetLoginName(){
+		Exception ex = null;
+
+		fred.setLoginName("Freddinator");
+		assertEquals("Freddinator", fred.getLoginName());
+
+		ex = assertThrows(IllegalArgumentException.class, () -> {
+			fred.setLoginName(null);
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: loginName is null"));
+
+		ex = assertThrows(IllegalArgumentException.class, () -> {
+			fred.setLoginName("");
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: loginName is empty"));
+	}
+
+	@Test
+	void testPasswordHash(){
+		Exception ex = null;
+
+		fred.setPasswordHash("hashedwordpassword");
+		assertEquals("hashedwordpassword", fred.getPasswordHash());
+
+		ex = assertThrows(IllegalArgumentException.class, () -> {
+			fred.setPasswordHash(null);
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: passwordHash is null"));
+
+		ex = assertThrows(IllegalArgumentException.class, () -> {
+			fred.setPasswordHash("");
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: passwordHash is empty"));
+	}
+
+	@Test
+
 	void testSetDisplayName() {
 		Exception ex = null;
 
@@ -195,7 +237,87 @@ class MemberTests {
 		ex = assertThrows(IllegalArgumentException.class, () -> {
 			fred.setDisplayName("");
 		});
-		assertTrue(ex.getMessage().contains("empty"));
+		assertTrue(ex.getMessage().contains("Invalid argument: name is empty"));
+
+		ex = assertThrows(IllegalArgumentException.class, () -> {
+			fred.setDisplayName(null);
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: name is null"));
+	}
+
+	@Test
+	void testSetBirthdate(){
+
+		amy.setBirthdate(2000, 7, 15,6,30,0);
+		assertEquals(DateHelpers.toTimestamp(2000,7,15,6,30,0), amy.getBirthdate());
+		
+		Exception ex = assertThrows(IllegalArgumentException.class, () -> {
+			amy.setBirthdate(null);	
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: birthdate is null"));
+	}
+
+	@Test
+	void testSetGender(){
+
+		fred.setGender("other");
+		assertEquals("other", fred.getGender());
+
+		Exception ex = assertThrows(IllegalArgumentException.class, ()->{
+			fred.setGender(null);
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: gender is null"));
+	}
+
+	@Test
+	void testSetTeacherNotes(){
+		
+		juan.setTeacherNotes("Weird bus schedule");
+		assertEquals("Weird bus schedule", juan.getTeacherNotes());
+		
+		Exception ex = assertThrows(IllegalArgumentException.class, ()->{
+			juan.setTeacherNotes(null);
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: teacherNotes is null"));
+	}
+
+	@Test
+	void testSetPhone1(){
+
+		amy.setPhone1("123-456-7890");
+		assertEquals("123-456-7890", amy.getPhone1());
+	}
+
+	@Test
+	void testSetPhone2(){
+
+		amy.setPhone2("123-456-7890");
+		assertEquals("123-456-7890", amy.getPhone2());
+	}
+
+	@Test
+	void testSetEmail(){
+
+		fred.setEmail("supercoolemail@mail.com");
+		assertEquals("supercoolemail@mail.com", fred.getEmail());
+	}
+
+	@Test
+	void testSetIsStudent(){
+		fred.setIsStudent(true);
+		assertTrue(fred.getIsStudent());
+	}
+
+	@Test
+	void testSetInstructor(){
+		juan.setIsInstructor(true);
+		assertTrue(juan.getIsInstructor());
+	}
+
+	@Test
+	void testSetAdmin(){
+		amy.setIsAdmin(true);
+		assertTrue(amy.getIsAdmin());
 	}
 
 	@Test
@@ -209,11 +331,30 @@ class MemberTests {
 
 	@Test
 	void testEquals() {
-		Member amy2 = new Member("amy", "Password01", "Amy", DateHelpers.toTimestamp("1987/10/15 00:00:00"), "f", "gets extra time on tests to help with adhd", "222-222-222", "", "amy@lwtech.edu", false, true, false);
-		assertTrue(amy.equals(amy2));
-		assertEquals(amy, amy2);
-		assertFalse(amy.equals(fred));
-		assertNotEquals(amy2, fred);
+		
+		Member mat = new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false);
+		
+		assertFalse(mat.equals(null));
+		
+		assertTrue(mat.equals(mat));
+		
+		assertFalse(mat.equals(new Opening(2, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/25/01 00:00:00"))));
+		
+		assertFalse(mat.equals(new Member(12,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"maty", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "MAT", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2020/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "f", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a lame bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "333-333-333", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "444-444-444", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "MAT@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", true, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, false, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, true)));
+	
+		assertTrue(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
 	}
 
 }

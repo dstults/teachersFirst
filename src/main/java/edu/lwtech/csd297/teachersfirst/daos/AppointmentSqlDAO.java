@@ -72,7 +72,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public Appointment retrieveByIndex(int index) {
 		//logger.debug("Trying to get Appointment with index: " + index);
 		
-		index++;                                    // SQL uses 1-based indexes
+		index++;
 
 		if (index < 1)
 			return null;
