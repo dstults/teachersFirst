@@ -2,11 +2,13 @@ package edu.lwtech.csd297.teachersfirst.actions;
 
 import java.io.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public abstract class ActionRunner {
 
@@ -14,6 +16,11 @@ public abstract class ActionRunner {
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
+	protected boolean jsonMode;
+	protected int uid;
+	protected boolean isAdmin;
+	protected boolean isInstructor;
+	protected boolean isStudent;
 	protected static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
 
 	// Constructors
@@ -21,6 +28,14 @@ public abstract class ActionRunner {
 	protected ActionRunner(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
+		jsonMode = QueryHelpers.getGetBool(request, "json");
+		uid = Security.getUserId(request);
+		if (uid > 0) {
+			Member member = DataManager.getMemberDAO().retrieveByID(uid);
+			isAdmin = member.getIsAdmin();
+			isInstructor = member.getIsInstructor();
+			isStudent = member.getIsStudent();
+		}
 	}
 
 	// Public entry point
@@ -29,17 +44,33 @@ public abstract class ActionRunner {
 
 	// Protected Methods (shared magic between all actions)
 
-	protected String getPostValue(String keyName, String defaultValue) {
-		if (request.getParameter(keyName) == null) return defaultValue;
-		if (request.getParameter(keyName) == "") return defaultValue;
-		return request.getParameter(keyName);
-	}
+	protected void SendPostReply(String nextPage, String query, String message) {
+		if (!jsonMode) {
+			// normal web behavior
+			String fullResponseURL = nextPage;
+			if (!query.isEmpty() || !message.isEmpty()) fullResponseURL += "?";
+			if (!query.isEmpty()) fullResponseURL += query;
+			if (!query.isEmpty() && !message.isEmpty()) fullResponseURL += "&";
+			if (!message.isEmpty()) fullResponseURL += "message=" + message;
+			try {
+				response.sendRedirect(fullResponseURL);
+			} catch (IOException e) {
+				logger.error("IO Error: ", e);
+			}
+		} else {
+			// for RESTful applications
+			String messageJson = "'message':'" + message + "'"; // include message even if empty
+			if (!query.isEmpty()) messageJson += ",";
+			
+			String fullJson = "{" + messageJson + JsonUtils.queryToJson(query) + "}";
 
-	protected void SendRedirectToPage(String nextPage) {
-		try {
-			response.sendRedirect(nextPage);
-		} catch (IOException e) {
-			logger.error("IO Error: ", e);
+			// send json:
+			logger.debug("Attempting to send json...");
+			try (ServletOutputStream out = response.getOutputStream()) {
+				out.println(fullJson);
+			} catch (IOException e) {
+				logger.error("IO Error: ", e);
+			}
 		}
 	}
 

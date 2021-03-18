@@ -2,35 +2,79 @@
 <#include "head.ftl">
 <body>
 <#include "header.ftl">
-<div class="openings-buttons">
-	<ul class="fake-buttons">
-		<li>
-			<a href="#favorites" class="fake-button">My favorites</a>
-		</li>
-		<li>
-			<a href="#search" class="fake-button">Search openings</a>
-		</li>
-	</ul>
-</div>
 
-<h1>Teacher openings for ${startDate} to ${endDate}:</h1>
+	<div class="openings-buttons">
+		<ul class="fake-buttons">
+			<li>
+				<a href="javascript:openFilter();" class="fake-button">Search openings</a>
+			</li>
+			<#if isAdmin || isInstructor>
+			<li>
+				<a href="javascript:makeOpenings();" class="fake-button">Make New Openings</a>
+			</li>
+			</#if>
+		</ul>
+	</div>
 
-<table>
-	<tr>
-		<th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th>
-	</tr>
+	<div class="openings-text">
+		<h1>Teacher openings for ${startDate} to ${endDate}:</h1>
+	</div>
+
+	<table class="openings-calendar">
 		<tr>
-		<#list days as day>
-			<td>
-			<#list day as openingData>
-				<#if openingData?has_content>
-					<br><a style="color: blue;" href="/make_appointment?instructor=${openingData.instructor}&startTime=${openingData.startTime}&endTime=${openingData.endTime}">[${openingData.instructor}] ${openingData.startTime} - ${openingData.endTime}</a>
+			<th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th>
+		</tr>
+		<#list weeks as days>
+		<tr>
+			<#list days as day>
+			<td class="${day.color}">
+				<p class="calendar-date">${day.name}</p>
+				<#if day.openings?has_content && day.openings?size != 0>
+				<#list day.openings as opening>
+				<#if isAdmin || (isInstructor && opening.instructorId == userId)>
+				<div class="${opening.highlight}">
+					<p class="aleft"><a href="javascript:confirmDeleteOpening(${opening.id?c});" class="red bold">X </a><a href="/make_appointment?openingId=${opening.id}&instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}">${opening.instructorName}:</p>
+					<p class="aright">${opening.startTime} - ${opening.endTime}</a></p>
+				</div>
 				<#else>
-					No openings!
+				<a href="/make_appointment?openingId=${opening.id}&instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}"><div class="${opening.highlight}">
+					<p class="aleft">${opening.instructorName}:</p>
+					<p class="aright">${opening.startTime} - ${opening.endTime}</p>
+				</div></a>
 				</#if>
+				</#list>
+				<#else>
+				
+				</#if>
+			</td>
 			</#list>
-		</td>
+		</tr>
 		</#list>
-	</tr>
-</table>
+	</table>
+	
 </body>
+<script>
+const openFilter = () => {
+	let instructor = prompt("Please enter a name to filter by.", "");
+	if (instructor != null) {
+		window.location.href = "/openings?instructorName=" + instructor;
+	}
+}
+<#if isAdmin || isInstructor>
+const makeOpenings = () => window.location.href = "/new_openings";
+const confirmDeleteOpening = (openingId) => {
+	if (confirm('Are you sure you want to delete opening ID #' + openingId + ' ?')) {
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				window.location.href = xhr.responseURL;
+			}
+		}
+		xhr.send('action=delete_opening&openingId=' + openingId);
+	}
+}
+</#if>
+</script>
+</html>

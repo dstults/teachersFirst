@@ -61,31 +61,34 @@ public class TeachersFirstServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
-		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
+		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
 		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
-		if (pagePath != "/health") // Don't log "health" commands
+		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
 			logger.debug("IN - {}", logInfo);
 
 		try {
 			switch (pagePath) {
 				case "":
-				case "/home":
-					//TODO: should redirect to / or /appointments, respectively
 				case "/":
+				case "/home":
+					//TODO: If logged in, redirect to appointments, otherwise, redirect to services
+				case "/services":
+					new ServicesPage(request, response).loadPage();
+					break;
 				case "/appointments":
 					new AppointmentsPage(request, response).loadPage();
 					break;
 				case "/make_appointment":
 					new MakeAppointmentPage(request, response).loadPage();
 					break;
+				case "/confirm_make_appointment":
+					new ConfirmMakeAppointmentPage(request, response).loadPage();
+					break;
 				case "/openings":
 					new OpeningsPage(request, response).loadPage();
 					break;
-				case "/services":
-					new ServicesPage(request, response).loadPage();
-					break;
-				case "/calendar":
-					new CalendarPage(request, response).loadPage();
+				case "/new_openings":
+					new NewOpeningsPage(request, response).loadPage();
 					break;
 				case "/profile":
 					new ProfilePage(request, response).loadPage();
@@ -103,17 +106,24 @@ public class TeachersFirstServlet extends HttpServlet {
 					new LogoutPage(request, response).loadPage();
 					break;
 
+				case "/log_in": // intentionally different - debug/json use
+					new LogInAction(request, response).RunAction(); // action, not page
+					return; // don't log
+				case "/log_out": // intentionally different - debug/json use
+					new LogOutAction(request, response).RunAction(); // action, not page
+					return; // don't log
+
 				case "/dynamic.css":
 					new DynamicCssFile(request, response).loadPage();
-					break;
-					
+					return; // don't log
+
 				case "/health":
 					try {
 						response.sendError(HttpServletResponse.SC_OK, "OK");
 					} catch (IOException e) {
 						logger.error("IO Error sending health response: ", e);
 					}
-					return;
+					return; // don't log
 
 				case "/test":
 					new DiagnosticsPage(request, response).loadPage();
@@ -152,13 +162,13 @@ public class TeachersFirstServlet extends HttpServlet {
 		String comma = "";
 		for (String key : paramMap.keySet()) {
 			for (String value : paramMap.get(key)) {
-				parameters += comma + "{" + key + ": " + value + "}";
+				parameters += comma + "{" + QueryHelpers.sanitizeForLog(key) + ": " + QueryHelpers.sanitizeForLog(value) + "}";
 				comma = ", ";
 			}
 		}		
 		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + parameters;
 		logger.debug("IN - {}", logInfo); // Don't log "health" commands
-		final String action = request.getParameter("action") == null ? "" : request.getParameter("action");
+		final String action = request.getParameter("action") == null ? "" : QueryHelpers.sanitizeForLog(request.getParameter("action"));
 
 		try {
 			switch (action) {
@@ -171,13 +181,25 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "register_new_member":
 					new NewMemberAction(request, response).RunAction();
 					break;
+				case "new_openings":
+					new NewOpeningsAction(request, response).RunAction();
+					break;
+				case "make_appointment":
+					new NewAppointmentAction(request, response).RunAction();
+					break;
+				case "delete_appointment":
+					new DeleteAppointmentAction(request, response).RunAction();
+					break;
+				case "delete_opening":
+					new DeleteOpeningAction(request, response).RunAction();
+					break;
 
 				default:
 					logger.debug("====================== Debug Me ======================");
 					logger.debug("Post Parameters: {}", parameters);
 					logger.debug("Page Path: {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					return;
+					return; // use above log instead
 			}
 
 

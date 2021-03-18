@@ -3,19 +3,36 @@
 <body>
 <#include "header.ftl">
 
-<table>
-	<tr>
-		<th>Record ID</th><th>Member</th><th>Age</th><th>Gender</th><th>Favorite Color</th><th>Favorite Food</th>
-	</tr>
-	<#list members as member>
+<#if userId lte 0>
+	<#include "please_login.ftl">
+<#else>
+
+	<table class="info-list">
 		<tr>
-			<td>${member.recID}</td>
-			<td>${member.name}</td>
-			<td>${member.age}</td>
-			<td>${member.gender}</td>
-			<td>${member.favoriteColor}</td>
-			<td>${member.favoriteFood}</td>
+			<th>Rec ID</th>
+			<th>Username</th>
+			<#if isAdmin><th>Birthdate</th></#if>
+			<th>Age</th>
+			<th>Gender</th>
+			<th>Contact</th>
+			<#if isAdmin || isInstructor><th>Notes</th></#if>
 		</tr>
-	</#list>
-</table>
+		<#list members as member>
+			<tr>
+				<td>${member.recID?c}</td>
+				<td><a href="/profile?memberId=${member.recID?c}">${member.displayName}</a></td>
+				<#if isAdmin>
+				<td>${member.birthdate}</td>
+				</#if>
+				<#if member.age gt 130><td>-</td><#else><td>${member.age}</td></#if>
+				<td>${member.gender}</td>
+				<td>${member.phone1}<br>${member.email}</td>
+				<#if isAdmin || isInstructor><td>${member.teacherNotes}</td></#if>
+			</tr>
+		</#list>
+	</table>
+
+</#if>
+
 </body>
+</html>

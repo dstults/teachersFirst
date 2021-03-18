@@ -3,6 +3,7 @@ package edu.lwtech.csd297.teachersfirst.actions;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class LogInAction extends ActionRunner {
 
@@ -10,24 +11,30 @@ public class LogInAction extends ActionRunner {
 
 	@Override
 	public void RunAction() {
-		String name = getPostValue("name", "");
-		String password = getPostValue("password", "");
-
-		if (name == null || name == "" || password == null || password == "") {
-			this.SendRedirectToPage("/login?name=" + name + "&message=Please enter a valid user name and password.");
+		if (uid > 0) {
+			this.SendPostReply("/appointments", "", "You're already logged in!");
 			return;
 		}
 
-		if (Security.checkPassword(1, password)) {
-			logger.debug(name + " logged in.");
-			request.getSession().setAttribute("USER_ID", 1);
-			request.getSession().setAttribute("USER_NAME", name);
-			this.SendRedirectToPage("/appointments");
+		String loginName = QueryHelpers.getPost(request, "loginName");
+		String password = QueryHelpers.getPost(request, "password");
+
+		if (loginName == null || loginName.isEmpty() || password == null || password.isEmpty()) {
+			this.SendPostReply("/login", "loginName=" + loginName, "Please enter a valid user name and password.");
+			return;
+		}
+
+		Member member = Security.checkPassword(loginName, password);
+		if (member != null) {
+			Security.login(request, member);
+			this.SendPostReply("/appointments", "", "Welcome back, " + member.getDisplayName());
 			return;
 		} else {
-			this.SendRedirectToPage("/login?name=" + name + "&message=Could not log you in.");
+			this.SendPostReply("/login", "loginName=" + loginName, "Could not log you in.");
 			return;
 		}
 	}
+
+
 	
 }

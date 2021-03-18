@@ -9,36 +9,101 @@ import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class DataManager {
 	
-	public static String primaryHighlight = "#ffbb96";
-	public static String primaryHighlightDark = "#faa97d";
-	public static String backgroundColor = "#ffd9c6";
+	public static String primaryHighlightAdmin = "#96bbff";
+	public static String primaryHighlightDarkAdmin = "#7da9fa";
+	public static String backgroundColorAdmin = "#c6d9ff";
+	public static String backgroundColorLightAdmin = "#dde5ff";
 
-	public static String websiteTitle = "CoolTutors";
+	public static String primaryHighlightInstructor = "#bbff96";
+	public static String primaryHighlightDarkInstructor = "#a9fa7d";
+	public static String backgroundColorInstructor = "#d9ffc6";
+	public static String backgroundColorLightInstructor = "#e5ffdd";
+
+	public static String primaryHighlightGeneral = "#ffbb96";
+	public static String primaryHighlightDarkGeneral = "#faa97d";
+	public static String backgroundColorGeneral = "#ffd9c6";
+	public static String backgroundColorLightGeneral = "#ffe5dd";
+
+	public static String websiteTitle = "CoolTutors.org";
 	public static String websiteSubtitle = "The coolest tutors on the web!";
 
 	public static final List<DAO<?>> allDAOs = new ArrayList<>();
 	private static DAO<Member> memberDAO = null;
+	private static DAO<Service> serviceDAO = null;
+	private static DAO<Appointment> appointmentDAO = null;
+	private static DAO<Opening> openingDAO = null;
 
 	// Meta constructors and destructors
 
 	public static void initializeDAOs() throws ServletException {
-		memberDAO = new MemberMemoryDAO();
-		allDAOs.add(memberDAO);
-		if (!memberDAO.initialize(""))
-			throw new UnavailableException("Unable to initialize the memberDAO.");
+
+		String initParams = "jdbc:mariadb://lwtech-csd297.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/mercer";
+        initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
+        initParams += "&user=mercer&password=mercer-rox";    
+
+		DataManager.memberDAO = new MemberSqlDAO();
+		if (!DataManager.memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
+		DataManager.allDAOs.add(DataManager.memberDAO);
+
+		DataManager.serviceDAO = new ServiceMemoryDAO();
+		if (!DataManager.serviceDAO.initialize("")) throw new UnavailableException("Unable to initialize the serviceDAO.");
+		DataManager.allDAOs.add(DataManager.serviceDAO);
+
+		DataManager.appointmentDAO = new AppointmentSqlDAO();
+		if (!DataManager.appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
+		DataManager.allDAOs.add(DataManager.appointmentDAO);
+
+		DataManager.openingDAO = new OpeningSqlDAO();
+		if (!DataManager.openingDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the openingDAO.");
+		DataManager.allDAOs.add(DataManager.openingDAO);
+
 	}
 
 	public static void terminateDAOs() {
 		// memberDAO.terminate();
-		for (DAO<?> iDAO : allDAOs) {
+		for (DAO<?> iDAO : DataManager.allDAOs) {
 			iDAO.terminate();
+		}
+	}
+
+	public static void resetDAOs() {
+		int i = 0;
+		for (DAO<?> iDAO : DataManager.allDAOs) {
+			try {
+				iDAO.terminate();
+			} catch (NullPointerException ex) {
+				System.out.println("==========================================");
+				System.out.println("| DAO #" + i + " COULD NOT GRACEFULLY TERMINATE! |");
+				System.out.println("==========================================");
+			}
+			i++;
+		}
+		DataManager.allDAOs.clear();
+		try {
+			DataManager.initializeDAOs();
+		} catch (ServletException ex) {
+			System.out.println("====================================");
+			System.out.println("| SQL CONNECTION ERROR PLEASE FIX! |");
+			System.out.println("====================================");
 		}
 	}
 
 	// methods
 
 	public static DAO<Member> getMemberDAO() {
-		return memberDAO;
+		return DataManager.memberDAO;
+	}
+
+	public static DAO<Service> getServiceDAO() {
+		return DataManager.serviceDAO;
+	}
+
+	public static DAO<Appointment> getAppointmentDAO() {
+		return DataManager.appointmentDAO;
+	}
+
+	public static DAO<Opening> getOpeningDAO() {
+		return DataManager.openingDAO;
 	}
 
 }

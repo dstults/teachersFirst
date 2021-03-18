@@ -1,68 +1,109 @@
 package edu.lwtech.csd297.teachersfirst.pojos;
 
-import java.util.*;
+import java.sql.Timestamp;
+
+import edu.lwtech.csd297.teachersfirst.*;
 
 public class Appointment {
-    private Date startDate;
-	private Date endDate;
-	
-	private int studentID;
-	private int teacherID;
-	
-    public Appointment(
-        int startYear, int startMonth, int startDay, int startHour, int startMinute, 
-        int endYear, int endMonth, int endDay, int endHour, int endMinute,
-        int teacherID) 
-    {
     
-        this.teacherID = teacherID;
-        this.startDate = newDate(startYear,startMonth,startDay,startHour,startMinute);
-        this.endDate = newDate(endYear,endMonth,endDay,endHour,endMinute);
-    }
+	private int recID;
+	private int studentId;
+	private int instructorId;
+	private Timestamp startTime;
+	private Timestamp endTime;
 
-	public Appointment(Date startDate, Date endDate, int studentID, int teacherID) {
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.studentID = studentID;
-		this.teacherID = teacherID;
-	}
+	// ----------------------------------------------------------------
+	
+	public Appointment(int studentID, int instructorID,
+			int startYear, int startMonth, int startDay, int startHour, int startMinute,
+			int endYear, int endMonth, int endDay, int endHour, int endMinute) {
 
-  private static Date newDate(int year, int month, int day, int hour, int minute) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(0);
-		// year, month, day, hour, minute, second
-		cal.set(year, month, day, hour, minute, 0);
-		return cal.getTime();
+		this(-1, studentID, instructorID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0),
+				DateHelpers.toTimestamp(endYear, endMonth, endDay, endHour, endMinute, 0));
 	}
 	
-	public int getStudentID() {
-		return this.studentID;
-	}
-	
-	public int getTeacherID() {
-		return this.teacherID;
-	}
-	
-	public Date getStartDate() {
-		return this.startDate;
-	}
-	
-	public Date getEndDate() {
-		return this.endDate;
+	public Appointment(int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
+
+		this(-1, studentID, instructorID, startTime, endTime);
 	}
 
-  public int getRecID() {
-		return this.teacherID;
+	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
+
+		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
+		if (studentID < -1) throw new IllegalArgumentException("Invalid argument: studentID < -1");
+		if (instructorID < -1) throw new IllegalArgumentException("Invalid argument: instructorID < -1");
+		if (startTime == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
+		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
+		
+		this.recID = recID;
+		this.studentId = studentID;
+		this.instructorId = instructorID;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+
+	// ----------------------------------------------------------------
+
+	public int getRecID() {
+		return this.recID;
 	}
 
 	public void setRecID(int recID) {
 		// Updates the recID of POJOs that have just been added to the database
-		if (recID <= 0)
-			throw new IllegalArgumentException("setRecID: recID cannot be negative.");
-		if (this.teacherID != -1)
-			throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1).");
+		if (recID <= 0){ throw new IllegalArgumentException("setRecID: recID cannot be negative."); }
+		if (this.recID != (-1)){ throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1)."); }
 
-		this.teacherID = recID;
+		this.recID = recID;
+	}
+
+	// ----------------------------------------------------------------
+
+	public int getStudentID() {
+		return this.studentId;
+	}
+	
+	public int getInstructorID() {
+		return this.instructorId;
+	}
+	
+	public boolean getIsMyAppointment(int memberId) {
+		return this.studentId == memberId || this.instructorId == memberId;
+	}
+
+	public Timestamp getStartTime() {
+		return this.startTime;
+	}
+	
+	public Timestamp getEndTime() {
+		return this.endTime;
+	}
+
+	public String getName() {
+		return this.toString();
+	}
+
+	// ----------------------------------------------------------------
+
+	@Override
+	public String toString() {
+		return "Appointment/" + this.studentId + ">" + this.instructorId + "@" + this.startTime.toString() + "-" + this.endTime.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false; // can't be same as null
+		if (obj == this) return true; // same as self is automatically true
+		if (!(obj instanceof Appointment)) return false; // must be same type of object
+
+		Appointment other = (Appointment) obj; // cast to compare fields
+		if (this.recID != other.recID) return false;
+		if (this.studentId != other.studentId) return false;
+		if (this.instructorId != other.instructorId) return false;
+		if (!this.startTime.equals(other.startTime)) return false;
+		if (!this.endTime.equals(other.endTime)) return false;
+
+		// no failures, good match
+		return true;
 	}
 
 }

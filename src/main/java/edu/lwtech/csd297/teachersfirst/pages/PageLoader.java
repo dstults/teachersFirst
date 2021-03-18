@@ -10,6 +10,7 @@ import org.apache.logging.log4j.*;
 
 import freemarker.template.*;
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public abstract class PageLoader {
 
@@ -21,6 +22,10 @@ public abstract class PageLoader {
 
 	protected String templateName = null;
 	protected Map<String, Object> templateDataMap;
+	protected int uid;
+	protected boolean isAdmin = false;
+	protected boolean isInstructor = false;
+	protected boolean isStudent = false;
 
 	// Static Declarations (shared variables to handle freemarker and DAOs)
 
@@ -48,16 +53,33 @@ public abstract class PageLoader {
 		templateDataMap = new HashMap<>();
 
 		// Handle session / cookies
-		String userIdRaw = getSessionValue("USER_ID", "0");
-		int userId = userIdRaw != null && userIdRaw != "" ? Integer.parseInt(userIdRaw) : 0;
-		String userName = getSessionValue("USER_NAME", "Stranger");
-		String message = getGetValue("message", "");
+		uid = Security.getUserId(request);
+		if (uid > 0) {
+			Member member = DataManager.getMemberDAO().retrieveByID(uid);
+			if (member != null) {
+				isAdmin = member.getIsAdmin();
+				isInstructor = member.getIsInstructor();
+				isStudent = member.getIsStudent();
+			} else {
+				Security.logout(request, "Bad session data or failure to contact SQL server.");
+				templateDataMap.put("messge", "Error contacting SQL server. Error code: " + uid + ".a5j // For your own security you will need to log in again.");
+				templateName = "messageOnly.ftl";
+				this.trySendResponse();
+				DataManager.resetDAOs();
+				return; // abort here
+			}
+		}
+		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+		String message = QueryHelpers.getGet(request, "message");
 
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
 		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);
 		templateDataMap.put("showWelcome", true);
-		templateDataMap.put("userId", userId);
+		templateDataMap.put("userId", uid);
 		templateDataMap.put("userName", userName);
+		templateDataMap.put("isAdmin", isAdmin);
+		templateDataMap.put("isInstructor", isInstructor);
+		templateDataMap.put("isStudent", isStudent);
 		templateDataMap.put("message", message);
 	}
 
@@ -67,23 +89,10 @@ public abstract class PageLoader {
 
 	// Protected Methods (shared magic between all pages)
 
-	protected String getGetValue(String keyName, String defaultValue) {
-		if (request.getParameter(keyName) == null) return defaultValue;
-		if (request.getParameter(keyName) == "") return defaultValue;
-		return request.getParameter(keyName);
-	}
-
-	protected String getSessionValue(String sessionArg, String defaultValue) {
-		if (request.getSession().getAttribute(sessionArg) == null) return defaultValue;
-		if (request.getSession().getAttribute(sessionArg).toString() == null) return defaultValue;
-		if (request.getSession().getAttribute(sessionArg).toString() == "") return defaultValue;
-		return request.getSession().getAttribute(sessionArg).toString();
-	}
-
 	protected void sendFake404(String description) {
 		logger.debug("====================== SECURITY ALERT ======================");
 		logger.debug("Description: {}", description);
-		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
+		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
 		logger.debug("Sanitized Query: {}", sanitizedQuery);
 		final String pathInfo = request.getPathInfo() == null ? "" : request.getPathInfo();
 		logger.debug("Page Path: {}", pathInfo);
@@ -95,6 +104,10 @@ public abstract class PageLoader {
 	}
 
 	protected void trySendResponse() {
+		trySendResponse("");
+	}
+
+	protected void trySendResponse(String headerOverwrite) {
 
 		if (templateName == null) {
 
@@ -110,7 +123,9 @@ public abstract class PageLoader {
 
 			// Process template:
 			logger.debug("Processing Template: " + templateName);
-
+			if (headerOverwrite != "") {
+				response.setHeader("Content-Type", headerOverwrite);
+			}
 			try (PrintWriter out = response.getWriter()) {
 				Template view = freeMarkerConfig.getTemplate(templateName);
 				view.process(templateDataMap, out);
@@ -122,6 +137,16 @@ public abstract class PageLoader {
 
 		}
 		
+	}
+
+	protected void trySendJson(String json) {
+		// send json:
+		logger.debug("Attempting to send json...");
+		try (ServletOutputStream out = response.getOutputStream()) {
+			out.println(json);
+		} catch (IOException e) {
+			logger.error("IO Error: ", e);
+		}
 	}
 
 }
