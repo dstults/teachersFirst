@@ -66,6 +66,28 @@ public class DataManager {
 		}
 	}
 
+	public static void resetDAOs() {
+		int i = 0;
+		for (DAO<?> iDAO : DataManager.allDAOs) {
+			try {
+				iDAO.terminate();
+			} catch (NullPointerException ex) {
+				System.out.println("==========================================");
+				System.out.println("| DAO #" + i + " COULD NOT GRACEFULLY TERMINATE! |");
+				System.out.println("==========================================");
+			}
+			i++;
+		}
+		DataManager.allDAOs.clear();
+		try {
+			DataManager.initializeDAOs();
+		} catch (ServletException ex) {
+			System.out.println("====================================");
+			System.out.println("| SQL CONNECTION ERROR PLEASE FIX! |");
+			System.out.println("====================================");
+		}
+	}
+
 	// methods
 
 	public static DAO<Member> getMemberDAO() {

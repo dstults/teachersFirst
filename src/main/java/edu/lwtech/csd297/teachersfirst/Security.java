@@ -67,9 +67,15 @@ public class Security {
 
 	public static void login(HttpServletRequest request, Member member) {
 		//TODO: Set info in cookie
-		logger.debug(member.getRecID() + "/" + member.getLoginName() + " logged in.");
 		request.getSession().setAttribute("USER_ID", member.getRecID());
 		request.getSession().setAttribute("USER_NAME", member.getDisplayName());
+		logger.debug(member.getRecID() + "/" + member.getLoginName() + " logged in.");
+	}
+
+	public static void logout(HttpServletRequest request, String info) {
+		request.getSession().setAttribute("USER_ID", 0);
+		request.getSession().setAttribute("USER_NAME", "");
+		logger.debug("User logged out: " + info);
 	}
 
 	// This has its own process to ensure security

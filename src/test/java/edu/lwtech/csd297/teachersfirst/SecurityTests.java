@@ -39,6 +39,9 @@ class SecurityTests {
 
 		//TODO: Get install Mock Http Module
 		assertThrows(NullPointerException.class, () -> Security.getUserId(null));
+
+		//TODO: Get install Mock Http Module
+		assertThrows(NullPointerException.class, () -> Security.logout(null, "unit test"));
 	}
 
 }

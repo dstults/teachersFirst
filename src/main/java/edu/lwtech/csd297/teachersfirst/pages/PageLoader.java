@@ -56,9 +56,18 @@ public abstract class PageLoader {
 		uid = Security.getUserId(request);
 		if (uid > 0) {
 			Member member = DataManager.getMemberDAO().retrieveByID(uid);
-			isAdmin = member.getIsAdmin();
-			isInstructor = member.getIsInstructor();
-			isStudent = member.getIsStudent();
+			if (member != null) {
+				isAdmin = member.getIsAdmin();
+				isInstructor = member.getIsInstructor();
+				isStudent = member.getIsStudent();
+			} else {
+				Security.logout(request, "Bad session data or failure to contact SQL server.");
+				templateDataMap.put("messge", "Error contacting SQL server. Error code: " + uid + ".a5j // For your own security you will need to log in again.");
+				templateName = "messageOnly.ftl";
+				this.trySendResponse();
+				DataManager.resetDAOs();
+				return; // abort here
+			}
 		}
 		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
 		String message = QueryHelpers.getGet(request, "message");

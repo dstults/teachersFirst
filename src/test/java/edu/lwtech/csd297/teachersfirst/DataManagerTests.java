@@ -10,7 +10,6 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.lwtech.csd297.teachersfirst.pojos.*;
-import jdk.jfr.Timestamp;
 
 class DataManagerTests {
 
@@ -33,6 +32,7 @@ class DataManagerTests {
 		assertTrue(DataManager.getServiceDAO() != null);
 
 		DataManager.terminateDAOs();
+		DataManager.resetDAOs();
 
 	}
 

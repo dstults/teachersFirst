@@ -11,8 +11,7 @@ public class LogOutAction extends ActionRunner {
 	@Override
 	public void RunAction() {
 		// Do this no matter what to make sure it's clean:
-		request.getSession().setAttribute("USER_ID", 0);
-		request.getSession().setAttribute("USER_NAME", "");
+		Security.logout(request, "User " + uid + " normal log out.");
 		if (uid > 0 ) {
 			this.SendPostReply("/services", "", "Have a nice day!");
 		} else {
