@@ -52,6 +52,7 @@
 </#if>
 
 </body>
+<#if userId gt 0>
 <script>
 //const startTimes = [<#list possibleStartTimes as possibleStartTime>'${possibleStartTime}',</#list>];
 const durations = [<#list possibleDurations as possibleDuration>'${possibleDuration}',</#list>];
@@ -77,4 +78,5 @@ const adjustDurations = (timeSelector) => {
 	}
 }
 </script>
+</#if>
 </html>

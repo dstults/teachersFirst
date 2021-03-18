@@ -99,18 +99,23 @@ public class NewOpeningsAction extends ActionRunner {
 		if(daysOfWeekString.contains("fr")) openedDays.add(DayOfWeek.FRIDAY);
 		if(daysOfWeekString.contains("sa")) openedDays.add(DayOfWeek.SATURDAY);
 		if (openedDays.size() == 0) {
-			this.SendPostReply("/new_opening", retryString, "Couldn't parse your days of the week.");
+			this.SendPostReply("/new_openings", retryString, "Couldn't parse your days of the week.");
 			return;
 		}
 
 		logger.debug("Attempting to create batch openings ...");
 		DAO<Opening> openingDAO = DataManager.getOpeningDAO();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy"); 		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 		
 		LocalDate startDate = LocalDate.parse(startDateString, formatter);
 		LocalDate today = startDate.plusDays(0);
 		LocalDate endDate = LocalDate.parse(endDateString, formatter);
 		Timestamp startDateTime;
 		Timestamp endDateTime;
+
+		if (endDate.compareTo(startDate) < 0) {
+			this.SendPostReply("/new_openings", retryString, "End date can't be before the start date.");
+			return;
+		}
 
 		//logger.debug("Start: " + startDate.toString());
 		//logger.debug("End:   " + endDate.toString());

@@ -20,11 +20,26 @@ public class NewOpeningsPage extends PageLoader {
 		String startDateString = QueryHelpers.getGet(request, "startDate");
 		String endDateString = QueryHelpers.getGet(request, "endDate");
 		String daysOfWeekString = QueryHelpers.getGet(request, "daysOfWeek"); // SuMoTuWdThFrSa
-		String startTimeString = QueryHelpers.getGet(request, "startTime");
-		String endTimeString = QueryHelpers.getGet(request, "endTime");
+		String startTimeString = QueryHelpers.getGet(request, "startTime", "12:00");
+		String endTimeString = QueryHelpers.getGet(request, "endTime", "21:00");
+
+		String sundayChecked = daysOfWeekString.contains("su") ? " checked" : "";
+		String mondayChecked = daysOfWeekString.contains("mo") ? " checked" : "";
+		String tuesdayChecked = daysOfWeekString.contains("tu") ? " checked" : "";
+		String wednesdayChecked = daysOfWeekString.contains("we") ? " checked" : "";
+		String thursdayChecked = daysOfWeekString.contains("th") ? " checked" : "";
+		String fridayChecked = daysOfWeekString.contains("fr") ? " checked" : "";
+		String saturdayChecked = daysOfWeekString.contains("sa") ? " checked" : "";
 
 		// FreeMarker
 		templateDataMap.put("instructorId", instructorIdString);
+		templateDataMap.put("sundayChecked", sundayChecked);
+		templateDataMap.put("mondayChecked", mondayChecked);
+		templateDataMap.put("tuesdayChecked", tuesdayChecked);
+		templateDataMap.put("wednesdayChecked", wednesdayChecked);
+		templateDataMap.put("thursdayChecked", thursdayChecked);
+		templateDataMap.put("fridayChecked", fridayChecked);
+		templateDataMap.put("saturdayChecked", saturdayChecked);
 		templateDataMap.put("startDate", startDateString);
 		templateDataMap.put("endDate", endDateString);
 		templateDataMap.put("daysOfWeek", daysOfWeekString);

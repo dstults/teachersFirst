@@ -119,6 +119,29 @@ li{
 .openings-text h1{
 	text-align: center;
 }
+.new-opening h1{
+    margin-bottom: 2rem;
+    margin: auto;
+    font-size: 2.5rem;
+}
+.opening-times{
+    display: inline-block;
+}
+.second-value{
+    float: right;
+}
+.opening-days{
+    display: inline-block;
+    margin-top: 2rem;
+}
+.opening-days li{
+    float: left;
+    margin-left: -.5rem;
+    font-weight: lighter;
+}
+.new-opening input[type=submit]{
+    margin-top: 2rem;
+}
 .fake-buttons {
 	color: black;
 	text-align: center;
@@ -241,7 +264,7 @@ table.profile-inner td {
 
 /* make/confirm appointment page */
 
-.make-appointment, .confirm-appointment{
+.make-appointment, .confirm-appointment, .new-opening{
 	margin: auto;
 	width: fit-content;
 	font-size: 2rem;

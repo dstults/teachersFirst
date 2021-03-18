@@ -72,11 +72,7 @@ const confirmDeleteAppointment = (appointmentId) => {
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = function() {
-			if (xhr.status === 200) {
-				window.location.href = xhr.responseURL;
-			}
-		}
+		xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
 		xhr.send('action=delete_appointment&appointmentId=' + appointmentId);
 	}
 }
