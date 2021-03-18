@@ -1,28 +1,17 @@
 package edu.lwtech.csd297.teachersfirst;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.*;
+import java.time.*;
+import java.time.format.*;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class DateHelpers {
 
 	public static final long millisecondsPerDay = 86_400_000;
 	public static final String homeZoneId = "America/Los_Angeles";
 	public static final ZoneId homeZone = ZoneId.of(homeZoneId);
-
-	public static Timestamp toTimestamp(Calendar cal) {
-		return new Timestamp(cal.getTimeInMillis());
-	}
 
 	public static Timestamp toTimestamp(int year, int month, int day, int hour, int minute, int second) {
 		return toTimestamp(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second);
@@ -38,43 +27,7 @@ public class DateHelpers {
 		try {
 			date = sdf.parse(dateTimeString);
 		} catch (ParseException e) {
-			// This cannot be called during testing
-			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
-			e.printStackTrace();
-			return null;
-		}
-		long timeInMillis = date.getTime();
-		return new Timestamp(timeInMillis);
-	}
-
-	public static Timestamp toTimestampRounded(String myDate, boolean almostMidnight) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date;
-		try {
-			if (almostMidnight) {
-				date = sdf.parse(myDate + " 23:59:59");
-			} else {
-				date = sdf.parse(myDate + " 00:00:00");
-			}
-		} catch (ParseException e) {
-			// This cannot be called during testing
-			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
-			e.printStackTrace();
-			return null;
-		}
-		long timeInMillis = date.getTime();
-		return new Timestamp(timeInMillis);
-	}
-
-	public static Timestamp toTimestampDateOnly(String myDate) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date;
-		try {
-			date = sdf.parse(myDate + " 00:00:00");
-		} catch (ParseException e) {
-			// This cannot be called during testing
-			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
-			e.printStackTrace();
+			System.out.println("ParseException: Cannot parse date " + dateTimeString + " at position " + e.getErrorOffset());
 			return null;
 		}
 		long timeInMillis = date.getTime();
@@ -127,9 +80,9 @@ public class DateHelpers {
 		// Thanks to: https://howtodoinjava.com/java/calculate-age-from-date-of-birth/
 		int years = 0;
 		int months = 0;
-		int days = 0;
+		int days;
 
-		//create calendar object for birth day
+		//create calendar object for birthday
 		Calendar birthDay = Calendar.getInstance();
 		birthDay.setTimeInMillis(birthdate.getTime());
 
@@ -148,34 +101,27 @@ public class DateHelpers {
 
 		//if month difference is in negative then reduce years by one 
 		//and calculate the number of months.
-		if (months < 0)
-		{
+		if (months < 0) {
 			years--;
 			months = 12 - birthMonth + currMonth;
-			if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
-			months--;
-		} else if (months == 0 && now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
-		{
+			if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE)) months--;
+		} else if (months == 0 && now.get(Calendar.DATE) < birthDay.get(Calendar.DATE)) {
 			years--;
 			months = 11;
 		}
 
 		//Calculate the days
-		if (now.get(Calendar.DATE) > birthDay.get(Calendar.DATE))
+		if (now.get(Calendar.DATE) > birthDay.get(Calendar.DATE)) {
 			days = now.get(Calendar.DATE) - birthDay.get(Calendar.DATE);
-		else if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
-		{
+		} else if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE)) {
 			int today = now.get(Calendar.DAY_OF_MONTH);
 			now.add(Calendar.MONTH, -1);
 			days = now.getActualMaximum(Calendar.DAY_OF_MONTH) - birthDay.get(Calendar.DAY_OF_MONTH) + today;
-		} 
-		else
-		{
+		} else {
 			days = 0;
-			if (months == 12)
-			{
-			years++;
-			months = 0;
+			if (months == 12) {
+				years++;
+				months = 0;
 			}
 		}
 		
@@ -218,12 +164,7 @@ public class DateHelpers {
 		return new Timestamp(cal.getTimeInMillis()); */
 	}
 
-	public static String toDateString(Timestamp ts) {
-		LocalDate date = Instant.ofEpochMilli(ts.getTime() * 1000).atZone(homeZone).toLocalDate();
-		return date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-	}
-
-	public static String getDateTimeString() {
+	public static String getNowDateTimeString() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();  
 		return dtf.format(now);
@@ -252,9 +193,13 @@ public class DateHelpers {
 			if (durationVals.length > 2) {
 				minutes = 60 * Integer.parseInt(durationVals[0]) + Integer.parseInt(durationVals[2]);
 			} else {
-				minutes = Integer.parseInt(durationVals[0]);
+				if (durationVals[1].contains("hour")) {
+					minutes = 60 * Integer.parseInt(durationVals[0]);
+				} else {
+					minutes = Integer.parseInt(durationVals[0]);
+				}
 			}
-		} catch (NumberFormatException e) {
+		} catch (DateTimeParseException e) {
 			return "";
 		}
 		return startDateTime.plusMinutes(minutes).format(DateTimeFormatter.ofPattern("HH:mm"));

@@ -141,11 +141,6 @@ class MemberMemoryDAOTests {
 	void testDelete() {
 		Exception ex = null;
 
-		System.out.println("This is working! Look for me! ---------------------------------------------------------");
-		System.out.println("Size: " + memberDAO.size());
-		System.out.println("Fred Size: " + memberDAO.search("Fred").size());
-		System.out.println("Get: " + memberDAO.search("Fred").get(0));
-		System.out.println("RecID: " + memberDAO.search("Fred").get(0).getRecID());
 		int fredID = memberDAO.search("Fred").get(0).getRecID();
 		memberDAO.delete(fredID);
 		assertNull(memberDAO.retrieveByID(fredID));

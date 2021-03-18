@@ -1,18 +1,12 @@
 package edu.lwtech.csd297.teachersfirst;
 
-import java.net.UnknownHostException;
-import java.util.*;
-
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.AssertTrue;
 
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.lwtech.csd297.teachersfirst.pojos.*;
-import jdk.jfr.Timestamp;
 
 class SecurityTests {
 
