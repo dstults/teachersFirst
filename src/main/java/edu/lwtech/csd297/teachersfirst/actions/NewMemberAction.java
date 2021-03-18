@@ -1,7 +1,5 @@
 package edu.lwtech.csd297.teachersfirst.actions;
 
-import java.util.List;
-
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
@@ -14,76 +12,50 @@ public class NewMemberAction extends ActionRunner {
 
 	@Override
 	public void RunAction() {
-
-		// This version of this process requites that you're not signed in.
-		final int uid = Security.getUserId(request);
-		if (uid > 0) {
-			this.SendRedirectToPage("/services?message=Please sign out before trying to register a new account!");
-			return;
-		}
-
-		String loginName = getPostValue("loginName", "");
-		String password1 = getPostValue("password1", "");
-		String password2 = getPostValue("password2", "");
-		String displayName = getPostValue("displayName", "");
+		String name = getPostValue("name", "");
+		String password1 = getPostValue("password", "");
+		String password2 = getPostValue("confirm_password", "");
+		String age = getPostValue("age", "");
+		int ageVal = Integer.parseInt(age);
 		String gender = getPostValue("gender", "");
-		/* String birthYear = getPostValue("b_year", "");
-		String birthMonth = getPostValue("b_month", "");
-		String birthDay = getPostValue("b_day", ""); */
-		String phone1 = getPostValue("phone1", "");
-		String phone2 = getPostValue("phone2", "");
-		String email = getPostValue("email", "");
+		String food = getPostValue("food", "");
+		String color = getPostValue("color", "");
 
-		final String retryString = "loginName=" + loginName + "&displayName=" + displayName + "&gender=" + gender + "&phone1=" + phone1 + "&phone2=" + phone2 + "&email=" + email + "&";
-
-		//TODO: Must check to make sure string input does not exceed database lengths
-		if (loginName.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid login name.");
+		if (name == null || name == "" || password1 == null || password1 == "") {
+			this.SendRedirectToPage("/register?message=Please enter a valid user name and password.");
 			return;
 		}
-		if (password1.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid password.");
+		if (password2 == null || password2 == "" || !password2.equals(password1)) {
+			this.SendRedirectToPage("/register?message=Passwords do not match!");
 			return;
 		}
-		if (displayName.isEmpty()) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid display name.");
+		if (ageVal < 4 || ageVal > 130) {
+			this.SendRedirectToPage("/register?message=Age must be between 4 and 130.");
 			return;
 		}
-		if (password2.isEmpty() || !password2.equals(password1)) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Passwords do not match!");
+		if (gender == null || (!gender.equals("Male") && !gender.equals("Female") && !gender.equals("Unset"))) {
+			this.SendRedirectToPage("/register?message=Please enter a valid gender.");
 			return;
 		}
-		// trim and lcase gender string -- if it's not empty, which is valid
-		if (gender.length() > 0) gender = gender.toLowerCase().substring(0, 1);
-		if (!gender.equals("m") && !gender.equals("f") && !gender.equals("")) {
-			this.SendRedirectToPage("/register?" + retryString + "message=Please provide a valid gender (m/f/blank).");
+		if (food == null || food == "" || color == null || color == "") {
+			this.SendRedirectToPage("/register?message=Please enter a favorite food and color.");
 			return;
 		}
 
-		logger.debug(displayName + " attempting to register...");
-		
-		// Making sure unique login name
-		List<Member> members = DataManager.getMemberDAO().retrieveAll();
-		for (Member member : members) {
-			if (member.getLoginName() == loginName) {
-				this.SendRedirectToPage("/register?" + retryString + "message=Login name '" + loginName + "' already taken, please try another.");
-				return;
-			}
+		logger.debug(name + " attempting to register in with password: " + password1);
+		if (Security.checkPassword(1, "Password01")) {
+			Member member = new Member(name, ageVal, gender, color, food, true, false, false);
+			DataManager.getMemberDAO().insert(member);
+			logger.info(DataManager.getMemberDAO().size() + " records total");
+			logger.debug("Registered new member: [{}]", member);
+			request.getSession().setAttribute("USER_ID", 1);
+			request.getSession().setAttribute("USER_NAME", name);
+			this.SendRedirectToPage("/appointments");
+			return;
+		} else {
+			this.SendRedirectToPage("/login?name=" + name + "&message=Could not log you in.");
+			return;
 		}
-
-		//TODO: Hash password either in JS or here
-		//TODO: Birthdates
-
-		//Member member = new Member(loginName, password1, displayName, birthdate, gender, "", phone1, phone2, email, true, false, false);
-		Member member = new Member(loginName, password1, displayName, gender, "", phone1, phone2, email, true, false, false);
-		DataManager.getMemberDAO().insert(member);
-		logger.info(DataManager.getMemberDAO().size() + " records total");
-		logger.debug("Registered new member: [{}]", member);
-		
-		// Log user into session
-		Security.login(request, member);
-		this.SendRedirectToPage("/appointments?message=Welcome new user!");
-		return;
 	}
 	
 }

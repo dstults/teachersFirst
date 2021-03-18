@@ -3,7 +3,6 @@ package edu.lwtech.csd297.teachersfirst.actions;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class LogInAction extends ActionRunner {
 
@@ -11,21 +10,22 @@ public class LogInAction extends ActionRunner {
 
 	@Override
 	public void RunAction() {
-		String loginName = getPostValue("loginName", "");
+		String name = getPostValue("name", "");
 		String password = getPostValue("password", "");
 
-		if (loginName == null || loginName.isEmpty() || password == null || password.isEmpty()) {
-			this.SendRedirectToPage("/login?name=" + loginName + "&message=Please enter a valid user name and password.");
+		if (name == null || name == "" || password == null || password == "") {
+			this.SendRedirectToPage("/login?name=" + name + "&message=Please enter a valid user name and password.");
 			return;
 		}
 
-		Member member = Security.checkPassword(loginName, password);
-		if (member != null) {
-			Security.login(request, member);
+		if (Security.checkPassword(1, password)) {
+			logger.debug(name + " logged in.");
+			request.getSession().setAttribute("USER_ID", 1);
+			request.getSession().setAttribute("USER_NAME", name);
 			this.SendRedirectToPage("/appointments");
 			return;
 		} else {
-			this.SendRedirectToPage("/login?name=" + loginName + "&message=Could not log you in.");
+			this.SendRedirectToPage("/login?name=" + name + "&message=Could not log you in.");
 			return;
 		}
 	}

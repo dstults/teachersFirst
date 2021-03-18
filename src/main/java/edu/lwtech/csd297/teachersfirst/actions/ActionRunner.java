@@ -31,7 +31,7 @@ public abstract class ActionRunner {
 
 	protected String getPostValue(String keyName, String defaultValue) {
 		if (request.getParameter(keyName) == null) return defaultValue;
-		if (request.getParameter(keyName).isEmpty()) return defaultValue;
+		if (request.getParameter(keyName) == "") return defaultValue;
 		return request.getParameter(keyName);
 	}
 

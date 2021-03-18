@@ -1,1 +1,0 @@
-			<p class="please-login">You must be <a href="/login">logged in</a> to view this page.</p>

@@ -10,11 +10,10 @@
 	</tr>
 	<#list services as service>
 		<tr>
-			<td><a href="/openings">${service.name}</a></td>
+			<td>${service.name}</td>
 			<td>${service.description}</td>
-			<td><a href="/openings">${service.teachers}</a></td>
+			<td>${service.teachers}</td>
 		</tr>
 	</#list>
 </table>
 </body>
-</html>

@@ -1,85 +1,68 @@
 package edu.lwtech.csd297.teachersfirst.pojos;
 
-import java.sql.Timestamp;
-
-import edu.lwtech.csd297.teachersfirst.*;
+import java.util.*;
 
 public class Appointment {
-    
-	private int recID;
+    private Date startDate;
+	private Date endDate;
+	
 	private int studentID;
-	private int instructorID;
-	private Timestamp startTime;
-	private Timestamp endTime;
-
-	// ----------------------------------------------------------------
+	private int teacherID;
 	
-	public Appointment(int studentID, int instructorID,
-			int startYear, int startMonth, int startDay, int startHour, int startMinute,
-			int endYear, int endMonth, int endDay, int endHour, int endMinute) {
+    public Appointment(
+        int startYear, int startMonth, int startDay, int startHour, int startMinute, 
+        int endYear, int endMonth, int endDay, int endHour, int endMinute,
+        int teacherID) 
+    {
+    
+        this.teacherID = teacherID;
+        this.startDate = newDate(startYear,startMonth,startDay,startHour,startMinute);
+        this.endDate = newDate(endYear,endMonth,endDay,endHour,endMinute);
+    }
 
-		this(-1, studentID, instructorID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0),
-				DateHelpers.toTimestamp(endYear, endMonth, endDay, endHour, endMinute, 0));
-	}
-	
-	public Appointment(int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
-
-		this(-1, studentID, instructorID, startTime, endTime);
-	}
-
-	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
-
-		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
-		//TODO: input validation
-		
-		this.recID = recID;
+	public Appointment(Date startDate, Date endDate, int studentID, int teacherID) {
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.studentID = studentID;
-		this.instructorID = instructorID;
-		this.startTime = startTime;
-		this.endTime = endTime;
+		this.teacherID = teacherID;
 	}
 
-	// ----------------------------------------------------------------
-
-	public int getRecID() {
-		return this.recID;
+  private static Date newDate(int year, int month, int day, int hour, int minute) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(0);
+		// year, month, day, hour, minute, second
+		cal.set(year, month, day, hour, minute, 0);
+		return cal.getTime();
 	}
-
-	public void setRecID(int recID) {
-		// Updates the recID of POJOs that have just been added to the database
-		if (recID <= 0) throw new IllegalArgumentException("setRecID: recID cannot be negative.");
-		if (this.recID != -1) throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1).");
-
-		this.recID = recID;
-	}
-
-	// ----------------------------------------------------------------
-
+	
 	public int getStudentID() {
 		return this.studentID;
 	}
 	
-	public int getInstructorID() {
-		return this.instructorID;
+	public int getTeacherID() {
+		return this.teacherID;
 	}
 	
-	public Timestamp getStartTime() {
-		return this.startTime;
+	public Date getStartDate() {
+		return this.startDate;
 	}
 	
-	public Timestamp getEndTime() {
-		return this.endTime;
+	public Date getEndDate() {
+		return this.endDate;
 	}
 
-	public String getName() {
-		return this.toString();
+  public int getRecID() {
+		return this.teacherID;
 	}
 
-	// ----------------------------------------------------------------
+	public void setRecID(int recID) {
+		// Updates the recID of POJOs that have just been added to the database
+		if (recID <= 0)
+			throw new IllegalArgumentException("setRecID: recID cannot be negative.");
+		if (this.teacherID != -1)
+			throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1).");
 
-	@Override
-	public String toString() {
-		return "Appointment/" + this.studentID + ">" + this.instructorID + "@" + this.startTime.toString() + "-" + this.endTime.toString();
+		this.teacherID = recID;
 	}
 
 }

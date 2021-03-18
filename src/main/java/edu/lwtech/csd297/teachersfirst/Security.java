@@ -3,11 +3,7 @@ package edu.lwtech.csd297.teachersfirst;
 import java.net.*;
 import java.util.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.logging.log4j.*;
-
-import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class Security {
 	
@@ -52,37 +48,10 @@ public class Security {
 	}
 
 
-	public static Member checkPassword(String loginName, String password) {
-		List<Member> memberDAO = DataManager.getMemberDAO().retrieveAll();
-		for (Member member : memberDAO) {
-			if (member.getLoginName().equals(loginName) && member.getPasswordHash().equals(password)) {
-				return member;
-			}
-		}
+	public static boolean checkPassword(int uid, String password) {
 		// should perform sql query, for now, just does this
-		logger.debug(loginName + " failed to log in with password: " + password);
-		return null;
-	}
-
-	public static void login(HttpServletRequest request, Member member) {
-		//TODO: Set info in cookie
-		logger.debug(member.getRecID() + "/" + member.getLoginName() + " logged in.");
-		request.getSession().setAttribute("USER_ID", member.getRecID());
-		request.getSession().setAttribute("USER_NAME", member.getDisplayName());
-	}
-
-	// This has its own process to ensure security
-	public static int getUserId(HttpServletRequest request) {
-		if (request.getSession().getAttribute("USER_ID") == null) return 0;
-		if (request.getSession().getAttribute("USER_ID").toString() == null) return 0;
-		if (request.getSession().getAttribute("USER_ID").toString().isEmpty()) return 0;
-		String uid = request.getSession().getAttribute("USER_ID").toString();
-		try {
-			return Integer.parseInt(uid);
-		} catch (NumberFormatException e) {
-			logger.fatal("SECURITY RISK: Invalid data stored in session's USER_ID value!");
-		}
-		return 0;
+		logger.debug(uid + " attempted to log in with password: " + password);
+		return password.equals("Password01");
 	}
 
 }

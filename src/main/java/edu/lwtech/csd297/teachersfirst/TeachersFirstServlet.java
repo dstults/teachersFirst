@@ -63,29 +63,26 @@ public class TeachersFirstServlet extends HttpServlet {
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String sanitizedQuery = QueryHelpers.getSanitizedQueryString(request);
 		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
-		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
+		if (pagePath != "/health") // Don't log "health" commands
 			logger.debug("IN - {}", logInfo);
 
 		try {
 			switch (pagePath) {
 				case "":
-				case "/":
 				case "/home":
-					//TODO: If logged in, redirect to appointments, otherwise, redirect to services
-				case "/services":
-					new ServicesPage(request, response).loadPage();
-					break;
+					//TODO: should redirect to / or /appointments, respectively
+				case "/":
 				case "/appointments":
 					new AppointmentsPage(request, response).loadPage();
 					break;
 				case "/make_appointment":
 					new MakeAppointmentPage(request, response).loadPage();
 					break;
-				case "/confirm_make_appointment":
-					new ConfirmMakeAppointmentPage(request, response).loadPage();
-					break;
 				case "/openings":
 					new OpeningsPage(request, response).loadPage();
+					break;
+				case "/services":
+					new ServicesPage(request, response).loadPage();
 					break;
 				case "/calendar":
 					new CalendarPage(request, response).loadPage();
@@ -108,14 +105,15 @@ public class TeachersFirstServlet extends HttpServlet {
 
 				case "/dynamic.css":
 					new DynamicCssFile(request, response).loadPage();
-					return; // don't log!
+					break;
+					
 				case "/health":
 					try {
 						response.sendError(HttpServletResponse.SC_OK, "OK");
 					} catch (IOException e) {
 						logger.error("IO Error sending health response: ", e);
 					}
-					return; // don't log!
+					return;
 
 				case "/test":
 					new DiagnosticsPage(request, response).loadPage();
@@ -172,12 +170,6 @@ public class TeachersFirstServlet extends HttpServlet {
 					break;
 				case "register_new_member":
 					new NewMemberAction(request, response).RunAction();
-					break;
-				case "make_openings":
-					new NewOpeningsAction(request, response).RunAction();
-					break;
-				case "make_appointment":
-					new NewAppointmentAction(request, response).RunAction();
 					break;
 
 				default:
