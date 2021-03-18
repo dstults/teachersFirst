@@ -31,8 +31,9 @@ public class QueryHelpers {
 		try {
 			s = URLDecoder.decode(s, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// Should never happen
 			throw new IllegalStateException(e);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(e);
 		}
 		// This might be redundant with URLDecoder, but just to be safe...
 		s = s.replaceAll("<", "&lt;");
