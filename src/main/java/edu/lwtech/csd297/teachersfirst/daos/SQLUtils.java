@@ -126,7 +126,7 @@ class SQLUtils {
 			String query,
 			int recID, String loginName, String passwordHash,
 			String displayName, Timestamp birthdate, String gender,
-			String teacherNotes,
+			String instructorNotes,
 			String phone1, String phone2, String email,
 			boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
@@ -144,7 +144,7 @@ class SQLUtils {
 			stmt.setString(3, displayName);
 			stmt.setTimestamp(4, birthdate);
 			stmt.setString(5, gender);
-			stmt.setString(6, teacherNotes);
+			stmt.setString(6, instructorNotes);
 			stmt.setString(7, phone1);
 			stmt.setString(8, phone2);
 			stmt.setString(9, email);

@@ -27,7 +27,7 @@
 				<#if member.age gt 130><td>-</td><#else><td>${member.age}</td></#if>
 				<td>${member.gender}</td>
 				<td>${member.phone1}<br>${member.email}</td>
-				<#if isAdmin || isInstructor><td>${member.teacherNotes}</td></#if>
+				<#if isAdmin || isInstructor><td>${member.instructorNotes}</td></#if>
 			</tr>
 		</#list>
 	</table>

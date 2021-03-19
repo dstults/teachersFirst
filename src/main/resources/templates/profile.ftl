@@ -35,8 +35,8 @@
 			</td></tr>
 			<#if isAdmin || isInstructor>
 			<tr><td colspan=2 class="extra-side-padding">
-				<p class="bold-left">Teacher notes:</p>
-				<p class="normal-paragraph italic"><#if member.teacherNotes?has_content>${member.teacherNotes}<#else>No teachers' comments.</#if></p>
+				<p class="bold-left">Instructor notes:</p>
+				<p class="normal-paragraph italic"><#if member.instructorNotes?has_content>${member.instructorNotes}<#else>No instructors' comments.</#if></p>
 			</td></tr>
 			</#if>
 		</tr>

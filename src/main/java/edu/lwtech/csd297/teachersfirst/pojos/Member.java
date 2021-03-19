@@ -6,7 +6,7 @@ import java.time.format.*;
 
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
 
-public class Member {
+public class Member implements IJsonnable {
 
 	// Encapsulated member variables
 	private int recID; // Database ID (or -1 if it isn't in the database yet)
@@ -19,7 +19,7 @@ public class Member {
 	private String displayName;
 	private Timestamp birthdate;
 	private String gender;
-	private String teacherNotes;
+	private String instructorNotes;
 
 	// Metadata:
 	private String phone1;
@@ -32,21 +32,21 @@ public class Member {
 	private boolean isAdmin;
 
 	// no record id, no birthdate -- this is the default for the new member made by the page
-	public Member(String loginName, String passwordHash, String displayName, String gender, String teacherNotes,
+	public Member(String loginName, String passwordHash, String displayName, String gender, String instructorNotes,
 					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
-		this(-1, loginName, passwordHash, displayName, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, passwordHash, displayName, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 	// no record id, yes birthdate -- used in code
-	public Member(String loginName, String passwordHash, String displayName, Timestamp birthdate, String gender, String teacherNotes,
+	public Member(String loginName, String passwordHash, String displayName, Timestamp birthdate, String gender, String instructorNotes,
 					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
-		this(-1, loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 	// everything
-	public Member(int recID, String loginName, String passwordHash, String displayName, Timestamp birthdate, String gender, String teacherNotes,
+	public Member(int recID, String loginName, String passwordHash, String displayName, Timestamp birthdate, String gender, String instructorNotes,
 					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
@@ -60,7 +60,7 @@ public class Member {
 		if (birthdate == null) throw new IllegalArgumentException("Invalid argument: birthdate is null");
 		if (gender == null) throw new IllegalArgumentException("Invalid argument: gender is null");
 		// gender can be empty string
-		if (teacherNotes == null) throw new IllegalArgumentException("Invalid argument: teacherNotes is null");
+		if (instructorNotes == null) throw new IllegalArgumentException("Invalid argument: instructorNotes is null");
 		// notes can be empty string
 		if (phone1 == null) throw new IllegalArgumentException("Invalid argument: phone1 is null");
 		// phone1 can be empty string
@@ -75,7 +75,7 @@ public class Member {
 		this.displayName = displayName;
 		this.birthdate = birthdate;
 		this.gender = gender;
-		this.teacherNotes = teacherNotes;
+		this.instructorNotes = instructorNotes;
 		this.phone1 = phone1;
 		this.phone2 = phone2;
 		this.email = email;
@@ -149,8 +149,8 @@ public class Member {
 		}
 	}
 
-	public String getTeacherNotes() {
-		return this.teacherNotes;
+	public String getInstructorNotes() {
+		return this.instructorNotes;
 	}
 
 	public String getPhone1() {
@@ -220,11 +220,11 @@ public class Member {
 		this.gender = gender;
 	}
 
-	public void setTeacherNotes(String teacherNotes) {
-		if (teacherNotes == null) throw new IllegalArgumentException("Invalid argument: teacherNotes is null");
+	public void setInstructorNotes(String instructorNotes) {
+		if (instructorNotes == null) throw new IllegalArgumentException("Invalid argument: instructorNotes is null");
 		// can be empty string
 
-		this.teacherNotes = teacherNotes;
+		this.instructorNotes = instructorNotes;
 	}
 
 	public void setPhone1(String phone1) {
@@ -275,7 +275,7 @@ public class Member {
 		if (!this.displayName.equals(other.displayName)) return false;
 		if (!this.birthdate.equals(other.birthdate)) return false;
 		if (!this.gender.equals(other.gender)) return false;
-		if (!this.teacherNotes.equals(other.teacherNotes)) return false;
+		if (!this.instructorNotes.equals(other.instructorNotes)) return false;
 		if (!this.phone1.equals(other.phone1)) return false;
 		if (!this.phone2.equals(other.phone2)) return false;
 		if (!this.email.equals(other.email)) return false;
@@ -285,6 +285,24 @@ public class Member {
 
 		// no failures, good match
 		return true;
+	}
+
+	@Override
+	public String toJson() {
+		return "{\"id\":\"" + this.recID +
+				"\",\"loginName\":\"" + this.loginName +
+				//"\",\"passwordHash\":\"" + this.passwordHash +
+				"\",\"displayName\":\"" + this.displayName +
+				"\",\"birthdate\":\"" + this.birthdate.toLocalDateTime().toLocalDate() +
+				"\",\"gender\":\"" + this.gender +
+				"\",\"instructorNotes\":\"" + this.instructorNotes +
+				"\",\"phone1\":\"" + this.phone1 +
+				"\",\"phone2\":\"" + this.phone2 +
+				"\",\"email\":\"" + this.email +
+				"\",\"isStudent\":\"" + this.isStudent +
+				"\",\"isInstructor\":\"" + this.isInstructor +
+				"\",\"isAdmin\":\"" + this.isAdmin +
+				"\"}";
 	}
 
 }

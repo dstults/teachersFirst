@@ -123,7 +123,7 @@ public class Service implements IJsonnable {
 
 	@Override
 	public String toJson() {
-		return "{\"recId\":\"" + this.recID +
+		return "{\"id\":\"" + this.recID +
 		"\",\"name\":\"" + this.name +
 		"\",\"description\":\"" + this.description +
 		"\",\"instructors\":\"" + this.instructors +

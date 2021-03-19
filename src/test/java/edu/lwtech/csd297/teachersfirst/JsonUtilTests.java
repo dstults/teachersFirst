@@ -1,4 +1,4 @@
-package edu.lwtech;
+package edu.lwtech.csd297.teachersfirst;
 
 import org.junit.jupiter.api.*;
 
@@ -13,7 +13,9 @@ public class JsonUtilTests {
 	private class JsonTester implements IJsonnable {
 		private String text;
 		public JsonTester(String text) { this.setText(text); }
-		public String getText() { return text; }
+
+		//public String getText() { return text; }
+
 		public void setText(String text) { this.text = text; }
 		@Override
 		public String toJson() { return "{'text':'" + text + "'}"; }
