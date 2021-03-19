@@ -21,6 +21,7 @@ public abstract class ActionRunner {
 	protected boolean isAdmin;
 	protected boolean isInstructor;
 	protected boolean isStudent;
+	protected String errorMessage = "";
 	protected static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
 
 	// Constructors
@@ -32,9 +33,19 @@ public abstract class ActionRunner {
 		uid = Security.getUserId(request);
 		if (uid > 0) {
 			Member member = DataManager.getMemberDAO().retrieveByID(uid);
-			isAdmin = member.getIsAdmin();
-			isInstructor = member.getIsInstructor();
-			isStudent = member.getIsStudent();
+			if (member != null) {
+				isAdmin = member.getIsAdmin();
+				isInstructor = member.getIsInstructor();
+				isStudent = member.getIsStudent();
+			} else {
+				errorMessage += " Failed to contact database, try again later. ";
+				DataManager.resetDAOs();
+			}
+		} else {
+			if (!DataManager.validateSQLConnection()) {
+				errorMessage += " Failed to contact database, try again later. ";
+				DataManager.resetDAOs();
+			}
 		}
 	}
 
@@ -51,7 +62,7 @@ public abstract class ActionRunner {
 			if (!query.isEmpty() || !message.isEmpty()) fullResponseURL += "?";
 			if (!query.isEmpty()) fullResponseURL += query;
 			if (!query.isEmpty() && !message.isEmpty()) fullResponseURL += "&";
-			if (!message.isEmpty()) fullResponseURL += "message=" + message;
+			if (!message.isEmpty()) fullResponseURL += "message=" + message.trim();
 			try {
 				response.sendRedirect(fullResponseURL);
 			} catch (IOException e) {
@@ -59,7 +70,7 @@ public abstract class ActionRunner {
 			}
 		} else {
 			// for RESTful applications
-			String messageJson = "'message':'" + message + "'"; // include message even if empty
+			String messageJson = "'message':'" + message.trim() + "'"; // include message even if empty
 			if (!query.isEmpty()) messageJson += ",";
 			
 			String fullJson = "{" + messageJson + JsonUtils.queryToJson(query) + "}";

@@ -24,6 +24,11 @@ public class LogInAction extends ActionRunner {
 			return;
 		}
 
+		if (!errorMessage.isEmpty()) {
+			this.SendPostReply("/login", "loginName=" + loginName, errorMessage);
+			return;
+		}
+
 		Member member = Security.checkPassword(loginName, password);
 		if (member != null) {
 			Security.login(request, member);

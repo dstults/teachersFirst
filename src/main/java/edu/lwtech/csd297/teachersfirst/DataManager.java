@@ -93,6 +93,14 @@ public class DataManager {
 		}
 	}
 
+	public static boolean validateSQLConnection() {
+		if (DataManager.memberDAO == null) return false;
+		if (DataManager.appointmentDAO == null) return false;
+		if (DataManager.openingDAO == null) return false;
+		if (DataManager.memberDAO.retrieveByIndex(0) == null) return false;
+		return true;
+	}
+  
 	public static DAO<Member> getMemberDAO() {
 		return DataManager.memberDAO;
 	}

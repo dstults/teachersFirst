@@ -53,7 +53,6 @@ public class Security {
 		}
 	}
 
-
 	public static Member checkPassword(String loginName, String password) {
 		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
 		Member member = memberDAO.retrieveByLoginNameAndPassword(loginName, password);
