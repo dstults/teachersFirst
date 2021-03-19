@@ -18,16 +18,17 @@ public class Security {
 	public static void populateWhitelist() {
 		
 		// Manual entries:		
-		
-		//whitelistIp("1.1.1.1");
-		//whitelistIp("1.1.1.1");
-		//whitelistIp("1.1.1.1");
-		//whitelistIp("1.1.1.1");
-		
-		// Automatic entries:
-		
-		//TODO: these should refresh about once a day, maybe, or it should just be checked on the fly -- it is fast after all
-		//well, food for thought.
+
+		whitelistIp("50.35.66.200"); // Darren
+		whitelistIp("97.127.115.35"); // Edmund
+		whitelistIp("73.140.252.100"); // Tanya
+
+		//TODO: Add some sort of remote server/SQL-like verification method in case get locked out of IPs
+		//or even a separate webadmin login
+
+		// Automatic entries:		
+		// Oh no: There is a problem doing nslookups on jenkins builds -- they probably have this
+		// functionality disabled
 		whitelistIp(nsLookup("dstults.net"));
 
 	}

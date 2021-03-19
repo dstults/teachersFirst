@@ -24,7 +24,7 @@ public class JsonUtils {
 				sb.append("'" + kvPair[0] + "':'" + kvPair[1] + "'");
 			} else {
 				//TODO: use logger
-				System.out.println("Invalid query.");
+				//System.out.println("Invalid query.");
 				return "";
 			}
 			i++;

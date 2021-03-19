@@ -33,7 +33,7 @@ public class DataManager {
 	private static DAO<Appointment> appointmentDAO = null;
 	private static DAO<Opening> openingDAO = null;
 
-	// Meta constructors and destructors
+	// Meta "construct" and "destruct" (and "reset")
 
 	public static void initializeDAOs() throws ServletException {
 
@@ -72,23 +72,26 @@ public class DataManager {
 			try {
 				iDAO.terminate();
 			} catch (NullPointerException ex) {
-				System.out.println("==========================================");
-				System.out.println("| DAO #" + i + " COULD NOT GRACEFULLY TERMINATE! |");
-				System.out.println("==========================================");
+				System.out.println("=============================================== Error");
+				System.out.println("| DAO #" + i + " TRIED TO TERMINATE WHEN SET TO NULL! | Error");
+				System.out.println("=============================================== Error");
 			}
 			i++;
 		}
+
+		// Probably not needed, just want it
+		try { Thread.sleep(1000); } catch (InterruptedException e) { System.out.println("Sleep interrupted while resetting DAOs"); }
+
 		DataManager.allDAOs.clear();
+
 		try {
 			DataManager.initializeDAOs();
 		} catch (ServletException ex) {
-			System.out.println("====================================");
-			System.out.println("| SQL CONNECTION ERROR PLEASE FIX! |");
-			System.out.println("====================================");
+			System.out.println("===================================== Error");
+			System.out.println("| ERROR CONNECTING TO SQL DATABASE! | Error");
+			System.out.println("===================================== Error");
 		}
 	}
-
-	// methods
 
 	public static DAO<Member> getMemberDAO() {
 		return DataManager.memberDAO;

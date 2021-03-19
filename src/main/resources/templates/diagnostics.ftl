@@ -11,9 +11,10 @@
 			word-break: break-all;
 		}
 		p { margin: 0; }
-		p.extraTests { color: blue; }
-		h3.extraTests { color: navy; }
-		p:not(.extraTests) { text-shadow: 0 0 4px yellow; }
+		p.gray { color: gray; }
+		p.blue { color: blue; }
+		p.green { color: green; }
+		h3 { color: navy; }
 		div.container {
 			margin: 5vw auto;
 			max-width: 900px;
@@ -21,6 +22,26 @@
 			background-color: white;
 			padding: 1vw;
 			font-size: 1.5rem;
+		}
+		button {
+			margin: 0 auto;
+			width: 100px;
+			height: 37px;
+			font-size: 21px;
+			vertical-align: middle;
+		}
+		code {
+			display: inline-block;
+			margin: 0 7px;
+			min-width: 150px;
+			padding: 5px;
+			border: 1px solid black;
+			border-radius: 3px;
+			background-color: rgba(64, 64, 64, 50%);
+			color: rgb(255, 224, 128);
+			font-size: 1rem;
+			vertical-align: middle;
+			line-height: 120%;
 		}
 		table {
 			border-collapse: collapse;
@@ -42,20 +63,23 @@
 <body>
 	<div class="container">
 		<p>Client IP: ${clientIp}</p>
-		<p class="extraTests">Client Host: ${clientHost}</p>
-		<p class="extraTests">HTTP/S?: ${httpType}</p>
+		<p class="gray">Client Host: ${clientHost}</p>
+		<p class="gray">HTTP/S?: ${httpType}</p>
 		<p>URI: ${uriPath}<p>
-		<p class="extraTests">Servlet Path Info: ${pathInfo}<p>
-		<p>Query: ${fullQuery}</p>
-		<p class="extraTests">Memory DAO Check 1: ${memberDaoCheck1}</p>
-		<p>Memory DAO Check 2: ${memberDaoCheck2}</p>
-		<p class="extraTests">Opening DAO Check 1: ${openingDaoCheck1}</p>
-		<p>Opening DAO Check 2: ${openingDaoCheck2}</p>
-		<p class="extraTests">Appointment DAO Check 1: ${appointmentDaoCheck1}</p>
-		<p>Appointment DAO Check 2: ${appointmentDaoCheck2}</p>
-		<h3 class="extraTests">Full parameter dump:</h3>
+		<p class="gray">Servlet Path Info: ${pathInfo}<p>
+		<p class="gray">Query: ${fullQuery}</p>
+		<br>
+		<p class="green">Memory DAO NRE test: ${memberDaoCheckNull}</p>
+		<p class="green">Member GET test: ${memberDaoCheckGet}</p>
+		<p class="green">Opening DAO NRE test: ${openingDaoCheckNull}</p>
+		<p class="green">Opening GET test: ${openingDaoCheckGet}</p>
+		<p class="green">Appointment DAO NRE test: ${appointmentDaoCheckNull}</p>
+		<p class="green">Appointment GET test: ${appointmentDaoCheckGet}</p>
+		<br>
+		<p>Attempt Manual SQL Connection Reset: <button onclick="resetSqlConnections()">Reset</button> <code id="sqlResetResultPre"> No reset underway </code></p>
 		<#if paramMap?has_content>
-		<table class="extraTests">
+		<h3>Full parameter dump:</h3>
+		<table class="blue">
 			<tr><th style="width: 20%;">Key</th><th>Value</th></tr>
 			<#list paramMap as key, values>
 			<#list values as value>
@@ -64,10 +88,10 @@
 			</#list>
 		</table>
 		<#else>
-		<p class="extraTests">(No parameters provided.)</p>
+		<p class="blue">(No parameters provided.)</p>
 		</#if>
-		<h3 class="extraTests">Full header dump:</h3>
-		<table class="extraTests">
+		<h3>Full header dump:</h3>
+		<table class="blue">
 			<tr><th style="width: 20%;">Key</th><th>Value</th></tr>
 			<#list headerItems as key, values>
 			<#list values as value>
@@ -77,4 +101,24 @@
 		</table>
 	</div>
 </body>
+<script>
+	const resetSqlConnections = () => {
+		const resultPre = document.getElementById('sqlResetResultPre');
+		
+		if (confirm('Are you sure you want to try reset the DAOs and their connections?')) {
+			resultPre.innerHTML = 'Resetting...';
+			const xhr = new XMLHttpRequest();
+			xhr.open('POST', '/');
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.onload = () => {
+				if (xhr.status === 200) {
+					resultPre.innerHTML = 'Reset successful.';
+				} else {
+					resultPre.innerHTML = 'Reset failed.';
+				}
+			};
+			xhr.send('action=reset_daos&secret=makeLoveNotWar');
+		}
+	};
+</script>
 </html>
