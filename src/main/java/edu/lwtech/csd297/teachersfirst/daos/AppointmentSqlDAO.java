@@ -74,11 +74,12 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		
 		index++;
 
-		if (index < 1)
+		if (index < 1) {
+			logger.debug("retrieveByIndex: index cannot be negative");
 			return null;
+		}
 
-		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM Appointments ORDER BY recID LIMIT " + index;
+		String query = "SELECT * FROM Appointments ORDER BY recID LIMIT " + index;
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -183,7 +184,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	// =====================================================================
 
 	private Appointment convertRowToAppointment(SQLRow row) {
-		//logger.debug("Converting " + row + " to Appointment...");
+		logger.debug("Converting " + row + " to Appointment...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		int studentID = Integer.parseInt(row.getItem("studentID"));
 		int instructorID = Integer.parseInt(row.getItem("instructorID"));

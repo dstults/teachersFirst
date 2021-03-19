@@ -104,10 +104,12 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByIndex(int index) {
 		//logger.debug("Trying to get Member with index: " + index);
 		
-		index++;                                    // SQL uses 1-based indexes
+		index++;
 
-		if (index < 1)
+		if (index < 1) {
+			logger.debug("retrieveByIndex: index cannot be negative");
 			return null;
+		}
 
 		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
 		query += " FROM Members ORDER BY recID LIMIT " + index;
@@ -215,7 +217,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	// =====================================================================
 
 	private Member convertRowToMember(SQLRow row) {
-		//logger.debug("Converting " + row + " to Member...");
+		logger.debug("Converting " + row + " to Member...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		String loginName = row.getItem("loginName");
 		String passwordHash = row.getItem("passwordHash");

@@ -70,7 +70,6 @@ public class MemberMemoryDAO implements DAO<Member> {
 	}
 
 	public Member retrieveByIndex(int index) {
-		// Note: indexes are zero-based
 		if (index < 0)
 			throw new IllegalArgumentException("retrieveByIndex: index cannot be negative");
 		logger.debug("Getting object with index: {} ...", index);

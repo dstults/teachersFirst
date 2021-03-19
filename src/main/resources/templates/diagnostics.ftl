@@ -47,6 +47,12 @@
 		<p>URI: ${uriPath}<p>
 		<p class="extraTests">Servlet Path Info: ${pathInfo}<p>
 		<p>Query: ${fullQuery}</p>
+		<p class="extraTests">Memory DAO Check 1: ${memberDaoCheck1}</p>
+		<p>Memory DAO Check 2: ${memberDaoCheck2}</p>
+		<p class="extraTests">Opening DAO Check 1: ${openingDaoCheck1}</p>
+		<p>Opening DAO Check 2: ${openingDaoCheck2}</p>
+		<p class="extraTests">Appointment DAO Check 1: ${appointmentDaoCheck1}</p>
+		<p>Appointment DAO Check 2: ${appointmentDaoCheck2}</p>
 		<h3 class="extraTests">Full parameter dump:</h3>
 		<#if paramMap?has_content>
 		<table class="extraTests">
