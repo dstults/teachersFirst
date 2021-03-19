@@ -100,7 +100,7 @@ public class DataManager {
 		if (DataManager.memberDAO.retrieveByIndex(0) == null) return false;
 		return true;
 	}
-  
+
 	public static DAO<Member> getMemberDAO() {
 		return DataManager.memberDAO;
 	}
