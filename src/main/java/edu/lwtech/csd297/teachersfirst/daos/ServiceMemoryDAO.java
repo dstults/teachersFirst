@@ -28,7 +28,7 @@ public class ServiceMemoryDAO implements DAO<Service> {
 	public boolean initialize(String initParams) {
 		if (initParams == null)
 			throw new IllegalArgumentException("init: initParams cannot be null");
-		logger.debug("Initializing MemoryDAO with: '{}'", initParams);
+		logger.info("Initializing MemoryDAO with: '{}'", initParams);
 
 		addDemoData();
 		return true;
@@ -44,12 +44,12 @@ public class ServiceMemoryDAO implements DAO<Service> {
 			throw new IllegalArgumentException("insert: cannot insert null object");
 		if (pojo.getRecID() != -1)
 			throw new IllegalArgumentException("insert: object is already in database (recID != -1)");
-		logger.debug("Inserting " + pojo + "...");
+		//logger.debug("Inserting " + pojo + "...");
 
 		pojo.setRecID(this.nextListRecID.incrementAndGet());
 		this.serviceDB.add(pojo);
 
-		logger.debug("Item successfully inserted!");
+		//logger.debug("Item successfully inserted!");
 		return pojo.getRecID();
 	}
 
@@ -152,7 +152,7 @@ public class ServiceMemoryDAO implements DAO<Service> {
 	// =================================================================
 
 	private void addDemoData() {
-		logger.debug("Creating demo data...");
+		//logger.debug("Creating demo data...");
 
 		this.insert(new Service("Pilates", "Pilates is a method of exercise that consists of low-impact flexibility and muscular strength and endurance movements. Use it to stay super trim!", "Fred, Edmund"));
 		this.insert(new Service("Phonetics", "Learn how to make all the sounds with your mouth and talk like a charismatic expert! IPA is your friend!", "Darren"));
