@@ -36,7 +36,7 @@ public class MemberMemoryDAO implements DAO<Member> {
 	}
 
 	public void terminate() {
-		logger.debug("Terminating MemoryDAO...");
+		logger.debug("Terminating Member Memory DAO...");
 		memberDB = null;
 	}
 

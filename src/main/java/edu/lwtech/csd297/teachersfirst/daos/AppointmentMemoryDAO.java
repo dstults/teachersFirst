@@ -33,7 +33,7 @@ public class AppointmentMemoryDAO implements DAO<Appointment> {
 	}
 
 	public void terminate() {
-		logger.debug("Terminating MemoryDAO...");
+		logger.debug("Terminating Appointment Memory DAO...");
 		appointmentDB = null;
 	}
 

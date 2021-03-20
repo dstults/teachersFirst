@@ -32,6 +32,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	}
 
 	public void terminate() {
+		logger.debug("Terminating Appointment SQL DAO...");
 		SQLUtils.disconnect(conn);
 		conn = null;
 	}

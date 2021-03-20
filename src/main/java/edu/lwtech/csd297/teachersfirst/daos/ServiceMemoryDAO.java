@@ -35,7 +35,7 @@ public class ServiceMemoryDAO implements DAO<Service> {
 	}
 
 	public void terminate() {
-		logger.debug("Terminating MemoryDAO...");
+		logger.debug("Terminating Service Memory DAO...");
 		this.serviceDB = null;
 	}
 

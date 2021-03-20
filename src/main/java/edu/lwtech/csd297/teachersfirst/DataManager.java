@@ -61,26 +61,23 @@ public class DataManager {
 
 	public static void terminateDAOs() {
 		// memberDAO.terminate();
-		for (DAO<?> iDAO : DataManager.allDAOs) {
-			iDAO.terminate();
-		}
-	}
-
-	public static void resetDAOs() {
 		int i = 0;
 		for (DAO<?> iDAO : DataManager.allDAOs) {
 			try {
 				iDAO.terminate();
 			} catch (NullPointerException ex) {
+				// This is a test-only catch, should not throw in normal use
 				System.out.println("=============================================== Error");
 				System.out.println("| DAO #" + i + " TRIED TO TERMINATE WHEN SET TO NULL! | Error");
 				System.out.println("=============================================== Error");
 			}
 			i++;
 		}
+	}
 
-		// Probably not needed, just want it
-		try { Thread.sleep(1000); } catch (InterruptedException e) { System.out.println("Sleep interrupted while resetting DAOs"); }
+	public static void resetDAOs() {
+
+		DataManager.terminateDAOs();
 
 		DataManager.allDAOs.clear();
 

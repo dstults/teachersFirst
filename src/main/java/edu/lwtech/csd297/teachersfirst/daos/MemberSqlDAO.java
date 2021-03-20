@@ -32,6 +32,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 
 	public void terminate() {
+		logger.debug("Terminating Member SQL DAO...");
 		SQLUtils.disconnect(conn);
 		conn = null;
 	}

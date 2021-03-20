@@ -32,6 +32,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 
 	public void terminate() {
+		logger.debug("Terminating Opening SQL DAO...");
 		SQLUtils.disconnect(conn);
 		conn = null;
 	}
