@@ -108,7 +108,8 @@ public class OpeningsPage extends PageLoader {
 			templateDataMap.put("endDate", saturdayString);
 			templateDataMap.put("weeks", weeks);
 			templateDataMap.put("message", "Failed to contact database/no data, try again later.");
-			trySendResponse();			
+			trySendResponse();
+			DataManager.resetDAOs();
 			return;
 		}
 

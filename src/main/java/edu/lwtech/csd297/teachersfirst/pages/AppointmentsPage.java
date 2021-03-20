@@ -87,8 +87,16 @@ public class AppointmentsPage extends PageLoader {
 		// make sure we're logged in
 		if (uid > 0) {
 			final DAO<Member> memberDAO = DataManager.getMemberDAO();
-			final List<Appointment> appointmentDAO = DataManager.getAppointmentDAO().retrieveAll();;
-
+			final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
+			if (appointmentDAO == null || appointmentDAO.retrieveByIndex(0) == null) {
+				// Failed to contact SQL Server or simply no data
+				templateDataMap.put("message", "Failed to contact database/no data, try again later.");
+				templateName = "messageOnly.ftl";
+				trySendResponse();
+				DataManager.resetDAOs();
+				return;
+			}
+			final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
 			// temp vars for more readable code below
 			String instructorName;
 			String studentName;
@@ -97,7 +105,7 @@ public class AppointmentsPage extends PageLoader {
 			String endTime;
 			
 			// check all DAOs
-			for (Appointment appointment : appointmentDAO) {
+			for (Appointment appointment : allAppointments) {
 				// make sure we're either an admin (sees everything) or in one of the appointments
 				if ((isAdmin && filterMemberId == -1) || appointment.getIsMyAppointment(uid)) {
 					instructorName = memberDAO.retrieveByID(appointment.getInstructorID()).getDisplayName();
