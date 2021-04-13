@@ -18,7 +18,6 @@ public class Security {
 	public static void populateWhitelist() {
 		
 		// Manual entries:		
-
 		whitelistIp("192.168.1.88"); // local temp
 		whitelistIp("50.35.66.200"); // Darren - temp
 		whitelistIp("97.127.115.35"); // Edmund - temp

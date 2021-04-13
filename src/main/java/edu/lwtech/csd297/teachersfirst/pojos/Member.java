@@ -53,7 +53,8 @@ public class Member implements IJsonnable {
 		if (loginName == null) throw new IllegalArgumentException("Invalid argument: loginName is null");
 		if (loginName.isEmpty()) throw new IllegalArgumentException("Invalid argument: loginName is empty");
 		if (passwordHash == null) throw new IllegalArgumentException("Invalid argument: passwordHash is null");
-		if (passwordHash.isEmpty()) throw new IllegalArgumentException("Invalid argument: passwordHash is empty");
+		//TODO: This is not an error so much as it should be a warning
+		// if (passwordHash.isEmpty()) throw new IllegalArgumentException("Invalid argument: passwordHash is empty");
 		//TODO: SHA1 Password Hash should be 40 chars long -- need hashing first
 		if (displayName == null) throw new IllegalArgumentException("Invalid argument: displayName is null");
 		if (displayName.isEmpty()) throw new IllegalArgumentException("Invalid argument: displayName is empty");
