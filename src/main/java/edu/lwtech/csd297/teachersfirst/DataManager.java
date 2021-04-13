@@ -37,9 +37,13 @@ public class DataManager {
 
 	public static void initializeDAOs() throws ServletException {
 
-		String initParams = "jdbc:mariadb://lwtech-csd297.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/mercer";
-        initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
-        initParams += "&user=mercer&password=mercer-rox";    
+		String schema = "teachersFirst";
+		String userID = "teachersFirst";
+		String password = "teachersFirst";
+
+		String initParams = "jdbc:mariadb://tfdb:3306/" + schema;
+		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
+		initParams += "&user=" + userID + "&password=" + password;    
 
 		DataManager.memberDAO = new MemberSqlDAO();
 		if (!DataManager.memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
