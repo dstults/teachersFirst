@@ -4,6 +4,8 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.daos.*;
+import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class DiagnosticsPage extends PageLoader {
 
@@ -33,6 +35,21 @@ public class DiagnosticsPage extends PageLoader {
 		final Map<String, String[]> paramMap = request.getParameterMap();
 		final Map<String, String[]> headerItems = dumpHeaderToMap(request);
 
+		final DAO<Member> memberDAO = DataManager.getMemberDAO();
+		final String memberDaoCheckNull = memberDAO != null ? "Member DAO Found" : "NULL MEMBER DAO";
+		final Member member = memberDAO != null ? memberDAO.retrieveByIndex(0) : null;
+		final String memberDaoCheckGet = member != null ? "Member Item Found" : "NO MEMBER ITEM COULD BE RETRIEVED";
+
+		final DAO<Opening> openingDAO = DataManager.getOpeningDAO();
+		final String openingDaoCheckNull = openingDAO != null ? "Opening DAO Found" : "NULL OPENING DAO";
+		final Opening opening = openingDAO != null ? openingDAO.retrieveByIndex(0) : null;
+		final String openingDaoCheckGet = opening != null ? "Opening Item Found" : "NO OPENING ITEM COULD BE RETRIEVED";
+
+		final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
+		final String appointmentDaoCheckNull = appointmentDAO != null ? "Appointment DAO Found" : "NULL APPOINTMENT DAO";
+		final Appointment appointment = appointmentDAO != null ? appointmentDAO.retrieveByIndex(0) : null;
+		final String appointmentDaoCheckGet = appointment != null ? "Appointment Item Found" : "NO APPOINTMENT ITEM COULD BE RETRIEVED";
+
 		// FreeMarker
 		templateName = "diagnostics.ftl";
 		templateDataMap.put("clientIp", clientIp);
@@ -43,6 +60,12 @@ public class DiagnosticsPage extends PageLoader {
 		templateDataMap.put("fullQuery", sanitizedQuery);
 		templateDataMap.put("paramMap", paramMap);
 		templateDataMap.put("headerItems", headerItems);
+		templateDataMap.put("memberDaoCheckNull", memberDaoCheckNull);
+		templateDataMap.put("memberDaoCheckGet", memberDaoCheckGet);
+		templateDataMap.put("openingDaoCheckNull", openingDaoCheckNull);
+		templateDataMap.put("openingDaoCheckGet", openingDaoCheckGet);
+		templateDataMap.put("appointmentDaoCheckNull", appointmentDaoCheckNull);
+		templateDataMap.put("appointmentDaoCheckGet", appointmentDaoCheckGet);
 
 		// Go
 		trySendResponse();

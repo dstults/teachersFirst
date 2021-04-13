@@ -33,7 +33,7 @@ public class DataManager {
 	private static DAO<Appointment> appointmentDAO = null;
 	private static DAO<Opening> openingDAO = null;
 
-	// Meta constructors and destructors
+	// Meta "construct" and "destruct" (and "reset")
 
 	public static void initializeDAOs() throws ServletException {
 
@@ -61,34 +61,42 @@ public class DataManager {
 
 	public static void terminateDAOs() {
 		// memberDAO.terminate();
-		for (DAO<?> iDAO : DataManager.allDAOs) {
-			iDAO.terminate();
-		}
-	}
-
-	public static void resetDAOs() {
 		int i = 0;
 		for (DAO<?> iDAO : DataManager.allDAOs) {
 			try {
 				iDAO.terminate();
 			} catch (NullPointerException ex) {
-				System.out.println("==========================================");
-				System.out.println("| DAO #" + i + " COULD NOT GRACEFULLY TERMINATE! |");
-				System.out.println("==========================================");
+				// This is a test-only catch, should not throw in normal use
+				System.out.println("=============================================== Error");
+				System.out.println("| DAO #" + i + " TRIED TO TERMINATE WHEN SET TO NULL! | Error");
+				System.out.println("=============================================== Error");
 			}
 			i++;
 		}
+	}
+
+	public static void resetDAOs() {
+
+		DataManager.terminateDAOs();
+
 		DataManager.allDAOs.clear();
+
 		try {
 			DataManager.initializeDAOs();
 		} catch (ServletException ex) {
-			System.out.println("====================================");
-			System.out.println("| SQL CONNECTION ERROR PLEASE FIX! |");
-			System.out.println("====================================");
+			System.out.println("===================================== Error");
+			System.out.println("| ERROR CONNECTING TO SQL DATABASE! | Error");
+			System.out.println("===================================== Error");
 		}
 	}
 
-	// methods
+	public static boolean validateSQLConnection() {
+		if (DataManager.memberDAO == null) return false;
+		if (DataManager.appointmentDAO == null) return false;
+		if (DataManager.openingDAO == null) return false;
+		if (DataManager.memberDAO.retrieveByIndex(0) == null) return false;
+		return true;
+	}
 
 	public static DAO<Member> getMemberDAO() {
 		return DataManager.memberDAO;

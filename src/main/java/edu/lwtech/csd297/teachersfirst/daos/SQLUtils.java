@@ -41,6 +41,10 @@ class SQLUtils {
 
         try {
             // Create the new statement object
+			if (conn == null) {
+				logger.error("Lost connection to SQL database, attempted query: {}", query);
+				return null;
+			}
             PreparedStatement stmt = conn.prepareStatement(query);
 
             // Substitute in the argument values for the question marks
@@ -122,7 +126,7 @@ class SQLUtils {
 			String query,
 			int recID, String loginName, String passwordHash,
 			String displayName, Timestamp birthdate, String gender,
-			String teacherNotes,
+			String instructorNotes,
 			String phone1, String phone2, String email,
 			boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
@@ -140,7 +144,7 @@ class SQLUtils {
 			stmt.setString(3, displayName);
 			stmt.setTimestamp(4, birthdate);
 			stmt.setString(5, gender);
-			stmt.setString(6, teacherNotes);
+			stmt.setString(6, instructorNotes);
 			stmt.setString(7, phone1);
 			stmt.setString(8, phone2);
 			stmt.setString(9, email);
@@ -229,12 +233,34 @@ class SQLUtils {
 	}
 
     public static void disconnect(Connection conn) {
+		if (conn == null) {
+			// This happens during test runs and that's a good thing. But there won't be a logger to use.
+			// Also we REALLY want to log this when it happens when an actual servlet is running.
+			if (logger != null) logger.error("CONNECTION WAS NULL WHEN ATTEMPTING TO DISCONNECT.");
+			return;
+		}
+
+		boolean wasClosedOiginally = false;
         try {
-            conn.close();
+			if (conn.isClosed()) {
+				wasClosedOiginally = true;
+				String warningMessage = "Warning: Connection was already disconnected while attempting to disconnect.";
+				System.out.println(warningMessage);
+				if (logger != null) logger.error(warningMessage);
+				return;
+			}
+			conn.close();
         } catch (SQLException e) {
-            logger.error("Exception thrown while trying to close SQL Connection", e);
+			if (!wasClosedOiginally) {
+				// In case happens during test builds or when logger is null:
+				System.out.println("================================================ Error");
+				System.out.println("| SQL EXCEPTION WHILE ATTEMPTING TO DISCONNECT | Error" + e.getStackTrace());
+				System.out.println("================================================ Error");
+				// Normal logging might not always work here:
+				if (logger != null) logger.error("Exception thrown while trying to close SQL Connection", e);
+			}
         }
-    }
+}
 
     // ===============================================================================================
 

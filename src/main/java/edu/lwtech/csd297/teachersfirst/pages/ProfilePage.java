@@ -15,6 +15,7 @@ public class ProfilePage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Profile");
+		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		final String memberIdString = QueryHelpers.getGet(request, "memberId", Integer.toString(uid));
 		int memberId;
@@ -46,12 +47,23 @@ public class ProfilePage extends PageLoader {
 			}
 		}
 
-		// FreeMarker
-		templateName = "profile.ftl";
-		templateDataMap.put("member", member);
-
 		// Go
-		trySendResponse();
+
+		if (jsonMode) {
+			if (member != null ) {
+				String json = member.toJson();
+				//logger.debug("Json: " + json);
+				trySendJson(json);
+			} else {
+				sendFake404("Attempt to load JSON profile page while not logged in.");
+			}
+		} else {
+			// FreeMarker
+			templateName = "profile.ftl";
+			templateDataMap.put("member", member);
+
+			trySendResponse();
+		}
 	}
 
 }

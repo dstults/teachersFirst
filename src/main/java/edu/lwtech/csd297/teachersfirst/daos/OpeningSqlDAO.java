@@ -32,6 +32,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 
 	public void terminate() {
+		logger.debug("Terminating Opening SQL DAO...");
 		SQLUtils.disconnect(conn);
 		conn = null;
 	}
@@ -72,10 +73,12 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public Opening retrieveByIndex(int index) {
 		//logger.debug("Trying to get Opening with index: " + index);
 		
-		index++;                                    // SQL uses 1-based indexes
+		index++;
 
-		if (index < 1)
+		if (index < 1) {
+			logger.debug("retrieveByIndex: index cannot be negative");
 			return null;
+		}
 
 		String query = "SELECT recID, instructorID, startTime, endTime";
 		query += " FROM Openings ORDER BY recID LIMIT " + index;
@@ -183,7 +186,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	// =====================================================================
 
 	private Opening convertRowToOpening(SQLRow row) {
-		//logger.debug("Converting " + row + " to Opening...");
+		logger.debug("Converting " + row + " to Opening...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		int instructorID = Integer.parseInt(row.getItem("instructorID"));
 		Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));

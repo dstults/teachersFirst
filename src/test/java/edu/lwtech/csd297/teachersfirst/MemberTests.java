@@ -75,7 +75,7 @@ class MemberTests {
 		ex = assertThrows(IllegalArgumentException.class, () -> {
 			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", null, "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
-		assertTrue(ex.getMessage().contains("Invalid argument: teacherNotes is null"));
+		assertTrue(ex.getMessage().contains("Invalid argument: instructorNotes is null"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
 			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", null, "", "fred@lwtech.edu", false, false, true);
@@ -156,8 +156,8 @@ class MemberTests {
 	}
 
 	@Test
-	void testGetTeacherNotes(){
-		assertEquals("gets extra time on tests to help with adhd", amy.getTeacherNotes());
+	void testGetInstructorNotes(){
+		assertEquals("gets extra time on tests to help with adhd", amy.getInstructorNotes());
 	}
 
 	@Test
@@ -270,15 +270,15 @@ class MemberTests {
 	}
 
 	@Test
-	void testSetTeacherNotes(){
+	void testSetInstructorNotes(){
 		
-		juan.setTeacherNotes("Weird bus schedule");
-		assertEquals("Weird bus schedule", juan.getTeacherNotes());
+		juan.setInstructorNotes("Weird bus schedule");
+		assertEquals("Weird bus schedule", juan.getInstructorNotes());
 		
 		Exception ex = assertThrows(IllegalArgumentException.class, ()->{
-			juan.setTeacherNotes(null);
+			juan.setInstructorNotes(null);
 		});
-		assertTrue(ex.getMessage().contains("Invalid argument: teacherNotes is null"));
+		assertTrue(ex.getMessage().contains("Invalid argument: instructorNotes is null"));
 	}
 
 	@Test

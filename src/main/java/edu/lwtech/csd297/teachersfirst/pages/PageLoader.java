@@ -61,12 +61,16 @@ public abstract class PageLoader {
 				isInstructor = member.getIsInstructor();
 				isStudent = member.getIsStudent();
 			} else {
-				Security.logout(request, "Bad session data or failure to contact SQL server.");
+				Security.logout(request, "Bad session data or failure to contact database, try again later.");
 				templateDataMap.put("messge", "Error contacting SQL server. Error code: " + uid + ".a5j // For your own security you will need to log in again.");
 				templateName = "messageOnly.ftl";
 				this.trySendResponse();
 				DataManager.resetDAOs();
 				return; // abort here
+			}
+		} else {
+			if (!DataManager.validateSQLConnection()) {
+				DataManager.resetDAOs();
 			}
 		}
 		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");

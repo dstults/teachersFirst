@@ -99,10 +99,22 @@ public class OpeningsPage extends PageLoader {
 		//logger.debug(sundayTime.toString());
 		//logger.debug(saturdayTime.toString());
 
-		// Should only show members that it should show based on who's querying...
-		final List<Opening> allOpenings = DataManager.getOpeningDAO().retrieveAll();
-		final DAO<Member> memberDAO = DataManager.getMemberDAO();
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
+		final DAO<Opening> openingDAO = DataManager.getOpeningDAO();
+		if (openingDAO == null || openingDAO.retrieveByIndex(0) == null) {
+			// Failed to contact SQL Server or simply no data
+			templateName = "openings.ftl";
+			templateDataMap.put("startDate", sundayString);
+			templateDataMap.put("endDate", saturdayString);
+			templateDataMap.put("weeks", weeks);
+			templateDataMap.put("message", "Failed to contact database/no data, try again later.");
+			trySendResponse();
+			DataManager.resetDAOs();
+			return;
+		}
+
+		final List<Opening> allOpenings = openingDAO.retrieveAll();
+		final DAO<Member> memberDAO = DataManager.getMemberDAO();
 		List<PrettifiedDay> thisWeek = null;
 		PrettifiedDay today;
 		LocalDateTime startTime;

@@ -34,7 +34,7 @@ public class OpeningMemoryDAO implements DAO<Opening> {
 	}
 
 	public void terminate() {
-		logger.debug("Terminating MemoryDAO...");
+		logger.debug("Terminating Opening Memory DAO...");
 		openingDB = null;
 	}
 

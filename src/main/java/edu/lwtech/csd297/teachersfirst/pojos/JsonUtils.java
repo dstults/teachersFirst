@@ -19,12 +19,15 @@ public class JsonUtils {
 			if (i > 0) sb.append(",");
 			kvPair = line.split("=");
 			if (kvPair.length == 1) {
+				kvPair[0] = kvPair[0].replace("'", "\\'");
 				sb.append("'" + kvPair[0] + "':undefined");
 			} else if (kvPair.length == 2) {
+				kvPair[0] = kvPair[0].replace("'", "\\'");
+				kvPair[1] = kvPair[1].replace("'", "\\'");
 				sb.append("'" + kvPair[0] + "':'" + kvPair[1] + "'");
 			} else {
 				//TODO: use logger
-				System.out.println("Invalid query.");
+				//System.out.println("Invalid query.");
 				return "";
 			}
 			i++;

@@ -32,6 +32,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 
 	public void terminate() {
+		logger.debug("Terminating Member SQL DAO...");
 		SQLUtils.disconnect(conn);
 		conn = null;
 	}
@@ -44,9 +45,9 @@ public class MemberSqlDAO implements DAO<Member> {
 			return -1;
 		}
 
-		String query = "INSERT INTO Members (loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?)";
+		String query = "INSERT INTO Members (loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?)";
 
-		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getBirthdate(), member.getGender(), member.getTeacherNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsAdmin());
+		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getBirthdate(), member.getGender(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsAdmin());
 		
 		logger.debug("Member successfully inserted with ID = " + recID);
 		return recID;
@@ -55,7 +56,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByID(int recID) {
 		//logger.debug("Trying to get Member with ID: " + recID);
 		
-		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, teacherNotes, gender, phone1, phone2, email, isStudent, isInstructor, isAdmin";
+		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, instructorNotes, gender, phone1, phone2, email, isStudent, isInstructor, isAdmin";
 		query += " FROM Members WHERE recID=" + recID;
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
@@ -104,12 +105,14 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByIndex(int index) {
 		//logger.debug("Trying to get Member with index: " + index);
 		
-		index++;                                    // SQL uses 1-based indexes
+		index++;
 
-		if (index < 1)
+		if (index < 1) {
+			logger.debug("retrieveByIndex: index cannot be negative");
 			return null;
+		}
 
-		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
+		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
 		query += " FROM Members ORDER BY recID LIMIT " + index;
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
@@ -126,7 +129,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Member> retrieveAll() {
 		logger.debug("Getting all Members...");
 		
-		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
+		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
 		query += " FROM Members ORDER BY recID";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
@@ -166,7 +169,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Member> search(String keyword) {
 		logger.debug("Searching for member with '" + keyword + "'");
 
-		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin FROM Members WHERE";
+		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin FROM Members WHERE";
 		query += " username like ?";
 		query += " ORDER BY recID";
 
@@ -215,7 +218,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	// =====================================================================
 
 	private Member convertRowToMember(SQLRow row) {
-		//logger.debug("Converting " + row + " to Member...");
+		logger.debug("Converting " + row + " to Member...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		String loginName = row.getItem("loginName");
 		String passwordHash = row.getItem("passwordHash");
@@ -224,14 +227,14 @@ public class MemberSqlDAO implements DAO<Member> {
 		Timestamp birthdate = DateHelpers.fromSqlDateToTimestamp(row.getItem("birthdate"));
 
 		String gender = row.getItem("gender");
-		String teacherNotes = row.getItem("teacherNotes");
+		String instructorNotes = row.getItem("instructorNotes");
 		String phone1 = row.getItem("phone1");
 		String phone2 = row.getItem("phone2");
 		String email = row.getItem("email");
 		Boolean isStudent = integerToBoolean(Integer.parseInt(row.getItem("isStudent")));
 		Boolean isInstructor = integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
 		Boolean isAdmin = integerToBoolean(Integer.parseInt(row.getItem("isAdmin")));
-		return new Member(recID, loginName, passwordHash, displayName, birthdate, gender, teacherNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		return new Member(recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 	private boolean integerToBoolean(int x){
