@@ -150,22 +150,26 @@ public class NewAppointmentAction extends ActionRunner {
 
 		// Make sure no conflicting appointments
 		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
-		for(Appointment appointment : allAppointments) {
-			if (DateHelpers.timeIsBetweenTimeAndTime(
-					startTimeLdt.plusMinutes(1),
-					appointment.getStartTime().toLocalDateTime(),
-					appointment.getEndTime().toLocalDateTime()) ||
-				DateHelpers.timeIsBetweenTimeAndTime(
-					endTimeLdt.minusMinutes(1),
-					appointment.getStartTime().toLocalDateTime(),
-					appointment.getEndTime().toLocalDateTime()) ||
-				DateHelpers.timeIsBetweenTimeAndTime( // catches edge case of iAppointment being inside potential new one
-					appointment.getStartTime().toLocalDateTime().plusMinutes(1),
-					startTimeLdt,
-					endTimeLdt)) {
+		
+		// Might be very first appointment, in which case this is null
+		if (allAppointments != null) {
+			for(Appointment appointment : allAppointments) {
+				if (DateHelpers.timeIsBetweenTimeAndTime(
+						startTimeLdt.plusMinutes(1),
+						appointment.getStartTime().toLocalDateTime(),
+						appointment.getEndTime().toLocalDateTime()) ||
+					DateHelpers.timeIsBetweenTimeAndTime(
+						endTimeLdt.minusMinutes(1),
+						appointment.getStartTime().toLocalDateTime(),
+						appointment.getEndTime().toLocalDateTime()) ||
+					DateHelpers.timeIsBetweenTimeAndTime( // catches edge case of iAppointment being inside potential new one
+						appointment.getStartTime().toLocalDateTime().plusMinutes(1),
+						startTimeLdt,
+						endTimeLdt)) {
 
-				this.SendPostReply("/openings", "", "Appointment conflicts with appointment: %5B" + appointment.getRecID() + "%5D!");
-				return;
+					this.SendPostReply("/openings", "", "Appointment conflicts with appointment: %5B" + appointment.getRecID() + "%5D!");
+					return;
+				}
 			}
 		}
 
