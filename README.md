@@ -1,4 +1,6 @@
-# School and Gym CRM
+# teachersFirst v0.7
+
+## School and Gym CRM
 An MVC servlet that provides an interface for schools or gyms to host teachers or coaches and allows students to sign up for classes
 
 It is written in Java, Freemarker, HTML, CSS, and MySQL, and designed to be hosted on a Tomcat-9 engine.
@@ -19,7 +21,7 @@ Get yours today!
 ![image](https://user-images.githubusercontent.com/20900852/111135625-1ca36600-853a-11eb-89c5-bd2d421d5530.png)
 ![image](https://user-images.githubusercontent.com/20900852/111137490-144c2a80-853c-11eb-8ed4-ad4b4fb446dd.png)
 
-### Roadmap to Success
+### Completed Objectives
  - v0.0 Getting started
  - v0.1 Member pojos, view, and registration
  - v0.2 Opening and Appointment pojos and views, and registration
@@ -31,7 +33,7 @@ Get yours today!
 #### End of quarter!
 Expect that the minimal viable product has been reached and is ready for rapid deployment.
 
-## In the future:
+## Under contruction:
  - v0.8 Credit economy
  - v0.9 Review System
  - v1.0 Professional initial release
