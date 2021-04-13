@@ -18,10 +18,10 @@ public class Security {
 	public static void populateWhitelist() {
 		
 		// Manual entries:		
-
-		whitelistIp("50.35.66.200"); // Darren
-		whitelistIp("97.127.115.35"); // Edmund
-		whitelistIp("73.140.252.100"); // Tanya
+		whitelistIp("192.168.1.88"); // local temp
+		whitelistIp("50.35.66.200"); // Darren - temp
+		whitelistIp("97.127.115.35"); // Edmund - temp
+		whitelistIp("73.140.252.100"); // Tanya - temp
 
 		//TODO: Add some sort of remote server/SQL-like verification method in case get locked out of IPs
 		//or even a separate webadmin login

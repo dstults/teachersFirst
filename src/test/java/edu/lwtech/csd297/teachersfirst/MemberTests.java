@@ -67,10 +67,12 @@ class MemberTests {
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: passwordHash is null"));
 
+		/* This is no longer an error so much as a valid way of disabling login ability:
 		ex = assertThrows(IllegalArgumentException.class, () -> {
 			new Member(666, "fred", "", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: passwordHash is empty"));
+		*/
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
 			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", null, "444-444-4444", "", "fred@lwtech.edu", false, false, true);

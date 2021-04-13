@@ -45,7 +45,7 @@ public class MemberSqlDAO implements DAO<Member> {
 			return -1;
 		}
 
-		String query = "INSERT INTO Members (loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?)";
+		String query = "INSERT INTO members (loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?)";
 
 		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getBirthdate(), member.getGender(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsAdmin());
 		
@@ -57,7 +57,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		//logger.debug("Trying to get Member with ID: " + recID);
 		
 		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, instructorNotes, gender, phone1, phone2, email, isStudent, isInstructor, isAdmin";
-		query += " FROM Members WHERE recID=" + recID;
+		query += " FROM members WHERE recID=" + recID;
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -73,7 +73,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByLoginName(String loginName) {
 		//logger.debug("Trying to get Member with login name: " + loginName);
 		
-		String query = "SELECT * FROM Members WHERE loginName='" + loginName +"'";
+		String query = "SELECT * FROM members WHERE loginName='" + loginName +"'";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -89,7 +89,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByLoginNameAndPassword(String loginName, String passwordHash) {
 		//logger.debug("Trying to get Member with login name and password: " + loginName + " " + passwordHash);
 		
-		String query = "SELECT * FROM Members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('"+passwordHash+"');";
+		String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('"+passwordHash+"');";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -113,7 +113,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		}
 
 		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
-		query += " FROM Members ORDER BY recID LIMIT " + index;
+		query += " FROM members ORDER BY recID LIMIT " + index;
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -127,10 +127,10 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 	
 	public List<Member> retrieveAll() {
-		logger.debug("Getting all Members...");
+		logger.debug("Getting all members...");
 		
 		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
-		query += " FROM Members ORDER BY recID";
+		query += " FROM members ORDER BY recID";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -149,7 +149,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Member IDs...");
 
-		String query = "SELECT recID FROM Members ORDER BY recID";
+		String query = "SELECT recID FROM members ORDER BY recID";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -169,7 +169,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Member> search(String keyword) {
 		logger.debug("Searching for member with '" + keyword + "'");
 
-		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin FROM Members WHERE";
+		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin FROM members WHERE";
 		query += " username like ?";
 		query += " ORDER BY recID";
 
@@ -196,14 +196,14 @@ public class MemberSqlDAO implements DAO<Member> {
 	public void delete(int recID) {
 		logger.debug("Trying to delete Member with ID: " + recID);
 
-		String query = "DELETE FROM Members WHERE recID=" + recID;
+		String query = "DELETE FROM members WHERE recID=" + recID;
 		SQLUtils.executeSQL(conn, query);
 	}
 	
 	public int size() {
 		logger.debug("Getting the number of rows...");
 
-		String query = "SELECT count(*) AS cnt FROM Members";
+		String query = "SELECT COUNT(*) AS cnt FROM members";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {

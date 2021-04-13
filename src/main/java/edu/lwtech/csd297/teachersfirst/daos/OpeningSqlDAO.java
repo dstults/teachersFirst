@@ -45,7 +45,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 			return -1;
 		}
 
-		String query = "INSERT INTO Openings (instructorID, startTime, endTime) VALUES (?,?,?)";
+		String query = "INSERT INTO openings (instructorID, startTime, endTime) VALUES (?,?,?)";
 
 		int recID = SQLUtils.executeSqlOpeningInsert(conn, query, opening.getRecID(), opening.getInstructorID(), opening.getStartTime(), opening.getEndTime());    
 		
@@ -57,7 +57,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		//logger.debug("Trying to get Opening with ID: " + recID);
 		
 		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM Openings WHERE recID=" + recID;
+		query += " FROM openings WHERE recID=" + recID;
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -81,7 +81,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		}
 
 		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM Openings ORDER BY recID LIMIT " + index;
+		query += " FROM openings ORDER BY recID LIMIT " + index;
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -95,10 +95,10 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 	
 	public List<Opening> retrieveAll() {
-		logger.debug("Getting all Openings...");
+		logger.debug("Getting all openings...");
 		
 		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM Openings ORDER BY recID";
+		query += " FROM openings ORDER BY recID";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -117,7 +117,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Opening IDs...");
 
-		String query = "SELECT recID FROM Openings ORDER BY recID";
+		String query = "SELECT recID FROM openings ORDER BY recID";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -137,7 +137,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Opening> search(String keyword) {
 		logger.debug("Searching for opening with '" + keyword + "'");
 
-		String query = "SELECT recID, instructorID, startTime, endTime FROM Openings WHERE";
+		String query = "SELECT recID, instructorID, startTime, endTime FROM openings WHERE";
 		query += " username like ?";
 		query += " ORDER BY recID";
 
@@ -164,14 +164,14 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public void delete(int recID) {
 		logger.debug("Trying to delete Opening with ID: " + recID);
 
-		String query = "DELETE FROM Openings WHERE recID=" + recID;
+		String query = "DELETE FROM openings WHERE recID=" + recID;
 		SQLUtils.executeSQL(conn, query);
 	}
 	
 	public int size() {
 		logger.debug("Getting the number of rows...");
 
-		String query = "SELECT count(*) as cnt FROM Openings";
+		String query = "SELECT COUNT(*) AS cnt FROM openings";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {

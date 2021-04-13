@@ -37,11 +37,16 @@ public class DataManager {
 
 	public static void initializeDAOs() throws ServletException {
 
+		//TODO: This should be moved to Security
+		//TODO: These variables need to be extracted to a file
+		String hostname = "tfdb";
+		String port = "3306";
 		String schema = "teachersFirst";
 		String userID = "teachersFirst";
 		String password = "teachersFirst";
 
-		String initParams = "jdbc:mariadb://tfdb:3306/" + schema;
+		// Merge Connection Parameters:
+		String initParams = "jdbc:mariadb://" + hostname + ":" + port + "/" + schema;
 		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
 		initParams += "&user=" + userID + "&password=" + password;    
 
