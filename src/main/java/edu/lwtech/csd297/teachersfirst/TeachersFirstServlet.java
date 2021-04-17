@@ -48,6 +48,10 @@ public class TeachersFirstServlet extends HttpServlet {
 		PageLoader.initializeFreeMarker(resourcesDir);
 		logger.info("Successfully initialized FreeMarker");
 
+		logger.info("Initializing site data...");
+		DataManager.initializeSiteData();
+		logger.info("Successfully initialized site data!");
+
 		logger.info("Initializing the DAOs...");
 		DataManager.initializeDAOs();
 		logger.info("Successfully initialized the DAOs!");

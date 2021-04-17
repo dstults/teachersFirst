@@ -1,11 +1,19 @@
 package edu.lwtech.csd297.teachersfirst;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 import javax.servlet.*;
 
 import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
+import freemarker.core.ParseException;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class DataManager {
 	
@@ -27,6 +35,12 @@ public class DataManager {
 	public static String websiteTitle = "CoolTutors.org";
 	public static String websiteSubtitle = "The coolest tutors on the web!";
 
+	private static String databaseHostname = "";
+	private static String databasePort = "3306";
+	private static String databaseUserID = "";
+	private static String databasePassword = "";
+	private static String databaseSchema = "";
+
 	public static final List<DAO<?>> allDAOs = new ArrayList<>();
 	private static DAO<Member> memberDAO = null;
 	private static DAO<Service> serviceDAO = null;
@@ -35,20 +49,56 @@ public class DataManager {
 
 	// Meta "construct" and "destruct" (and "reset")
 
+	public static void initializeSiteData() {
+		JSONParser parser = new JSONParser();
+		// A JSON object. Key value pairs are unordered. JSONObject supports java.util.Map interface.
+		JSONObject jsonObject;
+		try {
+			Object obj = parser.parse(new FileReader("/etc/tomcat9/myserver.conf"));
+			jsonObject = (JSONObject) obj;
+		} catch (FileNotFoundException ex) {
+			websiteTitle = "Howdy!"; // low key/plain sight error message
+			ex.printStackTrace();
+			return;
+		} catch (IOException ex) {
+			websiteTitle = "Hello!"; // low key/plain sight error message
+			ex.printStackTrace();
+			return;
+		} catch (org.json.simple.parser.ParseException ex) {
+			websiteTitle = "Welcome!"; // low key/plain sight error message
+			ex.printStackTrace();
+			return;
+		}
+
+		if (jsonObject.containsKey("websiteTitle")) {
+			websiteTitle = jsonObject.get("websiteTitle").toString();
+		}
+		if (jsonObject.containsKey("websiteSubtitle")) {
+			websiteSubtitle = jsonObject.get("websiteSubtitle").toString();
+		}
+		if (jsonObject.containsKey("databaseHostname")) {
+			databaseHostname = jsonObject.get("databaseHostname").toString();
+		}
+		if (jsonObject.containsKey("databasePort")) {
+			databasePort = jsonObject.get("databasePort").toString();
+		}
+		if (jsonObject.containsKey("databaseUserID")) {
+			databaseUserID = jsonObject.get("databaseUserID").toString();
+		}
+		if (jsonObject.containsKey("databasePassword")) {
+			databasePassword = jsonObject.get("databasePassword").toString();
+		}
+		if (jsonObject.containsKey("databaseSchema")) {
+			databaseSchema = jsonObject.get("databaseSchema").toString();
+		}
+	}
+
 	public static void initializeDAOs() throws ServletException {
 
-		//TODO: This should be moved to Security
-		//TODO: These variables need to be extracted to a file
-		String hostname = "tfdb";
-		String port = "3306";
-		String schema = "teachersFirst";
-		String userID = "teachersFirst";
-		String password = "teachersFirst";
-
 		// Merge Connection Parameters:
-		String initParams = "jdbc:mariadb://" + hostname + ":" + port + "/" + schema;
+		String initParams = "jdbc:mariadb://" + databaseHostname + ":" + databasePort + "/" + databaseSchema;
 		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
-		initParams += "&user=" + userID + "&password=" + password;    
+		initParams += "&user=" + databaseUserID + "&password=" + databasePassword;    
 
 		DataManager.memberDAO = new MemberSqlDAO();
 		if (!DataManager.memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
