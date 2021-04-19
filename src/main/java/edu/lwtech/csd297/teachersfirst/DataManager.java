@@ -100,13 +100,13 @@ public class DataManager {
 		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
 		initParams += "&user=" + databaseUserID + "&password=" + databasePassword;    
 
+		DataManager.serviceDAO = new ServiceSqlDAO();
+		if (!DataManager.serviceDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the serviceDAO.");
+		DataManager.allDAOs.add(DataManager.serviceDAO);
+
 		DataManager.memberDAO = new MemberSqlDAO();
 		if (!DataManager.memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
 		DataManager.allDAOs.add(DataManager.memberDAO);
-
-		DataManager.serviceDAO = new ServiceMemoryDAO();
-		if (!DataManager.serviceDAO.initialize("")) throw new UnavailableException("Unable to initialize the serviceDAO.");
-		DataManager.allDAOs.add(DataManager.serviceDAO);
 
 		DataManager.appointmentDAO = new AppointmentSqlDAO();
 		if (!DataManager.appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");

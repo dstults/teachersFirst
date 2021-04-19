@@ -36,7 +36,7 @@ class SQLUtils {
         return conn;
     }
 
-    public static List<SQLRow> executeSQL(Connection conn, String query, String... arguments) {
+    public static List<SQLRow> executeSql(Connection conn, String query, String... arguments) {
         //logger.debug("Executing SQL statement: " + query);
 
         try {
@@ -82,7 +82,7 @@ class SQLUtils {
                 return rows;
             }
         } catch (SQLException e) {
-            logger.error("SQL Exception caught in executeSQL: " + query, e);
+            logger.error("SQL Exception caught in executeSql: " + query, e);
             return null;
         }
         return null;
@@ -90,7 +90,7 @@ class SQLUtils {
 
 
     // Default Insert
-    public static int executeSQLInsert(Connection conn, String query, String recID, String... arguments) {
+    public static int executeSqlInsert(Connection conn, String query, String recID, String... arguments) {
         //logger.debug("Executing SQL Insert: " + query);
 
         int newID = -1;
@@ -113,7 +113,7 @@ class SQLUtils {
             keys.next();
             newID = keys.getInt(1);
         } catch (SQLException e) {
-            logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
+            logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
             return -1;
         }
 
@@ -161,7 +161,7 @@ class SQLUtils {
 			keys.next();
 			newID = keys.getInt(1);
 		} catch (SQLException e) {
-			logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
+			logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
 			return -1;
 		}
 
@@ -193,7 +193,7 @@ class SQLUtils {
 					keys.next();
 					newID = keys.getInt(1);
 				} catch (SQLException e) {
-					logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
+					logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
 					return -1;
 				}
 		
@@ -225,7 +225,7 @@ class SQLUtils {
 					keys.next();
 					newID = keys.getInt(1);
 				} catch (SQLException e) {
-					logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
+					logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
 					return -1;
 				}
 		

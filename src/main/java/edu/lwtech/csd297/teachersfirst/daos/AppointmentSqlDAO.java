@@ -41,7 +41,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		logger.debug("Inserting " + appointment + "...");
 
 		if (appointment.getRecID() != -1) {
-			logger.error("Attempting to add previously added Appointment: " + appointment);
+			logger.error("Error: Cannot add previously added Appointment: " + appointment);
 			return -1;
 		}
 
@@ -59,7 +59,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		String query = "SELECT recID, studentID, instructorID, startTime, endTime";
 		query += " FROM appointments WHERE recID=" + recID;
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find appointment.");
 			return null;
@@ -83,7 +83,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 
 		String query = "SELECT * FROM appointments ORDER BY recID LIMIT " + index;
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find appointment.");
 			return null;
@@ -100,7 +100,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		String query = "SELECT recID, studentID, instructorID, startTime, endTime";
 		query += " FROM appointments ORDER BY startTime";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No appointments found!");
 			return null;
@@ -119,7 +119,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 
 		String query = "SELECT recID FROM appointments ORDER BY recID";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No appointments found!");
 			return null;
@@ -143,7 +143,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 
 		keyword = "%" + keyword + "%";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query, keyword);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, keyword);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No appointments found!");
 			return null;
@@ -165,7 +165,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		logger.debug("Trying to delete Appointment with ID: " + recID);
 
 		String query = "DELETE FROM appointments WHERE recID=" + recID;
-		SQLUtils.executeSQL(conn, query);
+		SQLUtils.executeSql(conn, query);
 	}
 	
 	public int size() {
@@ -173,7 +173,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 
 		String query = "SELECT COUNT(*) AS cnt FROM appointments";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.error("No appointments found!");
 			return 0;
