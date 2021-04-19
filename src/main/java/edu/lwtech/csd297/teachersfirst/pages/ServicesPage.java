@@ -40,7 +40,7 @@ public class ServicesPage extends PageLoader {
 				templateDataMap.put("services", services);
 			} else {
 				templateName = "messageOnly.ftl";
-				templateDataMap.put("Could not contact database or no services loaded.", message);	
+				templateDataMap.put("message", "Could not contact database or no services loaded.");
 			}
 			trySendResponse();
 		}
