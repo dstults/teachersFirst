@@ -41,7 +41,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		logger.debug("Inserting " + member + "...");
 
 		if (member.getRecID() != -1) {
-			logger.error("Attempting to add previously added Member: " + member);
+			logger.error("Error: Cannot add previously added Member: " + member);
 			return -1;
 		}
 
@@ -59,7 +59,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, instructorNotes, gender, phone1, phone2, email, isStudent, isInstructor, isAdmin";
 		query += " FROM members WHERE recID=" + recID;
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find member.");
 			return null;
@@ -75,7 +75,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		
 		String query = "SELECT * FROM members WHERE loginName='" + loginName +"'";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find member.");
 			return null;
@@ -91,7 +91,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		
 		String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('"+passwordHash+"');";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find member.");
 			return null;
@@ -116,7 +116,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
 		query += " FROM members ORDER BY recID LIMIT " + index;
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find member.");
 			return null;
@@ -133,7 +133,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		String query = "SELECT recID, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin";
 		query += " FROM members ORDER BY recID";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No members found!");
 			return null;
@@ -152,7 +152,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		String query = "SELECT recID FROM members ORDER BY recID";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No members found!");
 			return null;
@@ -176,7 +176,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		keyword = "%" + keyword + "%";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query, keyword);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, keyword);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No members found!");
 			return null;
@@ -198,7 +198,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		logger.debug("Trying to delete Member with ID: " + recID);
 
 		String query = "DELETE FROM members WHERE recID=" + recID;
-		SQLUtils.executeSQL(conn, query);
+		SQLUtils.executeSql(conn, query);
 	}
 	
 	public int size() {
@@ -206,7 +206,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		String query = "SELECT COUNT(*) AS cnt FROM members";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.error("No members found!");
 			return 0;

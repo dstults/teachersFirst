@@ -41,7 +41,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		logger.debug("Inserting " + opening + "...");
 
 		if (opening.getRecID() != -1) {
-			logger.error("Attempting to add previously added Opening: " + opening);
+			logger.error("Error: Cannot add previously added Opening: " + opening);
 			return -1;
 		}
 
@@ -59,7 +59,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		String query = "SELECT recID, instructorID, startTime, endTime";
 		query += " FROM openings WHERE recID=" + recID;
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find opening.");
 			return null;
@@ -84,7 +84,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		String query = "SELECT recID, instructorID, startTime, endTime";
 		query += " FROM openings ORDER BY recID LIMIT " + index;
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("Did not find opening.");
 			return null;
@@ -101,7 +101,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		String query = "SELECT recID, instructorID, startTime, endTime";
 		query += " FROM openings ORDER BY startTime";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No openings found!");
 			return null;
@@ -120,7 +120,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 
 		String query = "SELECT recID FROM openings ORDER BY recID";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No openings found!");
 			return null;
@@ -144,7 +144,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 
 		keyword = "%" + keyword + "%";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query, keyword);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, keyword);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No openings found!");
 			return null;
@@ -166,7 +166,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		logger.debug("Trying to delete Opening with ID: " + recID);
 
 		String query = "DELETE FROM openings WHERE recID=" + recID;
-		SQLUtils.executeSQL(conn, query);
+		SQLUtils.executeSql(conn, query);
 	}
 	
 	public int size() {
@@ -174,7 +174,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 
 		String query = "SELECT COUNT(*) AS cnt FROM openings";
 
-		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
 			logger.error("No openings found!");
 			return 0;
