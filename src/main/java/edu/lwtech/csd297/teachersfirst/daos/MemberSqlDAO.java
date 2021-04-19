@@ -103,8 +103,9 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 	
 	public Member retrieveByIndex(int index) {
-		//logger.debug("Trying to get Member with index: " + index);
-		
+		logger.debug("Trying to get Member with index: " + index);
+		logger.warn("This will eventually be deprecated. Don't use this.");
+
 		index++;
 
 		if (index < 1) {
