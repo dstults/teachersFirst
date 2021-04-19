@@ -71,7 +71,8 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	}
 	
 	public Appointment retrieveByIndex(int index) {
-		//logger.debug("Trying to get Appointment with index: " + index);
+		logger.debug("Trying to get Appointment with index: " + index);
+		logger.warn("This will eventually be deprecated. Don't use this.");
 		
 		index++;
 
@@ -97,7 +98,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		logger.debug("Getting all appointments...");
 		
 		String query = "SELECT recID, studentID, instructorID, startTime, endTime";
-		query += " FROM appointments ORDER BY recID";
+		query += " FROM appointments ORDER BY startTime";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {

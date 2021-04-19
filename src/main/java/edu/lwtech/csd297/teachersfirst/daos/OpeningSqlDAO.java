@@ -71,8 +71,9 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 	
 	public Opening retrieveByIndex(int index) {
-		//logger.debug("Trying to get Opening with index: " + index);
-		
+		logger.debug("Trying to get Opening with index: " + index);
+		logger.warn("This will eventually be deprecated. Don't use this.");
+
 		index++;
 
 		if (index < 1) {
@@ -98,7 +99,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		logger.debug("Getting all openings...");
 		
 		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM openings ORDER BY recID";
+		query += " FROM openings ORDER BY startTime";
 
 		List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 		if (rows == null || rows.size() == 0) {
