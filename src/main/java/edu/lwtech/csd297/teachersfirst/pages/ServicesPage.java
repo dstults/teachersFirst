@@ -27,9 +27,6 @@ public class ServicesPage extends PageLoader {
 		final List<Service> services = DataManager.getServiceDAO().retrieveAll();
 		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
-		// FreeMarker
-		templateName = "services.ftl";
-		templateDataMap.put("services", services);
 
 		// Go
 		if (jsonMode) {
@@ -37,6 +34,14 @@ public class ServicesPage extends PageLoader {
 			//logger.debug("Json: " + json);
 			trySendJson(json);
 		} else {
+			// FreeMarker
+			if (services.size() > 0) {
+				templateName = "services.ftl";
+				templateDataMap.put("services", services);
+			} else {
+				templateName = "messageOnly.ftl";
+				templateDataMap.put("Could not contact database or no services loaded.", message);	
+			}
 			trySendResponse();
 		}
 	}
