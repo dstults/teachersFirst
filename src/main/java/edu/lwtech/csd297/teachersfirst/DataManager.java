@@ -17,6 +17,7 @@ import org.json.simple.parser.JSONParser;
 
 public class DataManager {
 	
+	// WEBSITE CUSTOMIZABLE COLORS
 	public static String primaryHighlightAdmin = "#96bbff";
 	public static String primaryHighlightDarkAdmin = "#7da9fa";
 	public static String backgroundColorAdmin = "#c6d9ff";
@@ -32,9 +33,15 @@ public class DataManager {
 	public static String backgroundColorGeneral = "#ffd9c6";
 	public static String backgroundColorLightGeneral = "#ffe5dd";
 
+	// WEBSITE CUSTOMIZABLE VARIABLES
 	public static String websiteTitle = "CoolTutors.org";
 	public static String websiteSubtitle = "The coolest tutors on the web!";
 
+	// WEBSITE RIGHTS TOGGLES
+	public static boolean enableOpenRegistration = true;
+	public static boolean teacherAdminFreeAppointmentMaking = false;
+
+	// DATABASE CREDENTIALS, DO NOT PUBLIC
 	private static String databaseHostname = "";
 	private static String databasePort = "3306";
 	private static String databaseUserID = "";
@@ -70,27 +77,24 @@ public class DataManager {
 			return;
 		}
 
-		if (jsonObject.containsKey("websiteTitle")) {
+		if (jsonObject.containsKey("websiteTitle"))
 			websiteTitle = jsonObject.get("websiteTitle").toString();
-		}
-		if (jsonObject.containsKey("websiteSubtitle")) {
+		if (jsonObject.containsKey("websiteSubtitle"))
 			websiteSubtitle = jsonObject.get("websiteSubtitle").toString();
-		}
-		if (jsonObject.containsKey("databaseHostname")) {
+		if (jsonObject.containsKey("databaseHostname"))
 			databaseHostname = jsonObject.get("databaseHostname").toString();
-		}
-		if (jsonObject.containsKey("databasePort")) {
+		if (jsonObject.containsKey("databasePort"))
 			databasePort = jsonObject.get("databasePort").toString();
-		}
-		if (jsonObject.containsKey("databaseUserID")) {
+		if (jsonObject.containsKey("databaseUserID"))
 			databaseUserID = jsonObject.get("databaseUserID").toString();
-		}
-		if (jsonObject.containsKey("databasePassword")) {
+		if (jsonObject.containsKey("databasePassword"))
 			databasePassword = jsonObject.get("databasePassword").toString();
-		}
-		if (jsonObject.containsKey("databaseSchema")) {
+		if (jsonObject.containsKey("databaseSchema"))
 			databaseSchema = jsonObject.get("databaseSchema").toString();
-		}
+		if (jsonObject.containsKey("enableOpenRegistration"))
+			enableOpenRegistration = Boolean.parseBoolean(jsonObject.get("enableOpenRegistration").toString());
+		if (jsonObject.containsKey("teacherAdminFreeAppointmentMaking"))
+			teacherAdminFreeAppointmentMaking = Boolean.parseBoolean(jsonObject.get("teacherAdminFreeAppointmentMaking").toString());
 	}
 
 	public static void initializeDAOs() throws ServletException {
