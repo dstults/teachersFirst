@@ -8,7 +8,7 @@
 				<a href="/logout"><div class="top-right-button slightly-lower mouseover faded">Log Out</div></a>
 			<#else>
 				<a href="/login"><div class="top-right-button navy mouseover">Log In</div></a>
-				<a href="/register"><div class="top-right-button slightly-lower navy mouseover">Register</div></a>
+				<#if canRegister><a href="/register"><div class="top-right-button slightly-lower navy mouseover">Register</div></a></#if>
 			</#if>
 			</div>
 		</div>

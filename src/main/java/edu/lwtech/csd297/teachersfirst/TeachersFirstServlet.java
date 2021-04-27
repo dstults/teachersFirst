@@ -183,7 +183,7 @@ public class TeachersFirstServlet extends HttpServlet {
 					new LogOutAction(request, response).RunAction();
 					break;
 				case "register_new_member":
-					new NewMemberAction(request, response).RunAction();
+					new OpenRegisterAction(request, response).RunAction();
 					break;
 				case "new_openings":
 					new NewOpeningsAction(request, response).RunAction();

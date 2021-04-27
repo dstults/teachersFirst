@@ -3,6 +3,7 @@ package edu.lwtech.csd297.teachersfirst.pages;
 import java.util.*;
 import javax.servlet.http.*;
 
+import edu.lwtech.csd297.teachersfirst.DataManager;
 import edu.lwtech.csd297.teachersfirst.QueryHelpers;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
@@ -15,6 +16,11 @@ public class RegisterPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
+		if (!DataManager.enableOpenRegistration) {
+			this.sendFake404("WARNING: User attempted to load open registration page when said page should not be visible.");
+			return;
+		}
+
 		templateDataMap.put("title", "Register");
 		String loginName = QueryHelpers.getGet(request, "loginName");
 		String displayName = QueryHelpers.getGet(request, "displayName");

@@ -8,9 +8,9 @@ import edu.lwtech.csd297.teachersfirst.*;
 import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-public class NewMemberAction extends ActionRunner {
+public class OpenRegisterAction extends ActionRunner {
 
-	public NewMemberAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public OpenRegisterAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
 	public void RunAction() {
@@ -18,6 +18,10 @@ public class NewMemberAction extends ActionRunner {
 		// This version of this process requites that you're not signed in.
 		if (uid > 0) {
 			this.SendPostReply("/services", "", "Please sign out before trying to register a new account!");
+			return;
+		}
+		if (!DataManager.enableOpenRegistration) {
+			this.SendPostReply("/services", "", "Open registration is disabled!");
 			return;
 		}
 

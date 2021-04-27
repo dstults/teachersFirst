@@ -76,6 +76,7 @@ public abstract class PageLoader {
 		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
 		String message = QueryHelpers.getGet(request, "message");
 
+		templateDataMap.put("canRegister", DataManager.enableOpenRegistration);
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
 		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);
 		templateDataMap.put("showWelcome", true);
