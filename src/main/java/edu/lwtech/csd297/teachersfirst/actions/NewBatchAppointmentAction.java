@@ -10,9 +10,9 @@ import edu.lwtech.csd297.teachersfirst.*;
 import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-public class NewAppointmentAction extends ActionRunner {
+public class NewBatchAppointmentAction extends ActionRunner {
 
-	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public NewBatchAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
 	public void RunAction() {
@@ -22,6 +22,9 @@ public class NewAppointmentAction extends ActionRunner {
 			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
+		if (DataManager.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
+			this.SendPostReply("/services", "", "Batch appointment function disabled.");
+		}
 
 		final String openingIdString = QueryHelpers.getPost(request, "openingId");
 		int openingIdInt;
@@ -29,11 +32,6 @@ public class NewAppointmentAction extends ActionRunner {
 			openingIdInt = Integer.parseInt(openingIdString);
 		} catch (NumberFormatException e) {
 			openingIdInt = 0;
-		}
-		final Opening referralOpening = DataManager.getOpeningDAO().retrieveByID(openingIdInt);
-		if (referralOpening == null) {
-			this.SendPostReply("/openings", "", "Opening with ID %5B" + openingIdString + "%5D does not exist!");
-			return;
 		}
 
 		final String studentIdString = QueryHelpers.getPost(request, "studentId");
@@ -63,21 +61,36 @@ public class NewAppointmentAction extends ActionRunner {
 			return;
 		}
 
-		final String dateString = QueryHelpers.getPost(request, "date");
+		final String startDateString = QueryHelpers.getPost(request, "startDate");
+		final String endDateString = QueryHelpers.getPost(request, "endDate");
 		final String startTimeString = QueryHelpers.getPost(request, "appointmentStartTime");
 		final String endTimeString = QueryHelpers.getPost(request, "appointmentEndTime");
 
-		int month = 1;
-		int day = 1;
-		int year = 1800;
+		int startMonth = 1;
+		int startDay = 1;
+		int startYear = 1800;
 		try {
-			final String[] dateInfo = dateString.split("/");
+			final String[] dateInfo = startDateString.split("/");
 			if (dateInfo.length != 3) throw new NumberFormatException();
-			month = Integer.parseInt(dateInfo[0]);
-			day = Integer.parseInt(dateInfo[1]);
-			year = Integer.parseInt(dateInfo[2]);
+			startMonth = Integer.parseInt(dateInfo[0]);
+			startDay = Integer.parseInt(dateInfo[1]);
+			startYear = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/openings", "", "Could not parse date: %5B" + dateString + "%5D !");
+			this.SendPostReply("/openings", "", "Could not parse date: %5B" + startDateString + "%5D !");
+			return;
+		}
+
+		int endMonth = 1;
+		int endDay = 1;
+		int endYear = 1800;
+		try {
+			final String[] dateInfo = endDateString.split("/");
+			if (dateInfo.length != 3) throw new NumberFormatException();
+			endMonth = Integer.parseInt(dateInfo[0]);
+			endDay = Integer.parseInt(dateInfo[1]);
+			endYear = Integer.parseInt(dateInfo[2]);
+		} catch (NumberFormatException e) {
+			this.SendPostReply("/openings", "", "Could not parse date: %5B" + endDateString + "%5D !");
 			return;
 		}
 
@@ -115,7 +128,6 @@ public class NewAppointmentAction extends ActionRunner {
 			return;
 		}
 
-		int endDay = day;
 		int startTime = startHour * 60 + startMinute;
 		int endTime = endHour * 60 + endMinute;
 		if (endTime < startTime) {
@@ -131,30 +143,15 @@ public class NewAppointmentAction extends ActionRunner {
 			return;
 		}
 
-		LocalDateTime startTimeLdt = LocalDateTime.of(year, month, day, startHour, startMinute, 0);
-		LocalDateTime endTimeLdt = LocalDateTime.of(year, month, day, endHour, endMinute, 0);
-
-		if (DataManager.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
-			// Make sure within scope of openings
-			if (!DateHelpers.timeIsBetweenTimeAndTime(
-					startTimeLdt,
-					referralOpening.getStartTime().toLocalDateTime(),
-					referralOpening.getEndTime().toLocalDateTime()) &&
-				!DateHelpers.timeIsBetweenTimeAndTime(
-					endTimeLdt,
-					referralOpening.getStartTime().toLocalDateTime(),
-					referralOpening.getEndTime().toLocalDateTime())) {
-
-					this.SendPostReply("/openings", "", "Appointment not within scope of opening!");
-				return;
-			}
-		}
+		LocalDateTime startTimeLdt = LocalDateTime.of(startYear, startMonth, startDay, startHour, startMinute, 0);
+		LocalDateTime endTimeLdt = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMinute, 0);
 
 		// Make sure no conflicting appointments
 		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
 		
 		// Might be very first appointment, in which case this is null
 		if (allAppointments != null) {
+			//TODO: Foreach potential new appointment
 			for(Appointment appointment : allAppointments) {
 				if (DateHelpers.timeIsBetweenTimeAndTime(
 						startTimeLdt.plusMinutes(1),
@@ -175,8 +172,9 @@ public class NewAppointmentAction extends ActionRunner {
 			}
 		}
 
-		logger.debug("Attempting to create new appointment ...");
+		logger.debug("Attempting to batch-create new appointments ...");
 		
+		//TODO: Foreach approved new appointment
 		Appointment appointment = new Appointment(studentIdInt, instructorIdInt, year, month, day, startHour, startMinute, year, month, endDay, endHour, endMinute);
 		DataManager.getAppointmentDAO().insert(appointment);
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");

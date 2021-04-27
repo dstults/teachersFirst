@@ -13,6 +13,11 @@
 				<a href="javascript:makeOpenings();" class="fake-button">Make New Openings</a>
 			</li>
 			</#if>
+			<#if batchAppointments && (isAdmin || isInstructor)>
+			<li>
+				<a href="javascript:makeOpenings();" class="fake-button">Make Batch Appointments</a>
+			</li>
+			</#if>
 		</ul>
 	</div>
 
