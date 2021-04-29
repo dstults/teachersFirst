@@ -175,21 +175,21 @@ public class NewAppointmentBatchAction extends ActionRunner {
 
 		logger.debug("PLANS VERIFIED");
 
+		StringBuilder sb = new StringBuilder("Batch appointment creation results://");
 		logger.debug("Attempting to batch-create new appointments ...");
-		StringBuilder sb = new StringBuilder("Batch appointment creation results:");
 		for (PlannedAppointment plan : plannedAppointments) {
 			if (plan.getResult().contains("OK")) {
 				Appointment appointment = new Appointment(plan);
 				DataManager.getAppointmentDAO().insert(appointment);
-				sb.append("Created new appointment: %5B").append(appointment.toString()).append("%5D<br>\n");
+				sb.append("OK: %5B").append(appointment.getDateString()).append("%5D//");
 				logger.debug("Created new appointment: [{}]", appointment);
 			} else {
-				sb.append("Skipped planned appointment: %5B").append(plan.toString()).append("%5D<br>\n");
+				sb.append("! CONFLICT: %5B").append(plan.getDateString()).append("%5D//");
 				logger.debug("Skipped planned appointment: [{}]", plan);
 			}
 		}
-		logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		sb.append("- End of List -");
+		logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		this.SendPostReply("/appointments", "", sb.toString());
 		return;
 	}

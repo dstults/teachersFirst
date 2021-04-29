@@ -85,6 +85,7 @@ public abstract class PageLoader {
 		templateDataMap.put("isAdmin", isAdmin);
 		templateDataMap.put("isInstructor", isInstructor);
 		templateDataMap.put("isStudent", isStudent);
+		message = message.replace("//", "<br>\n			");
 		templateDataMap.put("message", message);
 	}
 

@@ -93,6 +93,10 @@ public class Appointment {
 		return this.endTime;
 	}
 
+	public String getDateString() {
+		return this.startTime.toLocalDateTime().toLocalDate().toString();
+	}
+
 	public String getName() {
 		return this.toString();
 	}
