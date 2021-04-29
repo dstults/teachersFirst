@@ -186,7 +186,8 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	// =====================================================================
 
 	private Appointment convertRowToAppointment(SQLRow row) {
-		logger.debug("Converting " + row + " to Appointment...");
+		// Disabled due to log pollution 2021/04/29
+		//logger.debug("Converting " + row + " to Appointment...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		int studentID = Integer.parseInt(row.getItem("studentID"));
 		int instructorID = Integer.parseInt(row.getItem("instructorID"));

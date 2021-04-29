@@ -17,6 +17,12 @@ public class NewAppointmentBatchAction extends ActionRunner {
 	@Override
 	public void RunAction() {
 
+		// INPUT: {action: make_appointment_batch}, {instructorId: 1}, {studentId: 2}, {daysOfWeek: SuMoWeThSa}, {startDate: 2021-05-02}, {startTime: 09:00}, {endDate: 2021-05-08}, {endTime: 10:00}
+		// OUTPUT: Invalid value for MonthOfYear (Line 164)
+		// Fixed.
+		// INPUT: {action: make_appointment_batch}, {instructorId: 1}, {studentId: 2}, {daysOfWeek: MoTuWeFrSa}, {startDate: 2021-05-02}, {startTime: 09:00}, {endDate: 2021-05-08}, {endTime: 10:00}
+		// OUTPUT: Froze somewhere at or after List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
+
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
 			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
@@ -63,8 +69,8 @@ public class NewAppointmentBatchAction extends ActionRunner {
 
 		final String startDateString = QueryHelpers.getPost(request, "startDate");
 		final String endDateString = QueryHelpers.getPost(request, "endDate");
-		final String startTimeString = QueryHelpers.getPost(request, "appointmentStartTime");
-		final String endTimeString = QueryHelpers.getPost(request, "appointmentEndTime");
+		final String startTimeString = QueryHelpers.getPost(request, "startTime");
+		final String endTimeString = QueryHelpers.getPost(request, "endTime");
 
 		int startMonth = 1;
 		int startDay = 1;
@@ -72,11 +78,11 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		try {
 			final String[] dateInfo = startDateString.split("-");
 			if (dateInfo.length != 3) throw new NumberFormatException();
-			startMonth = Integer.parseInt(dateInfo[0]);
-			startDay = Integer.parseInt(dateInfo[1]);
-			startYear = Integer.parseInt(dateInfo[2]);
+			startYear = Integer.parseInt(dateInfo[0]);
+			startMonth = Integer.parseInt(dateInfo[1]);
+			startDay = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_appointment_batch", "", "Could not parse date: %5B" + startDateString + "%5D !");
+			this.SendPostReply("/make_appointment_batch", "", "Could not parse start date: %5B" + startDateString + "%5D !");
 			return;
 		}
 
@@ -86,11 +92,11 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		try {
 			final String[] dateInfo = endDateString.split("-");
 			if (dateInfo.length != 3) throw new NumberFormatException();
-			endMonth = Integer.parseInt(dateInfo[0]);
-			endDay = Integer.parseInt(dateInfo[1]);
-			endYear = Integer.parseInt(dateInfo[2]);
+			endYear = Integer.parseInt(dateInfo[0]);
+			endMonth = Integer.parseInt(dateInfo[1]);
+			endDay = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_appointment_batch", "", "Could not parse date: %5B" + endDateString + "%5D !");
+			this.SendPostReply("/make_appointment_batch", "", "Could not parse end date: %5B" + endDateString + "%5D !");
 			return;
 		}
 
@@ -163,32 +169,23 @@ public class NewAppointmentBatchAction extends ActionRunner {
 
 		// Make sure no conflicting appointments
 		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
+		logger.debug("Appointments GOT");
 		List<PlannedAppointment> plannedAppointments = PlannedAppointment.MakeList(
 			studentIdInt, instructorIdInt, scheduledDays,
 			startYear, startMonth, startDay, startHour, startMinute,
 			endYear, endMonth, endDay, endHour, endMinute);
+		logger.debug("PLANS GOT");
 
 		// Might be very first appointment, in which case this is null
 		if (allAppointments != null) {
-			for(Appointment appointment : allAppointments) {
-				if (DateHelpers.timeIsBetweenTimeAndTime(
-						startTimeLdt.plusMinutes(1),
-						appointment.getStartTime().toLocalDateTime(),
-						appointment.getEndTime().toLocalDateTime()) ||
-					DateHelpers.timeIsBetweenTimeAndTime(
-						endTimeLdt.minusMinutes(1),
-						appointment.getStartTime().toLocalDateTime(),
-						appointment.getEndTime().toLocalDateTime()) ||
-					DateHelpers.timeIsBetweenTimeAndTime( // catches edge case of iAppointment being inside potential new one
-						appointment.getStartTime().toLocalDateTime().plusMinutes(1),
-						startTimeLdt,
-						endTimeLdt)) {
-
-					this.SendPostReply("/make_appointment_batch", "", "Appointment conflicts with appointment: %5B" + appointment.getRecID() + "%5D!");
-					return;
-				}
+			for(PlannedAppointment plan : plannedAppointments) {
+				// returns bool but we don't care, this should run with or without failure
+				logger.debug("TESTING PLAN " + plan);
+				plan.hasConflictWithAppointments(allAppointments);
 			}
 		}
+
+		logger.debug("PLANS VERIFIED");
 
 		logger.debug("Attempting to batch-create new appointments ...");
 		StringBuilder sb = new StringBuilder("Batch appointment creation results:");

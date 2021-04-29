@@ -37,9 +37,9 @@
 			<input type="radio" name="gender" value="f"><label for="Female" class="radio">Female</label>
 		</#if>
 		<#if gender == "other">
-			<input type="radio" name="gender" value="other" checked><label for="Other" class="radio">Other/Unspecified</label>
+			<input type="radio" name="gender" value="" checked><label for="Other" class="radio">Other/Unspecified</label>
 		<#else>
-			<input type="radio" name="gender" value="other"><label for="Other" class="radio">Other/Unspecified</label>
+			<input type="radio" name="gender" value=""><label for="Other" class="radio">Other/Unspecified</label>
 		</#if>
 		<br><br>
 
