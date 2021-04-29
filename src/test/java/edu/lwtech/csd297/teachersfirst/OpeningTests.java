@@ -46,14 +46,14 @@ class OpeningTests {
 	}
 
 	@Test
-	void testGetRecID(){
+	void testGetRecID() {
 
 		assertEquals(5, Alex.getRecID());
 		assertEquals(-1, Riley.getRecID());
 	}
 
 	@Test
-	void testSetRecID(){
+	void testSetRecID() {
 		Exception ex = null;
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
@@ -72,27 +72,27 @@ class OpeningTests {
 	}
 
 	@Test
-	void testGetStartTime(){
+	void testGetStartTime() {
 		assertEquals("2000-06-05 00:00:00.0", Alex.getStartTime().toString());
 	}
 
 	@Test
-	void testGetEndTime(){
+	void testGetEndTime() {
 		assertEquals("2000-06-14 06:30:00.0", Jordan.getEndTime().toString());
 	}
 
 	@Test
-	void testInstructorID(){
+	void testInstructorID() {
 		assertEquals(5,Alex.getInstructorID());
 	}
 
 	@Test
-	void testGetName(){
+	void testGetName() {
 		assertEquals("Opening/14@2000-06-05 00:00:00.0-2000-08-15 00:00:00.0",Riley.getName());
 	}
 
 	@Test
-	void testEquals(){
+	void testEquals() {
 		assertFalse(Alex.equals(null));
 		assertTrue(Alex.equals(Alex));
 		assertFalse(Alex.equals(10));

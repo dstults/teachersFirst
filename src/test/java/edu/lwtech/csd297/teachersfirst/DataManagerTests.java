@@ -18,7 +18,7 @@ class DataManagerTests {
 	}
 
 	@Test
-	void testInitializeAndTerminate(){
+	void testInitializeAndTerminate() {
 		try {
 			DataManager.initializeDAOs();
 		} catch (ServletException e) {
