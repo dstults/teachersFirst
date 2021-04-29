@@ -104,7 +104,6 @@ public class OpeningsPage extends PageLoader {
 		if (openingDAO == null || openingDAO.retrieveByIndex(0) == null) {
 			// Failed to contact SQL Server or simply no data
 			templateName = "openings.ftl";
-			templateDataMap.put("batchAppointments", !DataManager.instructorAdminMakeAppointmentsRequiresOpening);
 			templateDataMap.put("startDate", sundayString);
 			templateDataMap.put("endDate", saturdayString);
 			templateDataMap.put("weeks", weeks);
@@ -179,6 +178,8 @@ public class OpeningsPage extends PageLoader {
 		} else {
 			// FreeMarker
 			templateName = "openings.ftl";
+			boolean enableBatch = !DataManager.instructorAdminMakeAppointmentsRequiresOpening && (isAdmin || isInstructor);
+			templateDataMap.put("batchEnabled", enableBatch);
 			templateDataMap.put("startDate", sundayString);
 			templateDataMap.put("endDate", saturdayString);
 			templateDataMap.put("weeks", weeks);

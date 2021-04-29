@@ -191,17 +191,21 @@ public class NewBatchAppointmentAction extends ActionRunner {
 		}
 
 		logger.debug("Attempting to batch-create new appointments ...");
-		
+		StringBuilder sb = new StringBuilder("Batch appointment creation results:");
 		for (PlannedAppointment plan : plannedAppointments) {
 			if (plan.getResult().contains("OK")) {
 				Appointment appointment = new Appointment(plan);
 				DataManager.getAppointmentDAO().insert(appointment);
+				sb.append("Created new appointment: [").append(appointment.toString()).append("]");
 				logger.debug("Created new appointment: [{}]", appointment);
+			} else {
+				sb.append("Skipped planned appointment: [").append(plan.toString()).append("]");
+				logger.debug("Skipped planned appointment: [{}]", plan);
 			}
 		}
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
-		
-		this.SendPostReply("/appointments", "", "Appointment created!");
+		sb.append("- End of List -");
+		this.SendPostReply("/appointments", "", sb.toString());
 		return;
 	}
 	

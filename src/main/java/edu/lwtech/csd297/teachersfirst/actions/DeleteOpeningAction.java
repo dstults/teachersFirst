@@ -43,7 +43,7 @@ public class DeleteOpeningAction extends ActionRunner {
 		//logger.info(DataManager.getOpeningDAO().size() + " records total");
 		logger.debug("Deleted opening ID: [{}]", openingIdInt);
 		
-		this.SendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D deleted!");
+		this.SendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D, deleted!");
 		return;
 	}
 	

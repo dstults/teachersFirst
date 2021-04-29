@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 
 class AppointmentTests {
 
-	Appointment Alex = new Appointment(5, 55,   1998, 3, 11, 4, 30,   2000, 6, 22, 6, 30);
-	Appointment Mack = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+	Appointment FiveAndFiftyFive = new Appointment(5, 55, 1998, 3, 11, 4, 30, 22, 6, 30);
+	Appointment ThirtyFiveAndSixtySix = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
 
 	Appointment Eimaj = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
 	Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
@@ -84,9 +84,9 @@ class AppointmentTests {
 
 	@Test
 	void testGetIsMyAppointment(){
-		assertTrue(Alex.getIsMyAppointment(5));
-		assertTrue(Alex.getIsMyAppointment(55));
-		assertFalse(Alex.getIsMyAppointment(9));
+		assertTrue(FiveAndFiftyFive.getIsMyAppointment(5));
+		assertTrue(FiveAndFiftyFive.getIsMyAppointment(55));
+		assertFalse(FiveAndFiftyFive.getIsMyAppointment(9));
 	}
 
 	@Test

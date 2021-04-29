@@ -93,8 +93,7 @@ public class MakeAppointmentPage extends PageLoader {
 
 		// FreeMarker
 		if (!DataManager.instructorAdminMakeAppointmentsRequiresOpening && (isAdmin || isInstructor)) {
-			
-			templateName = "makeAppointment.ftl";
+			templateName = "makeBatchAppointments.ftl";
 		} else {
 			templateName = "makeAppointment.ftl";
 		}
