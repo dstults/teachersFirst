@@ -11,11 +11,18 @@
 		<h1>Please make new appointments:</h1>
 
 		<form method="post" action="/" onsubmit = "return false;">
-			<label for="instructorId" style="margin-top: 1.3rem;">Instructor ID:</label>
-			<input type="text" id="instructorId" value="${instructorId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
-			<label for="studentId" style="margin-top: 1.3rem;">Student ID:</label>
-			<input type="text" id="studentId" value="${studentId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
-			<ul class="opening-days">
+			<ul>
+				<li>
+					<label for="instructorId" style="margin-top: 1.3rem;">Instructor ID:</label>
+					<input type="text" id="instructorId" value="${instructorId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
+				</li>
+				<li class="second-value">
+					<label for="studentId" style="margin-top: 1.3rem;">Student ID:</label>
+					<input type="text" id="studentId" value="${studentId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
+				</li>
+			</ul>
+
+			<ul class="day-list">
 				<li>
 					<input type="checkbox" id="sunday" value="Su"${sundayChecked}>
 					<label for="sunday">Sun</label>
@@ -94,6 +101,7 @@ const handlePost = () => {
 	}
 
 	const instructorId = document.getElementById('instructorId').value;
+	const studentId = document.getElementById('studentId').value;
 	const startDate = document.getElementById('startDate').value;
 	const startTime = document.getElementById('startTime').value;
 	const endDate = document.getElementById('endDate').value;

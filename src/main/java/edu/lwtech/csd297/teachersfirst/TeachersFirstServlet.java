@@ -82,7 +82,9 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "/appointments":
 					new AppointmentsPage(request, response).loadPage();
 					break;
-				case "/make_batch_appointments":
+				case "/make_appointment_batch":
+					new MakeAppointmentBatchPage(request, response).loadPage();
+					break;
 				case "/make_appointment":
 					new MakeAppointmentPage(request, response).loadPage();
 					break;
@@ -92,8 +94,8 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "/openings":
 					new OpeningsPage(request, response).loadPage();
 					break;
-				case "/new_openings":
-					new NewOpeningsPage(request, response).loadPage();
+				case "/make_openings":
+					new MakeOpeningsPage(request, response).loadPage();
 					break;
 				case "/profile":
 					new ProfilePage(request, response).loadPage();
@@ -183,17 +185,17 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "log_out":
 					new LogOutAction(request, response).RunAction();
 					break;
-				case "register_new_member":
+				case "register_member":
 					new OpenRegisterAction(request, response).RunAction();
 					break;
-				case "new_openings":
+				case "make_openings":
 					new NewOpeningsAction(request, response).RunAction();
 					break;
 				case "make_appointment":
 					new NewAppointmentAction(request, response).RunAction();
 					break;
 				case "make_appointment_batch":
-					new NewBatchAppointmentAction(request, response).RunAction();
+					new NewAppointmentBatchAction(request, response).RunAction();
 					break;
 				case "delete_appointment":
 					new DeleteAppointmentAction(request, response).RunAction();

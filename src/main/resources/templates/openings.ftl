@@ -15,7 +15,7 @@
 			</#if>
 			<#if batchEnabled>
 			<li>
-				<a href="javascript:makeBatchAppointments();" class="fake-button">Make Batch Appointments</a>
+				<a href="javascript:makeAppointmentBatch();" class="fake-button">Make Batch Appointments</a>
 			</li>
 			</#if>
 		</ul>
@@ -66,8 +66,8 @@ const openFilter = () => {
 	}
 }
 <#if isAdmin || isInstructor>
-const makeOpenings = () => window.location.href = "/new_openings";
-<#if batchEnabled>const makeBatchAppointments = () => window.location.href = "/make_batch_appointments";</#if>
+const makeOpenings = () => window.location.href = "/make_openings";
+<#if batchEnabled>const makeAppointmentBatch = () => window.location.href = "/make_appointment_batch";</#if>
 const confirmDeleteOpening = (openingId) => {
 	if (confirm('Are you sure you want to delete opening ID #' + openingId + ' ?')) {
 		const xhr = new XMLHttpRequest();

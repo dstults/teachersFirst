@@ -12,19 +12,12 @@
 
 		<form method="post" action="/" onsubmit = "return false;">
 
-			<ul>
-				<li>
-					<label for="instructorId">Instructor ID:</label>
-					<input type="text" id="instructorId" value="${instructorId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
-				</li>
-				<li class="second-value">
-					<label for="studentId">Student ID:</label>
-					<input type="text" id="studentId" value="${studentId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
-				</li>
-			</ul>
+			<li>
+				<label for="instructorId">Instructor ID:</label>
+				<input type="text" id="instructorId" value="${instructorId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
+			</li>
 
-
-			<ul class="opening-days">
+			<ul class="day-list">
 				<li>
 					<input type="checkbox" id="sunday" value="Su"${sundayChecked}>
 					<label for="sunday">Sun</label>
@@ -117,7 +110,7 @@ const handlePost = () => {
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-		xhr.send('action=new_openings&instructorId=' + instructorId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
+		xhr.send('action=make_openings&instructorId=' + instructorId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
 	}
 }
 </script>

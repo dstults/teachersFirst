@@ -127,11 +127,11 @@ li{
 .second-value{
     float: right;
 }
-.opening-days{
+.day-list{
     display: inline-block;
     margin-top: 2rem;
 }
-.opening-days li{
+.day-list li{
     float: left;
     margin-left: -.5rem;
     font-weight: lighter;

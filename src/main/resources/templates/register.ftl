@@ -7,7 +7,7 @@
 	<#if userId lte 0>
 
 	<form method="post" action="/">
-		<input type="hidden" name="action" value="register_new_member">
+		<input type="hidden" name="action" value="register_member">
 
 		<label for="full_name">Display Name (how others see you): <span class="required">*</span></label>
 		<input type="text" name="displayName" value="${displayName}" placeholder="Jane Doe"/> 

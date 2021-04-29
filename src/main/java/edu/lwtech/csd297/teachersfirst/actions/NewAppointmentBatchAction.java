@@ -10,9 +10,9 @@ import edu.lwtech.csd297.teachersfirst.*;
 import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 
-public class NewBatchAppointmentAction extends ActionRunner {
+public class NewAppointmentBatchAction extends ActionRunner {
 
-	public NewBatchAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
 	public void RunAction() {
@@ -42,7 +42,7 @@ public class NewBatchAppointmentAction extends ActionRunner {
 			studentIdInt = 0;
 		}
 		if (DataManager.getMemberDAO().retrieveByID(studentIdInt) == null) {
-			this.SendPostReply("/openings", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
+			this.SendPostReply("/make_appointment_batch", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
 		}
 		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
@@ -54,10 +54,10 @@ public class NewBatchAppointmentAction extends ActionRunner {
 		}
 
 		if (DataManager.getMemberDAO().retrieveByID(instructorIdInt) == null) {
-			this.SendPostReply("/openings", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
+			this.SendPostReply("/make_appointment_batch", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
 		} else if (studentIdInt == instructorIdInt) {
-			this.SendPostReply("/openings", "", "Student ID and Instructor ID both " + studentIdString + " -- appointments can not be made with self.");
+			this.SendPostReply("/make_appointment_batch", "", "Student ID and Instructor ID both " + studentIdString + " -- appointments can not be made with self.");
 			return;
 		}
 
@@ -70,13 +70,13 @@ public class NewBatchAppointmentAction extends ActionRunner {
 		int startDay = 1;
 		int startYear = 1800;
 		try {
-			final String[] dateInfo = startDateString.split("/");
+			final String[] dateInfo = startDateString.split("-");
 			if (dateInfo.length != 3) throw new NumberFormatException();
 			startMonth = Integer.parseInt(dateInfo[0]);
 			startDay = Integer.parseInt(dateInfo[1]);
 			startYear = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/openings", "", "Could not parse date: %5B" + startDateString + "%5D !");
+			this.SendPostReply("/make_appointment_batch", "", "Could not parse date: %5B" + startDateString + "%5D !");
 			return;
 		}
 
@@ -84,13 +84,13 @@ public class NewBatchAppointmentAction extends ActionRunner {
 		int endDay = 1;
 		int endYear = 1800;
 		try {
-			final String[] dateInfo = endDateString.split("/");
+			final String[] dateInfo = endDateString.split("-");
 			if (dateInfo.length != 3) throw new NumberFormatException();
 			endMonth = Integer.parseInt(dateInfo[0]);
 			endDay = Integer.parseInt(dateInfo[1]);
 			endYear = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/openings", "", "Could not parse date: %5B" + endDateString + "%5D !");
+			this.SendPostReply("/make_appointment_batch", "", "Could not parse date: %5B" + endDateString + "%5D !");
 			return;
 		}
 
@@ -102,12 +102,12 @@ public class NewBatchAppointmentAction extends ActionRunner {
 			startHour = Integer.parseInt(timeInfo[0]);
 			startMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/openings", "", "Could not parse start time: %5B" + startTimeString + "%5D L:" + startTimeString.split(":").length + " !");
+			this.SendPostReply("/make_appointment_batch", "", "Could not parse start time: %5B" + startTimeString + "%5D L:" + startTimeString.split(":").length + " !");
 			return;
 		}
 
 		if (startMinute != 0 && startMinute != 15 && startMinute != 30 && startMinute != 45) {
-			this.SendPostReply("/openings", "", "Start minute %5B" + startMinute + "%5D not allowed, must be multiple of 15!");
+			this.SendPostReply("/make_appointment_batch", "", "Start minute %5B" + startMinute + "%5D not allowed, must be multiple of 15!");
 			return;
 		}
 
@@ -119,12 +119,12 @@ public class NewBatchAppointmentAction extends ActionRunner {
 			endHour = Integer.parseInt(timeInfo[0]);
 			endMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/openings", "", "Could not parse end time: %5B" + endTimeString + "%5D !");
+			this.SendPostReply("/make_appointment_batch", "", "Could not parse end time: %5B" + endTimeString + "%5D !");
 			return;
 		}
 
 		if (endMinute != 0 && endMinute != 15 && endMinute != 30 && endMinute != 45) {
-			this.SendPostReply("/openings", "", "End minute %5B" + endMinute + "%5D not allowed, must be multiple of 15!");
+			this.SendPostReply("/make_appointment_batch", "", "End minute %5B" + endMinute + "%5D not allowed, must be multiple of 15!");
 			return;
 		}
 
@@ -135,11 +135,11 @@ public class NewBatchAppointmentAction extends ActionRunner {
 			endDay++;
 		}
 		if (startTime > 1440 || endTime > 1440) {
-			this.SendPostReply("/openings", "", "Invalid start time or end time. Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
+			this.SendPostReply("/make_appointment_batch", "", "Invalid start time or end time. Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
 			return;
 		}
 		if (endTime - 720 > startTime) {
-			this.SendPostReply("/openings", "", "Appointments must not be longer than 12 hours! Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
+			this.SendPostReply("/make_appointment_batch", "", "Appointments must not be longer than 12 hours! Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
 			return;
 		}
 
@@ -154,7 +154,7 @@ public class NewBatchAppointmentAction extends ActionRunner {
 		if(daysOfWeekString.contains("fr")) scheduledDays.add(DayOfWeek.FRIDAY);
 		if(daysOfWeekString.contains("sa")) scheduledDays.add(DayOfWeek.SATURDAY);
 		if (scheduledDays.size() == 0) {
-			this.SendPostReply("/new_openings", "", "Couldn't parse your days of the week.");
+			this.SendPostReply("/make_openings", "", "Couldn't parse your days of the week.");
 			return;
 		}
 
@@ -184,7 +184,7 @@ public class NewBatchAppointmentAction extends ActionRunner {
 						startTimeLdt,
 						endTimeLdt)) {
 
-					this.SendPostReply("/openings", "", "Appointment conflicts with appointment: %5B" + appointment.getRecID() + "%5D!");
+					this.SendPostReply("/make_appointment_batch", "", "Appointment conflicts with appointment: %5B" + appointment.getRecID() + "%5D!");
 					return;
 				}
 			}
