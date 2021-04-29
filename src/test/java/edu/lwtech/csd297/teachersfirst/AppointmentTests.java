@@ -106,7 +106,7 @@ class AppointmentTests {
 
 	@Test
 	void testGetName() {
-		assertEquals("Appointment/20>43@2000-01-01 00:00:00.0-2000-02-01 00:00:00.0", Jamie.getName());
+		assertEquals("Appointment(-1)/Student(20)>Instructor(43)@2000-01-01 00:00:00.0-2000-02-01 00:00:00.0", Jamie.getName());
 	}
 
 	@Test

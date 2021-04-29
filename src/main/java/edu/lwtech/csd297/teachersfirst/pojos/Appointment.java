@@ -101,7 +101,7 @@ public class Appointment {
 
 	@Override
 	public String toString() {
-		return "Appointment/" + this.studentId + ">" + this.instructorId + "@" + this.startTime.toString() + "-" + this.endTime.toString();
+		return "Appointment(" + this.recID + ")/Student(" + this.studentId + ")>Instructor(" + this.instructorId + ")@" + this.startTime.toString() + "-" + this.endTime.toString();
 	}
 
 	@Override

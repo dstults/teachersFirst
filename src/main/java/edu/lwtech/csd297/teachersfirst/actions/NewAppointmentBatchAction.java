@@ -32,14 +32,6 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.SendPostReply("/services", "", "Batch appointment function disabled.");
 		}
 
-		final String openingIdString = QueryHelpers.getPost(request, "openingId");
-		int openingIdInt;
-		try {
-			openingIdInt = Integer.parseInt(openingIdString);
-		} catch (NumberFormatException e) {
-			openingIdInt = 0;
-		}
-
 		final String studentIdString = QueryHelpers.getPost(request, "studentId");
 		int studentIdInt;
 		try {
@@ -151,7 +143,6 @@ public class NewAppointmentBatchAction extends ActionRunner {
 
 		String daysOfWeekString = QueryHelpers.getPost(request, "daysOfWeek").toLowerCase(); // SuMoTuWdThFrSa
 		List<DayOfWeek> scheduledDays = new ArrayList<>();
-		DayOfWeek dayOfWeek;		
 		if(daysOfWeekString.contains("su")) scheduledDays.add(DayOfWeek.SUNDAY);
 		if(daysOfWeekString.contains("mo")) scheduledDays.add(DayOfWeek.MONDAY);
 		if(daysOfWeekString.contains("tu")) scheduledDays.add(DayOfWeek.TUESDAY);
@@ -163,9 +154,6 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.SendPostReply("/make_openings", "", "Couldn't parse your days of the week.");
 			return;
 		}
-
-		LocalDateTime startTimeLdt = LocalDateTime.of(startYear, startMonth, startDay, startHour, startMinute, 0);
-		LocalDateTime endTimeLdt = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMinute, 0);
 
 		// Make sure no conflicting appointments
 		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
@@ -193,10 +181,10 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			if (plan.getResult().contains("OK")) {
 				Appointment appointment = new Appointment(plan);
 				DataManager.getAppointmentDAO().insert(appointment);
-				sb.append("Created new appointment: [").append(appointment.toString()).append("]");
+				sb.append("Created new appointment: %5B").append(appointment.toString()).append("%5D<br>\n");
 				logger.debug("Created new appointment: [{}]", appointment);
 			} else {
-				sb.append("Skipped planned appointment: [").append(plan.toString()).append("]");
+				sb.append("Skipped planned appointment: %5B").append(plan.toString()).append("%5D<br>\n");
 				logger.debug("Skipped planned appointment: [{}]", plan);
 			}
 		}

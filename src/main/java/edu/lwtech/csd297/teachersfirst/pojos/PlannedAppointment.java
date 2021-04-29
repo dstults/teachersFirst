@@ -149,7 +149,7 @@ public class PlannedAppointment {
 
 	@Override
 	public String toString() {
-		return "Appointment/" + this.studentId + "+" + this.instructorId + "@" + this.startTime.toString() + "-" + this.endTime.toString() + " - Result: " + this.result;
+		return "Appointment/Student(" + this.studentId + ")>Instructor(" + this.instructorId + ")@" + this.startTime.toString() + "-" + this.endTime.toString() + " - Result: " + this.result;
 	}
 
 	@Override
