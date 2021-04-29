@@ -39,7 +39,7 @@ public class DataManager {
 
 	// WEBSITE RIGHTS TOGGLES
 	public static boolean enableOpenRegistration = true;
-	public static boolean teacherAdminFreeAppointmentMaking = false;
+	public static boolean instructorAdminMakeAppointmentsRequiresOpening = true;
 
 	// DATABASE CREDENTIALS, DO NOT PUBLIC
 	private static String databaseHostname = "";
@@ -93,8 +93,8 @@ public class DataManager {
 			databaseSchema = jsonObject.get("databaseSchema").toString();
 		if (jsonObject.containsKey("enableOpenRegistration"))
 			enableOpenRegistration = Boolean.parseBoolean(jsonObject.get("enableOpenRegistration").toString());
-		if (jsonObject.containsKey("teacherAdminFreeAppointmentMaking"))
-			teacherAdminFreeAppointmentMaking = Boolean.parseBoolean(jsonObject.get("teacherAdminFreeAppointmentMaking").toString());
+		if (jsonObject.containsKey("instructorAdminMakeAppointmentsRequiresOpening"))
+			instructorAdminMakeAppointmentsRequiresOpening = Boolean.parseBoolean(jsonObject.get("instructorAdminMakeAppointmentsRequiresOpening").toString());
 	}
 
 	public static void initializeDAOs() throws ServletException {

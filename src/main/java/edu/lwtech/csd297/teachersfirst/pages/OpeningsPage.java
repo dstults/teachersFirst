@@ -178,6 +178,8 @@ public class OpeningsPage extends PageLoader {
 		} else {
 			// FreeMarker
 			templateName = "openings.ftl";
+			boolean enableBatch = !DataManager.instructorAdminMakeAppointmentsRequiresOpening && (isAdmin || isInstructor);
+			templateDataMap.put("batchEnabled", enableBatch);
 			templateDataMap.put("startDate", sundayString);
 			templateDataMap.put("endDate", saturdayString);
 			templateDataMap.put("weeks", weeks);

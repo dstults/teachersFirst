@@ -27,6 +27,8 @@ class MemberTests {
 	void testConstructor() {
 		Exception ex = null;
 
+		assertEquals(1976, fred.getBirthDate().getYear());
+
 		ex = assertThrows(IllegalArgumentException.class, () -> {
 			new Member(-666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
@@ -121,14 +123,14 @@ class MemberTests {
 	}
 
 	@Test
-	void testGetLoginName(){
+	void testGetLoginName() {
 		assertEquals("fred", fred.getLoginName());
 		assertEquals("amy", amy.getLoginName());
 		assertEquals("juan", juan.getLoginName());
 	}
 
 	@Test
-	void testGetPasswordHash(){
+	void testGetPasswordHash() {
 		assertEquals("Password01", amy.getPasswordHash());
 	}
 
@@ -140,7 +142,7 @@ class MemberTests {
 	}
 
 	@Test
-	void testGetBirthDate(){
+	void testGetBirthDate() {
 		assertEquals("1992-02-25 00:00:00.0", juan.getBirthdate().toString());
 	}
 
@@ -153,47 +155,47 @@ class MemberTests {
 	}
 
 	@Test
-	void testGetGender(){
+	void testGetGender() {
 		assertEquals("m", fred.getGender());
 	}
 
 	@Test
-	void testGetInstructorNotes(){
+	void testGetInstructorNotes() {
 		assertEquals("gets extra time on tests to help with adhd", amy.getInstructorNotes());
 	}
 
 	@Test
-	void testGetPhone1(){
+	void testGetPhone1() {
 		assertEquals("111-111-1111", juan.getPhone1());
 	}
 
 	@Test
-	void testGetPhone2(){
+	void testGetPhone2() {
 		assertEquals("999-999-9999", juan.getPhone2());
 	}
 
 	@Test 
-	void testGetEmail(){
+	void testGetEmail() {
 		assertEquals("amy@lwtech.edu", amy.getEmail());
 	}
 
 	@Test
-	void testGetIsStudent(){
+	void testGetIsStudent() {
 		assertTrue(juan.getIsStudent());
 	}
 
 	@Test
-	void testGetIsInstructor(){
+	void testGetIsInstructor() {
 		assertTrue(amy.getIsInstructor());
 	}
 
 	@Test
-	void testGetIsAdmin(){
+	void testGetIsAdmin() {
 		assertTrue(fred.getIsAdmin());
 	}
 
 	@Test
-	void testSetLoginName(){
+	void testSetLoginName() {
 		Exception ex = null;
 
 		fred.setLoginName("Freddinator");
@@ -211,7 +213,7 @@ class MemberTests {
 	}
 
 	@Test
-	void testPasswordHash(){
+	void testPasswordHash() {
 		Exception ex = null;
 
 		fred.setPasswordHash("hashedwordpassword");
@@ -248,7 +250,7 @@ class MemberTests {
 	}
 
 	@Test
-	void testSetBirthdate(){
+	void testSetBirthdate() {
 
 		amy.setBirthdate(2000, 7, 15,6,30,0);
 		assertEquals(DateHelpers.toTimestamp(2000,7,15,6,30,0), amy.getBirthdate());
@@ -260,7 +262,7 @@ class MemberTests {
 	}
 
 	@Test
-	void testSetGender(){
+	void testSetGender() {
 
 		fred.setGender("other");
 		assertEquals("other", fred.getGender());
@@ -272,7 +274,7 @@ class MemberTests {
 	}
 
 	@Test
-	void testSetInstructorNotes(){
+	void testSetInstructorNotes() {
 		
 		juan.setInstructorNotes("Weird bus schedule");
 		assertEquals("Weird bus schedule", juan.getInstructorNotes());
@@ -284,40 +286,40 @@ class MemberTests {
 	}
 
 	@Test
-	void testSetPhone1(){
+	void testSetPhone1() {
 
 		amy.setPhone1("123-456-7890");
 		assertEquals("123-456-7890", amy.getPhone1());
 	}
 
 	@Test
-	void testSetPhone2(){
+	void testSetPhone2() {
 
 		amy.setPhone2("123-456-7890");
 		assertEquals("123-456-7890", amy.getPhone2());
 	}
 
 	@Test
-	void testSetEmail(){
+	void testSetEmail() {
 
 		fred.setEmail("supercoolemail@mail.com");
 		assertEquals("supercoolemail@mail.com", fred.getEmail());
 	}
 
 	@Test
-	void testSetIsStudent(){
+	void testSetIsStudent() {
 		fred.setIsStudent(true);
 		assertTrue(fred.getIsStudent());
 	}
 
 	@Test
-	void testSetInstructor(){
+	void testSetInstructor() {
 		juan.setIsInstructor(true);
 		assertTrue(juan.getIsInstructor());
 	}
 
 	@Test
-	void testSetAdmin(){
+	void testSetAdmin() {
 		amy.setIsAdmin(true);
 		assertTrue(amy.getIsAdmin());
 	}

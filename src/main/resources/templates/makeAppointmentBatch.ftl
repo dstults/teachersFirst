@@ -8,14 +8,19 @@
 			<#include "please_login.ftl">
 		<#elseif isAdmin || isInstructor>
 
-		<h1>Please make a new opening:</h1>
+		<h1>Please make new appointments:</h1>
 
 		<form method="post" action="/" onsubmit = "return false;">
-
-			<li>
-				<label for="instructorId">Instructor ID:</label>
-				<input type="text" id="instructorId" value="${instructorId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
-			</li>
+			<ul>
+				<li>
+					<label for="instructorId" style="margin-top: 1.3rem;">Instructor ID:</label>
+					<input type="text" id="instructorId" value="${instructorId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
+				</li>
+				<li class="second-value">
+					<label for="studentId" style="margin-top: 1.3rem;">Student ID:</label>
+					<input type="text" id="studentId" value="${studentId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
+				</li>
+			</ul>
 
 			<ul class="day-list">
 				<li>
@@ -69,7 +74,7 @@
 				</li>
 			</ul>
 			
-			<input type="submit" id="submitOpening" value="Create Openings" onclick="handlePost();">
+			<input type="submit" id="submitOpening" value="Create Appointments" onclick="handlePost();">
 		</form>
 
 		<#else>
@@ -96,6 +101,7 @@ const handlePost = () => {
 	}
 
 	const instructorId = document.getElementById('instructorId').value;
+	const studentId = document.getElementById('studentId').value;
 	const startDate = document.getElementById('startDate').value;
 	const startTime = document.getElementById('startTime').value;
 	const endDate = document.getElementById('endDate').value;
@@ -103,6 +109,7 @@ const handlePost = () => {
 
 	if (confirm('Please confirm:' + 
 			'\nInstructor ID: ' + instructorId + '   Days of the Week: ' + daysOfWeek +
+			'\nStudent ID: ' + studentId +
 			'\nDates: ' + startDate + ' - ' + endDate +
 			'\nTimes: ' + startTime + ' - ' + endTime)) {
 
@@ -110,7 +117,7 @@ const handlePost = () => {
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-		xhr.send('action=make_openings&instructorId=' + instructorId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
+		xhr.send('action=make_appointment_batch&instructorId=' + instructorId + '&studentId=' + studentId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
 	}
 }
 </script>

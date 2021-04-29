@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 
 class AppointmentTests {
 
-	Appointment Alex = new Appointment(5, 55,   1998, 3, 11, 4, 30,   2000, 6, 22, 6, 30);
-	Appointment Mack = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+	Appointment FiveAndFiftyFive = new Appointment(5, 55, 1998, 3, 11, 4, 30, 22, 6, 30);
+	Appointment ThirtyFiveAndSixtySix = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
 
 	Appointment Eimaj = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
 	Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
@@ -23,7 +23,7 @@ class AppointmentTests {
 	void setUp() {}
 
 	@Test 
-	void testConstructor(){
+	void testConstructor() {
 		Exception ex = null;
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
@@ -55,12 +55,12 @@ class AppointmentTests {
 	}
 
 	@Test
-	void testGetRecID(){
+	void testGetRecID() {
 		assertEquals(-1, Jamie.getRecID());
 	}
 
 	@Test
-	void testSetRecID(){
+	void testSetRecID() {
 		Exception ex = null;
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
@@ -78,39 +78,39 @@ class AppointmentTests {
 	}
 
 	@Test
-	void testGetStudentID(){
+	void testGetStudentID() {
 		assertEquals(20, Jamie.getStudentID());
 	}
 
 	@Test
-	void testGetIsMyAppointment(){
-		assertTrue(Alex.getIsMyAppointment(5));
-		assertTrue(Alex.getIsMyAppointment(55));
-		assertFalse(Alex.getIsMyAppointment(9));
+	void testGetIsMyAppointment() {
+		assertTrue(FiveAndFiftyFive.getIsMyAppointment(5));
+		assertTrue(FiveAndFiftyFive.getIsMyAppointment(55));
+		assertFalse(FiveAndFiftyFive.getIsMyAppointment(9));
 	}
 
 	@Test
-	void testGetInstructorID(){
+	void testGetInstructorID() {
 		assertEquals(43, Jamie.getInstructorID());
 	}
 
 	@Test
-	void testGetStartTime(){
+	void testGetStartTime() {
 		assertEquals("2000-01-01 00:00:00.0", Jamie.getStartTime().toString());
 	}
 
 	@Test
-	void testGetEndTime(){
+	void testGetEndTime() {
 		assertEquals("2000-02-01 00:00:00.0", Jamie.getEndTime().toString());
 	}
 
 	@Test
-	void testGetName(){
-		assertEquals("Appointment/20>43@2000-01-01 00:00:00.0-2000-02-01 00:00:00.0", Jamie.getName());
+	void testGetName() {
+		assertEquals("Appointment(-1)/Student(20)>Instructor(43)@2000-01-01 00:00:00.0-2000-02-01 00:00:00.0", Jamie.getName());
 	}
 
 	@Test
-	void testEquals(){
+	void testEquals() {
 		//Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
 		assertTrue(Jamie.equals(Eimaj));
 

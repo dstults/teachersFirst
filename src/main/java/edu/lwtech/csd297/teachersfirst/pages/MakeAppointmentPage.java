@@ -44,12 +44,11 @@ public class MakeAppointmentPage extends PageLoader {
 			final String openingEndTimeString = QueryHelpers.getGet(request, "openingEndTime");
 			final String appointmentStartTimeString = QueryHelpers.getGet(request, "appointmentStartTime");
 			final String appointmentEndTimeString = QueryHelpers.getGet(request, "appointmentEndTime");
-			//final String appointmentDuration = QueryHelpers.getGet(request, "appointmentDuration");
 			
 			// If thrown here on a "go back", assign these:
 			String defaultStartTime = "";
 			String defaultDuration = "";
-			if (appointmentStartTimeString != "" && appointmentEndTimeString != "") {
+			if (!appointmentStartTimeString.equals("") && !appointmentEndTimeString.equals("")) {
 				defaultStartTime = appointmentStartTimeString;
 				final LocalTime st = LocalTime.parse(appointmentStartTimeString);
 				final LocalTime et = LocalTime.parse(appointmentEndTimeString);

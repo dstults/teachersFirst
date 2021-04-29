@@ -134,51 +134,41 @@ public class NewAppointmentAction extends ActionRunner {
 		LocalDateTime startTimeLdt = LocalDateTime.of(year, month, day, startHour, startMinute, 0);
 		LocalDateTime endTimeLdt = LocalDateTime.of(year, month, day, endHour, endMinute, 0);
 
-		// Make sure within scope of openings
-		if (!DateHelpers.timeIsBetweenTimeAndTime(
-				startTimeLdt,
-				referralOpening.getStartTime().toLocalDateTime(),
-				referralOpening.getEndTime().toLocalDateTime()) &&
-			!DateHelpers.timeIsBetweenTimeAndTime(
-				endTimeLdt,
-				referralOpening.getStartTime().toLocalDateTime(),
-				referralOpening.getEndTime().toLocalDateTime())) {
+		if (DataManager.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
+			// Make sure within scope of openings
+			if (!DateHelpers.timeIsBetweenTimeAndTime(
+					startTimeLdt,
+					referralOpening.getStartTime().toLocalDateTime(),
+					referralOpening.getEndTime().toLocalDateTime()) &&
+				!DateHelpers.timeIsBetweenTimeAndTime(
+					endTimeLdt,
+					referralOpening.getStartTime().toLocalDateTime(),
+					referralOpening.getEndTime().toLocalDateTime())) {
 
-				this.SendPostReply("/openings", "", "Appointment not within scope of opening!");
-			return;
+					this.SendPostReply("/openings", "", "Appointment not within scope of opening!");
+				return;
+			}
 		}
 
 		// Make sure no conflicting appointments
 		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
-		
+		PlannedAppointment pa = new PlannedAppointment(studentIdInt, instructorIdInt,
+				year, month, day, startHour, startMinute, endDay, endHour, endMinute);
+	
 		// Might be very first appointment, in which case this is null
 		if (allAppointments != null) {
-			for(Appointment appointment : allAppointments) {
-				if (DateHelpers.timeIsBetweenTimeAndTime(
-						startTimeLdt.plusMinutes(1),
-						appointment.getStartTime().toLocalDateTime(),
-						appointment.getEndTime().toLocalDateTime()) ||
-					DateHelpers.timeIsBetweenTimeAndTime(
-						endTimeLdt.minusMinutes(1),
-						appointment.getStartTime().toLocalDateTime(),
-						appointment.getEndTime().toLocalDateTime()) ||
-					DateHelpers.timeIsBetweenTimeAndTime( // catches edge case of iAppointment being inside potential new one
-						appointment.getStartTime().toLocalDateTime().plusMinutes(1),
-						startTimeLdt,
-						endTimeLdt)) {
-
-					this.SendPostReply("/openings", "", "Appointment conflicts with appointment: %5B" + appointment.getRecID() + "%5D!");
-					return;
-				}
+			if (pa.hasConflictWithAppointments(allAppointments)) {
+				this.SendPostReply("/openings", "", "Appointment conflict detected: %5B" + pa.getResult() + "%5D!");
+				return;
 			}
 		}
 
 		logger.debug("Attempting to create new appointment ...");
 		
-		Appointment appointment = new Appointment(studentIdInt, instructorIdInt, year, month, day, startHour, startMinute, year, month, endDay, endHour, endMinute);
+		Appointment appointment = new Appointment(pa);
 		DataManager.getAppointmentDAO().insert(appointment);
-		logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		logger.debug("Created new appointment: [{}]", appointment);
+		logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		
 		this.SendPostReply("/appointments", "", "Appointment created!");
 		return;
