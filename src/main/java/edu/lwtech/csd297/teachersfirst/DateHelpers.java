@@ -35,7 +35,6 @@ public class DateHelpers {
 	}
 
 	public static Timestamp fromSqlDatetimeToTimestamp(String sqlDatetime) {
-		///String choppedDecisecond = sqlDatetime.split(".")[0];
 		String choppedDecisecond = sqlDatetime.substring(0, sqlDatetime.length() - 2);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date;
@@ -43,7 +42,7 @@ public class DateHelpers {
 			date = sdf.parse(choppedDecisecond);
 		} catch (ParseException e) {
 			// This cannot be called during testing
-			//TeachersFirstServlet.logger.debug(e.getStackTrace().toString());
+			//logger.debug(e.getStackTrace().toString());
 			e.printStackTrace();
 			return null;
 		}

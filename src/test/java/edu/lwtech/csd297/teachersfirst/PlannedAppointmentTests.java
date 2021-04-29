@@ -9,93 +9,45 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.lwtech.csd297.teachersfirst.pojos.*;
+import junit.framework.Assert;
+
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.format.*;
 
-class AppointmentTests {
-
-	Appointment FiveAndFiftyFive = new Appointment(5, 55, 1998, 3, 11, 4, 30, 22, 6, 30);
-	Appointment ThirtyFiveAndSixtySix = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
-
-	Appointment Eimaj = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
-	Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+class PlannedAppointmentTests {
 
 	@BeforeEach
 	void setUp() {}
 
 	@Test 
-	void testConstructor() {
+	void testConstructorBasicGets() {
+
+		PlannedAppointment Sample1 = new PlannedAppointment(13, 2, 2021, 4, 29, 6, 30, 29, 7, 30);
+		PlannedAppointment Sample2 = new PlannedAppointment(166, 35, DateHelpers.toTimestamp("2023/03/12 11:30:00"), DateHelpers.toTimestamp("2023/03/12 12:30:00"));
+		Assert.assertEquals(13, Sample1.getStudentID());
+		Assert.assertEquals(2, Sample1.getInstructorID());
+		Assert.assertEquals(DateHelpers.toTimestamp("2021/04/29 06:30:00"), Sample1.getStartTime());
+		Assert.assertEquals(35, Sample2.getInstructorID());
+		Assert.assertEquals("UNTESTED", Sample2.getResult());
+		Assert.assertEquals(DateHelpers.toTimestamp("2023/03/12 12:30:00"), Sample2.getEndTime());
+		// No crash is good
+	}
+
+	@Test 
+	void testMakeListConstructor() {
+		List<DayOfWeek> daysOfWeek = new ArrayList<>();
+		daysOfWeek.add(DayOfWeek.SUNDAY);
+		daysOfWeek.add(DayOfWeek.TUESDAY);
+		daysOfWeek.add(DayOfWeek.THURSDAY);
+
+		List<PlannedAppointment> planList = PlannedAppointment.MakeList(13, 2, daysOfWeek,
+			2021, 5, 2, 8, 0,
+			2021, 5, 15, 19, 30);
 		
-	}
-
-	@Test
-	void testGetRecID() {
-		assertEquals(-1, Jamie.getRecID());
-	}
-
-	@Test
-	void testSetRecID() {
-		Exception ex = null;
-
-		ex = assertThrows(IllegalArgumentException.class, () -> {
-			Jamie.setRecID(-6);
-		});
-		assertTrue(ex.getMessage().contains("setRecID: recID cannot be negative."));
-
-		Jamie.setRecID(42);
-
-		ex = assertThrows(IllegalArgumentException.class, () -> {
-			Jamie.setRecID(20);
-		});
-		assertTrue(ex.getMessage().contains("setRecID: Object has already been added to the database (recID != 1)."));
-
-	}
-
-	@Test
-	void testGetStudentID() {
-		assertEquals(20, Jamie.getStudentID());
-	}
-
-	@Test
-	void testGetIsMyAppointment() {
-		assertTrue(FiveAndFiftyFive.getIsMyAppointment(5));
-		assertTrue(FiveAndFiftyFive.getIsMyAppointment(55));
-		assertFalse(FiveAndFiftyFive.getIsMyAppointment(9));
-	}
-
-	@Test
-	void testGetInstructorID() {
-		assertEquals(43, Jamie.getInstructorID());
-	}
-
-	@Test
-	void testGetStartTime() {
-		assertEquals("2000-01-01 00:00:00.0", Jamie.getStartTime().toString());
-	}
-
-	@Test
-	void testGetEndTime() {
-		assertEquals("2000-02-01 00:00:00.0", Jamie.getEndTime().toString());
-	}
-
-	@Test
-	void testGetName() {
-		assertEquals("Appointment/20>43@2000-01-01 00:00:00.0-2000-02-01 00:00:00.0", Jamie.getName());
-	}
-
-	@Test
-	void testEquals() {
-		//Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
-		assertTrue(Jamie.equals(Eimaj));
-
-		assertFalse(Jamie.equals(new Appointment(2,20,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,19,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,20,44,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,20,43,DateHelpers.toTimestamp("2000/15/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,20,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/25/01 00:00:00"))));
-
-		assertFalse(Jamie.equals(null));
-		assertTrue(Jamie.equals(Jamie));
-		assertFalse(Jamie.equals(new Opening(2, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/25/01 00:00:00"))));
+		Assert.assertNotNull(planList);
+		Assert.assertEquals("2021-05-04 08:00:00.0", planList.get(1).getStartTime().toString());
+		Assert.assertEquals("2021-05-11 19:30:00.0", planList.get(4).getEndTime().toString());
 	}
 
 	

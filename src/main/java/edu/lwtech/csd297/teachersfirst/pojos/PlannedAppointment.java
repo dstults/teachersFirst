@@ -20,22 +20,23 @@ public class PlannedAppointment {
 				int endYear, int endMonth, int endDay, int endHour, int endMinute) {
 
 		LocalDate iDate = LocalDate.of(startYear, startMonth, startDay);
-		LocalDate endDate = LocalDate.of(endYear, startMonth, startDay).plusDays(1);
+		LocalDate endDate = LocalDate.of(endYear, endMonth, endDay).plusDays(1);
 		List<PlannedAppointment> list = new ArrayList<>();
 		int crossDay = endHour < startHour ? 1 : 0;
 		DayOfWeek dayOfWeek;
 
 		while (iDate.isBefore(endDate)) {
+			//System.out.println("iDate: " + iDate.toString() + " -- endDate: " + endDate);
 			dayOfWeek = iDate.getDayOfWeek();
 			if (daysOfWeek.contains(dayOfWeek)) {
 				list.add(new PlannedAppointment(
 					studentId, instructorId,
-					iDate.getDayOfYear(), iDate.getMonthValue(),
+					iDate.getYear(), iDate.getMonthValue(),
 					iDate.getDayOfMonth(), startHour, startMinute,
 					iDate.getDayOfMonth() + crossDay, endHour, endMinute
 				));	
 			}
-			iDate.plusDays(1);
+			iDate = iDate.plusDays(1);
 		}
 
 		return list;
@@ -86,10 +87,6 @@ public class PlannedAppointment {
 	
 	public int getInstructorID() {
 		return this.instructorId;
-	}
-	
-	public boolean getIsMyAppointment(int memberId) {
-		return this.studentId == memberId || this.instructorId == memberId;
 	}
 
 	public Timestamp getStartTime() {

@@ -14,17 +14,20 @@ import edu.lwtech.csd297.teachersfirst.pojos.*;
 class DataManagerTests {
 
 	@BeforeEach
-	void setUp() {
-	}
+	void setUp() { }
 
 	@Test
 	void testInitializeAndTerminate() {
+		// This entire test should not exist, period.
+		
+		/*
 		try {
 			DataManager.initializeDAOs();
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 
 		/* Disabled while moving servers:
 		assertTrue(DataManager.getAppointmentDAO() != null);
