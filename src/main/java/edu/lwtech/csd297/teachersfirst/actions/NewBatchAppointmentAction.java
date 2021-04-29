@@ -143,15 +143,33 @@ public class NewBatchAppointmentAction extends ActionRunner {
 			return;
 		}
 
+		String daysOfWeekString = QueryHelpers.getPost(request, "daysOfWeek").toLowerCase(); // SuMoTuWdThFrSa
+		List<DayOfWeek> scheduledDays = new ArrayList<>();
+		DayOfWeek dayOfWeek;		
+		if(daysOfWeekString.contains("su")) scheduledDays.add(DayOfWeek.SUNDAY);
+		if(daysOfWeekString.contains("mo")) scheduledDays.add(DayOfWeek.MONDAY);
+		if(daysOfWeekString.contains("tu")) scheduledDays.add(DayOfWeek.TUESDAY);
+		if(daysOfWeekString.contains("we")) scheduledDays.add(DayOfWeek.WEDNESDAY);
+		if(daysOfWeekString.contains("th")) scheduledDays.add(DayOfWeek.THURSDAY);
+		if(daysOfWeekString.contains("fr")) scheduledDays.add(DayOfWeek.FRIDAY);
+		if(daysOfWeekString.contains("sa")) scheduledDays.add(DayOfWeek.SATURDAY);
+		if (scheduledDays.size() == 0) {
+			this.SendPostReply("/new_openings", "", "Couldn't parse your days of the week.");
+			return;
+		}
+
 		LocalDateTime startTimeLdt = LocalDateTime.of(startYear, startMonth, startDay, startHour, startMinute, 0);
 		LocalDateTime endTimeLdt = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMinute, 0);
 
 		// Make sure no conflicting appointments
 		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
-		
+		List<PlannedAppointment> plannedAppointments = PlannedAppointment.MakeList(
+			studentIdInt, instructorIdInt, scheduledDays,
+			startYear, startMonth, startDay, startHour, startMinute,
+			endYear, endMonth, endDay, endHour, endMinute);
+
 		// Might be very first appointment, in which case this is null
 		if (allAppointments != null) {
-			//TODO: Foreach potential new appointment
 			for(Appointment appointment : allAppointments) {
 				if (DateHelpers.timeIsBetweenTimeAndTime(
 						startTimeLdt.plusMinutes(1),
@@ -174,11 +192,14 @@ public class NewBatchAppointmentAction extends ActionRunner {
 
 		logger.debug("Attempting to batch-create new appointments ...");
 		
-		//TODO: Foreach approved new appointment
-		Appointment appointment = new Appointment(studentIdInt, instructorIdInt, year, month, day, startHour, startMinute, year, month, endDay, endHour, endMinute);
-		DataManager.getAppointmentDAO().insert(appointment);
+		for (PlannedAppointment plan : plannedAppointments) {
+			if (plan.getResult().contains("OK")) {
+				Appointment appointment = new Appointment(plan);
+				DataManager.getAppointmentDAO().insert(appointment);
+				logger.debug("Created new appointment: [{}]", appointment);
+			}
+		}
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
-		logger.debug("Created new appointment: [{}]", appointment);
 		
 		this.SendPostReply("/appointments", "", "Appointment created!");
 		return;

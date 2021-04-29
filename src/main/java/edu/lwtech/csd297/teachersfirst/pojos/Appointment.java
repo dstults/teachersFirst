@@ -15,16 +15,31 @@ public class Appointment {
 	// ----------------------------------------------------------------
 	
 	public Appointment(int studentID, int instructorID,
-			int startYear, int startMonth, int startDay, int startHour, int startMinute,
-			int endYear, int endMonth, int endDay, int endHour, int endMinute) {
+			int year, int month,
+			int startDay, int startHour, int startMinute,
+			int endDay, int endHour, int endMinute) {
 
-		this(-1, studentID, instructorID, DateHelpers.toTimestamp(startYear, startMonth, startDay, startHour, startMinute, 0),
-				DateHelpers.toTimestamp(endYear, endMonth, endDay, endHour, endMinute, 0));
+		this(-1, studentID, instructorID, DateHelpers.toTimestamp(year, month, startDay, startHour, startMinute, 0),
+				DateHelpers.toTimestamp(year, month, endDay, endHour, endMinute, 0));
 	}
 	
 	public Appointment(int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
 
 		this(-1, studentID, instructorID, startTime, endTime);
+	}
+	
+	public Appointment(PlannedAppointment plan) {
+		if (plan.getStudentID() < -1) throw new IllegalArgumentException("Invalid argument: studentID < -1");
+		if (plan.getInstructorID() < -1) throw new IllegalArgumentException("Invalid argument: instructorID < -1");
+		if (plan.getStartTime() == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
+		if (plan.getEndTime() == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
+		if (!plan.getResult().contains("OK")) throw new IllegalArgumentException("Cannot create appointment from an untested or conflicting planned appointment."); // Invalid operation
+		
+		this.recID = -1;
+		this.studentId = plan.getStudentID();
+		this.instructorId = plan.getInstructorID();
+		this.startTime = plan.getStartTime();
+		this.endTime = plan.getEndTime();
 	}
 
 	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
