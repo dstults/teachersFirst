@@ -56,8 +56,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public Appointment retrieveByID(int recID) {
 		//logger.debug("Trying to get Appointment with ID: " + recID);
 		
-		String query = "SELECT recID, studentID, instructorID, startTime, endTime";
-		query += " FROM appointments WHERE recID=" + recID;
+		String query = "SELECT * FROM appointments WHERE recID=" + recID;
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -74,14 +73,14 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		logger.debug("Trying to get Appointment with index: " + index);
 		logger.warn("This will eventually be deprecated. Don't use this.");
 		
-		index++;
-
-		if (index < 1) {
+		if (index < 0) {
 			logger.debug("retrieveByIndex: index cannot be negative");
 			return null;
 		}
 
-		String query = "SELECT * FROM appointments ORDER BY recID LIMIT " + index;
+		int limiter = index + 1;
+
+		String query = "SELECT * FROM appointments ORDER BY recID LIMIT " + limiter;
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -97,8 +96,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Appointment> retrieveAll() {
 		logger.debug("Getting all appointments...");
 		
-		String query = "SELECT recID, studentID, instructorID, startTime, endTime";
-		query += " FROM appointments ORDER BY startTime";
+		String query = "SELECT * FROM appointments ORDER BY startTime";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -137,12 +135,8 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Appointment> search(String keyword) {
 		logger.debug("Searching for appointment with '" + keyword + "'");
 
-		String query = "SELECT recID, instructorID, startTime, endTime FROM appointments WHERE";
-		query += " username like ?";
-		query += " ORDER BY recID";
-
+		String query = "SELECT * FROM appointments WHERE userName LIKE ? ORDER BY recID";
 		keyword = "%" + keyword + "%";
-
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query, keyword);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No appointments found!");

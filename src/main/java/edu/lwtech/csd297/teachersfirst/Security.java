@@ -29,11 +29,13 @@ public class Security {
 		// Automatic entries:		
 		// Oh no: There is a problem doing nslookups on jenkins builds -- they probably have this
 		// functionality disabled
-		whitelistIp(nsLookup("dstults.net"));
+		//whitelistIp(nsLookup("dstults.net"));
 
 	}
 
 	private static void whitelistIp(String ip) {
+		if (ip == null) logger.warn("Invalid argument: ip is null");
+		if (ip.isEmpty()) throw new IllegalArgumentException("Invalid argument: ip is empty");
 		ipWhitelist.add(ip);
 		logger.info("Added IP [ " + ip + " ] to whitelist.");
 	}
