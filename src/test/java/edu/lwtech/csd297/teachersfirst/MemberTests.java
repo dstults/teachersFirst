@@ -18,9 +18,9 @@ class MemberTests {
 
 	@BeforeEach
 	void setUp() {
-		fred = new Member("fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
-		amy = new Member("amy", "Password01", "Amy", DateHelpers.toTimestamp("1987/10/15 00:00:00"), "f", "gets extra time on tests to help with adhd", "222-222-222", "", "amy@lwtech.edu", false, true, false);
-		juan = new Member("juan", "password01", "Juan", DateHelpers.toTimestamp("1992/02/25 00:00:00"), "m", "", "111-111-1111", "999-999-9999", "juan@lwtech.edu", true, false, false);
+		fred = new Member("fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro1", "notes1", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+		amy = new Member("amy", "Password01", "Amy", 10, DateHelpers.toTimestamp("1987/10/15 00:00:00"), "f", "intro2", "notes2", "222-222-222", "", "amy@lwtech.edu", false, true, false);
+		juan = new Member("juan", "password01", "Juan", 100, DateHelpers.toTimestamp("1992/02/25 00:00:00"), "", "intro2", "notes2", "111-111-1111", "999-999-9999", "juan@lwtech.edu", true, false, false);
 	}
 
 	@Test
@@ -30,42 +30,42 @@ class MemberTests {
 		assertEquals(1976, fred.getBirthDate().getYear());
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(-666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(-666, "fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: recID < -1"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", null, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", "Password01", null, 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: displayName is null"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", "", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", "Password01", "", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: displayName is empty"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, null, "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, null, "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: loginName is null"));
 	
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: loginName is empty"));
 	
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", "Fred", null, "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", "Password01", "Fred", 0, null, "m", "", "444-444-4444", "intro", "notes", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: birthdate is null"));
 	
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), null, "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), null, "intro", "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: gender is null"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", null, "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", null, "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: passwordHash is null"));
 
@@ -77,22 +77,27 @@ class MemberTests {
 		*/
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", null, "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", null, "notes", "444-444-4444", "", "fred@lwtech.edu", false, false, true);
+		});
+		assertTrue(ex.getMessage().contains("Invalid argument: selfIntroduction is null"));
+
+		ex = assertThrows(IllegalArgumentException.class, () -> {
+			new Member(666, "fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", null, "444-444-4444", "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: instructorNotes is null"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", null, "", "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", null, "", "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: phone1 is null"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", null, "fred@lwtech.edu", false, false, true);
+			new Member(666, "fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", null, "fred@lwtech.edu", false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: phone2 is null"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Member(666, "fred", "Password01", "Fred", DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "", "444-444-4444", "", null, false, false, true);
+			new Member(666, "fred", "Password01", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro", "notes", "444-444-4444", "", null, false, false, true);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: email is null"));
 	}
@@ -161,7 +166,7 @@ class MemberTests {
 
 	@Test
 	void testGetInstructorNotes() {
-		assertEquals("gets extra time on tests to help with adhd", amy.getInstructorNotes());
+		assertEquals("notes2", amy.getInstructorNotes());
 	}
 
 	@Test
@@ -336,7 +341,7 @@ class MemberTests {
 	@Test
 	void testEquals() {
 		
-		Member mat = new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false);
+		Member mat = new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false);
 		
 		assertFalse(mat.equals(null));
 		
@@ -344,21 +349,22 @@ class MemberTests {
 		
 		assertFalse(mat.equals(new Opening(2, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/25/01 00:00:00"))));
 		
-		assertFalse(mat.equals(new Member(12,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"maty", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "MAT", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2020/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "f", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a lame bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "333-333-333", "", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "444-444-444", "mat@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "MAT@lwtech.edu", false, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", true, true, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, false, false)));
-		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, true)));
+		assertFalse(mat.equals(new Member(12,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"maty", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "MAT", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2020/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "f", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a lame bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs moar practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "333-333-333", "", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "444-444-444", "mat@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "MAT@lwtech.edu", false, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", true, true, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, false, false)));
+		assertFalse(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, true)));
 	
-		assertTrue(mat.equals(new Member(11,"mat", "Password01", "Mat", DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
+		assertTrue(mat.equals(new Member(11,"mat", "Password01", "Mat", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@lwtech.edu", false, true, false)));
 	}
 
 }

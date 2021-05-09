@@ -78,7 +78,7 @@ public class OpenRegisterAction extends ActionRunner {
 		//TODO: Birthdates
 
 		//Member member = new Member(loginName, password1, displayName, birthdate, gender, "", phone1, phone2, email, true, false, false);
-		Member member = new Member(loginName, password1, displayName, gender, "", phone1, phone2, email, true, false, false);
+		Member member = new Member(loginName, password1, displayName, 0, gender, "", "", phone1, phone2, email, true, false, false);
 		int newMemberRecordId = DataManager.getMemberDAO().insert(member);
 		member.setRecID(newMemberRecordId);
 		logger.info(DataManager.getMemberDAO().size() + " records total");

@@ -104,6 +104,7 @@ public class OpeningsPage extends PageLoader {
 		if (openingDAO == null || openingDAO.retrieveByIndex(0) == null) {
 			// Failed to contact SQL Server or simply no data
 			templateName = "openings.ftl";
+			templateDataMap.put("batchEnabled", false);
 			templateDataMap.put("startDate", sundayString);
 			templateDataMap.put("endDate", saturdayString);
 			templateDataMap.put("weeks", weeks);

@@ -56,8 +56,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public Opening retrieveByID(int recID) {
 		//logger.debug("Trying to get Opening with ID: " + recID);
 		
-		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM openings WHERE recID=" + recID;
+		String query = "SELECT * FROM openings WHERE recID=" + recID;
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -74,15 +73,14 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		logger.debug("Trying to get Opening with index: " + index);
 		logger.warn("This will eventually be deprecated. Don't use this.");
 
-		index++;
-
-		if (index < 1) {
+		if (index < 0) {
 			logger.debug("retrieveByIndex: index cannot be negative");
 			return null;
 		}
 
-		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM openings ORDER BY recID LIMIT " + index;
+		int limiter = index + 1;
+
+		String query = "SELECT * FROM openings ORDER BY recID LIMIT " + limiter;
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -98,8 +96,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Opening> retrieveAll() {
 		logger.debug("Getting all openings...");
 		
-		String query = "SELECT recID, instructorID, startTime, endTime";
-		query += " FROM openings ORDER BY startTime";
+		String query = "SELECT * FROM openings ORDER BY startTime";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -138,9 +135,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Opening> search(String keyword) {
 		logger.debug("Searching for opening with '" + keyword + "'");
 
-		String query = "SELECT recID, instructorID, startTime, endTime FROM openings WHERE";
-		query += " username like ?";
-		query += " ORDER BY recID";
+		String query = "SELECT * FROM openings WHERE userName LIKE ? ORDER BY recID";
 
 		keyword = "%" + keyword + "%";
 

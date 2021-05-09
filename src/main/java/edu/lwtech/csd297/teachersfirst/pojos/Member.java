@@ -15,11 +15,15 @@ public class Member implements IJsonnable {
 	private String loginName;
 	private String passwordHash;
 
-	// Bios:
+	// Funtional:
 	private String displayName;
+	private float credits;
+
+	// Descriptive:
 	private Timestamp birthdate;
 	private String gender;
 	private String instructorNotes;
+	private String selfIntroduction;
 
 	// Metadata:
 	private String phone1;
@@ -32,22 +36,28 @@ public class Member implements IJsonnable {
 	private boolean isAdmin;
 
 	// no record id, no birthdate -- this is the default for the new member made by the page
-	public Member(String loginName, String passwordHash, String displayName, String gender, String instructorNotes,
+	public Member(String loginName, String passwordHash, String displayName, float credits,
+					String gender,
+					String selfIntroduction, String instructorNotes,
 					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
-		this(-1, loginName, passwordHash, displayName, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, passwordHash, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 	// no record id, yes birthdate -- used in code
-	public Member(String loginName, String passwordHash, String displayName, Timestamp birthdate, String gender, String instructorNotes,
+	public Member(String loginName, String passwordHash, String displayName, float credits,
+					Timestamp birthdate, String gender,
+					String selfIntroduction, String instructorNotes,
 					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
-		this(-1, loginName, passwordHash, displayName, birthdate, gender, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, passwordHash, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 	// everything
-	public Member(int recID, String loginName, String passwordHash, String displayName, Timestamp birthdate, String gender, String instructorNotes,
-					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
+	public Member(int recID, String loginName, String passwordHash, String displayName, float credits,
+				Timestamp birthdate, String gender,
+				String selfIntroduction, String instructorNotes,
+				String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (loginName == null) throw new IllegalArgumentException("Invalid argument: loginName is null");
@@ -61,6 +71,7 @@ public class Member implements IJsonnable {
 		if (birthdate == null) throw new IllegalArgumentException("Invalid argument: birthdate is null");
 		if (gender == null) throw new IllegalArgumentException("Invalid argument: gender is null");
 		// gender can be empty string
+		if (selfIntroduction == null) throw new IllegalArgumentException("Invalid argument: selfIntroduction is null");
 		if (instructorNotes == null) throw new IllegalArgumentException("Invalid argument: instructorNotes is null");
 		// notes can be empty string
 		if (phone1 == null) throw new IllegalArgumentException("Invalid argument: phone1 is null");
@@ -74,8 +85,10 @@ public class Member implements IJsonnable {
 		this.loginName = loginName;
 		this.passwordHash = passwordHash;
 		this.displayName = displayName;
+		this.credits = credits;
 		this.birthdate = birthdate;
 		this.gender = gender;
+		this.selfIntroduction = selfIntroduction;
 		this.instructorNotes = instructorNotes;
 		this.phone1 = phone1;
 		this.phone2 = phone2;
@@ -117,6 +130,10 @@ public class Member implements IJsonnable {
 		return this.displayName;
 	}
 
+	public float getCredits() {
+		return credits;
+	}
+
 	public Timestamp getBirthdate() {
 		return this.birthdate;
 	}
@@ -148,6 +165,10 @@ public class Member implements IJsonnable {
 			default:
 				return "[ " + this.gender + " ]";
 		}
+	}
+
+	public String getSelfIntroduction() {
+		return selfIntroduction;
 	}
 
 	public String getInstructorNotes() {
@@ -202,6 +223,10 @@ public class Member implements IJsonnable {
 		this.displayName = name;
 	}
 
+	public void setCredits(float credits) {
+		this.credits = credits;
+	}
+
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {
 		//TODO: validate integers
 
@@ -221,10 +246,15 @@ public class Member implements IJsonnable {
 		this.gender = gender;
 	}
 
+	public void setSelfIntroduction(String selfIntroduction) {
+		if (selfIntroduction == null) throw new IllegalArgumentException("Invalid argument: selfIntroduction is null");
+		// can be empty string
+		this.selfIntroduction = selfIntroduction;
+	}
+
 	public void setInstructorNotes(String instructorNotes) {
 		if (instructorNotes == null) throw new IllegalArgumentException("Invalid argument: instructorNotes is null");
 		// can be empty string
-
 		this.instructorNotes = instructorNotes;
 	}
 
@@ -276,6 +306,7 @@ public class Member implements IJsonnable {
 		if (!this.displayName.equals(other.displayName)) return false;
 		if (!this.birthdate.equals(other.birthdate)) return false;
 		if (!this.gender.equals(other.gender)) return false;
+		if (!this.selfIntroduction.equals(other.selfIntroduction)) return false;
 		if (!this.instructorNotes.equals(other.instructorNotes)) return false;
 		if (!this.phone1.equals(other.phone1)) return false;
 		if (!this.phone2.equals(other.phone2)) return false;
@@ -294,8 +325,10 @@ public class Member implements IJsonnable {
 				"\",\"loginName\":\"" + this.loginName +
 				//"\",\"passwordHash\":\"" + this.passwordHash +
 				"\",\"displayName\":\"" + this.displayName +
+				"\",\"credits\":\"" + this.credits +
 				"\",\"birthdate\":\"" + this.birthdate.toLocalDateTime().toLocalDate() +
 				"\",\"gender\":\"" + this.gender +
+				"\",\"selfIntroduction\":\"" + this.selfIntroduction +
 				"\",\"instructorNotes\":\"" + this.instructorNotes +
 				"\",\"phone1\":\"" + this.phone1 +
 				"\",\"phone2\":\"" + this.phone2 +

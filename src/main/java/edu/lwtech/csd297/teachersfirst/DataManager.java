@@ -1,8 +1,6 @@
 package edu.lwtech.csd297.teachersfirst;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import javax.servlet.*;
@@ -11,12 +9,15 @@ import edu.lwtech.csd297.teachersfirst.daos.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 import freemarker.core.ParseException;
 
+import org.apache.logging.log4j.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class DataManager {
 	
+	private static final Logger logger = LogManager.getLogger(AppointmentSqlDAO.class.getName());
+
 	// WEBSITE CUSTOMIZABLE COLORS
 	public static String primaryHighlightAdmin = "#96bbff";
 	public static String primaryHighlightDarkAdmin = "#7da9fa";
@@ -104,6 +105,7 @@ public class DataManager {
 		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
 		initParams += "&user=" + databaseUserID + "&password=" + databasePassword;    
 
+		//DataManager.serviceDAO = new ServiceMemoryDAO();
 		DataManager.serviceDAO = new ServiceSqlDAO();
 		if (!DataManager.serviceDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the serviceDAO.");
 		DataManager.allDAOs.add(DataManager.serviceDAO);
@@ -154,10 +156,19 @@ public class DataManager {
 	}
 
 	public static boolean validateSQLConnection() {
-		if (DataManager.memberDAO == null) return false;
-		if (DataManager.appointmentDAO == null) return false;
-		if (DataManager.openingDAO == null) return false;
-		if (DataManager.memberDAO.retrieveByIndex(0) == null) return false;
+		if (DataManager.memberDAO == null) {
+			logger.warn("WARNING: Database connection validation FAILED (DataManager.memberDAO == null).");
+			return false;
+		} else if (DataManager.appointmentDAO == null) {
+			logger.warn("WARNING: Database connection validation FAILED (DataManager.appointmentDAO == null).");
+			return false;
+		} else if (DataManager.openingDAO == null) {
+			logger.warn("WARNING: Database connection validation FAILED (DataManager.openingDAO == null).");
+			return false;
+		} else if (DataManager.memberDAO.retrieveByIndex(0) == null) {
+			logger.error("ERROR: Database connection validation FAILED (DataManager.memberDAO.retrieveByIndex(0) == null).");
+			return false;
+		}
 		return true;
 	}
 

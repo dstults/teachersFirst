@@ -125,8 +125,9 @@ class SQLUtils {
 	public static int executeSqlMemberInsert(Connection conn,
 			String query,
 			int recID, String loginName, String passwordHash,
-			String displayName, Timestamp birthdate, String gender,
-			String instructorNotes,
+			String displayName, float credits,
+			Timestamp birthdate, String gender,
+			String selfIntroduction, String instructorNotes,
 			String phone1, String phone2, String email,
 			boolean isStudent, boolean isInstructor, boolean isAdmin) {
 
@@ -142,15 +143,17 @@ class SQLUtils {
 			stmt.setString(1, loginName);
 			stmt.setString(2, passwordHash);
 			stmt.setString(3, displayName);
-			stmt.setTimestamp(4, birthdate);
-			stmt.setString(5, gender);
-			stmt.setString(6, instructorNotes);
-			stmt.setString(7, phone1);
-			stmt.setString(8, phone2);
-			stmt.setString(9, email);
-			stmt.setInt(10, isStudent ? 1 : 0);
-			stmt.setInt(11, isInstructor ? 1 : 0);
-			stmt.setInt(12, isAdmin ? 1 : 0);
+			stmt.setFloat(4, credits);
+			stmt.setTimestamp(5, birthdate);
+			stmt.setString(6, gender);
+			stmt.setString(7, selfIntroduction);
+			stmt.setString(8, instructorNotes);
+			stmt.setString(9, phone1);
+			stmt.setString(10, phone2);
+			stmt.setString(11, email);
+			stmt.setInt(12, isStudent ? 1 : 0);
+			stmt.setInt(13, isInstructor ? 1 : 0);
+			stmt.setInt(14, isAdmin ? 1 : 0);
 			
 			// Execute the INSERT statement
 			//logger.debug("ATTEMPTING INSERT: " + stmt.toString());
