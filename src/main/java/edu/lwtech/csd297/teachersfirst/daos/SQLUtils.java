@@ -9,116 +9,112 @@ import edu.lwtech.csd297.teachersfirst.*;
 
 class SQLUtils {
 
-    private static final Logger logger = LogManager.getLogger(SQLUtils.class.getName());
+	private static final Logger logger = LogManager.getLogger(SQLUtils.class.getName());
 
-    private SQLUtils() { }                                          // Hide the implicit public constructor
+	private SQLUtils() { }                                          // Hide the implicit public constructor
 
-    public static Connection connect(String initParams) {
-        logger.debug("Connecting to " + initParams + "...");
+	public static Connection connect(String initParams) {
+		logger.debug("Connecting to " + initParams + "...");
 
-        String driverClass = "org.mariadb.jdbc.Driver";
-        try {
-            Class.forName(driverClass);                             // Dynamically loads the driver from the WAR file
-        } catch (ClassNotFoundException e) {
-            logger.error("Unable to find JDBC driver on classpath: " + driverClass , e);
-            return null;
-        }
+		String driverClass = "org.mariadb.jdbc.Driver";
+		try {
+			Class.forName(driverClass);                             // Dynamically loads the driver from the WAR file
+		} catch (ClassNotFoundException e) {
+			logger.error("Unable to find JDBC driver on classpath: " + driverClass , e);
+			return null;
+		}
 
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(initParams);
-        } catch (SQLException e) {
-            logger.error("Unable to connect to SQL Database with: " + initParams, e);
-            return null;
-        }
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(initParams);
+		} catch (SQLException e) {
+			logger.error("Unable to connect to SQL Database with: " + initParams, e);
+			return null;
+		}
 
-        logger.debug("Connected!");
-        return conn;
-    }
+		logger.debug("Connected!");
+		return conn;
+	}
 
-    public static List<SQLRow> executeSql(Connection conn, String query, String... arguments) {
-        //logger.debug("Executing SQL statement: " + query);
+	public static List<SQLRow> executeSql(Connection conn, String query, String... arguments) {
+		//logger.debug("Executing SQL statement: " + query);
 
-        try {
-            // Create the new statement object
+		try {
+			// Create the new statement object
 			if (conn == null) {
 				logger.error("Lost connection to SQL database, attempted query: {}", query);
 				return null;
 			}
-            PreparedStatement stmt = conn.prepareStatement(query);
+			PreparedStatement stmt = conn.prepareStatement(query);
 
-            // Substitute in the argument values for the question marks
-            int position = 1;
-            for (String arg : arguments) {
-                stmt.setString(position++, arg);
-            }
+			// Substitute in the argument values for the question marks
+			int position = 1;
+			for (String arg : arguments) {
+				stmt.setString(position++, arg);
+			}
 
-            query = query.toLowerCase();
-            if (query.contains("update ") || query.contains("delete ")) {
+			query = query.toLowerCase();
+			if (query.contains("update ") || query.contains("delete ")) {
 
-                int numRows = stmt.executeUpdate();
-                return results(numRows);
+				int numRows = stmt.executeUpdate();
+				return results(numRows);
 
-            } else if (query.contains("select ")) {
+			} else if (query.contains("select ")) {
 
-                // Execute the SELECT query
-                ResultSet sqlResults = stmt.executeQuery();
+				// Execute the SELECT query
+				ResultSet sqlResults = stmt.executeQuery();
 
-                // Get the column names
-                ResultSetMetaData md = sqlResults.getMetaData();
-                List<String> columns = new ArrayList<>();
-                for (int i=0; i < md.getColumnCount(); i++) {
-                    columns.add(md.getColumnName(i+1));
-                }
+				// Get the column names
+				ResultSetMetaData md = sqlResults.getMetaData();
+				List<String> columns = new ArrayList<>();
+				for (int i=0; i < md.getColumnCount(); i++) {
+					columns.add(md.getColumnName(i+1));
+				}
 
-                // Store each row in a List
-                List<SQLRow> rows = new ArrayList<>();
-                while (sqlResults.next()) {
-                    SQLRow row = new SQLRow(columns, sqlResults);
-                    //logger.debug(row.toString());
-                    rows.add(row);
-                }
+				// Store each row in a List
+				List<SQLRow> rows = new ArrayList<>();
+				while (sqlResults.next()) {
+					SQLRow row = new SQLRow(columns, sqlResults);
+					//logger.debug(row.toString());
+					rows.add(row);
+				}
 
-                return rows;
-            }
-        } catch (SQLException e) {
-            logger.error("SQL Exception caught in executeSql: " + query, e);
-            return null;
-        }
-        return null;
-    }
+				return rows;
+			}
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in executeSql: " + query, e);
+			return null;
+		}
+		return null;
+	}
 
+	// Default Insert
+	public static int executeSqlInsert(Connection conn, String query, String recID, String... arguments) {
+		//logger.debug("Executing SQL Insert: " + query);
 
-    // Default Insert
-    public static int executeSqlInsert(Connection conn, String query, String recID, String... arguments) {
-        //logger.debug("Executing SQL Insert: " + query);
+		int newID = -1;
+		String[] returnColumns = new String[] { recID };
 
-        int newID = -1;
-        String[] returnColumns = new String[] { recID };
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 
-        try {
-            // Create the new statement object, specifying the recID return column as well
-            PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
+			int position = 1;
+			for (String arg : arguments)
+				stmt.setString(position++, arg);
 
-            // Substitute in the argument values for the question marks
-            int position = 1;
-            for (String arg : arguments)
-                stmt.setString(position++, arg);
+			stmt.executeUpdate();
+			
+			// Get the new recID value from the query results and return it to the caller
+			ResultSet keys = stmt.getGeneratedKeys();
+			keys.next();
+			newID = keys.getInt(1);
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
+			return -1;
+		}
 
-            // Execute the INSERT statement
-            stmt.executeUpdate();
-            
-            // Get the new recID value from the query results and return it to the caller
-            ResultSet keys = stmt.getGeneratedKeys();
-            keys.next();
-            newID = keys.getInt(1);
-        } catch (SQLException e) {
-            logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
-            return -1;
-        }
-
-        return newID;
-    }
+		return newID;
+	}
 
 
 	// Member Insert
@@ -137,7 +133,6 @@ class SQLUtils {
 		String[] returnColumns = new String[] { String.valueOf(recID) };
 		
 		try {
-			// Create the new statement object, specifying the recID return column as well
 			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 			
 			stmt.setString(1, loginName);
@@ -155,8 +150,6 @@ class SQLUtils {
 			stmt.setInt(13, isInstructor ? 1 : 0);
 			stmt.setInt(14, isAdmin ? 1 : 0);
 			
-			// Execute the INSERT statement
-			//logger.debug("ATTEMPTING INSERT: " + stmt.toString());
 			stmt.executeUpdate();
 			
 			// Get the new recID value from the query results and return it to the caller
@@ -175,67 +168,84 @@ class SQLUtils {
 	//Opening Insert
 	public static int executeSqlOpeningInsert(Connection conn, String query, int recID, int instructorID,
 			Timestamp startTime, Timestamp endTime) {
-				//logger.debug("Executing SQL Insert: " + query);
+		//logger.debug("Executing SQL Insert: " + query);
 
-				int newID = -1;
-				String[] returnColumns = new String[] { String.valueOf(recID) };
-				
-				try {
-					// Create the new statement object, specifying the recID return column as well
-					PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
-
-					stmt.setInt(1, instructorID);
-					stmt.setTimestamp(2, startTime);
-					stmt.setTimestamp(3, endTime);
-					
-					// Execute the INSERT statement
-					stmt.executeUpdate();
-					
-					// Get the new recID value from the query results and return it to the caller
-					ResultSet keys = stmt.getGeneratedKeys();
-					keys.next();
-					newID = keys.getInt(1);
-				} catch (SQLException e) {
-					logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
-					return -1;
-				}
+		int newID = -1;
+		String[] returnColumns = new String[] { String.valueOf(recID) };
 		
-				return newID;
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
+
+			stmt.setInt(1, instructorID);
+			stmt.setTimestamp(2, startTime);
+			stmt.setTimestamp(3, endTime);
+			
+			stmt.executeUpdate();
+			
+			// Get the new recID value from the query results and return it to the caller
+			ResultSet keys = stmt.getGeneratedKeys();
+			keys.next();
+			newID = keys.getInt(1);
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
+			return -1;
+		}
+
+		return newID;
 	}
 
 	// Appointment Insert
 	public static int executeSqlAppointmentInsert(Connection conn, String query, int recID, int studentID, int instructorID,
-			Timestamp startTime, Timestamp endTime) {
-				//logger.debug("Executing SQL Insert: " + query);
-				
-				int newID = -1;
-				String[] returnColumns = new String[] { String.valueOf(recID) };
-				
-				try {
-					// Create the new statement object, specifying the recID return column as well
-					PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
-					
-					stmt.setInt(1, studentID);
-					stmt.setInt(2, instructorID);
-					stmt.setTimestamp(3, startTime);
-					stmt.setTimestamp(4, endTime);
-					
-					// Execute the INSERT statement
-					stmt.executeUpdate();
-					
-					// Get the new recID value from the query results and return it to the caller
-					ResultSet keys = stmt.getGeneratedKeys();
-					keys.next();
-					newID = keys.getInt(1);
-				} catch (SQLException e) {
-					logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
-					return -1;
-				}
+			Timestamp startTime, Timestamp endTime, boolean schedulingVerified, int completionState) {
+		//logger.debug("Executing SQL Insert: " + query);
 		
-				return newID;
+		int newID = -1;
+		String[] returnColumns = new String[] { String.valueOf(recID) };
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
+			
+			stmt.setInt(1, studentID);
+			stmt.setInt(2, instructorID);
+			stmt.setTimestamp(3, startTime);
+			stmt.setTimestamp(4, endTime);
+			stmt.setBoolean(5, schedulingVerified);
+			stmt.setInt(6, completionState);
+			
+			stmt.executeUpdate();
+			
+			// Get the new recID value from the query results and return it to the caller
+			ResultSet keys = stmt.getGeneratedKeys();
+			keys.next();
+			newID = keys.getInt(1);
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
+			return -1;
+		}
+
+		return newID;
 	}
 
-    public static void disconnect(Connection conn) {
+	// Appointment Insert
+	public static boolean executeSqlAppointmentUpdate(Connection conn, String query, boolean schedulingVerified, int completionState) {
+		logger.debug("Executing SQL Update to Appointment: " + query);
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query);
+			
+			stmt.setBoolean(1, schedulingVerified);
+			stmt.setInt(2, completionState);
+
+			stmt.executeUpdate();
+			
+			return true;
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
+			return false;
+		}
+	}
+
+	public static void disconnect(Connection conn) {
 		if (conn == null) {
 			// This happens during test runs and that's a good thing. But there won't be a logger to use.
 			// Also we REALLY want to log this when it happens when an actual servlet is running.
@@ -244,7 +254,7 @@ class SQLUtils {
 		}
 
 		boolean wasClosedOiginally = false;
-        try {
+		try {
 			if (conn.isClosed()) {
 				wasClosedOiginally = true;
 				String warningMessage = "Warning: Connection was already disconnected while attempting to disconnect.";
@@ -253,7 +263,7 @@ class SQLUtils {
 				return;
 			}
 			conn.close();
-        } catch (SQLException e) {
+		} catch (SQLException e) {
 			if (!wasClosedOiginally) {
 				// In case happens during test builds or when logger is null:
 				System.out.println("================================================ Error");
@@ -262,16 +272,16 @@ class SQLUtils {
 				// Normal logging might not always work here:
 				if (logger != null) logger.error("Exception thrown while trying to close SQL Connection", e);
 			}
-        }
+		}
 }
 
-    // ===============================================================================================
+	// ===============================================================================================
 
-    private static List<SQLRow> results(int i) {
-        List<SQLRow> rows = new ArrayList<>();
-        rows.add(new SQLRow("Value", i));
-        return rows;
-    }
+	private static List<SQLRow> results(int i) {
+		List<SQLRow> rows = new ArrayList<>();
+		rows.add(new SQLRow("Value", i));
+		return rows;
+	}
 
-    
+	
 }

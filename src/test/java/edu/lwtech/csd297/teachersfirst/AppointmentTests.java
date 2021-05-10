@@ -13,11 +13,11 @@ import java.sql.Timestamp;
 
 class AppointmentTests {
 
-	Appointment FiveAndFiftyFive = new Appointment(5, 55, 1998, 3, 11, 4, 30, 22, 6, 30);
-	Appointment ThirtyFiveAndSixtySix = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+	Appointment FiveAndFiftyFive = new Appointment(5, 55, 1998, 3, 11, 4, 30, 22, 6, 30, true);
+	Appointment ThirtyFiveAndSixtySix = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true);
 
-	Appointment Eimaj = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
-	Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+	Appointment Eimaj = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
+	Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
 
 	@BeforeEach
 	void setUp() {}
@@ -27,27 +27,27 @@ class AppointmentTests {
 		Exception ex = null;
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Appointment(-10, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+			new Appointment(-10, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: recID < -1"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Appointment(3, -20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+			new Appointment(3, -20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: studentID < -1"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Appointment(3, 20, -43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+			new Appointment(3, 20, -43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: instructorID < -1"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Appointment(3, 20, 43, null, DateHelpers.toTimestamp("2000/02/01 00:00:00"));
+			new Appointment(3, 20, 43, null, DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: startTime is null"));
 
 		ex = assertThrows(IllegalArgumentException.class, () -> {
-			new Appointment(3, 20, 43, DateHelpers.toTimestamp("2000/02/01 00:00:00"), null);
+			new Appointment(3, 20, 43, DateHelpers.toTimestamp("2000/02/01 00:00:00"), null, true, -1);
 		});
 		assertTrue(ex.getMessage().contains("Invalid argument: endTime is null"));
 		
@@ -114,11 +114,11 @@ class AppointmentTests {
 		//Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
 		assertTrue(Jamie.equals(Eimaj));
 
-		assertFalse(Jamie.equals(new Appointment(2,20,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,19,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,20,44,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,20,43,DateHelpers.toTimestamp("2000/15/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"))));
-		assertFalse(Jamie.equals(new Appointment(-1,20,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/25/01 00:00:00"))));
+		assertFalse(Jamie.equals(new Appointment(2,20,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1)));
+		assertFalse(Jamie.equals(new Appointment(-1,19,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1)));
+		assertFalse(Jamie.equals(new Appointment(-1,20,44,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1)));
+		assertFalse(Jamie.equals(new Appointment(-1,20,43,DateHelpers.toTimestamp("2000/15/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1)));
+		assertFalse(Jamie.equals(new Appointment(-1,20,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/25/01 00:00:00"), true, -1)));
 
 		assertFalse(Jamie.equals(null));
 		assertTrue(Jamie.equals(Jamie));

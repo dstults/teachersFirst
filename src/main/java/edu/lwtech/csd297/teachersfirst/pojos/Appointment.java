@@ -11,21 +11,24 @@ public class Appointment {
 	private int instructorId;
 	private Timestamp startTime;
 	private Timestamp endTime;
+	private boolean schedulingVerified;
+	private int completionState;
 
 	// ----------------------------------------------------------------
 	
 	public Appointment(int studentID, int instructorID,
 			int year, int month,
 			int startDay, int startHour, int startMinute,
-			int endDay, int endHour, int endMinute) {
+			int endDay, int endHour, int endMinute,
+			boolean isConfirmed) {
 
 		this(-1, studentID, instructorID, DateHelpers.toTimestamp(year, month, startDay, startHour, startMinute, 0),
-				DateHelpers.toTimestamp(year, month, endDay, endHour, endMinute, 0));
+				DateHelpers.toTimestamp(year, month, endDay, endHour, endMinute, 0), isConfirmed, -1);
 	}
 	
-	public Appointment(int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
+	public Appointment(int studentID, int instructorID, Timestamp startTime, Timestamp endTime, boolean isConfirmed) {
 
-		this(-1, studentID, instructorID, startTime, endTime);
+		this(-1, studentID, instructorID, startTime, endTime, isConfirmed, -1);
 	}
 	
 	public Appointment(PlannedAppointment plan) {
@@ -42,19 +45,22 @@ public class Appointment {
 		this.endTime = plan.getEndTime();
 	}
 
-	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime) {
+	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime, boolean schedulingVerified, int completionState) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (studentID < -1) throw new IllegalArgumentException("Invalid argument: studentID < -1");
 		if (instructorID < -1) throw new IllegalArgumentException("Invalid argument: instructorID < -1");
 		if (startTime == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
 		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
+		if (completionState < -1 || completionState > 1) throw new IllegalArgumentException("Invalid argument: completionState range is -1 to 1");
 		
 		this.recID = recID;
 		this.studentId = studentID;
 		this.instructorId = instructorID;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.schedulingVerified = schedulingVerified;
+		this.completionState = completionState;
 	}
 
 	// ----------------------------------------------------------------
@@ -101,6 +107,24 @@ public class Appointment {
 		return this.toString();
 	}
 
+	public boolean getSchedulingVerified() {
+		return this.schedulingVerified;
+	}
+
+	public int getCompletionState() {
+		return this.completionState;
+	}
+
+	public void setSchedulingVerified(boolean value) {
+		this.schedulingVerified = value;
+		DataManager.getAppointmentDAO().update(this);
+	}
+
+	public void setCompletionState(int value) {
+		this.completionState = value;
+		DataManager.getAppointmentDAO().update(this);
+	}
+
 	// ----------------------------------------------------------------
 
 	@Override
@@ -120,6 +144,8 @@ public class Appointment {
 		if (this.instructorId != other.instructorId) return false;
 		if (!this.startTime.equals(other.startTime)) return false;
 		if (!this.endTime.equals(other.endTime)) return false;
+		if (this.schedulingVerified != other.schedulingVerified) return false;
+		if (this.completionState != other.completionState) return false;
 
 		// no failures, good match
 		return true;
