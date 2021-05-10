@@ -146,9 +146,9 @@ class SQLUtils {
 			stmt.setString(9, phone1);
 			stmt.setString(10, phone2);
 			stmt.setString(11, email);
-			stmt.setInt(12, isStudent ? 1 : 0);
-			stmt.setInt(13, isInstructor ? 1 : 0);
-			stmt.setInt(14, isAdmin ? 1 : 0);
+			stmt.setInt(12, isStudent ? 1 : 0); // SetBoolean doesn't work
+			stmt.setInt(13, isInstructor ? 1 : 0); // SetBoolean doesn't work
+			stmt.setInt(14, isAdmin ? 1 : 0); // SetBoolean doesn't work
 			
 			stmt.executeUpdate();
 			
@@ -209,7 +209,7 @@ class SQLUtils {
 			stmt.setInt(2, instructorID);
 			stmt.setTimestamp(3, startTime);
 			stmt.setTimestamp(4, endTime);
-			stmt.setBoolean(5, schedulingVerified);
+			stmt.setInt(5, schedulingVerified ? 1 : 0); // SetBoolean doesn't work
 			stmt.setInt(6, completionState);
 			
 			stmt.executeUpdate();
@@ -273,7 +273,7 @@ class SQLUtils {
 				if (logger != null) logger.error("Exception thrown while trying to close SQL Connection", e);
 			}
 		}
-}
+	}
 
 	// ===============================================================================================
 
@@ -283,5 +283,12 @@ class SQLUtils {
 		return rows;
 	}
 
+	public static boolean integerToBoolean(int value){
+		if(value == 0){
+			return false;
+		}else{
+			return true;
+		}
+	}
 	
 }

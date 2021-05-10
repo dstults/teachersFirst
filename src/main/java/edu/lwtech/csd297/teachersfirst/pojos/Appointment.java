@@ -51,6 +51,8 @@ public class Appointment implements IJsonnable {
 		this.instructorId = plan.getInstructorID();
 		this.startTime = plan.getStartTime();
 		this.endTime = plan.getEndTime();
+		this.schedulingVerified = false;
+		this.completionState = -1;
 	}
 
 	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime, boolean schedulingVerified, int completionState) {

@@ -18,17 +18,18 @@
 	<h2 class="appointments-text" style="margin-top: 11rem;">Upcoming appointments</h2>
 	<table class="info-list">
 		<tr>
-			<th></th><#if isAdmin || isInstructor><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th>
+			<th></th><#if isAdmin || isInstructor><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th>Status</th>
 		</tr>
 		<#list futureAppointments as appointment>
 			<#if isAdmin && appointment.isMyAppointment><tr class="soft-highlight"><#else><tr></#if>
-				<td><a href="javascript:confirmDeleteAppointment(${appointment.recID?c});" class="red bold">X</a></td>
+				<td id="appt-${appointment.recID?c}-control"><a href="javascript:confirmDeleteAppointment(${appointment.recID?c});" class="red bold">X</a></td>
 				<#if isAdmin || isInstructor><td>${appointment.recID?c}</td></#if>
 				<td>${appointment.dateFormatted}</td>
 				<td>${appointment.startTimeFormatted}</td>
 				<td>${appointment.endTimeFormatted}</td>
 				<td><a href="/profile?memberId=${appointment.studentID?c}">${appointment.studentName}</a></td>
 				<td><a href="/profile?memberId=${appointment.instructorID?c}">${appointment.instructorName}</a></td>
+				<td id="appt-${appointment.recID?c}-status"><#if appointment.schedulingVerified>verified<#else>NOT VERIFIED</#if></td>
 			</tr>
 		</#list>
 	</table>
@@ -36,11 +37,11 @@
 	<h2 class="appointments-text">Previous appointments</h2>
 	<table class="info-list">
 		<tr>
-			<#if isAdmin || isInstructor><th></th><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th>
+			<#if isAdmin || isInstructor><th></th><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th>Status</th>
 		</tr>
 		<#list pastAppointments as appointment>
 			<#if isAdmin && appointment.isMyAppointment><tr class="soft-highlight"><#else><tr></#if>
-				<td><#if isAdmin || isInstructor && appointment.wasNotCompleted>
+				<td id="appt-${appointment.recID?c}-control"><#if isAdmin || isInstructor && appointment.wasNotCompleted>
 				<a href="javascript:confirmDeleteAppointment(${appointment.recID?c});" class="red bold"> X </a>
 				</#if><#if isAdmin || isInstructor && appointment.completionUnconfirmed>
 				<a href="javascript:confirmMissAppointment(${appointment.recID?c});" class="blue bigger">&#9746;</a>&nbsp;&nbsp;&nbsp;
@@ -52,6 +53,7 @@
 				<td>${appointment.endTimeFormatted}</td>
 				<td><a href="/profile?memberId=${appointment.studentID?c}">${appointment.studentName}</a></td>
 				<td><a href="/profile?memberId=${appointment.instructorID?c}">${appointment.instructorName}</a></td>
+				<td id="appt-${appointment.recID?c}-status"><#if appointment.completionUnconfirmed>NEEDS COMPLETION CONFIRMATION<#elseif appointment.wasCompleted>completed<#elseif appointment.wasNotCompleted>CANCELLED</#if></td>
 			</tr>
 		</#list>
 	</table>
@@ -71,19 +73,27 @@
 	}
 	const confirmMissAppointment = (appointmentId) => {
 		if (confirm('You\'re sure you did not complete appointment #' + appointmentId + ' ?')) {
+			const e1 = document.getElementById('appt-' + appointmentId + '-control');
+			e1.innerHTML = '...';
+			const e2 = document.getElementById('appt-' + appointmentId + '-status');
+			e2.innerHTML = '...updating...';
 			const xhr = new XMLHttpRequest();
 			xhr.open('POST', '/');
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
+			//xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
 			xhr.send('action=miss_appointment&appointmentId=' + appointmentId);
 		}
 	}
 	const confirmCompleteAppointment = (appointmentId) => {
 		if (confirm('You\'re sure you completed appointment #' + appointmentId + ' ?')) {
+			const e1 = document.getElementById('appt-' + appointmentId + '-control');
+			e1.innerHTML = '...';
+			const e2 = document.getElementById('appt-' + appointmentId + '-status');
+			e2.innerHTML = '...updating...';
 			const xhr = new XMLHttpRequest();
 			xhr.open('POST', '/');
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
+			//xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
 			xhr.send('action=complete_appointment&appointmentId=' + appointmentId);
 		}
 	}

@@ -62,7 +62,7 @@ public class MissOrCompleteAppointmentAction extends ActionRunner {
 		appointment.setCompletionState(subAction);
 		logger.debug("Deleted appointment ID: [{}]", appointmentIdString);
 		
-		this.SendPostReply("/appointments", "", "Appointment " + appointmentIdString + " deleted!");
+		this.SendPostReply("/appointments", "", "Appointment " + appointmentIdString + " updated!");
 		return;
 	}
 	

@@ -198,7 +198,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		int instructorID = Integer.parseInt(row.getItem("instructorID"));
 		Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));
 		Timestamp endTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("endTime"));
-		boolean schedulingVerified = Boolean.parseBoolean(row.getItem("schedulingVerified"));
+		Boolean schedulingVerified = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("schedulingVerified")));
 		int completionState = Integer.parseInt(row.getItem("completionState"));
 		return new Appointment(recID,studentID, instructorID, startTime, endTime, schedulingVerified, completionState);
 	}
