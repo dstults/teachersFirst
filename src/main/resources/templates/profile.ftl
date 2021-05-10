@@ -17,10 +17,11 @@
 			<td>
 				<table class="profile-inner">
 					<tr><td colspan=2><h1>${member.displayName}</h1></tr>
+					<#if isAdmin || member.isStudent><tr><td colspan=2><h1>Credit-Hours: ${member.credits}</h1></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left" style="width: 33%;">Member ID:</td><td style="width: 67%;">${member.recID}</td></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Login name:</td><td>${member.loginName}</td></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Gender:</td><td>${member.genderWord}</td></tr></#if>
-					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Birthdate:</td><td>${member.birthDateFormatted}</td></tr></#if>
+					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Birthdate:</td><td>${member.birthDateView}</td></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Age:</td><td>${member.age}</td></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Phone 1:</td><td>${member.phone1}</td></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Phone 2:</td><td>${member.phone2}</td></tr></#if>
@@ -31,7 +32,7 @@
 		<tr>
 			<tr><td colspan=2 class="extra-side-padding">
 				<p class="bold-left">Self-Introduction:</p>
-				<p class="normal-paragraph">I really like studying and exercise! This gym/school is so much fun!</p>
+				<p class="normal-paragraph italic"><#if member.selfIntroduction?has_content>${member.selfIntroduction}<#else>No self-introduction.</#if></p>
 			</td></tr>
 			<#if isAdmin || isInstructor>
 			<tr><td colspan=2 class="extra-side-padding">

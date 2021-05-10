@@ -146,6 +146,12 @@ public class Member implements IJsonnable {
 		return this.birthdate.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
 	}
 
+	public String getBirthDateView() {
+		if (getBirthDate().getYear() == 1800 && getBirthDate().getMonth() == Month.JANUARY && getBirthDate().getDayOfMonth() == 1)
+			return "unset";
+		return getBirthDateFormatted();
+	}
+
 	public int getAge() {
 		return DateHelpers.calculateAgeFrom(this.birthdate);
 	}
