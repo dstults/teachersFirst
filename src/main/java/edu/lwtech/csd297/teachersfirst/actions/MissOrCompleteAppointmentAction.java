@@ -12,7 +12,7 @@ public class MissOrCompleteAppointmentAction extends ActionRunner {
 	public MissOrCompleteAppointmentAction(HttpServletRequest request, HttpServletResponse response, String subAction) {
 		super(request, response);
 		if (subAction == null) throw new IllegalArgumentException("Invalid argument: null subAction");
-		if (subAction != "miss" || subAction != "complete") throw new IllegalArgumentException("Invalid argument: subAction must be 'complete' or 'miss'");
+		if (!subAction.equals("miss") && !subAction.equals("complete")) throw new IllegalArgumentException("Invalid argument: subAction must be 'complete' or 'miss'");
 		
 		this.subAction = subAction;
 	}
@@ -46,7 +46,7 @@ public class MissOrCompleteAppointmentAction extends ActionRunner {
 		}
 
 		// Make sure is admin or instructor
-		if (!isAdmin || !isInstructor) {
+		if (!isAdmin && !isInstructor) {
 			this.SendPostReply("/appointments", "", "Appointment can only be marked as completed or missed by an admin or an instructor.");
 			return;
 		}

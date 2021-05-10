@@ -27,8 +27,8 @@
 				<td>${appointment.dateFormatted}</td>
 				<td>${appointment.startTimeFormatted}</td>
 				<td>${appointment.endTimeFormatted}</td>
-				<td><a href="/profile?memberId=${appointment.studentId}">${appointment.studentName}</a></td>
-				<td><a href="/profile?memberId=${appointment.instructorId}">${appointment.instructorName}</a></td>
+				<td><a href="/profile?memberId=${appointment.studentID?c}">${appointment.studentName}</a></td>
+				<td><a href="/profile?memberId=${appointment.instructorID?c}">${appointment.instructorName}</a></td>
 			</tr>
 		</#list>
 	</table>
@@ -42,16 +42,16 @@
 			<#if isAdmin && appointment.isMyAppointment><tr class="soft-highlight"><#else><tr></#if>
 				<td><#if isAdmin || isInstructor && appointment.wasNotCompleted>
 				<a href="javascript:confirmDeleteAppointment(${appointment.recID?c});" class="red bold"> X </a>
-				</#if><#if isAdmin || isInstructor && appointment.wasNotCompleted>
-				<a href="javascript:confirmMissAppointment(${appointment.recID?c});" class="blue bold"> &#9746; </a>
-				<a href="javascript:confirmCompleteAppointment(${appointment.recID?c})appointment.id;" class="green bold"> &#9745; </a>
+				</#if><#if isAdmin || isInstructor && appointment.completionUnconfirmed>
+				<a href="javascript:confirmMissAppointment(${appointment.recID?c});" class="blue bigger">&#9746;</a>&nbsp;&nbsp;&nbsp;
+				<a href="javascript:confirmCompleteAppointment(${appointment.recID?c});" class="green bigger">&#9745;</a>
 				</#if></td>
 				<#if isAdmin || isInstructor><td>${appointment.recID?c}</td></#if>
 				<td>${appointment.dateFormatted}</td>
 				<td>${appointment.startTimeFormatted}</td>
 				<td>${appointment.endTimeFormatted}</td>
-				<td><a href="/profile?memberId=${appointment.studentId}">${appointment.studentName}</a></td>
-				<td><a href="/profile?memberId=${appointment.instructorId}">${appointment.instructorName}</a></td>
+				<td><a href="/profile?memberId=${appointment.studentID?c}">${appointment.studentName}</a></td>
+				<td><a href="/profile?memberId=${appointment.instructorID?c}">${appointment.instructorName}</a></td>
 			</tr>
 		</#list>
 	</table>
@@ -61,7 +61,7 @@
 </body>
 <script>
 	const confirmDeleteAppointment = (appointmentId) => {
-		if (confirm('Are you sure you want to delete appointment.recID #' + appointmentId + ' ?')) {
+		if (confirm('Are you sure you want to delete appointment #' + appointmentId + ' ?')) {
 			const xhr = new XMLHttpRequest();
 			xhr.open('POST', '/');
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -70,7 +70,7 @@
 		}
 	}
 	const confirmMissAppointment = (appointmentId) => {
-		if (confirm('You\'re sure you did not complete appointment.recID #' + appointmentId + ' ?')) {
+		if (confirm('You\'re sure you did not complete appointment #' + appointmentId + ' ?')) {
 			const xhr = new XMLHttpRequest();
 			xhr.open('POST', '/');
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -79,7 +79,7 @@
 		}
 	}
 	const confirmCompleteAppointment = (appointmentId) => {
-		if (confirm('You\'re sure you completed appointment.recID #' + appointmentId + ' ?')) {
+		if (confirm('You\'re sure you completed appointment #' + appointmentId + ' ?')) {
 			const xhr = new XMLHttpRequest();
 			xhr.open('POST', '/');
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

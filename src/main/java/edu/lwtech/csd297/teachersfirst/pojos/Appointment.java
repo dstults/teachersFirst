@@ -200,7 +200,7 @@ public class Appointment implements IJsonnable {
 
 	@Override
 	public String toString() {
-		return "Appointment(" + this.recId + ")/Student(" + this.studentId + ")>Instructor(" + this.instructorId + ")@" + this.startTime.toString() + "-" + this.endTime.toString();
+		return "Appointment(" + this.recId + "): Student(" + this.studentId + ") > Instructor(" + this.instructorId + ") @ " + this.getDateFormatted() + " " + this.getStartTimeFormatted() + " - " + this.getEndTimeFormatted();
 	}
 
 	@Override

@@ -7,7 +7,7 @@
 	<#include "please_login.ftl">
 <#elseif !member?has_content>
 	<div class="profile-page">
-		<p>No user data to show.</p>
+		<p class="centered">No user data to show.</p>
 	</div>
 <#else>
 

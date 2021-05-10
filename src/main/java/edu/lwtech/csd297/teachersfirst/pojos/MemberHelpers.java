@@ -14,7 +14,7 @@ public class MemberHelpers {
 	public static String FindNameByID(List<Member> members, int recID) {
 		Member found = FindByID(members, recID);
 		if (found == null) return "unknown";
-		return found.getName();
+		return found.getDisplayName();
 	}
 
 }

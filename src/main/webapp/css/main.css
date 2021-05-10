@@ -432,8 +432,20 @@ input[type=radio]{
 .red {
 	color: red;
 }
+.bigger {
+	font-size: 200%;
+}
+.blue {
+	color: blue;
+}
+.green {
+	color: green;
+}
 .navy {
 	color: navy;
+}
+.centered {
+	text-align: center;
 }
 .faded {
 	opacity: 50%;
