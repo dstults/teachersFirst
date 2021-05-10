@@ -181,7 +181,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			if (plan.getResult().contains("OK")) {
 				Appointment appointment = new Appointment(plan);
 				DataManager.getAppointmentDAO().insert(appointment);
-				sb.append("OK: %5B").append(appointment.getDateString()).append("%5D//");
+				sb.append("OK: %5B").append(appointment.getDateFormatted()).append("%5D//");
 				logger.debug("Created new appointment: [{}]", appointment);
 			} else {
 				sb.append("! CONFLICT: %5B").append(plan.getDateString()).append("%5D//");

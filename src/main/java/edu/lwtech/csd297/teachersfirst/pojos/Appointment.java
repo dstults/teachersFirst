@@ -1,18 +1,26 @@
 package edu.lwtech.csd297.teachersfirst.pojos;
 
+import java.time.format.DateTimeFormatter;
+
+import javax.naming.OperationNotSupportedException;
+
 import java.sql.Timestamp;
 
 import edu.lwtech.csd297.teachersfirst.*;
 
-public class Appointment {
+public class Appointment implements IJsonnable {
     
-	private int recID;
+	private int recId;
 	private int studentId;
 	private int instructorId;
 	private Timestamp startTime;
 	private Timestamp endTime;
 	private boolean schedulingVerified;
 	private int completionState;
+
+	private String studentName; // Temporary/Prettification use only -- should not be saved to database
+	private String instructorName; // Temporary/Prettification use only -- should not be saved to database
+	private boolean isMyAppointment; // Temporary/Prettification use only -- should not be saved to database
 
 	// ----------------------------------------------------------------
 	
@@ -38,7 +46,7 @@ public class Appointment {
 		if (plan.getEndTime() == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
 		if (!plan.getResult().contains("OK")) throw new IllegalArgumentException("Cannot create appointment from an untested or conflicting planned appointment."); // Invalid operation
 		
-		this.recID = -1;
+		this.recId = -1;
 		this.studentId = plan.getStudentID();
 		this.instructorId = plan.getInstructorID();
 		this.startTime = plan.getStartTime();
@@ -54,7 +62,7 @@ public class Appointment {
 		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
 		if (completionState < -1 || completionState > 1) throw new IllegalArgumentException("Invalid argument: completionState range is -1 to 1");
 		
-		this.recID = recID;
+		this.recId = recID;
 		this.studentId = studentID;
 		this.instructorId = instructorID;
 		this.startTime = startTime;
@@ -66,15 +74,15 @@ public class Appointment {
 	// ----------------------------------------------------------------
 
 	public int getRecID() {
-		return this.recID;
+		return this.recId;
 	}
 
 	public void setRecID(int recID) {
 		// Updates the recID of POJOs that have just been added to the database
 		if (recID <= 0){ throw new IllegalArgumentException("setRecID: recID cannot be negative."); }
-		if (this.recID != (-1)){ throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1)."); }
+		if (this.recId != (-1)){ throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1)."); }
 
-		this.recID = recID;
+		this.recId = recID;
 	}
 
 	// ----------------------------------------------------------------
@@ -94,13 +102,21 @@ public class Appointment {
 	public Timestamp getStartTime() {
 		return this.startTime;
 	}
+
+	public String getStartTimeFormatted() {
+		return this.startTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+	}
 	
 	public Timestamp getEndTime() {
 		return this.endTime;
 	}
 
-	public String getDateString() {
-		return this.startTime.toLocalDateTime().toLocalDate().toString();
+	public String getEndTimeFormatted() {
+		return this.endTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+	}
+
+	public String getDateFormatted() {
+		return this.startTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 	}
 
 	public String getName() {
@@ -115,9 +131,34 @@ public class Appointment {
 		return this.completionState;
 	}
 
+	public boolean getCompletionUnconfirmed() {
+		return this.completionState == -1;
+	}
+
+	public boolean getWasNotCompleted() {
+		return this.completionState == 0;
+	}
+
+	public boolean getWasCompleted() {
+		return this.completionState == 1;
+	}
+
 	public void setSchedulingVerified(boolean value) {
 		this.schedulingVerified = value;
 		DataManager.getAppointmentDAO().update(this);
+	}
+
+	public void setCompletionState(String value) {
+		switch (value) {
+			case "complete":
+				setCompletionState(1);
+				break;
+			case "miss":
+				setCompletionState(0);
+				break;
+			default:
+			throw new IllegalArgumentException("Invalid argument: completionState = " + value);
+		}
 	}
 
 	public void setCompletionState(int value) {
@@ -127,9 +168,53 @@ public class Appointment {
 
 	// ----------------------------------------------------------------
 
+	public String getStudentName() {
+		if (this.studentName == null || this.studentName == "")
+			return "unset";
+		return this.studentName;
+	}
+
+	public String getInstructorName() {
+		if (this.instructorName == null || this.instructorName == "")
+			return "unset";
+		return this.instructorName;
+	}
+
+	public boolean getIsMyAppointment() {
+		return this.isMyAppointment;
+	}
+
+	public void setStudentName(String value) {
+		this.studentName = value;
+	}
+
+	public void setInstructorName(String value) {
+		this.instructorName = value;
+	}
+
+	public void setIsMyAppointment(boolean value) {
+		this.isMyAppointment = value;
+	}
+
+	// ----------------------------------------------------------------
+
 	@Override
 	public String toString() {
-		return "Appointment(" + this.recID + ")/Student(" + this.studentId + ")>Instructor(" + this.instructorId + ")@" + this.startTime.toString() + "-" + this.endTime.toString();
+		return "Appointment(" + this.recId + ")/Student(" + this.studentId + ")>Instructor(" + this.instructorId + ")@" + this.startTime.toString() + "-" + this.endTime.toString();
+	}
+
+	@Override
+	public String toJson() {
+		return "{\"id\":\"" + this.recId +
+				"\",\"instructorId\":\"" + this.instructorId +
+				"\",\"instructorName\":\"" + this.getInstructorName() +
+				"\",\"studentId\":\"" + this.studentId +
+				"\",\"studentName\":\"" + this.getStudentName() +
+				"\",\"date\":\"" + this.getDateFormatted() +
+				"\",\"startTime\":\"" + this.startTime +
+				"\",\"endTime\":\"" + this.endTime +
+				"\",\"isMyAppointment\":\"" + this.getIsMyAppointment() +
+				"\"}";
 	}
 
 	@Override
@@ -139,7 +224,7 @@ public class Appointment {
 		if (!(obj instanceof Appointment)) return false; // must be same type of object
 
 		Appointment other = (Appointment) obj; // cast to compare fields
-		if (this.recID != other.recID) return false;
+		if (this.recId != other.recId) return false;
 		if (this.studentId != other.studentId) return false;
 		if (this.instructorId != other.instructorId) return false;
 		if (!this.startTime.equals(other.startTime)) return false;

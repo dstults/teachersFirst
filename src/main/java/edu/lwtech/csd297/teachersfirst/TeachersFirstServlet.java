@@ -200,6 +200,12 @@ public class TeachersFirstServlet extends HttpServlet {
 				case "delete_appointment":
 					new DeleteAppointmentAction(request, response).RunAction();
 					break;
+				case "miss_appointment":
+					new MissOrCompleteAppointmentAction(request, response, "miss").RunAction();
+					break;
+				case "complete_appointment":
+					new MissOrCompleteAppointmentAction(request, response, "complete").RunAction();
+					break;
 				case "delete_opening":
 					new DeleteOpeningAction(request, response).RunAction();
 					break;
