@@ -232,19 +232,11 @@ public class MemberSqlDAO implements DAO<Member> {
 		String phone2 = row.getItem("phone2");
 		String email = row.getItem("email");
 
-		Boolean isStudent = integerToBoolean(Integer.parseInt(row.getItem("isStudent")));
-		Boolean isInstructor = integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
-		Boolean isAdmin = integerToBoolean(Integer.parseInt(row.getItem("isAdmin")));
+		Boolean isStudent = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isStudent")));
+		Boolean isInstructor = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
+		Boolean isAdmin = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isAdmin")));
 
 		return new Member(recID, loginName, passwordHash, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
-	}
-
-	private boolean integerToBoolean(int x){
-		if(x == 0){
-			return false;
-		}else{
-			return true;
-		}
 	}
 
 }

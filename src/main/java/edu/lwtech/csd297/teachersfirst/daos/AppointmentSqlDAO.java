@@ -45,12 +45,27 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 			return -1;
 		}
 
-		String query = "INSERT INTO appointments (studentID, instructorID, startTime, endTime) VALUES (?,?,?,?)";
+		String query = "INSERT INTO appointments (studentID, instructorID, startTime, endTime, schedulingVerified, completionState) VALUES (?,?,?,?,?,?)";
 
-		int recID = SQLUtils.executeSqlAppointmentInsert(conn, query, appointment.getRecID(), appointment.getStudentID(), appointment.getInstructorID(), appointment.getStartTime(), appointment.getEndTime());    
+		int recID = SQLUtils.executeSqlAppointmentInsert(conn, query, appointment.getRecID(), appointment.getStudentID(), appointment.getInstructorID(), appointment.getStartTime(), appointment.getEndTime(), appointment.getSchedulingVerified(), appointment.getCompletionState());    
 		
 		logger.debug("Appointment successfully inserted with ID = " + recID);
 		return recID;
+	}
+
+	public boolean update(Appointment appointment) {
+		if (appointment.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update appointment with recID <= 0");
+
+		String query = "UPDATE appointments SET schedulingVerified = ?, completionState = ? WHERE recID = " + appointment.getRecID() + ";";
+
+		boolean success = SQLUtils.executeSqlAppointmentUpdate(conn, query, appointment.getSchedulingVerified(), appointment.getCompletionState());    
+
+		if (success)
+			logger.debug("Appointment " + appointment.getRecID() + " successfully updated");
+		else
+			logger.error("!! Appointment " + appointment.getRecID() + " failed to updated !!");
+		
+		return success;
 	}
 
 	public Appointment retrieveByID(int recID) {
@@ -151,10 +166,6 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		return appointments;
 	}
 
-	public boolean update(Appointment appointment) {
-		throw new UnsupportedOperationException("Unable to update existing appointment in database.");
-	}
-
 	public void delete(int recID) {
 		logger.debug("Trying to delete Appointment with ID: " + recID);
 
@@ -187,6 +198,8 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		int instructorID = Integer.parseInt(row.getItem("instructorID"));
 		Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));
 		Timestamp endTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("endTime"));
-		return new Appointment(recID,studentID, instructorID, startTime, endTime);
+		Boolean schedulingVerified = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("schedulingVerified")));
+		int completionState = Integer.parseInt(row.getItem("completionState"));
+		return new Appointment(recID,studentID, instructorID, startTime, endTime, schedulingVerified, completionState);
 	}
 }
