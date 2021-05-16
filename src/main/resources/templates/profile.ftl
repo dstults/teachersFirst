@@ -17,7 +17,7 @@
 			<td>
 				<table class="profile-inner">
 					<tr><td colspan=2><h1>${member.displayName}</h1></tr>
-					<#if isAdmin || member.isStudent><tr><td colspan=2><h1>Credit-Hours: ${member.credits}</h1></tr></#if>
+					<#if isAdmin || member.isStudent><tr><td style="background-color: var(--primaryHighlight);" colspan=2><h3 style="line-height: 200%;">Credit-Hours:&nbsp;&nbsp;${member.credits}</h3></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left" style="width: 33%;">Member ID:</td><td style="width: 67%;">${member.recID}</td></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Login name:</td><td>${member.loginName}</td></tr></#if>
 					<#if isAdmin || isInstructor || isSelf><tr><td class="bold-left">Gender:</td><td>${member.genderWord}</td></tr></#if>
@@ -43,7 +43,7 @@
 		</tr>
 		</table>
 		<br><br>
-		<#if isAdmin || isInstructor || isSelf><p><a href="/edit_profile">Edit profile info</a></p></#if>
+		<#if isAdmin || isInstructor || isSelf><p><a href="/edit_profile?memberId=${member.recID}">Edit Profile</a></p></#if>
 	</div>
 
 </#if>

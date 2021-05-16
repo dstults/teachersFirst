@@ -28,7 +28,7 @@
 	</header>
 
 <#if message != "">
-	<div class="banner">
+	<div id="messageBanner" class="banner">
 		<p>${message}</p>
 	</div>
 </#if>
