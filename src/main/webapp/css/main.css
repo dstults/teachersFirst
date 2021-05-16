@@ -432,8 +432,15 @@ input[type=radio]{
 .red {
 	color: red;
 }
+.slightly-bigger {
+	font-size: 150%;
+	line-height: 75%;
+	vertical-align: middle;
+}
 .bigger {
 	font-size: 200%;
+	line-height: 50%;
+	vertical-align: middle;
 }
 .blue {
 	color: blue;
