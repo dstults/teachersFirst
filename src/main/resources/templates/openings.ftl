@@ -3,27 +3,11 @@
 <body>
 <#include "header.ftl">
 
-	<div class="openings-buttons">
-		<ul class="fake-buttons">
-			<li>
-				<a href="javascript:openFilter();" class="fake-button">Search openings</a>
-			</li>
-			<#if isAdmin || isInstructor>
-			<li>
-				<a href="javascript:makeOpenings();" class="fake-button">Make New Openings</a>
-			</li>
-			</#if>
-			<#if batchEnabled>
-			<li>
-				<a href="javascript:makeAppointmentBatch();" class="fake-button">Make Batch Appointments</a>
-			</li>
-			</#if>
-		</ul>
-	</div>
+	<a href="javascript:openFilter();" class="buttonize-link">Search openings</a>
+	<#if isAdmin || isInstructor><a href="javascript:makeOpenings();" class="buttonize-link">Make New Openings</a></#if>
+	<#if batchEnabled><a href="javascript:makeAppointmentBatch();" class="buttonize-link">Make Batch Appointments</a></#if>
 
-	<div class="openings-text">
-		<h1>Teacher openings for ${startDate} to ${endDate}:</h1>
-	</div>
+	<h1 class="openings-subtitle">Teacher openings for ${startDate} to ${endDate}:</h1>
 
 	<table class="openings-calendar">
 		<tr>
