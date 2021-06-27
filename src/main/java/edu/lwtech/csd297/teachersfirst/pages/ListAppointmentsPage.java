@@ -7,10 +7,10 @@ import javax.servlet.http.*;
 import edu.lwtech.csd297.teachersfirst.pojos.*;
 import edu.lwtech.csd297.teachersfirst.*;
 import edu.lwtech.csd297.teachersfirst.daos.*;
-public class AppointmentsPage extends PageLoader {
+public class ListAppointmentsPage extends PageLoader {
 
 	// Constructor
-	public AppointmentsPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public ListAppointmentsPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	// Page-specific
 

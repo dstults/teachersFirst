@@ -212,10 +212,13 @@ public class Appointment implements IJsonnable {
 				"\",\"instructorName\":\"" + this.getInstructorName() +
 				"\",\"studentId\":\"" + this.studentId +
 				"\",\"studentName\":\"" + this.getStudentName() +
-				"\",\"date\":\"" + this.getDateFormatted() +
 				"\",\"startTime\":\"" + this.startTime +
 				"\",\"endTime\":\"" + this.endTime +
+				"\",\"dateFormatted\":\"" + this.getDateFormatted() +
+				"\",\"startTimeFormatted\":\"" + this.getStartTimeFormatted() +
+				"\",\"endTimeFormatted\":\"" + this.getEndTimeFormatted() +
 				"\",\"isMyAppointment\":\"" + this.getIsMyAppointment() +
+				"\",\"schedulingVerified\":\"" + this.getSchedulingVerified() +
 				"\"}";
 	}
 

@@ -69,6 +69,14 @@
 
 </body>
 <script>
+	const messageBanner = doc.getElementById('messageBanner');
+	let futureAppointmentData = null;
+	let pastAppointmentData = null;
+	fetch('/appointments?json').then(response => response.json()).then(data => {
+		[ futureAppointmentData, pastAppointmentData ] = data;
+		console.log('data parse successful for [futureAppointmentData] and [pastAppointmentData]');
+	}).catch(err => console.error(err.message));
+
 	const getControlElement = (appointmentId) => {
 		const e1 = document.getElementById('appt-' + appointmentId + '-control');
 		e1.innerHTML = '...';
@@ -85,11 +93,6 @@
 
 			let parser = new DOMParser();
 			let doc = parser.parseFromString(xhr.response, 'text/html');
-			let messageBanner = doc.getElementById('messageBanner');
-			console.log(xhr);
-			console.log(parser);
-			console.log(doc);
-			console.log(messageBanner);
 			statusElement.innerHTML = messageBanner.innerHTML;
 
 		} else {

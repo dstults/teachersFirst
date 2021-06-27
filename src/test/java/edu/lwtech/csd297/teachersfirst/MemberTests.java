@@ -154,7 +154,7 @@ class MemberTests {
 	@Test
 	void testGetAge() {
 		//TODO: Fix Get Age
-		assertEquals(44, fred.getAge());
+		assertEquals(45, fred.getAge());
 		assertEquals(33, amy.getAge());
 		assertEquals(29, juan.getAge());
 	}
@@ -334,7 +334,7 @@ class MemberTests {
 		assertTrue(fred.toString().contains("L:fred")); // login
 		assertTrue(fred.toString().contains("Fred")); // name
 		assertTrue(fred.toString().contains("G:m")); // gender
-		assertTrue(fred.toString().contains("A:44")); // age
+		assertTrue(fred.toString().contains("A:45")); // age
 		assertTrue(fred.toString().contains("P:0-0-1")); // permissions
 	}
 
