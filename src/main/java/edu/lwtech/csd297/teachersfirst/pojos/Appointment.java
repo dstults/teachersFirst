@@ -219,6 +219,7 @@ public class Appointment implements IJsonnable {
 				"\",\"endTimeFormatted\":\"" + this.getEndTimeFormatted() +
 				"\",\"isMyAppointment\":\"" + this.getIsMyAppointment() +
 				"\",\"schedulingVerified\":\"" + this.getSchedulingVerified() +
+				"\",\"completionState\":\"" + this.getCompletionState() +
 				"\"}";
 	}
 
