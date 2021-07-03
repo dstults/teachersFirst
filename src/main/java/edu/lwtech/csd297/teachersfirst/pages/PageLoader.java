@@ -35,6 +35,12 @@ public abstract class PageLoader {
 	// variables)
 
 	public static void initializeFreeMarker(String resourcesDir) throws ServletException {
+		if (resourcesDir == null) {
+			logger.warn("===========DEBUG HELP===========");
+			logger.warn("Something has broken above here!");
+			logger.warn("FreeMarker is attempting to initialize without a resourcesDir, this should not be possible.");
+			throw new RuntimeException("FreeMarker is attempting to initialize without a resourcesDir.");
+		}
 		String templateDir = resourcesDir + "/templates";
 		try {
 			freeMarkerConfig.setDirectoryForTemplateLoading(new File(templateDir));
@@ -116,7 +122,6 @@ public abstract class PageLoader {
 	protected void trySendResponse(String headerOverwrite) {
 
 		if (templateName == null) {
-
 			// Send 404 error response
 			try {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -124,25 +129,21 @@ public abstract class PageLoader {
 				logger.error("Unable to send 404 response code.", e);
 			}
 			return;
-
-		} else {
-
-			// Process template:
-			logger.debug("Processing Template: " + templateName);
-			if (headerOverwrite != "") {
-				response.setHeader("Content-Type", headerOverwrite);
-			}
-			try (PrintWriter out = response.getWriter()) {
-				Template view = freeMarkerConfig.getTemplate(templateName);
-				view.process(templateDataMap, out);
-			} catch (TemplateException | MalformedTemplateNameException e) {
-				logger.error("Template Error: ", e);
-			} catch (IOException e) {
-				logger.error("IO Error: ", e);
-			}
-
 		}
-		
+
+		// Process template:
+		logger.debug("Processing Template: " + templateName);
+		if (headerOverwrite != "") {
+			response.setHeader("Content-Type", headerOverwrite);
+		}
+		try (PrintWriter out = response.getWriter()) {
+			Template view = freeMarkerConfig.getTemplate(templateName);
+			view.process(templateDataMap, out);
+		} catch (TemplateException | MalformedTemplateNameException e) {
+			logger.error("Template Error: ", e);
+		} catch (IOException e) {
+			logger.error("IO Error: ", e);
+		}
 	}
 
 	protected void trySendJson(String json) {
