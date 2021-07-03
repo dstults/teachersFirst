@@ -1,5 +1,5 @@
 	<header>
-		<div class="landing-text">
+		<div class="main-title-text">
 			<h1>${websiteTitle}</h1>
 			<h6>${websiteSubtitle}</h6>
 			

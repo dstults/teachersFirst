@@ -80,7 +80,7 @@ public class TeachersFirstServlet extends HttpServlet {
 					new ServicesPage(request, response).loadPage();
 					break;
 				case "/appointments":
-					new AppointmentsPage(request, response).loadPage();
+					new ListAppointmentsPage(request, response).loadPage();
 					break;
 				case "/make_appointment_batch":
 					new MakeAppointmentBatchPage(request, response).loadPage();
