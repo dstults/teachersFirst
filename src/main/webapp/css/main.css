@@ -226,27 +226,30 @@ table.openings-calendar div.highlight {
 
 /* profile page */
 
-.profile-page {
+.profile-page-nodata {
 	font-size: 2rem;
 	text-align: left;
 }
-table.profile-outer {
+.profile-table img {
+	width: 100%;
+}
+table.profile-table {
 	table-layout: fixed;
 	padding: 15px 10px;
 	width: 100%;
 	border: 2px solid black;
 	box-shadow: 2px 2px 2px black;
 }
-table.profile-outer td {
+table.profile-table td {
 	width: 50%;
 }
-table.profile-inner {
+table.profile-basic-stats {
 	table-layout: fixed;
 	border: none;
 	width: 90%;
 	margin: 10px auto;
 }
-table.profile-inner td {
+table.profile-basic-stats td {
 	border: none;
 }
 
