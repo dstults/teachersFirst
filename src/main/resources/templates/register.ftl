@@ -2,7 +2,7 @@
 <#include "head.ftl">
 <body>
 <#include "header.ftl">
-<div class="fixed-width-subpage">
+<div class="page-content-550">
 
 	<#if userId lte 0>
 

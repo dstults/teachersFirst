@@ -11,7 +11,7 @@
 	</div>
 <#else>
 
-	<div class="fixed-width-subpage-wide">
+	<div class="page-content-750-1000">
 		<table class="profile-table">
 		<tr><td><img src="/images/profileNeutral.png"></td>
 			<td>

@@ -2,70 +2,70 @@
 <#include "head.ftl">
 <body>
 <#include "header.ftl">
-
+	<div class="page-content-750-1000">
 <#if userId lte 0>
 	<#include "please_login.ftl">
 <#else>
-
-	<a href="javascript:filterAppointments();" class="buttonize-link">Filter Appointments</a>
-	<div class="appointment-title-container">
-		<div class="appointment-page-controls">
-			<a href="javascript:futurePagePrev();">Prev Page</a>
-			<p id="current-future-page">1</p>
-			<a href="javascript:futurePageNext();">Next Page</a>
+		<div class="top-buttons">
+			<a href="javascript:filterAppointments();" class="buttonize-link">Filter Appointments</a>
 		</div>
-		<h2 class="appointments-subtitle">Upcoming appointments</h2>
-		<div></div>
-	</div>
-	<table class="info-list">
-		<tr>
-			<th style="width: 50px;">#</th><th style="width: 135px;">Controls</th><#if isAdmin || isInstructor><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th style="width: 265px;">Status</th>
-		</tr>
-		<#list 0..9 as i>
-		<tr id="future-row-${i?c}">
-			<td id="future-row-${i?c}-arrayindex"></td>
-			<td id="future-row-${i?c}-controls"></td>
-			<#if isAdmin || isInstructor><td id="future-row-${i?c}-recID"></td></#if>
-			<td id="future-row-${i?c}-date"></td>
-			<td id="future-row-${i?c}-startTime"></td>
-			<td id="future-row-${i?c}-endTime"></td>
-			<td><a id="future-row-${i?c}-student"></a></td>
-			<td><a id="future-row-${i?c}-instructor"></a></td>
-			<td id="future-row-${i?c}-status"></td>
-		</tr>
-		</#list>
-	</table>
-
-	<div class="appointment-title-container">
-		<div class="appointment-page-controls">
-			<a href="javascript:pastPagePrev();">Prev Page</a>
-			<p id="current-past-page">1</p>
-			<a href="javascript:pastPageNext();">Next Page</a>
+		<div class="appointment-title-container">
+			<div class="appointment-page-controls">
+				<a href="javascript:futurePagePrev();">Prev Page</a>
+				<p id="current-future-page">1</p>
+				<a href="javascript:futurePageNext();">Next Page</a>
+			</div>
+			<h2 class="appointments-subtitle">Upcoming appointments</h2>
+			<div></div>
 		</div>
-		<h2 class="appointments-subtitle">Previous appointments</h2>
-		<div></div>
-	</div>
-	<table class="info-list">
-		<tr>
-			<th style="width: 50px;">#</th><#if isAdmin || isInstructor><th style="width: 135px;">Controls</th><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th style="width: 265px;">Status</th>
-		</tr>
-		<#list 0..14 as i>
-		<tr id="past-row-${i?c}">
-			<td id="past-row-${i?c}-arrayindex"></td>
-			<td id="past-row-${i?c}-controls"></td>
-			<#if isAdmin || isInstructor><td id="past-row-${i?c}-recID"></td></#if>
-			<td id="past-row-${i?c}-date"></td>
-			<td id="past-row-${i?c}-startTime"></td>
-			<td id="past-row-${i?c}-endTime"></td>
-			<td><a id="past-row-${i?c}-student"></a></td>
-			<td><a id="past-row-${i?c}-instructor"></a></td>
-			<td id="past-row-${i?c}-status"></td>
-		</tr>
-		</#list>
-	</table>
+		<table class="info-list">
+			<tr>
+				<th style="width: 50px;">#</th><th style="width: 135px;">Controls</th><#if isAdmin || isInstructor><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th style="width: 265px;">Status</th>
+			</tr>
+			<#list 0..9 as i>
+			<tr id="future-row-${i?c}">
+				<td id="future-row-${i?c}-arrayindex"></td>
+				<td id="future-row-${i?c}-controls"></td>
+				<#if isAdmin || isInstructor><td id="future-row-${i?c}-recID"></td></#if>
+				<td id="future-row-${i?c}-date"></td>
+				<td id="future-row-${i?c}-startTime"></td>
+				<td id="future-row-${i?c}-endTime"></td>
+				<td><a id="future-row-${i?c}-student"></a></td>
+				<td><a id="future-row-${i?c}-instructor"></a></td>
+				<td id="future-row-${i?c}-status"></td>
+			</tr>
+			</#list>
+		</table>
 
+		<div class="appointment-title-container">
+			<div class="appointment-page-controls">
+				<a href="javascript:pastPagePrev();">Prev Page</a>
+				<p id="current-past-page">1</p>
+				<a href="javascript:pastPageNext();">Next Page</a>
+			</div>
+			<h2 class="appointments-subtitle">Previous appointments</h2>
+			<div></div>
+		</div>
+		<table class="info-list">
+			<tr>
+				<th style="width: 50px;">#</th><#if isAdmin || isInstructor><th style="width: 135px;">Controls</th><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th style="width: 265px;">Status</th>
+			</tr>
+			<#list 0..14 as i>
+			<tr id="past-row-${i?c}">
+				<td id="past-row-${i?c}-arrayindex"></td>
+				<td id="past-row-${i?c}-controls"></td>
+				<#if isAdmin || isInstructor><td id="past-row-${i?c}-recID"></td></#if>
+				<td id="past-row-${i?c}-date"></td>
+				<td id="past-row-${i?c}-startTime"></td>
+				<td id="past-row-${i?c}-endTime"></td>
+				<td><a id="past-row-${i?c}-student"></a></td>
+				<td><a id="past-row-${i?c}-instructor"></a></td>
+				<td id="past-row-${i?c}-status"></td>
+			</tr>
+			</#list>
+		</table>
 </#if>
-
+	</div>
 </body>
 <#if userId gt 0>
 <script>
@@ -262,12 +262,10 @@
 	const handleDeleteResponse = (xhr, controlElement, statusElement) => {
 		if (xhr.status === 200) {
 			controlElement.innerHTML = '';
-
 			const parser = new DOMParser();
 			const data = parser.parseFromString(xhr.response, 'text/html');
-			const messageBanner = data.getElementById('messageBanner');
+			const messageBanner = data.getElementById('message-banner');
 			statusElement.innerHTML = messageBanner.innerHTML;
-
 		} else {
 			controlElement.innerHTML = 'ERROR';
 		}

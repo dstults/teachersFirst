@@ -7,7 +7,7 @@
 	<#include "please_login.ftl">
 <#else>
 
-<div class="fixed-width-subpage">
+<div class="page-content-550">
 	<div class="confirm-appointment" style="width: 80%;">
 
 	<p>Please confirm that you'd like to make an appointment:</p>
