@@ -122,6 +122,12 @@ li {
 .page-content-550 p {
 	line-height: 200%;
 }
+.data-view {
+	background-color: var(--backgroundColorLight);
+	font-family: monospace;
+	line-height: 115%;
+	line-height: 105%;
+}
 .required {
 	color: red;
 }
@@ -166,6 +172,7 @@ input[type=radio] {
 	text-align: left;
 	text-indent: 50px;
 	margin: 0;
+	min-height: 120px;
 }
 .italic {
 	font-style: italic;
@@ -320,17 +327,17 @@ table.info-list {
 }
 table.info-list, table.info-list th, table.info-list td {
 	border: 1px solid black;
-	padding: 15px 20px;
+	padding: 5px 10px;
 	text-align: center;	
 }
 table.info-list th {
 	font-size: 1.5rem;
 	background-color: var(--primaryHighlight);
 }
-table.info-list td, .data-view {
+table.info-list td {
 	background-color: var(--backgroundColorLight);
 	font-family: monospace;
-	font-size: 120%;
+	font-size: 130%;
 }
 table.info-list tr {
 	height: 45px;
