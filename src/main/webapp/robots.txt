@@ -1,0 +1,10 @@
+#AdsBot Explicit Blocks
+User-agent: AdsBot-Google-Mobile
+Disallow: /
+
+User-agent: AdsBot-Google
+Disallow: /
+
+# Block everyone else
+User-agent: * 
+Disallow: /

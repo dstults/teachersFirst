@@ -45,7 +45,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 			return -1;
 		}
 
-		String query = "INSERT INTO appointments (studentID, instructorID, startTime, endTime, schedulingVerified, completionState) VALUES (?,?,?,?,?,?)";
+		String query = "INSERT INTO appointments (studentID, instructorID, startTime, endTime, schedulingVerified, completionState) VALUES (?,?,?,?,?,?);";
 
 		int recID = SQLUtils.executeSqlAppointmentInsert(conn, query, appointment.getRecID(), appointment.getStudentID(), appointment.getInstructorID(), appointment.getStartTime(), appointment.getEndTime(), appointment.getSchedulingVerified(), appointment.getCompletionState());    
 		
@@ -71,7 +71,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public Appointment retrieveByID(int recID) {
 		//logger.debug("Trying to get Appointment with ID: " + recID);
 		
-		String query = "SELECT * FROM appointments WHERE recID=" + recID;
+		String query = "SELECT * FROM appointments WHERE recID=" + recID + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -95,7 +95,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 
 		int limiter = index + 1;
 
-		String query = "SELECT * FROM appointments ORDER BY recID LIMIT " + limiter;
+		String query = "SELECT * FROM appointments ORDER BY recID LIMIT " + limiter + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -111,7 +111,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Appointment> retrieveAll() {
 		logger.debug("Getting all appointments...");
 		
-		String query = "SELECT * FROM appointments ORDER BY startTime";
+		String query = "SELECT * FROM appointments ORDER BY startTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -130,7 +130,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Appointment IDs...");
 
-		String query = "SELECT recID FROM appointments ORDER BY recID";
+		String query = "SELECT recID FROM appointments ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -150,7 +150,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Appointment> search(String keyword) {
 		logger.debug("Searching for appointment with '" + keyword + "'");
 
-		String query = "SELECT * FROM appointments WHERE userName LIKE ? ORDER BY recID";
+		String query = "SELECT * FROM appointments WHERE userName LIKE ? ORDER BY recID;";
 		keyword = "%" + keyword + "%";
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query, keyword);
 		if (rows == null || rows.size() == 0) {
@@ -176,7 +176,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public int size() {
 		logger.debug("Getting the number of rows...");
 
-		String query = "SELECT COUNT(*) AS cnt FROM appointments";
+		String query = "SELECT COUNT(*) AS cnt FROM appointments;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {

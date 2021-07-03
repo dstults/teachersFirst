@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <#include "head.ftl">
 <body>
-<#include "header.ftl">
-
-<#if userId lte 0>
+	<#include "header.ftl">
+	<div class="page-content-750-1000">
+	<#if userId lte 0>
 	<#include "please_login.ftl">
-<#else>
-
-	<table class="info-list">
-		<tr>
-			<th>ID</th>
-			<th>Name</th>
-			<th>Credits</th>
-			<th>Gender / Age</th>
-			<th>Contact</th>
-			<th>Self-Introduction</th>
-			<#if isAdmin || isInstructor><th>Notes</th></#if>
-		</tr>
-		<#list members as member>
+	<#else>
+		<table class="info-list">
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Credits</th>
+				<th>Gender / Age</th>
+				<th>Contact</th>
+				<th>Self-Introduction</th>
+				<#if isAdmin || isInstructor><th>Notes</th></#if>
+			</tr>
+			<#list members as member>
 			<tr>
 				<td>${member.recID?c}</td>
 				<td><a href="/profile?memberId=${member.recID?c}">${member.displayName}</a></td>
@@ -27,10 +26,9 @@
 				<td>${member.selfIntroduction}</td>
 				<#if isAdmin || isInstructor><td>${member.instructorNotes}</td></#if>
 			</tr>
-		</#list>
-	</table>
-
-</#if>
-
+			</#list>
+		</table>
+	</div>
+	</#if>
 </body>
 </html>

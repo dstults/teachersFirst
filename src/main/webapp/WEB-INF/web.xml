@@ -19,6 +19,7 @@
 		<url-pattern>/scripts/*</url-pattern>
 		<url-pattern>/css/*</url-pattern>
 		<url-pattern>/favicon.ico</url-pattern>
+		<url-pattern>/robots.txt</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>teachersFirst</servlet-name>

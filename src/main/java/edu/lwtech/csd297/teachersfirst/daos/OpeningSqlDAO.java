@@ -45,7 +45,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 			return -1;
 		}
 
-		String query = "INSERT INTO openings (instructorID, startTime, endTime) VALUES (?,?,?)";
+		String query = "INSERT INTO openings (instructorID, startTime, endTime) VALUES (?,?,?);";
 
 		int recID = SQLUtils.executeSqlOpeningInsert(conn, query, opening.getRecID(), opening.getInstructorID(), opening.getStartTime(), opening.getEndTime());    
 		
@@ -56,7 +56,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public Opening retrieveByID(int recID) {
 		//logger.debug("Trying to get Opening with ID: " + recID);
 		
-		String query = "SELECT * FROM openings WHERE recID=" + recID;
+		String query = "SELECT * FROM openings WHERE recID=" + recID + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -80,7 +80,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 
 		int limiter = index + 1;
 
-		String query = "SELECT * FROM openings ORDER BY recID LIMIT " + limiter;
+		String query = "SELECT * FROM openings ORDER BY recID LIMIT " + limiter + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -96,7 +96,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Opening> retrieveAll() {
 		logger.debug("Getting all openings...");
 		
-		String query = "SELECT * FROM openings ORDER BY startTime";
+		String query = "SELECT * FROM openings ORDER BY startTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -115,7 +115,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Opening IDs...");
 
-		String query = "SELECT recID FROM openings ORDER BY recID";
+		String query = "SELECT recID FROM openings ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -135,7 +135,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Opening> search(String keyword) {
 		logger.debug("Searching for opening with '" + keyword + "'");
 
-		String query = "SELECT * FROM openings WHERE userName LIKE ? ORDER BY recID";
+		String query = "SELECT * FROM openings WHERE userName LIKE ? ORDER BY recID;";
 
 		keyword = "%" + keyword + "%";
 
@@ -167,7 +167,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public int size() {
 		logger.debug("Getting the number of rows...");
 
-		String query = "SELECT COUNT(*) AS cnt FROM openings";
+		String query = "SELECT COUNT(*) AS cnt FROM openings;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {

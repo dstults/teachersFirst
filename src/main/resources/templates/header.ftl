@@ -2,14 +2,13 @@
 		<div class="main-title-text">
 			<h1>${websiteTitle}</h1>
 			<h6>${websiteSubtitle}</h6>
-			
-			<#if userId gt 0>
+				<#if userId gt 0>
 				<div class="top-right-button welcome-text gray">Welcome, <span class="black">${userName}</span></div>
 				<a href="/logout"><div class="top-right-button slightly-lower mouseover faded">Log Out</div></a>
-			<#else>
+				<#else>
 				<a href="/login"><div class="top-right-button navy mouseover">Log In</div></a>
 				<#if canRegister><a href="/register"><div class="top-right-button slightly-lower navy mouseover">Register</div></a></#if>
-			</#if>
+				</#if>
 			</div>
 		</div>
 		<nav>
@@ -26,9 +25,8 @@
 			</ul>
 		</nav>
 	</header>
-
-<#if message != "">
-	<div id="messageBanner" class="banner">
+	<#if message != "">
+	<div id="message-banner" class="banner">
 		<p>${message}</p>
 	</div>
-</#if>
+	</#if>

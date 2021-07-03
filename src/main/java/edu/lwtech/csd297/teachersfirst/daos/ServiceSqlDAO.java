@@ -45,7 +45,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 			return -1;
 		}
 
-		String query = "INSERT INTO services (name, description, instructors) VALUES (?,?,?)";
+		String query = "INSERT INTO services (name, description, instructors) VALUES (?,?,?);";
 
 		int recID = SQLUtils.executeSqlInsert(conn, query, String.valueOf(service.getRecID()), service.getName(), service.getDescription(), service.getInstructors());
 		
@@ -56,7 +56,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 	public Service retrieveByID(int recID) {
 		//logger.debug("Trying to get Service with ID: " + recID);
 		
-		String query = "SELECT * FROM services WHERE recID=" + recID;
+		String query = "SELECT * FROM services WHERE recID=" + recID + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -80,7 +80,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 
 		int limiter = index + 1;
 
-		String query = "SELECT * FROM services ORDER BY recID LIMIT " + limiter;
+		String query = "SELECT * FROM services ORDER BY recID LIMIT " + limiter + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -96,7 +96,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 	public List<Service> retrieveAll() {
 		logger.debug("Getting all services...");
 		
-		String query = "SELECT * FROM services ORDER BY recID";
+		String query = "SELECT * FROM services ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -115,7 +115,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Service IDs...");
 
-		String query = "SELECT recID FROM services ORDER BY recID";
+		String query = "SELECT recID FROM services ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -135,7 +135,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 	public List<Service> search(String keyword) {
 		logger.debug("Searching for service with '" + keyword + "'");
 
-		String query = "SELECT * WHERE name LIKE ? OR description LIKE ? OR instructors LIKE ? ORDER BY recID";
+		String query = "SELECT * WHERE name LIKE ? OR description LIKE ? OR instructors LIKE ? ORDER BY recID;";
 
 		keyword = "%" + keyword + "%";
 
@@ -167,7 +167,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 	public int size() {
 		logger.debug("Getting the number of rows...");
 
-		String query = "SELECT COUNT(*) AS cnt FROM services";
+		String query = "SELECT COUNT(*) AS cnt FROM services;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {

@@ -45,7 +45,7 @@ public class MemberSqlDAO implements DAO<Member> {
 			return -1;
 		}
 
-		String query = "INSERT INTO members (loginName, passwordHash, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?,?,?)";
+		String query = "INSERT INTO members (loginName, passwordHash, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?,?,?);";
 
 		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsAdmin());
 		
@@ -56,7 +56,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByID(int recID) {
 		//logger.debug("Trying to get Member with ID: " + recID);
 		
-		String query = "SELECT * FROM members WHERE recID=" + recID;
+		String query = "SELECT * FROM members WHERE recID=" + recID + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -72,7 +72,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByLoginName(String loginName) {
 		//logger.debug("Trying to get Member with login name: " + loginName);
 		
-		String query = "SELECT * FROM members WHERE loginName='" + loginName +"'";
+		String query = "SELECT * FROM members WHERE loginName='" + loginName +"';";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -112,7 +112,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		int limiter = index + 1;
 
-		String query = "SELECT * FROM members ORDER BY recID LIMIT " + limiter;
+		String query = "SELECT * FROM members ORDER BY recID LIMIT " + limiter + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -128,7 +128,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Member> retrieveAll() {
 		logger.debug("Getting all members...");
 		
-		String query = "SELECT * FROM members ORDER BY recID";
+		String query = "SELECT * FROM members ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -147,7 +147,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Member IDs...");
 
-		String query = "SELECT recID FROM members ORDER BY recID";
+		String query = "SELECT recID FROM members ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -167,7 +167,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Member> search(String keyword) {
 		logger.debug("Searching for member with '" + keyword + "'");
 
-		String query = "SELECT * FROM members WHERE userName LIKE ? ORDER BY recID";
+		String query = "SELECT * FROM members WHERE userName LIKE ? ORDER BY recID;";
 
 		keyword = "%" + keyword + "%";
 
@@ -199,7 +199,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public int size() {
 		logger.debug("Getting the number of rows...");
 
-		String query = "SELECT COUNT(*) AS cnt FROM members";
+		String query = "SELECT COUNT(*) AS cnt FROM members;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
