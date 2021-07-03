@@ -168,6 +168,26 @@ public class Appointment implements IJsonnable {
 		DataManager.getAppointmentDAO().update(this);
 	}
 
+	public String getStatusText() {
+		String status1 = this.schedulingVerified ? "verified" : "UNVERIFIED";
+		String status2;
+		switch(this.completionState) {
+			case -1:
+				status2 = "NEEDS COMPLETION CONFIRMATION";
+				break;
+			case 0:
+				status2 = "CANCELLED";
+				break;
+			case 1:
+				status2 = "completed";
+				break;
+			default:
+				status2 = "";
+				break;
+		}
+		return status1 + "/" + status2;
+	}
+
 	// ----------------------------------------------------------------
 
 	public String getStudentName() {
@@ -207,20 +227,21 @@ public class Appointment implements IJsonnable {
 
 	@Override
 	public String toJson() {
-		return "{\"id\":\"" + this.recId +
-				"\",\"instructorId\":\"" + this.instructorId +
-				"\",\"instructorName\":\"" + this.getInstructorName() +
-				"\",\"studentId\":\"" + this.studentId +
-				"\",\"studentName\":\"" + this.getStudentName() +
-				"\",\"startTime\":\"" + this.startTime +
-				"\",\"endTime\":\"" + this.endTime +
-				"\",\"dateFormatted\":\"" + this.getDateFormatted() +
-				"\",\"startTimeFormatted\":\"" + this.getStartTimeFormatted() +
-				"\",\"endTimeFormatted\":\"" + this.getEndTimeFormatted() +
-				"\",\"isMyAppointment\":\"" + this.getIsMyAppointment() +
-				"\",\"schedulingVerified\":\"" + this.getSchedulingVerified() +
-				"\",\"completionState\":\"" + this.getCompletionState() +
-				"\"}";
+		return "{\"id\":" + this.recId + "," +
+				"\"instructorId\":" + this.instructorId + "," +
+				"\"instructorName\":\"" + this.getInstructorName() + "\"," +
+				"\"studentId\":" + this.studentId + "," +
+				"\"studentName\":\"" + this.getStudentName() + "\"," +
+				"\"startTime\":\"" + this.startTime + "\"," +
+				"\"endTime\":\"" + this.endTime + "\"," +
+				"\"dateFormatted\":\"" + this.getDateFormatted() + "\"," +
+				"\"startTimeFormatted\":\"" + this.getStartTimeFormatted() + "\"," +
+				"\"endTimeFormatted\":\"" + this.getEndTimeFormatted() + "\"," +
+				"\"isMyAppointment\":" + this.getIsMyAppointment() + "," +
+				"\"schedulingVerified\":" + this.getSchedulingVerified() + "," +
+				"\"completionState\":" + this.getCompletionState() + "," +
+				"\"statusText\":\"" + this.getStatusText() + "\"" +
+				"}";
 	}
 
 	@Override
