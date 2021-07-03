@@ -24,7 +24,7 @@
 					<#list day.openings as opening>
 					<#if isAdmin || (isInstructor && opening.instructorId == userId)>
 					<div class="${opening.highlight}">
-						<p class="aleft"><a href="javascript:confirmDeleteOpening(${opening.id?c});" class="red bold">X </a><a href="/make_appointment?openingId=${opening.id}&instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}">${opening.instructorName}:</p>
+						<p class="aleft"><a href="javascript:confirmDeleteOpening(${opening.id?c});" class="red size2p2 bold">X </a><a href="/make_appointment?openingId=${opening.id}&instructorId=${opening.instructorId}&date=${opening.date}&openingStartTime=${opening.startTime}&openingEndTime=${opening.endTime}">${opening.instructorName}:</p>
 						<p class="aright">${opening.startTime} - ${opening.endTime}</a></p>
 					</div>
 					<#else>

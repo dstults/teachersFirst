@@ -125,8 +125,8 @@
 			if (isAdmin || !isPast || appointment.completionState == 0) {
 				const child = document.createElement('a');
 				child.classList.add('red');
+				child.classList.add('size2p2');
 				child.classList.add('bold');
-				if (isPast) child.classList.add('slightly-bigger');
 				child.href = 'javascript:confirmDeleteAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
 				child.innerHTML = 'X';
 				controls.appendChild(child);
@@ -137,14 +137,14 @@
 				}
 				const child1 = document.createElement('a');
 				child1.classList.add('blue');
-				child1.classList.add('bigger');
+				child1.classList.add('size2p4');
 				child1.href = 'javascript:confirmMissAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
 				child1.innerHTML = '&#9746;';
 				controls.appendChild(child1);
 				controls.appendChild(document.createTextNode('   '));
 				const child2 = document.createElement('a');
 				child2.classList.add('green');
-				child2.classList.add('bigger');
+				child2.classList.add('size2p4');
 				child2.href = 'javascript:confirmCompleteAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
 				child2.innerHTML = '&#9745;';
 				controls.appendChild(child2);
@@ -284,7 +284,7 @@
 	const handleCompleteMissResponse = (xhr, controlElement, statusElement, statusText, appointmentId, isPast, row) => {
 		if (xhr.status === 200) {
 			if (statusText.includes('CANCELLED')) {
-				controlElement.innerHTML = '<a href="javascript:confirmDeleteAppointment(' + isPast + ', ' + appointmentId + ', ' + row + ');" class="red slightly-bigger bold">X</a>';
+				controlElement.innerHTML = '<a href="javascript:confirmDeleteAppointment(' + isPast + ', ' + appointmentId + ', ' + row + ');" class="red size2p2 bold">X</a>';
 			} else {
 				controlElement.innerHTML = '';
 			}
