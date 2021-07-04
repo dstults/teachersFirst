@@ -164,15 +164,12 @@ input[type=radio] {
 	font-weight: bold;
 	text-align: left;
 }
-.bold-left>p {
-	margin-left: 1rem;
-}
 .normal-paragraph {
 	font-weight: normal;
 	text-align: left;
 	text-indent: 50px;
 	margin: 0;
-	min-height: 120px;
+	min-height: 100px;
 }
 .italic {
 	font-style: italic;
@@ -226,6 +223,16 @@ input[type=radio] {
 	line-height: 0;
 	vertical-align: middle;
 }
+.size1p5h2 {
+	font-size: 1.5rem;
+	line-height: 2rem;
+	vertical-align: middle;
+}
+.size1p4h2 {
+	font-size: 1.4rem;
+	line-height: 2rem;
+	vertical-align: middle;
+}
 .blue {
 	color: blue;
 }
@@ -239,7 +246,10 @@ input[type=radio] {
 	text-align: center;
 }
 .faded {
-	opacity: 50%;
+	opacity: 0.6;
+}
+.disabled {
+	opacity: 0.4;
 }
 .extra-side-padding {
 	padding: 8px 32px;
@@ -395,30 +405,54 @@ table.openings-calendar div.highlight {
 .profile-table {
 	font-size: 2rem;
 }
-.profile-table img {
+.profile-image {
+	margin-top: 2rem;
+	margin-left: 3rem;
 	width: 100%;
 }
-table.profile-table {
+.profile-table {
 	table-layout: fixed;
 	padding: 15px 10px;
 	width: 100%;
 	border: 2px solid black;
 	box-shadow: 2px 2px 2px black;
 }
-table.profile-table td {
+.profile-table td {
 	width: 50%;
 }
-table.profile-basic-stats {
-	table-layout: fixed;
-	border: none;
+.profile-basic-stats {
+	display: grid;
 	width: 90%;
-	margin: 10px auto;
+	grid-template-columns: 170px auto 33px;
+	margin: 0 0 auto auto;
 }
-table.profile-basic-stats td {
-	border: none;
+.profile-basic-stats > .full-width-grid {
+	grid-column-start: 1;
+	grid-column-end: 4;
 }
-
-/* make/confirm appointment page */
+.profile-basic-stats > .bold-left {
+	margin-left: 1rem;
+}
+.profile-basic-stats > .h1-like {
+	font-size: 2em;
+}
+.profile-basic-stats > .h3-like {
+	font-size: 1.17em;
+	line-height: 2em;
+}
+.profile-basic-stats img {
+	width: 20px;
+	margin: 0 auto;
+}
+.right-float-img-button {
+	float: right;
+	width: 20px;
+}
+.profile-basic-stats .right-float-img-button {
+	height: 100%;
+	margin-right: 0.8rem;
+}
+/* css for make & confirm new appointment(s) page */
 
 .make-appointment, .confirm-appointment, .new-opening {
 	margin: auto;
