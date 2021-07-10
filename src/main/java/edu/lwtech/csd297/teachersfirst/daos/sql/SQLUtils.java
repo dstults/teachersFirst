@@ -89,7 +89,7 @@ class SQLUtils {
 	}
 
 	// Default Insert
-	public static int executeSqlInsert(Connection conn, String query, String recID, String... arguments) {
+	public static int executeSqlInsert(Connection conn, String query, String recID, String... args) {
 		//logger.debug("Executing SQL Insert: " + query);
 
 		int newID = -1;
@@ -99,7 +99,7 @@ class SQLUtils {
 			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 
 			int position = 1;
-			for (String arg : arguments)
+			for (String arg : args)
 				stmt.setString(position++, arg);
 
 			stmt.executeUpdate();
@@ -227,7 +227,7 @@ class SQLUtils {
 	}
 
 	// Generic Update
-	public static boolean executeSqlUpdate(Connection conn, String query, String ... args) {
+	public static boolean executeSqlUpdate(Connection conn, String query, String... args) {
 		logger.debug("Executing SQL Update: " + query);
 		
 		try {
