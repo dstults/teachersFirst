@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.daos;
+package edu.lwtech.csd297.teachersfirst.daos.sql;
 
 import java.sql.*;
 import java.util.*;
@@ -6,6 +6,7 @@ import java.util.*;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.daos.DAO;
 import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class ServiceSqlDAO implements DAO<Service> {

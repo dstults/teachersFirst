@@ -6,6 +6,10 @@ import java.util.*;
 import javax.servlet.*;
 
 import edu.lwtech.csd297.teachersfirst.daos.*;
+import edu.lwtech.csd297.teachersfirst.daos.sql.AppointmentSqlDAO;
+import edu.lwtech.csd297.teachersfirst.daos.sql.MemberSqlDAO;
+import edu.lwtech.csd297.teachersfirst.daos.sql.OpeningSqlDAO;
+import edu.lwtech.csd297.teachersfirst.daos.sql.ServiceSqlDAO;
 import edu.lwtech.csd297.teachersfirst.obj.*;
 import freemarker.core.ParseException;
 

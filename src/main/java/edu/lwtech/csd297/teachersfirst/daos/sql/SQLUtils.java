@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.daos;
+package edu.lwtech.csd297.teachersfirst.daos.sql;
 
 import java.sql.*;
 import java.util.*;
