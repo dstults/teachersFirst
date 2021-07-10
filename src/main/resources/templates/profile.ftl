@@ -53,13 +53,15 @@
 	const operatorId = ${userId};
 	const memberId = ${member.recID};
 	const memberName = '${member.displayName}';
+	const memberIsStudent = ${member.isStudent?c};
 	
 	<#if isAdmin || isInstructor && member.isStudent>
 	// Set up credits
 	const creditsBox = document.getElementById('credits');
 	let credits = ${member.credits};
 	const editCredits = _ => {
-		if (!confirm(memberName + ' currently has ' + credits + ' credits, would you like to update?')) {
+		const warningMsg = memberIsStudent ? '' : '\n\nWARNING: USER IS NOT A STUDENT. THIS WOULD NOT MAKE SENSE.';
+		if (!confirm(memberName + ' currently has ' + credits + ' credits, would you like to update?' + warningMsg)) {
 			//alert('Operation cancelled.');
 			return;
 		}
@@ -76,7 +78,7 @@
 		}
 		const increaseDecrease = difference > 0 ? 'Increase' : 'Decrease';
 		if (!confirm(increaseDecrease + ' ' + memberName + '\'s credits by ' + difference + ' to ' + parsed + ', is this correct?\n\nOperator ID: [ ' + operatorId + ' ]\nDate-Time: ' + new Date())) {
-			alert('Operation cancelled.');
+			//alert('Operation cancelled.');
 			return;
 		}
 		credits = parsed;
@@ -92,18 +94,18 @@
 
 	const getFormattedString = (unformattedString) => !unformattedString ? '(unset)' : unformattedString;
 	const getStringPromptChain = (dataType, defaultValue, maxLength) => {
-		if (!confirm('Change ' + memberName + '\'s ' + dataType + '?\n\nCurrently: ' + getFormattedString(defaultValue))) {
-			return null;
-		}		
+		//if (!confirm('Change ' + memberName + '\'s ' + dataType + '?\n\nCurrently: ' + getFormattedString(defaultValue))) {
+		//	return null;
+		//}
 		const regEx = new RegExp(/^[\+\-\@\.\ \:\!\?\_a-zA-Z\d]+$/);
 		const input = prompt('Enter new ' + dataType + ' for ' + memberName + ':\n\nMax Length: ' + maxLength + ' chars', defaultValue);
 		if (!input) {
-			alert('Operation cancelled!');
+			//alert('Operation cancelled!');
 			return null;
 		}
 		const inputTrimmed = input.trim();
 		if (!inputTrimmed) {
-			alert('Operation cancelled!');
+			//alert('Operation cancelled!');
 			return null;
 		}
 		const parseResult = regEx.exec(inputTrimmed);
