@@ -187,7 +187,18 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 
 	public boolean update(Member member) {
-		throw new UnsupportedOperationException("Unable to update existing member in database.");
+		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
+
+		String query = "UPDATE members SET credits = ?, phone1 = ?, phone2 = ?, email = ?, selfIntroduction = ?, instructorNotes = ? WHERE recID = " + member.getRecID() + ";";
+
+		boolean success = SQLUtils.executeSqlUpdate(conn, query, String.valueOf(member.getCredits()), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getSelfIntroduction(), member.getInstructorNotes());
+
+		if (success)
+			logger.debug("Member " + member.getRecID() + " successfully updated");
+		else
+			logger.error("!! Member " + member.getRecID() + " failed to updated !!");
+		
+		return success;
 	}
 
 	public void delete(int recID) {

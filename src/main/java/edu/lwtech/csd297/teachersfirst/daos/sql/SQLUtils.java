@@ -226,7 +226,27 @@ class SQLUtils {
 		return newID;
 	}
 
-	// Appointment Insert
+	// Generic Update
+	public static boolean executeSqlUpdate(Connection conn, String query, String ... args) {
+		logger.debug("Executing SQL Update: " + query);
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query);
+			
+			for (int i = 0; i <= args.length; i++) {
+				stmt.setString(i + 1, args[i]);
+			}
+			stmt.executeUpdate();
+			
+			return true;
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in executeSqlUpdate: " + query, e);
+			return false;
+		}
+	}
+
+	//TODO: Switch to generic once the generic is confirmed to be working
+	// Appointment Update
 	public static boolean executeSqlAppointmentUpdate(Connection conn, String query, boolean schedulingVerified, int completionState) {
 		logger.debug("Executing SQL Update to Appointment: " + query);
 		
@@ -240,7 +260,7 @@ class SQLUtils {
 			
 			return true;
 		} catch (SQLException e) {
-			logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
+			logger.error("SQL Exception caught in executeSqlAppointmentUpdate: " + query, e);
 			return false;
 		}
 	}

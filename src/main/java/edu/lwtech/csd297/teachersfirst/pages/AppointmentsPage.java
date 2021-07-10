@@ -72,7 +72,7 @@ public class AppointmentsPage extends PageLoader {
 				Collections.reverse(pastAppointments);
 			}
 
-					String json = JsonUtils.BuildArrays(futureAppointments, pastAppointments);
+			String json = JsonUtils.BuildArrays(futureAppointments, pastAppointments);
 			//logger.debug("Json: " + json);
 			trySendJson(json);
 
