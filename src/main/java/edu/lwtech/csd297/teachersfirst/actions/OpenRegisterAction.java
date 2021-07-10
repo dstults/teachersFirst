@@ -15,7 +15,7 @@ public class OpenRegisterAction extends ActionRunner {
 	@Override
 	public void RunAction() {
 
-		// This version of this process requites that you're not signed in.
+		// This version of this process requires that you're not signed in.
 		if (uid > 0) {
 			this.SendPostReply("/services", "", "Please sign out before trying to register a new account!");
 			return;

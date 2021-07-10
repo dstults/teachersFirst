@@ -51,12 +51,18 @@ public abstract class PageLoader {
 		}
 	}
 
-	// Constructors
+	private void getGetMessage() {
+		String message = QueryHelpers.getGet(request, "message");
+		message = message.replace("//", "<br>\n			");
+		this.templateDataMap.put("message", message);
+	}
 
+	// Constructors
 	protected PageLoader(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
-		templateDataMap = new HashMap<>();
+		this.templateDataMap = new HashMap<>();
+		getGetMessage(); // Should always check for and assign this even if inevitable security fail will occur
 
 		// Handle session / cookies
 		uid = Security.getUserId(request);
@@ -68,7 +74,7 @@ public abstract class PageLoader {
 				isStudent = member.getIsStudent();
 			} else {
 				Security.logout(request, "Bad session data or failure to contact database, try again later.");
-				templateDataMap.put("messge", "Error contacting SQL server. Error code: " + uid + ".a5j // For your own security you will need to log in again.");
+				templateDataMap.put("message", "Error contacting SQL server. Error code: " + uid + ".a5j // For your own security you will need to log in again.");
 				templateName = "messageOnly.ftl";
 				this.trySendResponse();
 				DataManager.resetDAOs();
@@ -80,7 +86,6 @@ public abstract class PageLoader {
 			}
 		}
 		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-		String message = QueryHelpers.getGet(request, "message");
 
 		templateDataMap.put("canRegister", DataManager.enableOpenRegistration);
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
@@ -91,8 +96,6 @@ public abstract class PageLoader {
 		templateDataMap.put("isAdmin", isAdmin);
 		templateDataMap.put("isInstructor", isInstructor);
 		templateDataMap.put("isStudent", isStudent);
-		message = message.replace("//", "<br>\n			");
-		templateDataMap.put("message", message);
 	}
 
 	// Public entry point

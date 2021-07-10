@@ -74,10 +74,11 @@ public class ServerMain extends HttpServlet {
 			switch (pagePath) {
 				case "":
 				case "/":
-				case "/home":
-					//TODO: If logged in, redirect to appointments, otherwise, redirect to services
 				case "/services":
 					new ServicesPage(request, response).loadPage();
+					break;
+				case "/messageOnly":
+					new MessagePage(request, response).loadPage();
 					break;
 				case "/appointments":
 					new AppointmentsPage(request, response).loadPage();
