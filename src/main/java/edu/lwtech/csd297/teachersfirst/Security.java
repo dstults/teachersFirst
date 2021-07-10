@@ -16,26 +16,23 @@ public class Security {
 	private static final List<String> ipWhitelist = new ArrayList<String>();
 
 	public static void populateWhitelist() {
-		
 		// Manual entries:		
-		whitelistIp("192.168.1.88"); // local temp
-		whitelistIp("50.35.66.200"); // Darren - temp
-		whitelistIp("97.127.115.35"); // Edmund - temp
-		whitelistIp("73.140.252.100"); // Tanya - temp
-
-		//TODO: Add some sort of remote server/SQL-like verification method in case get locked out of IPs
-		//or even a separate webadmin login
+		whitelistIp("192.168.1.129");
 
 		// Automatic entries:		
-		// Oh no: There is a problem doing nslookups on jenkins builds -- they probably have this
-		// functionality disabled
+		// WARNING: Jenkins build will fail nslookup, so cannot use this:
 		//whitelistIp(nsLookup("dstults.net"));
-
 	}
 
 	private static void whitelistIp(String ip) {
-		if (ip == null) logger.warn("Invalid argument: ip is null");
-		if (ip.isEmpty()) throw new IllegalArgumentException("Invalid argument: ip is empty");
+		if (ip == null) {
+			logger.warn("Invalid argument: ip is null");
+			return;
+		}
+		if (ip.isEmpty()) {
+			throw new IllegalArgumentException("Invalid argument: ip is empty");
+		}
+
 		ipWhitelist.add(ip);
 		logger.info("Added IP [ " + ip + " ] to whitelist.");
 	}
