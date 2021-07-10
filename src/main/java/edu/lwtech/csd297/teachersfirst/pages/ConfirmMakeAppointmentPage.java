@@ -7,7 +7,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class ConfirmMakeAppointmentPage extends PageLoader {
 

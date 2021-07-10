@@ -3,8 +3,9 @@ package edu.lwtech.csd297.teachersfirst.pages;
 import java.util.*;
 import javax.servlet.http.*;
 
+import edu.lwtech.csd297.teachersfirst.PageLoader;
 import edu.lwtech.csd297.teachersfirst.QueryHelpers;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class MakeOpeningsPage extends PageLoader {
 

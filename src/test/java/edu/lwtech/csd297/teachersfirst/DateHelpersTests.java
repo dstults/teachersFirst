@@ -12,9 +12,9 @@ import javax.validation.constraints.AssertTrue;
 
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DateHelpersTests {
 

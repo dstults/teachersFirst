@@ -3,7 +3,7 @@ package edu.lwtech.csd297.teachersfirst.actions;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class MissOrCompleteAppointmentAction extends ActionRunner {
 

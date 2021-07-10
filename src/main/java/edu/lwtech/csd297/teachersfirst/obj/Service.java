@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.pojos;
+package edu.lwtech.csd297.teachersfirst.obj;
 
 import java.util.*;
 

@@ -6,7 +6,7 @@ import java.util.*;
 import javax.servlet.*;
 
 import edu.lwtech.csd297.teachersfirst.daos.*;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 import freemarker.core.ParseException;
 
 import org.apache.logging.log4j.*;

@@ -6,7 +6,7 @@ import java.util.*;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class OpeningSqlDAO implements DAO<Opening> {
 	

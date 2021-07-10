@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.daos.MemberSqlDAO;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class Security {
 	

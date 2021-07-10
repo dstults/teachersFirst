@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.pages;
+package edu.lwtech.csd297.teachersfirst;
 
 import java.io.*;
 import java.util.*;
@@ -10,7 +10,7 @@ import org.apache.logging.log4j.*;
 
 import freemarker.template.*;
 import edu.lwtech.csd297.teachersfirst.*;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public abstract class PageLoader {
 

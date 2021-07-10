@@ -4,8 +4,9 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import edu.lwtech.csd297.teachersfirst.DataManager;
+import edu.lwtech.csd297.teachersfirst.PageLoader;
 import edu.lwtech.csd297.teachersfirst.QueryHelpers;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class RegisterPage extends PageLoader {
 

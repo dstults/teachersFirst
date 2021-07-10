@@ -2,11 +2,11 @@ package edu.lwtech.csd297.teachersfirst;
 
 import org.junit.jupiter.api.*;
 
+import edu.lwtech.csd297.teachersfirst.obj.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
-
-import edu.lwtech.csd297.teachersfirst.pojos.*;
 
 public class JsonUtilTests {
 

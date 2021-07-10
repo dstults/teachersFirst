@@ -6,9 +6,10 @@ import javax.validation.constraints.AssertTrue;
 
 import org.junit.jupiter.api.*;
 
+import edu.lwtech.csd297.teachersfirst.obj.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.lwtech.csd297.teachersfirst.pojos.*;
 import junit.framework.Assert;
 
 import java.sql.Timestamp;

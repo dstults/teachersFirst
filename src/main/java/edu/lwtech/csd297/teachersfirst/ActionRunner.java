@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.actions;
+package edu.lwtech.csd297.teachersfirst;
 
 import java.io.*;
 
@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
-import edu.lwtech.csd297.teachersfirst.pojos.*;
+import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public abstract class ActionRunner {
 
