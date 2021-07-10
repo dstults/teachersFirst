@@ -12,7 +12,7 @@ import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class Security {
 	
-	private static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
+	private static final Logger logger = LogManager.getLogger(ServerMain.class);
 	private static final List<String> ipWhitelist = new ArrayList<String>();
 
 	public static void populateWhitelist() {

@@ -14,7 +14,7 @@ import edu.lwtech.csd297.teachersfirst.actions.*;
 import edu.lwtech.csd297.teachersfirst.pages.*;
 
 @WebServlet(name = "teachersFirst", urlPatterns = { "/" }, loadOnStartup = 0)
-public class TeachersFirstServlet extends HttpServlet {
+public class ServerMain extends HttpServlet {
 
 	// Declarations
 
@@ -23,7 +23,7 @@ public class TeachersFirstServlet extends HttpServlet {
 	private static final String RESOURCES_DIR = "/WEB-INF/classes";
 
 	// Public
-	public static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
+	public static final Logger logger = LogManager.getLogger(ServerMain.class);
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {

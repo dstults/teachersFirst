@@ -7,11 +7,11 @@ import java.util.*;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
-import edu.lwtech.csd297.teachersfirst.TeachersFirstServlet;
+import edu.lwtech.csd297.teachersfirst.ServerMain;
 
 public class PlannedAppointment {
 	
-	protected static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
+	protected static final Logger logger = LogManager.getLogger(ServerMain.class);
 
 	public static List<PlannedAppointment> MakeList(
 				int studentId, int instructorId,

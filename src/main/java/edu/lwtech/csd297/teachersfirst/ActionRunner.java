@@ -22,7 +22,7 @@ public abstract class ActionRunner {
 	protected boolean isInstructor;
 	protected boolean isStudent;
 	protected String errorMessage = "";
-	protected static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
+	protected static final Logger logger = LogManager.getLogger(ServerMain.class);
 
 	// Constructors
 

@@ -18,7 +18,7 @@ public abstract class PageLoader {
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
-	protected static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
+	protected static final Logger logger = LogManager.getLogger(ServerMain.class);
 
 	protected String templateName = null;
 	protected Map<String, Object> templateDataMap;
