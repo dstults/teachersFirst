@@ -154,9 +154,9 @@
 			startTime.innerHTML = appointment.startTimeFormatted;
 			endTime.innerHTML = appointment.endTimeFormatted;
 			student.innerHTML = appointment.studentName;
-			student.href = '/profile?memberId=' + appointment.studentID;
+			student.href = '/profile?memberId=' + appointment.studentId;
 			instructor.innerHTML = appointment.instructorName;
-			instructor.href = '/profile?memberId=' + appointment.instructorID;
+			instructor.href = '/profile?memberId=' + appointment.instructorId;
 			if (!isPast) {
 				status.innerHTML = appointment.schedulingVerified ? 'verified' : 'NOT VERIFIED';
 			} else {
