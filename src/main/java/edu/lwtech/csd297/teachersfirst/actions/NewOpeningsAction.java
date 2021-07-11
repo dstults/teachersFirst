@@ -20,7 +20,7 @@ public class NewOpeningsAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
+			this.sendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -48,7 +48,7 @@ public class NewOpeningsAction extends ActionRunner {
 			startHour = Integer.parseInt(timeInfo[0]);
 			startMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_openings", retryString, "Could not parse start time: %5B" + startTimeString + "%5D !");
+			this.sendPostReply("/make_openings", retryString, "Could not parse start time: %5B" + startTimeString + "%5D !");
 			return;
 		}
 		final int endHour;
@@ -59,32 +59,32 @@ public class NewOpeningsAction extends ActionRunner {
 			endHour = Integer.parseInt(timeInfo[0]);
 			endMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_openings", retryString, "Could not parse end time: %5B" + endTimeString + "%5D !");
+			this.sendPostReply("/make_openings", retryString, "Could not parse end time: %5B" + endTimeString + "%5D !");
 			return;
 		}
 
 		if (!instructorExists) {
-			this.SendPostReply("/make_openings", retryString, "Please provide a valid instructor ID.");
+			this.sendPostReply("/make_openings", retryString, "Please provide a valid instructor ID.");
 			return;
 		}
 		if (startDateString.isEmpty()) {
-			this.SendPostReply("/make_openings", retryString, "Please provide a valid start date.");
+			this.sendPostReply("/make_openings", retryString, "Please provide a valid start date.");
 			return;
 		}
 		if (endDateString.isEmpty()) {
-			this.SendPostReply("/make_openings", retryString, "Please provide a valid end date.");
+			this.sendPostReply("/make_openings", retryString, "Please provide a valid end date.");
 			return;
 		}
 		if (daysOfWeekString.isEmpty() ) {
-			this.SendPostReply("/make_openings", retryString, "Please provide days of the week.");
+			this.sendPostReply("/make_openings", retryString, "Please provide days of the week.");
 			return;
 		}
 		if (startTimeString.isEmpty()) {
-			this.SendPostReply("/make_openings", retryString, "Please provide a valid start time.");
+			this.sendPostReply("/make_openings", retryString, "Please provide a valid start time.");
 			return;
 		}
 		if (endTimeString.isEmpty()) {
-			this.SendPostReply("/make_openings", retryString, "Please provide a valid end time.");
+			this.sendPostReply("/make_openings", retryString, "Please provide a valid end time.");
 			return;
 		}
 		
@@ -99,7 +99,7 @@ public class NewOpeningsAction extends ActionRunner {
 		if(daysOfWeekString.contains("fr")) openedDays.add(DayOfWeek.FRIDAY);
 		if(daysOfWeekString.contains("sa")) openedDays.add(DayOfWeek.SATURDAY);
 		if (openedDays.size() == 0) {
-			this.SendPostReply("/make_openings", retryString, "Couldn't parse your days of the week.");
+			this.sendPostReply("/make_openings", retryString, "Couldn't parse your days of the week.");
 			return;
 		}
 
@@ -113,7 +113,7 @@ public class NewOpeningsAction extends ActionRunner {
 		Timestamp endDateTime;
 
 		if (endDate.compareTo(startDate) < 0) {
-			this.SendPostReply("/make_openings", retryString, "End date can't be before the start date.");
+			this.sendPostReply("/make_openings", retryString, "End date can't be before the start date.");
 			return;
 		}
 
@@ -130,7 +130,7 @@ public class NewOpeningsAction extends ActionRunner {
 			today = today.plusDays(1);
 		}
 
-		this.SendPostReply("/openings", "", "Openings made, good job!");
+		this.sendPostReply("/openings", "", "Openings made, good job!");
 		return;
 	}
 	

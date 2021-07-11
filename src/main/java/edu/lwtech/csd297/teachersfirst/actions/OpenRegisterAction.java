@@ -17,11 +17,11 @@ public class OpenRegisterAction extends ActionRunner {
 
 		// This version of this process requires that you're not signed in.
 		if (uid > 0) {
-			this.SendPostReply("/services", "", "Please sign out before trying to register a new account!");
+			this.sendPostReply("/services", "", "Please sign out before trying to register a new account!");
 			return;
 		}
 		if (!DataManager.enableOpenRegistration) {
-			this.SendPostReply("/services", "", "Open registration is disabled!");
+			this.sendPostReply("/services", "", "Open registration is disabled!");
 			return;
 		}
 
@@ -41,25 +41,25 @@ public class OpenRegisterAction extends ActionRunner {
 
 		//TODO: Must check to make sure string input does not exceed database lengths
 		if (loginName.isEmpty()) {
-			this.SendPostReply("/register", retryString, "Please provide a valid login name.");
+			this.sendPostReply("/register", retryString, "Please provide a valid login name.");
 			return;
 		}
 		if (password1.isEmpty()) {
-			this.SendPostReply("/register", retryString, "Please provide a valid password.");
+			this.sendPostReply("/register", retryString, "Please provide a valid password.");
 			return;
 		}
 		if (displayName.isEmpty()) {
-			this.SendPostReply("/register", retryString, "Please provide a valid display name.");
+			this.sendPostReply("/register", retryString, "Please provide a valid display name.");
 			return;
 		}
 		if (password2.isEmpty() || !password2.equals(password1)) {
-			this.SendPostReply("/register", retryString, "Passwords do not match!");
+			this.sendPostReply("/register", retryString, "Passwords do not match!");
 			return;
 		}
 		// trim and lcase gender string -- if it's not empty, which is valid
 		if (gender.length() > 0) gender = gender.toLowerCase().substring(0, 1);
 		if (!gender.equals("m") && !gender.equals("f") && !gender.equals("")) {
-			this.SendPostReply("/register", retryString, "Please provide a valid gender (m/f/blank).");
+			this.sendPostReply("/register", retryString, "Please provide a valid gender (m/f/blank).");
 			return;
 		}
 
@@ -69,7 +69,7 @@ public class OpenRegisterAction extends ActionRunner {
 		List<Member> members = DataManager.getMemberDAO().retrieveAll();
 		for (Member member : members) {
 			if (member.getLoginName() == loginName) {
-				this.SendPostReply("/register", retryString, "Login name '" + loginName + "' already taken, please try another.");
+				this.sendPostReply("/register", retryString, "Login name '" + loginName + "' already taken, please try another.");
 				return;
 			}
 		}
@@ -86,7 +86,7 @@ public class OpenRegisterAction extends ActionRunner {
 		
 		// Log user into session
 		Security.login(request, member);
-		this.SendPostReply("/appointments", "", "Welcome new user!");
+		this.sendPostReply("/appointments", "", "Welcome new user!");
 		return;
 	}
 	

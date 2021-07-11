@@ -14,7 +14,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
+			this.sendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -27,19 +27,19 @@ public class DeleteAppointmentAction extends ActionRunner {
 		}
 		final Appointment appointment = DataManager.getAppointmentDAO().retrieveByID(appointmentIdInt);
 		if (appointment == null) {
-			this.SendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
+			this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
 			return;
 		}
 
 		// Make sure the person has the authority
 		if (!isAdmin && !appointment.getIsMyAppointment(uid)) {
-			this.SendPostReply("/appointments", "", "Not your appointment, cannot cancel.");
+			this.sendPostReply("/appointments", "", "Not your appointment, cannot cancel.");
 			return;
 		}
 
 		// Make sure even if they have the authority, whether they can delete things in the past
 		if (!isAdmin && DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-			this.SendPostReply("/appointments", "", "Appointment has already happened, cannot delete.");
+			this.sendPostReply("/appointments", "", "Appointment has already happened, cannot delete.");
 			return;
 		}
 
@@ -49,7 +49,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 		//logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		logger.debug("Deleted appointment ID: [{}]", appointmentIdString);
 		
-		this.SendPostReply("/appointments", "", "Appointment " + appointmentIdString + " deleted!");
+		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " deleted!");
 		return;
 	}
 	

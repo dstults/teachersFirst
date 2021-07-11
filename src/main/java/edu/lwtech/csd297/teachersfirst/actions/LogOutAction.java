@@ -13,9 +13,9 @@ public class LogOutAction extends ActionRunner {
 		// Do this no matter what to make sure it's clean:
 		Security.logout(request, "User " + uid + " normal log out.");
 		if (uid > 0 ) {
-			this.SendPostReply("/services", "", "Have a nice day!");
+			this.sendPostReply("/services", "", "Have a nice day!");
 		} else {
-			this.SendPostReply("/services", "", "You're not logged in.");
+			this.sendPostReply("/services", "", "You're not logged in.");
 		}
 	}
 	

@@ -25,11 +25,11 @@ public class NewAppointmentBatchAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
+			this.sendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
 		if (DataManager.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
-			this.SendPostReply("/services", "", "Batch appointment function disabled.");
+			this.sendPostReply("/services", "", "Batch appointment function disabled.");
 		}
 
 		final String studentIdString = QueryHelpers.getPost(request, "studentId");
@@ -40,7 +40,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			studentIdInt = 0;
 		}
 		if (DataManager.getMemberDAO().retrieveByID(studentIdInt) == null) {
-			this.SendPostReply("/make_appointment_batch", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
+			this.sendPostReply("/make_appointment_batch", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
 		}
 		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
@@ -52,10 +52,10 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		}
 
 		if (DataManager.getMemberDAO().retrieveByID(instructorIdInt) == null) {
-			this.SendPostReply("/make_appointment_batch", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
+			this.sendPostReply("/make_appointment_batch", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
 		} else if (studentIdInt == instructorIdInt) {
-			this.SendPostReply("/make_appointment_batch", "", "Student ID and Instructor ID both " + studentIdString + " -- appointments can not be made with self.");
+			this.sendPostReply("/make_appointment_batch", "", "Student ID and Instructor ID both " + studentIdString + " -- appointments can not be made with self.");
 			return;
 		}
 
@@ -74,7 +74,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			startMonth = Integer.parseInt(dateInfo[1]);
 			startDay = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_appointment_batch", "", "Could not parse start date: %5B" + startDateString + "%5D !");
+			this.sendPostReply("/make_appointment_batch", "", "Could not parse start date: %5B" + startDateString + "%5D !");
 			return;
 		}
 
@@ -88,7 +88,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			endMonth = Integer.parseInt(dateInfo[1]);
 			endDay = Integer.parseInt(dateInfo[2]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_appointment_batch", "", "Could not parse end date: %5B" + endDateString + "%5D !");
+			this.sendPostReply("/make_appointment_batch", "", "Could not parse end date: %5B" + endDateString + "%5D !");
 			return;
 		}
 
@@ -100,12 +100,12 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			startHour = Integer.parseInt(timeInfo[0]);
 			startMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_appointment_batch", "", "Could not parse start time: %5B" + startTimeString + "%5D L:" + startTimeString.split(":").length + " !");
+			this.sendPostReply("/make_appointment_batch", "", "Could not parse start time: %5B" + startTimeString + "%5D L:" + startTimeString.split(":").length + " !");
 			return;
 		}
 
 		if (startMinute != 0 && startMinute != 15 && startMinute != 30 && startMinute != 45) {
-			this.SendPostReply("/make_appointment_batch", "", "Start minute %5B" + startMinute + "%5D not allowed, must be multiple of 15!");
+			this.sendPostReply("/make_appointment_batch", "", "Start minute %5B" + startMinute + "%5D not allowed, must be multiple of 15!");
 			return;
 		}
 
@@ -117,12 +117,12 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			endHour = Integer.parseInt(timeInfo[0]);
 			endMinute = Integer.parseInt(timeInfo[1]);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/make_appointment_batch", "", "Could not parse end time: %5B" + endTimeString + "%5D !");
+			this.sendPostReply("/make_appointment_batch", "", "Could not parse end time: %5B" + endTimeString + "%5D !");
 			return;
 		}
 
 		if (endMinute != 0 && endMinute != 15 && endMinute != 30 && endMinute != 45) {
-			this.SendPostReply("/make_appointment_batch", "", "End minute %5B" + endMinute + "%5D not allowed, must be multiple of 15!");
+			this.sendPostReply("/make_appointment_batch", "", "End minute %5B" + endMinute + "%5D not allowed, must be multiple of 15!");
 			return;
 		}
 
@@ -133,11 +133,11 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			endDay++;
 		}
 		if (startTime > 1440 || endTime > 1440) {
-			this.SendPostReply("/make_appointment_batch", "", "Invalid start time or end time. Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
+			this.sendPostReply("/make_appointment_batch", "", "Invalid start time or end time. Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
 			return;
 		}
 		if (endTime - 720 > startTime) {
-			this.SendPostReply("/make_appointment_batch", "", "Appointments must not be longer than 12 hours! Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
+			this.sendPostReply("/make_appointment_batch", "", "Appointments must not be longer than 12 hours! Start Time: %5B" + startTime + "%5D End Time: %5B" + endTime + "%5D");
 			return;
 		}
 
@@ -151,7 +151,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		if(daysOfWeekString.contains("fr")) scheduledDays.add(DayOfWeek.FRIDAY);
 		if(daysOfWeekString.contains("sa")) scheduledDays.add(DayOfWeek.SATURDAY);
 		if (scheduledDays.size() == 0) {
-			this.SendPostReply("/make_openings", "", "Couldn't parse your days of the week.");
+			this.sendPostReply("/make_openings", "", "Couldn't parse your days of the week.");
 			return;
 		}
 
@@ -190,7 +190,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		}
 		sb.append("- End of List -");
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
-		this.SendPostReply("/appointments", "", sb.toString());
+		this.sendPostReply("/appointments", "", sb.toString());
 		return;
 	}
 	

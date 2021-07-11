@@ -22,7 +22,7 @@ public class MissOrCompleteAppointmentAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.SendPostReply("/services", "", "Please sign in or register to use this feature!");
+			this.sendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -35,25 +35,25 @@ public class MissOrCompleteAppointmentAction extends ActionRunner {
 		}
 		final Appointment appointment = DataManager.getAppointmentDAO().retrieveByID(appointmentIdInt);
 		if (appointment == null) {
-			this.SendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
+			this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
 			return;
 		}
 
 		// Must be in past
 		if (!DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-			this.SendPostReply("/appointments", "", "Cannot " + subAction + " appointments that haven't happened yet.");
+			this.sendPostReply("/appointments", "", "Cannot " + subAction + " appointments that haven't happened yet.");
 			return;
 		}
 
 		// Make sure is admin or instructor
 		if (!isAdmin && !isInstructor) {
-			this.SendPostReply("/appointments", "", "Appointment can only be marked as completed or missed by an admin or an instructor.");
+			this.sendPostReply("/appointments", "", "Appointment can only be marked as completed or missed by an admin or an instructor.");
 			return;
 		}
 
 		// Make sure can write to others (admin) or write to own (teachers)
 		if (!isAdmin && !appointment.getIsMyAppointment(uid)) {
-			this.SendPostReply("/appointments", "", "Cannot " + subAction + " others' appointments.");
+			this.sendPostReply("/appointments", "", "Cannot " + subAction + " others' appointments.");
 			return;
 		}
 
@@ -62,7 +62,7 @@ public class MissOrCompleteAppointmentAction extends ActionRunner {
 		appointment.setCompletionState(subAction);
 		logger.debug("Deleted appointment ID: [{}]", appointmentIdString);
 		
-		this.SendPostReply("/appointments", "", "Appointment " + appointmentIdString + " updated!");
+		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " updated!");
 		return;
 	}
 	
