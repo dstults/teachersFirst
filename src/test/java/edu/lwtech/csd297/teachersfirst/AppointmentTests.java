@@ -107,7 +107,7 @@ class AppointmentTests {
 
 	@Test
 	void testGetName() {
-		assertEquals("Appointment(-1): Student(35) > Instructor(66) @ 02/10/2020  9:00 - 12:00", Appointment2.getName());
+		assertEquals("Appointment(-1): Student(35) > Instructor(66) @ 02/10/2020 09:00 - 12:00", Appointment2.getName());
 		assertEquals("Appointment(-1): Student(20) > Instructor(43) @ 07/21/2019 16:00 - 17:00", Appointment4.getName());
 		assertEquals("Appointment(-1): Student(20) > Instructor(43) @ 07/21/2019 16:00 - 17:00", Appointment4b.getName());
 	}

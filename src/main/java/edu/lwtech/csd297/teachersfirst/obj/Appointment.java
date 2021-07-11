@@ -110,8 +110,7 @@ public class Appointment implements IJsonnable {
 	}
 
 	public String getStartTimeFormatted() {
-		String time = this.startTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("H:mm"));
-		return time.length() == 4 ? " " + time : time;
+		return this.startTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
 	}
 	
 	public Timestamp getEndTime() {
@@ -119,8 +118,7 @@ public class Appointment implements IJsonnable {
 	}
 
 	public String getEndTimeFormatted() {
-		String time = this.endTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("H:mm"));
-		return time.length() == 4 ? " " + time : time;
+		return this.endTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
 	}
 
 	public String getDateFormatted() {
