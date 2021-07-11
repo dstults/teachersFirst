@@ -14,7 +14,7 @@ public class UpdateMemberAction extends ActionRunner {
 
 	private String removeInvalidText(String text) {
 		text = text.trim();
-		final String newText = text.replaceAll("[^\\+\\-\\=\\@\\.\\ \\:\\!\\?\\,\\:\\;\\_a-zA-Z\\d]", "");
+		final String newText = text.replaceAll("[^\\+\\-\\=\\@\\.\\'\\\"\\ \\:\\!\\?\\,\\:\\;\\_a-zA-Z\\d]", "");
 		if (text != newText)
 			logger.debug(text + " => changed to => " + newText);
 		return newText;

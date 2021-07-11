@@ -122,7 +122,7 @@
 		//if (!confirm('Change ' + memberName + '\'s ' + dataType + '?\n\nCurrently: ' + getFormattedString(initialValue))) {
 		//	return null;
 		//}
-		const regEx = new RegExp(/^[\+\-\=\@\.\ \:\!\?\,\:\;\_a-zA-Z\d]+$/);
+		const regEx = new RegExp(/^[\+\-\=\@\.\'\"\ \:\!\?\,\:\;\_a-zA-Z\d]+$/);
 		const input = prompt('Enter new ' + dataType + ' for ' + memberName + ':\n\nMax Length: ' + maxLength + ' chars', initialValue);
 		if (!input) {
 			//alert('Operation cancelled!');
