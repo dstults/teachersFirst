@@ -164,7 +164,6 @@ class SQLUtils {
 		return newID;
 	}
 
-
 	//Opening Insert
 	public static int executeSqlOpeningInsert(Connection conn, String query, int recID, int instructorID,
 			Timestamp startTime, Timestamp endTime) {
@@ -233,7 +232,7 @@ class SQLUtils {
 		try {
 			PreparedStatement stmt = conn.prepareStatement(query);
 			
-			for (int i = 0; i <= args.length; i++) {
+			for (int i = 0; i <= args.length - 1; i++) {
 				stmt.setString(i + 1, args[i]);
 			}
 			stmt.executeUpdate();

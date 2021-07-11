@@ -14,7 +14,7 @@ public class UpdateMemberAction extends ActionRunner {
 
 	private String removeInvalidText(String text) {
 		text = text.trim();
-		final String newText = text.replaceAll("[^\\+\\-\\@\\.\\ \\:\\!\\?\\_a-zA-Z\\d]", "");
+		final String newText = text.replaceAll("[^\\+\\-\\=\\@\\.\\ \\:\\!\\?\\,\\:\\;\\_a-zA-Z\\d]", "");
 		if (text != newText)
 			logger.debug(text + " => changed to => " + newText);
 		return newText;
@@ -52,15 +52,15 @@ public class UpdateMemberAction extends ActionRunner {
 		final String phone1 = removeInvalidText(QueryHelpers.getPost(request, "phone1", member.getPhone1()));
 		final String phone2 = removeInvalidText(QueryHelpers.getPost(request, "phone2", member.getPhone2()));
 		final String email = removeInvalidText(QueryHelpers.getPost(request, "email", member.getEmail()));
-		final String selfIntroduction = removeInvalidText(QueryHelpers.getPost(request, "intro", member.getSelfIntroduction()));
-		final String instructorNotes = removeInvalidText(QueryHelpers.getPost(request, "notes", member.getInstructorNotes()));
+		final String selfIntroduction = removeInvalidText(QueryHelpers.getPost(request, "selfIntroduction", member.getSelfIntroduction()));
+		final String instructorNotes = removeInvalidText(QueryHelpers.getPost(request, "instructorNotes", member.getInstructorNotes()));
 
 		// Parse integer elements from post
-		final int credits;
+		final float credits;
 		try {
-			credits = Integer.parseInt(creditsRaw);
+			credits = Float.parseFloat(creditsRaw);
 		} catch (NumberFormatException e) {
-			this.sendJsonReply("Couldn't parse the credits!");
+			this.sendJsonReply("Couldn't parse credits: [ " + creditsRaw + " ]!");
 			return;
 		}
 
@@ -80,34 +80,29 @@ public class UpdateMemberAction extends ActionRunner {
 			return;
 		}
 
-		if (!isAdmin || !isInstructor || (isStudent)) {
-			this.sendJsonReply("Action not allowed.");
-			return;
-		}
-
 		boolean changesMade = false;
 		if (credits != member.getCredits()) {
 			member.setCredits(credits);
 			changesMade = true;
 		}
 		if (phone1 != member.getPhone1()) {
-			member.setCredits(credits);
+			member.setPhone1(phone1);
 			changesMade = true;
 		}
 		if (phone2 != member.getPhone2()) {
-			member.setCredits(credits);
+			member.setPhone2(phone2);
 			changesMade = true;
 		}
 		if (email != member.getEmail()) {
-			member.setCredits(credits);
+			member.setEmail(email);
 			changesMade = true;
 		}
 		if (selfIntroduction != member.getSelfIntroduction()) {
-			member.setCredits(credits);
+			member.setSelfIntroduction(selfIntroduction);
 			changesMade = true;
 		}
 		if (instructorNotes != member.getInstructorNotes()) {
-			member.setCredits(credits);
+			member.setInstructorNotes(instructorNotes);
 			changesMade = true;
 		}
 		if (!changesMade) {
@@ -115,19 +110,15 @@ public class UpdateMemberAction extends ActionRunner {
 			return;
 		}
 
-		Member member2 = DataManager.getMemberDAO().retrieveByID(memberId);
+		//Member member2 = DataManager.getMemberDAO().retrieveByID(memberId);
+		//this.sendJsonReply("Success!//" + member2.toString() + "//Changed to://" + member.toString());
 
-		this.sendJsonReply("Success!//" + member2.toJson() + "//Changed to://" + member.toJson());
-		return;
-
-		/*
 		member.update();
 		logger.debug("Updated: [{}]", member);
 		
 		// Log user into session
-		this.SendJsonReply("Success!");
+		this.sendJsonReply("Success!");
 		return;
-		*/
 	}
 	
 }
