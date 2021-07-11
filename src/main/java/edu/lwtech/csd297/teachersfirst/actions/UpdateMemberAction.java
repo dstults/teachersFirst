@@ -54,16 +54,6 @@ public class UpdateMemberAction extends ActionRunner {
 		final String email = removeInvalidText(QueryHelpers.getPost(request, "email", member.getEmail()));
 		final String selfIntroduction = removeInvalidText(QueryHelpers.getPost(request, "intro", member.getSelfIntroduction()));
 		final String instructorNotes = removeInvalidText(QueryHelpers.getPost(request, "notes", member.getInstructorNotes()));
-		if (creditsRaw == String.valueOf(member.getCredits()) &&
-			phone1 == member.getPhone1() &&
-			phone2 == member.getPhone2() &&
-			email == member.getEmail() &&
-			selfIntroduction == member.getSelfIntroduction() &&
-			instructorNotes == member.getInstructorNotes()) {
-
-			this.SendPostReply("/message", "", "No changes detected, aborting!");
-			return;
-		}
 
 		// Parse integer elements from post
 		final int credits;
@@ -95,13 +85,49 @@ public class UpdateMemberAction extends ActionRunner {
 			return;
 		}
 
-		//Member member = new Member(loginName, password1, displayName, birthdate, gender, "", phone1, phone2, email, true, false, false);		
+		boolean changesMade = false;
+		if (credits != member.getCredits()) {
+			member.setCredits(credits);
+			changesMade = true;
+		}
+		if (phone1 != member.getPhone1()) {
+			member.setCredits(credits);
+			changesMade = true;
+		}
+		if (phone2 != member.getPhone2()) {
+			member.setCredits(credits);
+			changesMade = true;
+		}
+		if (email != member.getEmail()) {
+			member.setCredits(credits);
+			changesMade = true;
+		}
+		if (selfIntroduction != member.getSelfIntroduction()) {
+			member.setCredits(credits);
+			changesMade = true;
+		}
+		if (instructorNotes != member.getInstructorNotes()) {
+			member.setCredits(credits);
+			changesMade = true;
+		}
+		if (!changesMade) {
+			this.SendPostReply("/message", "", "No changes detected, aborting!");
+			return;
+		}
+
+		Member member2 = DataManager.getMemberDAO().retrieveByID(memberId);
+
+		this.SendPostReply("/message", "", "Success!//" + member2.toJson() + "//Changed to://" + member.toJson());
+		return;
+
+		/*
 		member.update();
 		logger.debug("Updated: [{}]", member);
 		
 		// Log user into session
 		this.SendPostReply("/message", "", "Success!");
 		return;
+		*/
 	}
 	
 }

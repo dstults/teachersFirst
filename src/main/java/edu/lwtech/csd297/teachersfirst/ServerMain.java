@@ -191,6 +191,9 @@ public class ServerMain extends HttpServlet {
 				case "register_member":
 					new OpenRegisterAction(request, response).RunAction();
 					break;
+				case "update_member":
+					new UpdateMemberAction(request, response).RunAction();
+					break;
 				case "make_openings":
 					new NewOpeningsAction(request, response).RunAction();
 					break;
