@@ -53,19 +53,37 @@
 	const operatorId = ${userId};
 	const memberId = ${member.recID};
 	const memberName = '${member.displayName}';
+	const memberIsStudent = ${member.isStudent?c};
 	
+	const sendPostData = async (varName, varValue) => {
+		const data = new URLSearchParams();
+		data.append('action', 'update_member');
+		data.append('memberId', memberId);
+		data.append(varName, varValue);
+
+		let jsonReply;
+		const response = await fetch('/', {
+			method: 'POST',
+			cache: 'no-cache',
+			body: data
+		});
+
+		return await response.json();
+	};
+
 	<#if isAdmin || isInstructor && member.isStudent>
 	// Set up credits
 	const creditsBox = document.getElementById('credits');
 	let credits = ${member.credits};
-	const editCredits = _ => {
-		if (!confirm(memberName + ' currently has ' + credits + ' credits, would you like to update?')) {
+	const editCredits = async _ => {
+		const warningMsg = memberIsStudent ? '' : '\n\nWARNING: USER IS NOT A STUDENT. THIS WOULD NOT MAKE SENSE.';
+		if (!confirm(memberName + ' currently has ' + credits + ' credits, would you like to update?' + warningMsg)) {
 			//alert('Operation cancelled.');
 			return;
 		}
 		const input = prompt('Enter the updated number of credits you think user ' + memberName + ' should have:', credits);
 		const parsed = parseFloat(input);
-		if (!parsed || isNaN(parsed)) {
+		if (isNaN(parsed)) {
 			alert('Could not understand your input. Operation cancelled.');
 			return;
 		}
@@ -76,12 +94,21 @@
 		}
 		const increaseDecrease = difference > 0 ? 'Increase' : 'Decrease';
 		if (!confirm(increaseDecrease + ' ' + memberName + '\'s credits by ' + difference + ' to ' + parsed + ', is this correct?\n\nOperator ID: [ ' + operatorId + ' ]\nDate-Time: ' + new Date())) {
-			alert('Operation cancelled.');
+			//alert('Operation cancelled.');
 			return;
 		}
-		credits = parsed;
-		creditsBox.innerHTML = 'Credit-Hours:&nbsp;&nbsp;' + credits + '<img class="credits-img" src="/images/edit-box.svg">';
-		alert('Changes saved!\n\nNote: this is just a demo, no changes have been saved.');
+		let proposedCredits = parsed;
+		creditsBox.innerHTML = 'Updating ...';
+		
+		const response = await sendPostData('credits', proposedCredits);
+
+		if (response.message.includes('Success!')) {
+			credits = proposedCredits;
+		} else {
+			alert(response.message);
+		}
+		creditsBox.innerHTML = 'Credit-Hours:&nbsp;&nbsp;' + credits + '<img class="right-float-img-button" src="/images/edit-box.svg" onclick="editCredits();">';
+		//alert('Changes saved!\n\nNote: this is just a demo, no changes have been saved.');
 	};
 	</#if>
 
@@ -91,80 +118,88 @@
 	const ageBox = document.getElementById('age');
 
 	const getFormattedString = (unformattedString) => !unformattedString ? '(unset)' : unformattedString;
-	const getStringPromptChain = (dataType, defaultValue, maxLength) => {
-		if (!confirm('Change ' + memberName + '\'s ' + dataType + '?\n\nCurrently: ' + getFormattedString(defaultValue))) {
-			return null;
-		}		
-		const regEx = new RegExp(/^[\+\-\@\.\ \:\!\?\_a-zA-Z\d]+$/);
-		const input = prompt('Enter new ' + dataType + ' for ' + memberName + ':\n\nMax Length: ' + maxLength + ' chars', defaultValue);
+	const getStringPromptChain = async (dataType, elementBox, postVarName, initialValue, maxLength) => {
+		//if (!confirm('Change ' + memberName + '\'s ' + dataType + '?\n\nCurrently: ' + getFormattedString(initialValue))) {
+		//	return null;
+		//}
+		const regEx = new RegExp(/^[\+\-\=\@\.\ \:\!\?\,\:\;\_a-zA-Z\d]+$/);
+		const input = prompt('Enter new ' + dataType + ' for ' + memberName + ':\n\nMax Length: ' + maxLength + ' chars', initialValue);
 		if (!input) {
-			alert('Operation cancelled!');
+			//alert('Operation cancelled!');
 			return null;
 		}
 		const inputTrimmed = input.trim();
 		if (!inputTrimmed) {
-			alert('Operation cancelled!');
+			//alert('Operation cancelled!');
 			return null;
 		}
 		const parseResult = regEx.exec(inputTrimmed);
-		const parsed = parseResult ? parseResult[0] : null;
-		if (!parsed) {
+		const parsed = inputTrimmed.length === 0 || (parseResult !== null && parseResult.length > 0) ? parseResult[0] : null;
+		if (parsed === null) {
 			alert('Could not understand user input: [ ' + input + ' ]');
 			return null;
 		}
-		const shortened = parsed.length <= maxLength ? parsed : parsed.substr(0, maxLength - 1);
-		return shortened;
+
+		// This is the final filtering process
+		const shortenedValue = parsed.length <= maxLength ? parsed : parsed.substr(0, maxLength - 1);
+		elementBox.innerText = 'Updating ...';
+
+		const response = await sendPostData(postVarName, shortenedValue);
+		//alert(response.message);
+		if (!response.message.includes('Success!')) {
+			alert(response.message);
+			return null;
+		}
+
+		elementBox.innerText = shortenedValue;
+		return shortenedValue;
 	}
-	const sharedReportBack = (fieldName, introText) => {
-		alert(fieldName + ' updated to: [ ' + introText + ' ]\n\nNote: This is just a demo, no changes were made.');
+	const sharedReportBack = (fieldName, newText) => {
+		//alert(fieldName + ' updated to: [ ' + newText + ' ]');
 	};
 
 	const phone1Box = document.getElementById('phone1');
 	let memberPhone1 = '${member.phone1}';
-	const editPhone1 = _ => {
-		const parsed = getStringPromptChain('phone number (#1)', memberPhone1, 20);
-		if (!parsed) return; // alert message handled by shared function
-		memberPhone1 = parsed;
+	const editPhone1 = async _ => {
+		const updatedValue = await getStringPromptChain('phone number (#1)', phone1Box, 'phone1', memberPhone1, 20);
+		if (updatedValue === null) return; // alert message handled by shared function
+		memberPhone1 = updatedValue;
 		phone1Box.innerText = memberPhone1;
 		sharedReportBack('Phone number (#1)', memberPhone1);
 	};
 
 	const phone2Box = document.getElementById('phone2');
 	let memberPhone2 = '${member.phone2}';
-	const editPhone2 = _ => {
-		const parsed = getStringPromptChain('phone number (#2)', memberPhone2, 20);
-		if (!parsed) return; // alert message handled by shared function
-		memberPhone2 = parsed;
-		phone2Box.innerText = memberPhone2;
+	const editPhone2 = async _ => {
+		const updatedValue = await getStringPromptChain('phone number (#2)', phone2Box, 'phone2', memberPhone2, 20);
+		if (updatedValue === null) return; // alert message handled by shared function
+		memberPhone2 = updatedValue;
 		sharedReportBack('Phone number (#2)', memberPhone2);
 	};
 
 	const emailBox = document.getElementById('email');
 	let memberEmail = '${member.email}';
-	const editEmail = _ => {
-		const parsed = getStringPromptChain('email', memberEmail, 50);
-		if (!parsed) return; // alert message handled by shared function
-		memberEmail = parsed;
-		emailBox.innerText = memberEmail;
+	const editEmail = async _ => {
+		const updatedValue = await getStringPromptChain('email', emailBox, 'email', memberEmail, 50);
+		if (updatedValue === null) return; // alert message handled by shared function
+		memberEmail = updatedValue;
 		sharedReportBack('Email', memberEmail);
 	};
 
 	const introBox = document.getElementById('introduction');
 	let introText = '${member.selfIntroduction}';
-	const editIntro = _ => {
-		const parsed = getStringPromptChain('self-introduction', introText, 400);
-		if (!parsed) return; // alert message handled by shared function
-		introText = parsed;
-		introBox.innerText = introText;
+	const editIntro = async _ => {
+		const updatedValue = await getStringPromptChain('self-introduction', introBox, 'selfIntroduction', introText, 400);
+		if (updatedValue === null) return; // alert message handled by shared function
+		introText = updatedValue;
 		sharedReportBack('Self-introduction', introText);
 	};
 	const notesBox = document.getElementById('instructor-notes');
 	let notesText = '${member.instructorNotes}';
-	const editNotes = _ => {
-		const parsed = getStringPromptChain('instructor notes', notesText, 1000);
-		if (!parsed) return; // alert message handled by shared function
-		notesText = parsed;
-		notesBox.innerText = notesText;
+	const editNotes = async _ => {
+		const updatedValue = await getStringPromptChain('instructor notes', notesBox, 'instructorNotes', notesText, 1000);
+		if (updatedValue === null) return; // alert message handled by shared function
+		notesText = updatedValue;
 		sharedReportBack('Instructor notes', notesText);
 	};
 </script>

@@ -87,6 +87,10 @@ public class Appointment implements IJsonnable {
 		this.recId = recID;
 	}
 
+	public boolean update() {
+		return DataManager.getAppointmentDAO().update(this);
+	}
+
 	// ----------------------------------------------------------------
 
 	public int getStudentID() {

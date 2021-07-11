@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.daos;
+package edu.lwtech.csd297.teachersfirst.daos.sql;
 
 import java.sql.*;
 import java.util.*;
@@ -6,6 +6,7 @@ import java.util.*;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.*;
+import edu.lwtech.csd297.teachersfirst.daos.DAO;
 import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class MemberSqlDAO implements DAO<Member> {
@@ -186,7 +187,18 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 
 	public boolean update(Member member) {
-		throw new UnsupportedOperationException("Unable to update existing member in database.");
+		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
+
+		String query = "UPDATE members SET credits = ?, phone1 = ?, phone2 = ?, email = ?, selfIntroduction = ?, instructorNotes = ? WHERE recID = " + member.getRecID() + ";";
+
+		boolean success = SQLUtils.executeSqlUpdate(conn, query, String.valueOf(member.getCredits()), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getSelfIntroduction(), member.getInstructorNotes());
+
+		if (success)
+			logger.debug("Member " + member.getRecID() + " successfully updated");
+		else
+			logger.error("!! Member " + member.getRecID() + " failed to updated !!");
+		
+		return success;
 	}
 
 	public void delete(int recID) {
@@ -214,7 +226,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	// =====================================================================
 
 	private Member convertRowToMember(SQLRow row) {
-		logger.debug("Converting " + row + " to Member...");
+		//logger.debug("Converting " + row + " to Member...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 
 		String loginName = row.getItem("loginName");

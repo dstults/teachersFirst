@@ -18,7 +18,7 @@ public class JsonUtilTests {
 
 		public void setText(String text) { this.text = text; }
 		@Override
-		public String toJson() { return "{'text':'" + text + "'}"; }
+		public String toJson() { return "{\"text\":\"" + text + "\"}"; }
 	}
 
 	@BeforeEach
@@ -27,9 +27,9 @@ public class JsonUtilTests {
 
 	@Test
 	void testSetRecID() {
-		assertEquals("'love':'war'", JsonUtils.queryToJson("love=war"));
-		assertEquals("'love':'war'", JsonUtils.queryToJson("?love=war"));
-		assertEquals("'love':undefined", JsonUtils.queryToJson("love"));
+		assertEquals("\"love\":\"war\"", JsonUtils.queryToJson("love=war"));
+		assertEquals("\"love\":\"war\"", JsonUtils.queryToJson("?love=war"));
+		assertEquals("\"love\":undefined", JsonUtils.queryToJson("love"));
 		assertEquals("", JsonUtils.queryToJson(""));
 		assertEquals("", JsonUtils.queryToJson(null));
 		assertEquals("", JsonUtils.queryToJson("fdsjklfds=fdsafads=fasdfsda"));
@@ -38,7 +38,7 @@ public class JsonUtilTests {
 		bigArray.add(new JsonTester("love"));
 		bigArray.add(new JsonTester("joy"));
 		String json = JsonUtils.BuildArrays(bigArray);
-		assertEquals("[{'text':'peace'},{'text':'love'},{'text':'joy'}]", json);
+		assertEquals("[{\"text\":\"peace\"},{\"text\":\"love\"},{\"text\":\"joy\"}]", json);
 	}
 
 }

@@ -1,10 +1,11 @@
-package edu.lwtech.csd297.teachersfirst.daos;
+package edu.lwtech.csd297.teachersfirst.daos.memory;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.*;
 
+import edu.lwtech.csd297.teachersfirst.daos.DAO;
 import edu.lwtech.csd297.teachersfirst.obj.*;
 
 // Memory-based DAO class - stores objects in a List.  No persistance.

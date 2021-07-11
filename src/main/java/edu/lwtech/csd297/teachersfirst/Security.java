@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.*;
 
-import edu.lwtech.csd297.teachersfirst.daos.MemberSqlDAO;
+import edu.lwtech.csd297.teachersfirst.daos.sql.MemberSqlDAO;
 import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class Security {
 	
-	private static final Logger logger = LogManager.getLogger(TeachersFirstServlet.class);
+	private static final Logger logger = LogManager.getLogger(ServerMain.class);
 	private static final List<String> ipWhitelist = new ArrayList<String>();
 
 	public static void populateWhitelist() {

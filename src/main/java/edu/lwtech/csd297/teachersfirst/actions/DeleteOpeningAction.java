@@ -14,7 +14,7 @@ public class DeleteOpeningAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.SendPostReply("/openings", "", "Please sign in or register to use this feature!");
+			this.sendPostReply("/openings", "", "Please sign in or register to use this feature!");
 			return;
 		}
 
@@ -27,13 +27,13 @@ public class DeleteOpeningAction extends ActionRunner {
 		}
 		final Opening opening = DataManager.getOpeningDAO().retrieveByID(openingIdInt);
 		if (opening == null) {
-			this.SendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D not found!");
+			this.sendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D not found!");
 			return;
 		}
 
 		// Make sure the person has the authority
 		if (!isAdmin && opening.getInstructorID() != uid) {
-			this.SendPostReply("/openings", "", "Not your opening, cannot delete.");
+			this.sendPostReply("/openings", "", "Not your opening, cannot delete.");
 			return;
 		}
 
@@ -43,7 +43,7 @@ public class DeleteOpeningAction extends ActionRunner {
 		//logger.info(DataManager.getOpeningDAO().size() + " records total");
 		logger.debug("Deleted opening ID: [{}]", openingIdInt);
 		
-		this.SendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D, deleted!");
+		this.sendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D, deleted!");
 		return;
 	}
 	

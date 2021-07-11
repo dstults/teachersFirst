@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.daos;
+package edu.lwtech.csd297.teachersfirst.daos.sql;
 
 import java.sql.*;
 import java.util.*;
@@ -89,7 +89,7 @@ class SQLUtils {
 	}
 
 	// Default Insert
-	public static int executeSqlInsert(Connection conn, String query, String recID, String... arguments) {
+	public static int executeSqlInsert(Connection conn, String query, String recID, String... args) {
 		//logger.debug("Executing SQL Insert: " + query);
 
 		int newID = -1;
@@ -99,7 +99,7 @@ class SQLUtils {
 			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 
 			int position = 1;
-			for (String arg : arguments)
+			for (String arg : args)
 				stmt.setString(position++, arg);
 
 			stmt.executeUpdate();
@@ -164,7 +164,6 @@ class SQLUtils {
 		return newID;
 	}
 
-
 	//Opening Insert
 	public static int executeSqlOpeningInsert(Connection conn, String query, int recID, int instructorID,
 			Timestamp startTime, Timestamp endTime) {
@@ -226,7 +225,27 @@ class SQLUtils {
 		return newID;
 	}
 
-	// Appointment Insert
+	// Generic Update
+	public static boolean executeSqlUpdate(Connection conn, String query, String... args) {
+		logger.debug("Executing SQL Update: " + query);
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query);
+			
+			for (int i = 0; i <= args.length - 1; i++) {
+				stmt.setString(i + 1, args[i]);
+			}
+			stmt.executeUpdate();
+			
+			return true;
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in executeSqlUpdate: " + query, e);
+			return false;
+		}
+	}
+
+	//TODO: Switch to generic once the generic is confirmed to be working
+	// Appointment Update
 	public static boolean executeSqlAppointmentUpdate(Connection conn, String query, boolean schedulingVerified, int completionState) {
 		logger.debug("Executing SQL Update to Appointment: " + query);
 		
@@ -240,7 +259,7 @@ class SQLUtils {
 			
 			return true;
 		} catch (SQLException e) {
-			logger.error("SQL Exception caught in executeSqlInsert: " + query, e);
+			logger.error("SQL Exception caught in executeSqlAppointmentUpdate: " + query, e);
 			return false;
 		}
 	}

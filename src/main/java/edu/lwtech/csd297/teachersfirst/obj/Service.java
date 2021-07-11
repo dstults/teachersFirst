@@ -2,12 +2,16 @@ package edu.lwtech.csd297.teachersfirst.obj;
 
 import java.util.*;
 
+import edu.lwtech.csd297.teachersfirst.DataManager;
+
 public class Service implements IJsonnable {
 
 	private int recID; // Database ID (or -1 if it isn't in the database yet)
 	private String name;
 	private String description;
 	private String instructors;
+
+	// ----------------------------------------------------------------
 
 	public Service(String name, String description, String teachers) {
 
@@ -37,6 +41,8 @@ public class Service implements IJsonnable {
 		this.instructors = teachers;
 	}
 
+	// ----------------------------------------------------------------
+
 	public int getRecID() {
 		return recID;
 	}
@@ -50,6 +56,12 @@ public class Service implements IJsonnable {
 
 		this.recID = recID;
 	}
+
+	public boolean update() {
+		return DataManager.getServiceDAO().update(this);
+	}
+
+	// ----------------------------------------------------------------
 
 	public String getName() {
 		return this.name;

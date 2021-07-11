@@ -1,4 +1,4 @@
-package edu.lwtech.csd297.teachersfirst.daos;
+package edu.lwtech.csd297.teachersfirst.daos.sql;
 
 import java.sql.*;
 import java.util.*;
@@ -6,6 +6,7 @@ import java.util.*;
 import org.apache.logging.log4j.*;
 
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
+import edu.lwtech.csd297.teachersfirst.daos.DAO;
 import edu.lwtech.csd297.teachersfirst.obj.*;
 
 public class OpeningSqlDAO implements DAO<Opening> {
@@ -182,7 +183,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	// =====================================================================
 
 	private Opening convertRowToOpening(SQLRow row) {
-		logger.debug("Converting " + row + " to Opening...");
+		//logger.debug("Converting " + row + " to Opening...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		int instructorID = Integer.parseInt(row.getItem("instructorID"));
 		Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));
