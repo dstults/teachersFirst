@@ -183,7 +183,7 @@ public class ServiceSqlDAO implements DAO<Service> {
 	// =====================================================================
 
 	private Service convertRowToService(SQLRow row) {
-		logger.debug("Converting " + row + " to Service...");
+		//logger.debug("Converting " + row + " to Service...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		String name = row.getItem("name");
 		String description = row.getItem("description");

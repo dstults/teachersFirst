@@ -183,7 +183,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	// =====================================================================
 
 	private Opening convertRowToOpening(SQLRow row) {
-		logger.debug("Converting " + row + " to Opening...");
+		//logger.debug("Converting " + row + " to Opening...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		int instructorID = Integer.parseInt(row.getItem("instructorID"));
 		Timestamp startTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("startTime"));

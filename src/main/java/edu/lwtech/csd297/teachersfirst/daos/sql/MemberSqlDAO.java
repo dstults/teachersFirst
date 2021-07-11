@@ -226,7 +226,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	// =====================================================================
 
 	private Member convertRowToMember(SQLRow row) {
-		logger.debug("Converting " + row + " to Member...");
+		//logger.debug("Converting " + row + " to Member...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 
 		String loginName = row.getItem("loginName");
