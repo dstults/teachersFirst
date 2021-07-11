@@ -15,9 +15,10 @@ import java.sql.Timestamp;
 class AppointmentTests {
 
 	Appointment Appointment1 = new Appointment(5, 55, 1998, 3, 11, 4, 30, 22, 6, 30, true);
-	Appointment Appointment2 = new Appointment(35, 66, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true);
-	Appointment Appointment3 = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
-	Appointment Appointment4 = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1);
+	Appointment Appointment2 = new Appointment(35, 66, DateHelpers.toTimestamp("2020/02/10 09:00:00"), DateHelpers.toTimestamp("2020/02/10 12:00:00"), true);
+	Appointment Appointment3 = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2021/04/14 12:00:00"), DateHelpers.toTimestamp("2021/04/14 13:30:00"), true, -1);
+	Appointment Appointment4 = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2019/07/21 16:00:00"), DateHelpers.toTimestamp("2019/07/21 17:00:00"), true, -1);
+	Appointment Appointment4b = new Appointment(20, 43, 2019, 7, 21, 16, 0, 21, 17, 0, true);
 
 	@BeforeEach
 	void setUp() {}
@@ -96,23 +97,25 @@ class AppointmentTests {
 
 	@Test
 	void testGetStartTime() {
-		assertEquals("2000-01-01 00:00:00.0", Appointment4.getStartTime().toString());
+		assertEquals("2019-07-21 16:00:00.0", Appointment4.getStartTime().toString());
 	}
 
 	@Test
 	void testGetEndTime() {
-		assertEquals("2000-02-01 00:00:00.0", Appointment4.getEndTime().toString());
+		assertEquals("2019-07-21 17:00:00.0", Appointment4.getEndTime().toString());
 	}
 
 	@Test
 	void testGetName() {
-		assertEquals("Appointment(-1): Student(20) > Instructor(43) @ 01/01/2000 00:00 - 00:00", Appointment4.getName());
+		assertEquals("Appointment(-1): Student(35) > Instructor(66) @ 02/10/2020  9:00 - 12:00", Appointment2.getName());
+		assertEquals("Appointment(-1): Student(20) > Instructor(43) @ 07/21/2019 16:00 - 17:00", Appointment4.getName());
+		assertEquals("Appointment(-1): Student(20) > Instructor(43) @ 07/21/2019 16:00 - 17:00", Appointment4b.getName());
 	}
 
 	@Test
 	void testEquals() {
 		//Appointment Jamie = new Appointment(-1, 20, 43, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"));
-		assertTrue(Appointment4.equals(Appointment3));
+		assertTrue(Appointment4.equals(Appointment4b));
 
 		assertFalse(Appointment4.equals(new Appointment(2,20,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1)));
 		assertFalse(Appointment4.equals(new Appointment(-1,19,43,DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/02/01 00:00:00"), true, -1)));
