@@ -83,7 +83,7 @@ public class OpeningsPage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Openings");
-		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
+		final boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		final String instructorName = QueryHelpers.getGet(request, "instructorName").toLowerCase();
 

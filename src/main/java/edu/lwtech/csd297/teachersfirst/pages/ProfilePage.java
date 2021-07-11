@@ -15,7 +15,7 @@ public class ProfilePage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Profile");
-		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
+		final boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		final String memberIdString = QueryHelpers.getGet(request, "memberId", Integer.toString(uid));
 		int memberId;

@@ -21,9 +21,8 @@ public class AppointmentsPage extends PageLoader {
 		// key variables
 		final List<Appointment> futureAppointments = new ArrayList<Appointment>();		
 		final List<Appointment> pastAppointments= new ArrayList<Appointment>();
-		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
+		final boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 		if (jsonMode) {
-			//logger.debug("Json Mode: " + (jsonMode ? "true" : "false"));
 			String filterMemberIdString = QueryHelpers.getGet(request, "memberId");
 			int filterMemberId;
 			if (!filterMemberIdString.isEmpty() && isAdmin) {

@@ -15,7 +15,6 @@ public class ServicesPage extends PageLoader {
 
 	// Constructor
 	public ServicesPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
-		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
 	// Page-specific
 
@@ -25,8 +24,7 @@ public class ServicesPage extends PageLoader {
 		
 		// Get Data from DAO
 		final List<Service> services = DataManager.getServiceDAO().retrieveAll();
-		boolean jsonMode = QueryHelpers.getGetBool(request, "json");
-
+		final boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		// Go
 		if (jsonMode) {
