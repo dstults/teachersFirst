@@ -55,6 +55,23 @@
 	const memberName = '${member.displayName}';
 	const memberIsStudent = ${member.isStudent?c};
 	
+	const postData = async (actionType, varName, varValue) => {
+		const data = {};
+		data.action = actionType;
+		data[varName] = varValue;
+
+		const response = await fetch('/', {
+			method: 'POST',
+			cache: 'no-cache',
+			credentials: 'same-origin',
+			headers: { 'Content-Type': 'application/json' },
+			referrerPolicy: 'no-referrer',
+			body: JSON.stringify(data)
+		});
+
+		return response;
+	};
+
 	<#if isAdmin || isInstructor && member.isStudent>
 	// Set up credits
 	const creditsBox = document.getElementById('credits');
@@ -82,8 +99,16 @@
 			return;
 		}
 		credits = parsed;
-		creditsBox.innerHTML = 'Credit-Hours:&nbsp;&nbsp;' + credits + '<img class="credits-img" src="/images/edit-box.svg">';
-		alert('Changes saved!\n\nNote: this is just a demo, no changes have been saved.');
+		creditsBox.innerHTML = 'Updating ...';
+		
+		const response = postData('update_member', 'credits', credits);
+		
+		// debug-use only:
+		document.temp = response;
+
+		alert(response.json());
+		creditsBox.innerHTML = 'Credit-Hours:&nbsp;&nbsp;' + credits + '<img class="credits-img" src="/images/edit-box.svg" onclick="editCredits();">';
+		//alert('Changes saved!\n\nNote: this is just a demo, no changes have been saved.');
 	};
 	</#if>
 
