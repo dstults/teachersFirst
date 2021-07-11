@@ -24,7 +24,7 @@ public class UpdateMemberAction extends ActionRunner {
 	public void RunAction() {
 
 		if (uid <= 0) {
-			this.SendPostReply("/message", "", "You must be signed in to do this!");
+			this.sendJsonReply("You must be signed in to do this!");
 			return;
 		}
 
@@ -33,16 +33,16 @@ public class UpdateMemberAction extends ActionRunner {
 		try {
 			memberId = Integer.parseInt(memberIdRaw);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/message", "", "Couldn't parse the memberId!");
+			this.sendJsonReply("Couldn't parse the memberId!");
 			return;
 		}
 		if (memberId <= 0) {
-			this.SendPostReply("/message", "", "Invalid memberId!");
+			this.sendJsonReply("Invalid memberId!");
 			return;
 		}
 		Member member = DataManager.getMemberDAO().retrieveByID(memberId);
 		if (member == null) {
-			this.SendPostReply("/message", "", "Invalid memberId!");
+			this.sendJsonReply("Invalid memberId!");
 			return;
 		}
 		final boolean memberIsStudent = member.getIsStudent();
@@ -60,7 +60,7 @@ public class UpdateMemberAction extends ActionRunner {
 		try {
 			credits = Integer.parseInt(creditsRaw);
 		} catch (NumberFormatException e) {
-			this.SendPostReply("/message", "", "Couldn't parse the credits!");
+			this.sendJsonReply("Couldn't parse the credits!");
 			return;
 		}
 
@@ -76,12 +76,12 @@ public class UpdateMemberAction extends ActionRunner {
 		}
 		// Abort operation if not allowed.
 		if (!actionAllowed) {
-			this.SendPostReply("/message", "", "Operation not allowed.");
+			this.sendJsonReply("Operation not allowed.");
 			return;
 		}
 
 		if (!isAdmin || !isInstructor || (isStudent)) {
-			this.SendPostReply("/message", "", "Action not allowed.");
+			this.sendJsonReply("Action not allowed.");
 			return;
 		}
 
@@ -111,13 +111,13 @@ public class UpdateMemberAction extends ActionRunner {
 			changesMade = true;
 		}
 		if (!changesMade) {
-			this.SendPostReply("/message", "", "No changes detected, aborting!");
+			this.sendJsonReply("No changes detected, aborting!");
 			return;
 		}
 
 		Member member2 = DataManager.getMemberDAO().retrieveByID(memberId);
 
-		this.SendPostReply("/message", "", "Success!//" + member2.toJson() + "//Changed to://" + member.toJson());
+		this.sendJsonReply("Success!//" + member2.toJson() + "//Changed to://" + member.toJson());
 		return;
 
 		/*
@@ -125,7 +125,7 @@ public class UpdateMemberAction extends ActionRunner {
 		logger.debug("Updated: [{}]", member);
 		
 		// Log user into session
-		this.SendPostReply("/message", "", "Success!");
+		this.SendJsonReply("Success!");
 		return;
 		*/
 	}
