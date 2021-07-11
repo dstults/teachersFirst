@@ -77,6 +77,8 @@ public class ServerMain extends HttpServlet {
 				case "/services":
 					new ServicesPage(request, response).loadPage();
 					break;
+				case "/msg":
+				case "/message":
 				case "/messageOnly":
 					new MessagePage(request, response).loadPage();
 					break;
