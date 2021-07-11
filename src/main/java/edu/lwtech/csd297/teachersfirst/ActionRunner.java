@@ -16,7 +16,6 @@ public abstract class ActionRunner {
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
-	protected boolean jsonMode;
 	protected int uid;
 	protected boolean isAdmin;
 	protected boolean isInstructor;
@@ -29,7 +28,6 @@ public abstract class ActionRunner {
 	protected ActionRunner(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
-		jsonMode = QueryHelpers.getGetBool(request, "json");
 		uid = Security.getUserId(request);
 		if (uid > 0) {
 			Member member = DataManager.getMemberDAO().retrieveByID(uid);
@@ -55,33 +53,31 @@ public abstract class ActionRunner {
 
 	// Protected Methods (shared magic between all actions)
 
-	protected void SendPostReply(String nextPage, String query, String message) {
-		if (!jsonMode) {
-			// normal web behavior
-			String fullResponseURL = nextPage;
-			if (!query.isEmpty() || !message.isEmpty()) fullResponseURL += "?";
-			if (!query.isEmpty()) fullResponseURL += query;
-			if (!query.isEmpty() && !message.isEmpty()) fullResponseURL += "&";
-			if (!message.isEmpty()) fullResponseURL += "message=" + message.trim();
-			try {
-				response.sendRedirect(fullResponseURL);
-			} catch (IOException e) {
-				logger.error("IO Error: ", e);
-			}
-		} else {
-			// for RESTful applications
-			String messageJson = "'message':'" + message.trim() + "'"; // include message even if empty
-			if (!query.isEmpty()) messageJson += ",";
-			
-			String fullJson = "{" + messageJson + JsonUtils.queryToJson(query) + "}";
+	protected void sendJsonReply(String message) {
+		String messageJson = "\"message\": \"" + message.trim() + "\""; // include message even if empty
+		
+		String fullJson = "{ " + messageJson + " }";
 
-			// send json:
-			logger.debug("Attempting to send json...");
-			try (ServletOutputStream out = response.getOutputStream()) {
-				out.println(fullJson);
-			} catch (IOException e) {
-				logger.error("IO Error: ", e);
-			}
+		// send json:
+		logger.debug("Attempting to send json...");
+		try (ServletOutputStream out = response.getOutputStream()) {
+			out.println(fullJson);
+		} catch (IOException e) {
+			logger.error("IO Error: ", e);
+		}
+	}
+
+	protected void sendPostReply(String nextPage, String query, String message) {
+		// normal web behavior
+		String fullResponseURL = nextPage;
+		if (!query.isEmpty() || !message.isEmpty()) fullResponseURL += "?";
+		if (!query.isEmpty()) fullResponseURL += query;
+		if (!query.isEmpty() && !message.isEmpty()) fullResponseURL += "&";
+		if (!message.isEmpty()) fullResponseURL += "message=" + message.trim();
+		try {
+			response.sendRedirect(fullResponseURL);
+		} catch (IOException e) {
+			logger.error("IO Error: ", e);
 		}
 	}
 
