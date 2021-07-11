@@ -3,6 +3,7 @@ package edu.lwtech.csd297.teachersfirst.obj;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import edu.lwtech.csd297.teachersfirst.DataManager;
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
 
 public class Opening {
@@ -51,6 +52,10 @@ public class Opening {
 		if (this.recID != -1) { throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1)."); }
 
 		this.recID = recID;
+	}
+
+	public boolean update() {
+		return DataManager.getOpeningDAO().update(this);
 	}
 
 	// ----------------------------------------------------------------	

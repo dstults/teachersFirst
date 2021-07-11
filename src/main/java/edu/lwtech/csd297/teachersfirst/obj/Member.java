@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.*;
 
+import edu.lwtech.csd297.teachersfirst.DataManager;
 import edu.lwtech.csd297.teachersfirst.DateHelpers;
 
 public class Member implements IJsonnable {
@@ -110,6 +111,10 @@ public class Member implements IJsonnable {
 		if (this.recID != -1) throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1).");
 
 		this.recID = recID;
+	}
+
+	public boolean update() {
+		return DataManager.getMemberDAO().update(this);
 	}
 
 	// ----------------------------------------------------------------
