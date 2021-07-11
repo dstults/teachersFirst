@@ -19,9 +19,9 @@ public class JsonUtils {
 			if (i > 0) sb.append(",");
 			kvPair = line.split("=");
 			if (kvPair.length == 1) {
-				sb.append("\"" + kvPair[0] + "\": undefined");
+				sb.append("\"" + kvPair[0] + "\":undefined");
 			} else if (kvPair.length == 2) {
-				sb.append("\"" + kvPair[0] + "\": \"" + kvPair[1] + "\"");
+				sb.append("\"" + kvPair[0] + "\":\"" + kvPair[1] + "\"");
 			} else {
 				//TODO: use logger
 				//System.out.println("Invalid query.");
