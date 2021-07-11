@@ -8,7 +8,7 @@ public class JsonUtils {
 		if (query == null) return "";
 		String sanitized = query.trim();
 		if (sanitized.isEmpty()) return "";
-		if (sanitized.substring(0,1).equals("?"))
+		if (sanitized.substring(0, 1).equals("?"))
 			sanitized = sanitized.substring(1);
 		
 		String[] splits = sanitized.split("&");
@@ -19,12 +19,9 @@ public class JsonUtils {
 			if (i > 0) sb.append(",");
 			kvPair = line.split("=");
 			if (kvPair.length == 1) {
-				kvPair[0] = kvPair[0].replace("'", "\\'");
-				sb.append("'" + kvPair[0] + "':undefined");
+				sb.append("\"" + kvPair[0] + "\": undefined");
 			} else if (kvPair.length == 2) {
-				kvPair[0] = kvPair[0].replace("'", "\\'");
-				kvPair[1] = kvPair[1].replace("'", "\\'");
-				sb.append("'" + kvPair[0] + "':'" + kvPair[1] + "'");
+				sb.append("\"" + kvPair[0] + "\": \"" + kvPair[1] + "\"");
 			} else {
 				//TODO: use logger
 				//System.out.println("Invalid query.");
