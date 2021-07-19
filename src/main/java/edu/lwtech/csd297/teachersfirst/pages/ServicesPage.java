@@ -24,7 +24,6 @@ public class ServicesPage extends PageLoader {
 		
 		// Get Data from DAO
 		final List<Service> services = DataManager.getServiceDAO().retrieveAll();
-		final boolean jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		// Go
 		if (jsonMode) {

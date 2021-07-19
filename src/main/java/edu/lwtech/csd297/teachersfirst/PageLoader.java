@@ -27,6 +27,8 @@ public abstract class PageLoader {
 	protected boolean isInstructor = false;
 	protected boolean isStudent = false;
 
+	protected final boolean jsonMode;
+
 	// Static Declarations (shared variables to handle freemarker and DAOs)
 
 	protected static final Configuration freeMarkerConfig = new Configuration(Configuration.getVersion());
@@ -63,6 +65,7 @@ public abstract class PageLoader {
 		this.response = response;
 		this.templateDataMap = new HashMap<>();
 		getGetMessage(); // Should always check for and assign this even if inevitable security fail will occur
+		jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		// Handle session / cookies
 		uid = Security.getUserId(request);
