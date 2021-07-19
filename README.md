@@ -1,4 +1,4 @@
-# teachersFirst v0.7
+# Teachers First FOSS Project v0.8
 
 ## School and Gym CRM
 An MVC servlet that provides an interface for schools or gyms to host teachers or coaches and allows students to sign up for classes
@@ -23,17 +23,15 @@ Get yours today!
 
 ### Completed Objectives
  - v0.0 Getting started
- - v0.1 Member pojos, view, and registration
- - v0.2 Opening and Appointment pojos and views, and registration
- - v0.3 Basic functions look like they work in unison as designed
- - v0.4 Cookie integration & database integration & basic admin/edit functions
- - v0.6 Error validation and openings
- - v0.7 Polish to Minimal Viable Product
-
-#### End of quarter!
-Expect that the minimal viable product has been reached and is ready for rapid deployment.
+ - v0.1 Member objects, initial page layout and member registration
+ - v0.2 Opening and appointment objects, pages and creation
+ - v0.3 Cohesive interaction between all new objects
+ - v0.4 Database integration
+ - v0.5 Input validation and opening error detection
+ - v0.6 Polish to Minimal Viable Product
+ - v0.7 Fully customizable profile and transition to JS-based view
 
 ## Under contruction:
- - v0.8 Credit economy
- - v0.9 Review System
- - v1.0 Professional initial release
+ - v0.8 Credit economy and transaction logging
+ - v0.9 Administrative additions (create, modify and disable other accounts)
+ - v1.0 Attractive enhancements
