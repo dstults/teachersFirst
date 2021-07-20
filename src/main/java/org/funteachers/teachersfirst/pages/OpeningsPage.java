@@ -107,7 +107,11 @@ public class OpeningsPage extends PageLoader {
 			templateDataMap.put("startDate", sundayString);
 			templateDataMap.put("endDate", saturdayString);
 			templateDataMap.put("weeks", weeks);
-			templateDataMap.put("message", "Failed to contact database/no data, try again later.");
+			if (openingDAO == null) {
+				templateDataMap.put("message", "Failed to connect with database, please try again.");
+			} else if (openingDAO.retrieveByIndex(0) == null) {
+				templateDataMap.put("message", "No opening data.");
+			}
 			trySendResponse();
 			DataManager.resetDAOs();
 			return;

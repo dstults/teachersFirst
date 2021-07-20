@@ -70,8 +70,11 @@ public class ServiceMemoryDAO implements DAO<Service> {
 
 	public Service retrieveByIndex(int index) {
 		// Note: indexes are zero-based
-		if (index < 0)
-			throw new IllegalArgumentException("retrieveByIndex: index cannot be negative");
+		if (index < 0) {
+			logger.error("retrieveByIndex: index cannot be negative");
+			//throw new IllegalArgumentException("retrieveByIndex: index cannot be negative");
+			return null;
+		}
 		logger.debug("Getting object with index: {} ...", index);
 
 		return this.serviceDB.get(index);
