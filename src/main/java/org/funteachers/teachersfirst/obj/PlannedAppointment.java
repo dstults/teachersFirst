@@ -96,6 +96,11 @@ public class PlannedAppointment {
 		return this.endTime;
 	}
 
+	public float getLength() {
+		float diff = this.endTime.getTime() - this.startTime.getTime();
+		return diff / (60 * 60 * 1000);
+	}
+
 	public String getDateString() {
 		return this.startTime.toLocalDateTime().toLocalDate().toString();
 	}

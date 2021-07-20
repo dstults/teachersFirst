@@ -3,6 +3,8 @@ package org.funteachers.teachersfirst.actions;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteAppointmentAction extends ActionRunner {
@@ -49,6 +51,17 @@ public class DeleteAppointmentAction extends ActionRunner {
 		//logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		logger.debug("Deleted appointment ID: [{}]", appointmentIdString);
 		
+		// Update credits for student
+		final DAO<Member> memberDAO = DataManager.getMemberDAO();
+		final Member student = memberDAO.retrieveByID(appointment.getStudentID());
+		float credits = student.getCredits();
+		float length = appointment.getLength();
+		credits += length;
+		String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+		student.setCredits(uid, opName, "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
+		memberDAO.update(student);
+		
+		// Send response
 		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " deleted!");
 		return;
 	}

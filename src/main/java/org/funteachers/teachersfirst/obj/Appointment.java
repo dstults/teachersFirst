@@ -121,6 +121,11 @@ public class Appointment implements IJsonnable {
 		return this.endTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
 	}
 
+	public float getLength() {
+		float diff = this.endTime.getTime() - this.startTime.getTime();
+		return diff / (60 * 60 * 1000);
+	}
+
 	public String getDateFormatted() {
 		return this.startTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 	}

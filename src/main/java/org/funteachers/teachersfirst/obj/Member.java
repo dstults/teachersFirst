@@ -244,12 +244,14 @@ public class Member implements IJsonnable {
 		this.displayName = name;
 	}
 
-	public void setCredits(float credits) {
+	public void setCredits(int operator, String operatorName, String method, float credits) {
+		LoggedEvent.log(operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + this.credits + "] > [" + credits + "]");
 		this.credits = credits;
+		//TODO: This should do the SQL update right here and the update for credits should be removed from the generic update
 	}
 
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {
-		//TODO: validate integers
+		//TODO: validate integers?
 
 		setBirthdate(DateHelpers.toTimestamp(years, months, days, hours, minutes, seconds));
 	}
