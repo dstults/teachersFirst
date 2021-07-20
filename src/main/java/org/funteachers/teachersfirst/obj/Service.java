@@ -48,7 +48,7 @@ public class Service implements IJsonnable {
 	}
 
 	public void setRecID(int recID) {
-		// Updates the recID of POJOs that have just been added to the database
+		// Updates the recID of objects that have just been added to the database
 		if (recID <= 0)
 			throw new IllegalArgumentException("setRecID: recID cannot be negative.");
 		if (this.recID != -1)
