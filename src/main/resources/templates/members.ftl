@@ -96,7 +96,7 @@
 			<#if isAdmin || isInstructor>credits.innerHTML = member.credits;</#if>
 			age.innerHTML = member.age < 18 ? member.age : member.ageClass;
 			gender.innerHTML = member.gender;
-			phones.innerHTML = member.phone1 + '\n' + member.phone2;
+			phones.innerHTML = member.phone1 + '<br>' + member.phone2;
 			email.innerHTML = member.email;
 		}
 	};
