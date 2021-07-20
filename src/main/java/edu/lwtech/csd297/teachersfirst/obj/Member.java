@@ -161,6 +161,16 @@ public class Member implements IJsonnable {
 		return DateHelpers.calculateAgeFrom(this.birthdate);
 	}
 
+	public String getAgeClass() {
+		int age = DateHelpers.calculateAgeFrom(this.birthdate);
+		if (age < 10) return "child";
+		if (age < 13) return "pre-teen";
+		if (age < 18) return "teenager";
+		if (age < 55) return "adult";
+		if (age < 130) return "senior";
+		return "-";
+	}
+
 	public String getGender() {
 		return this.gender;
 	}
@@ -332,22 +342,24 @@ public class Member implements IJsonnable {
 
 	@Override
 	public String toJson() {
-		return "{\"id\":\"" + this.recID +
-				"\",\"loginName\":\"" + this.loginName +
-				//"\",\"passwordHash\":\"" + this.passwordHash +
-				"\",\"displayName\":\"" + this.displayName +
-				"\",\"credits\":\"" + this.credits +
-				"\",\"birthdate\":\"" + this.birthdate.toLocalDateTime().toLocalDate() +
-				"\",\"gender\":\"" + this.gender +
-				"\",\"selfIntroduction\":\"" + this.selfIntroduction +
-				"\",\"instructorNotes\":\"" + this.instructorNotes +
-				"\",\"phone1\":\"" + this.phone1 +
-				"\",\"phone2\":\"" + this.phone2 +
-				"\",\"email\":\"" + this.email +
-				"\",\"isStudent\":\"" + this.isStudent +
-				"\",\"isInstructor\":\"" + this.isInstructor +
-				"\",\"isAdmin\":\"" + this.isAdmin +
-				"\"}";
+		return "{\"id\":" + this.recID + "," +
+				"\"loginName\":\"" + this.loginName + "\"," +
+				//"\"passwordHash\":\"" + this.passwordHash + "\"," +
+				"\"displayName\":\"" + this.displayName + "\"," +
+				"\"credits\":" + this.credits + "," +
+				"\"birthdate\":\"" + this.birthdate.toLocalDateTime().toLocalDate() + "\"," +
+				"\"age\":" + this.getAge() + "," +
+				"\"ageClass\":\"" + this.getAgeClass() + "\"," +
+				"\"gender\":\"" + this.gender + "\"," +
+				"\"selfIntroduction\":\"" + this.selfIntroduction + "\"," +
+				"\"instructorNotes\":\"" + this.instructorNotes + "\"," +
+				"\"phone1\":\"" + this.phone1 + "\"," +
+				"\"phone2\":\"" + this.phone2 + "\"," +
+				"\"email\":\"" + this.email + "\"," +
+				"\"isStudent\":" + this.isStudent + "," +
+				"\"isInstructor\":" + this.isInstructor + "," +
+				"\"isAdmin\":" + this.isAdmin +
+				"}";
 	}
 
 }

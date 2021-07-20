@@ -94,6 +94,7 @@
 			displayName.innerHTML = '<a href="/profile?memberId=' + member.id + '">' + member.displayName + '</a>';
 			recId.innerHTML = '<a href="/profile?memberId=' + member.id + '">' + member.id + '</a>';
 			<#if isAdmin || isInstructor>credits.innerHTML = member.credits;</#if>
+			age.innerHTML = member.age < 18 ? member.age : member.ageClass;
 			gender.innerHTML = member.gender;
 			phones.innerHTML = member.phone1 + '\n' + member.phone2;
 			email.innerHTML = member.email;
