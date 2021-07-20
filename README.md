@@ -1,6 +1,11 @@
-# Teachers First FOSS CRM Project v0.7
+# "Teachers First" FOSS CRM v0.8
 
-## School and Gym CRM
+For help with installation or using the interface, please consult [the WIKI](https://github.com/dstults/teachersFirst/wiki).
+- https://github.com/dstults/teachersFirst/wiki
+
+Note: The Wiki won't be updated much until after the app is on version 1.0. If you have any questions feels free to [make an issue](https://github.com/dstults/teachersFirst/issues).
+
+# School and Gym CRM
 An MVC servlet that provides an interface for schools or gyms to host teachers or coaches and allows students to sign up for classes
 
 Written in Java, Freemarker, HTML, CSS, and SQL (MariaDB), Teacher's First is designed to be bulit with Maven and hosted on a Tomcat environment.
