@@ -6,13 +6,13 @@
 	<#if userId lte 0>
 	<#include "please_login.ftl">
 	<#else>
-		<div class="appointment-title-container">
-			<div class="appointment-page-controls">
+		<div class="info-list-title-container">
+			<div class="info-list-page-controls">
 				<a href="javascript:prevPage();">Prev Page</a>
 				<p id="current-page">1</p>
 				<a href="javascript:nextPage();">Next Page</a>
 			</div>
-			<h2 class="appointments-subtitle">Upcoming appointments</h2>
+			<h2 class="info-list-subtitle">Members</h2>
 			<div></div>
 		</div>
 		<table class="info-list">
