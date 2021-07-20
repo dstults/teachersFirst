@@ -38,6 +38,8 @@ public class AppointmentsPage extends PageLoader {
 			
 			// make sure we're logged in
 			if (uid > 0) {
+				// TODO: This is json mode now! This should probably say something like:
+				// {"message":"Unable to contact database!"}
 				final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
 				if (appointmentDAO == null || appointmentDAO.retrieveByIndex(0) == null) {
 					if (appointmentDAO == null)
