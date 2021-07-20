@@ -129,6 +129,10 @@ public abstract class PageLoader {
 		trySendResponse("", statusCode);
 	}
 
+	protected void trySendResponse(String headerOverwrite) {
+		trySendResponse(headerOverwrite, 200);
+	}
+
 	protected void trySendResponse(String headerOverwrite, int statusCode) {
 
 		if (templateName == null) {
@@ -141,11 +145,11 @@ public abstract class PageLoader {
 			return;
 		}
 
+		if (!headerOverwrite.equals("")) response.setHeader("Content-Type", headerOverwrite);
+		response.setStatus(statusCode);
+
 		// Process template:
 		logger.debug("Processing Template: " + templateName);
-		if (headerOverwrite != "") {
-			response.setHeader("Content-Type", headerOverwrite);
-		}
 		try (PrintWriter out = response.getWriter()) {
 			Template view = freeMarkerConfig.getTemplate(templateName);
 			view.process(templateDataMap, out);
@@ -159,6 +163,8 @@ public abstract class PageLoader {
 	protected void trySendJson(String json) {
 		// send json:
 		logger.debug("Attempting to send json...");
+		response.setHeader("Content-Type", "application/json");
+		response.setStatus(200);
 		try (ServletOutputStream out = response.getOutputStream()) {
 			out.println(json);
 		} catch (IOException e) {
