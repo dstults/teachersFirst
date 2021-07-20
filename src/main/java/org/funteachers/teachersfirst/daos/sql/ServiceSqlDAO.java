@@ -71,7 +71,6 @@ public class ServiceSqlDAO implements DAO<Service> {
 
 	public Service retrieveByIndex(int index) {
 		logger.debug("Trying to get Service with index: " + index);
-		logger.warn("This will eventually be deprecated. Don't use this.");
 
 		if (index < 0) {
 			logger.debug("retrieveByIndex: index cannot be negative");

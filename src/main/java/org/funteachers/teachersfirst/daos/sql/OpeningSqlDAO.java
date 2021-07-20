@@ -71,7 +71,6 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	
 	public Opening retrieveByIndex(int index) {
 		logger.debug("Trying to get Opening with index: " + index);
-		logger.warn("This will eventually be deprecated. Don't use this.");
 
 		if (index < 0) {
 			logger.debug("retrieveByIndex: index cannot be negative");
