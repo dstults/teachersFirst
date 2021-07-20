@@ -1,4 +1,3 @@
-```
 
 CREATE DATABASE teachersFirst;
 USE teachersFirst;
@@ -77,4 +76,3 @@ CREATE TABLE events (
     message             VARCHAR           NOT NULL,
     PRIMARY KEY (recID)
 );
-```
