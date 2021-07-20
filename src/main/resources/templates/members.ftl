@@ -31,4 +31,16 @@
 	</div>
 	</#if>
 </body>
+<#if userId gt 0>
+<script>
+	let allStudentData = null;
+	let filteredStudentData = null;
+	const studentRows = 15;
+	fetch('https://funteachers.org/members?json').then(response => response.json()).then(data => {
+		allStudentData = data;
+		filteredStudentData = allStudentData;
+		//refreshAll();
+	}).catch(err => console.error(err.message));
+</script>
+</#if>
 </html>
