@@ -1,9 +1,13 @@
 package edu.lwtech.csd297.teachersfirst.obj;
 
+import org.apache.logging.log4j.*;
+
+import edu.lwtech.csd297.teachersfirst.*;
+
 import java.util.*;
 
 public class JsonUtils {
-	
+
 	public static String queryToJson(String query) {
 		if (query == null) return "";
 		String sanitized = query.trim();
@@ -23,8 +27,9 @@ public class JsonUtils {
 			} else if (kvPair.length == 2) {
 				sb.append("\"" + kvPair[0] + "\":\"" + kvPair[1] + "\"");
 			} else {
-				//TODO: use logger
-				//System.out.println("Invalid query.");
+				// Crashes during unit tests:
+				//ServerMain.logger.error("Invalid query when trying to convert from query to JSON.");
+				System.out.println("Invalid query when trying to convert from query to JSON.");
 				return "";
 			}
 			i++;
@@ -34,11 +39,19 @@ public class JsonUtils {
 
 	@SafeVarargs
 	public static String BuildArrays(List<? extends IJsonnable>...joLists) {
+		if (joLists == null || joLists.length == 0) return "[]";
+
 		StringBuilder sb = new StringBuilder();
 		int i;
 		int j = 0;
 		if (joLists.length > 1) sb.append("[");
 		for (List<? extends IJsonnable> joList : joLists) {
+			if (joList == null) {
+				// Crashes during unit tests:
+				//ServerMain.logger.error("JsonUtils.BuildArrays 'joLists' passed a null list at iterator [ " + j + " ]!");
+				System.out.println("JsonUtils.BuildArrays 'joLists' passed a null list at iterator [ " + j + " ]!");
+				continue;
+			}
 			if (j > 0) sb.append(",");
 			i = 0;
 			sb.append("[");

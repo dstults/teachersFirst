@@ -28,7 +28,8 @@ public class MembersPage extends PageLoader {
 		}
 
 		if (jsonMode) {
-			String json = "{}";
+			// JSON
+			String json = JsonUtils.BuildArrays(members);
 
 			// Go
 			trySendJson(json);
