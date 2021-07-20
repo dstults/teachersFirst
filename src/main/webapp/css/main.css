@@ -255,27 +255,29 @@ input[type=radio] {
 	padding: 8px 32px;
 }
 
-/* appointments page */
+/* navigable data pages */
 
-.appointment-title-container {
+.info-list-title-container {
 	margin: 0 auto;
 	height: 4rem;
 	display: grid;
 	grid-template-columns: 1fr 2fr 1fr;
 }
-.appointment-page-controls {
+.info-list-page-controls {
 	font-size: 150%;
 	display: inline-grid;
 	grid-template-columns: 1fr 2fr 1fr;
 	text-align: center;
 	align-items: center;
 }
-.appointments-subtitle {
+.info-list-subtitle {
 	margin: auto;
 	text-align: center;
 	font-size: 2.5rem;
 	display: block;
 }
+
+
 .openings-subtitle {
 	width: 80%;
 	margin: 1.4rem auto .4rem auto;

@@ -26,13 +26,21 @@ public class MembersPage extends PageLoader {
 		} else {
 			members = null;
 		}
-		
-		// FreeMarker
-		templateName = "members.ftl";
-		templateDataMap.put("members", members);
 
-		// Go
-		trySendResponse();
+		if (jsonMode) {
+			// JSON
+			String json = JsonUtils.BuildArrays(members);
+
+			// Go
+			trySendJson(json);
+		} else {
+			// FreeMarker
+			templateName = "members.ftl";
+			templateDataMap.put("members", members);
+
+			// Go
+			trySendResponse();
+		}
 	}
 
 }

@@ -9,13 +9,13 @@
 		<div class="top-buttons">
 			<a href="javascript:filterAppointments();" class="buttonize-link">Filter Appointments</a>
 		</div>
-		<div class="appointment-title-container">
-			<div class="appointment-page-controls">
+		<div class="info-list-title-container">
+			<div class="info-list-page-controls">
 				<a href="javascript:futurePagePrev();">Prev Page</a>
 				<p id="current-future-page">1</p>
 				<a href="javascript:futurePageNext();">Next Page</a>
 			</div>
-			<h2 class="appointments-subtitle">Upcoming appointments</h2>
+			<h2 class="info-list-subtitle">Upcoming appointments</h2>
 			<div></div>
 		</div>
 		<table class="info-list">
@@ -37,13 +37,13 @@
 			</#list>
 		</table>
 
-		<div class="appointment-title-container">
-			<div class="appointment-page-controls">
+		<div class="info-list-title-container">
+			<div class="info-list-page-controls">
 				<a href="javascript:pastPagePrev();">Prev Page</a>
 				<p id="current-past-page">1</p>
 				<a href="javascript:pastPageNext();">Next Page</a>
 			</div>
-			<h2 class="appointments-subtitle">Previous appointments</h2>
+			<h2 class="info-list-subtitle">Previous appointments</h2>
 			<div></div>
 		</div>
 		<table class="info-list">
