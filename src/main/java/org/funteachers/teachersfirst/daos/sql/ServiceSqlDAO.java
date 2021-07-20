@@ -189,12 +189,4 @@ public class ServiceSqlDAO implements DAO<Service> {
 		return new Service(recID, name, description, instructors);
 	}
 
-	private boolean integerToBoolean(int x){
-		if(x == 0){
-			return false;
-		}else{
-			return true;
-		}
-	}
-
 }

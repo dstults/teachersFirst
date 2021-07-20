@@ -14,16 +14,16 @@ public class LoggedEvent implements IJsonnable {
 
 	// ----------------------------------------------------------------
 	
-	public LoggedEvent(int operator, Timestamp date, String message) {
-		this(-1, operator, date, message);
+	public LoggedEvent(int operator, String message) {
+		this(-1, operator, new Timestamp(System.currentTimeMillis()), message);
 	}
 
 	public LoggedEvent(int recID, int operator, Timestamp date, String message) {
 
 		if (recID < -1)
 			throw new IllegalArgumentException("Invalid argument: recID < -1");
-		if (operator < 1)
-			throw new IllegalArgumentException("Invalid argument: operator < 1");
+		if (operator < 0)
+			throw new IllegalArgumentException("Invalid argument: operator < 0");
 		if (date == null)
 			throw new IllegalArgumentException("Invalid argument: date is null");
 		if (message == null)
@@ -35,6 +35,13 @@ public class LoggedEvent implements IJsonnable {
 		this.operator = operator;
 		this.date = date;
 		this.message = message;
+	}
+
+	// ----------------------------------------------------------------
+
+	public static void log(int operator, String message) {
+		LoggedEvent ev = new LoggedEvent(operator, message);
+		DataManager.getLoggedEventDAO().insert(ev);
 	}
 
 	// ----------------------------------------------------------------
