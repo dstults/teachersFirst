@@ -44,8 +44,8 @@
 </body>
 <#if userId gt 0>
 <script>
-	const isAdmin = <#if isAdmin>true<#else>false</#if>;
-	const isInstructor = <#if isInstructor>true<#else>false</#if>;
+	const isAdmin = ${isAdmin?c};
+	const isInstructor = ${isInstructor?c};
 	const isStudent = <#if isStudent>true<#else>false</#if>;
 
 	let currentPage = 0;

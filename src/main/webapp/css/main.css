@@ -202,7 +202,7 @@ input[type=radio] {
 	background-color: var(--backgroundColorLight);
 }
 .soft-highlight {
-	background-color: rgba(255, 255, 0, 25%);
+	background-color: rgb(255, 255, 0) !important;
 }
 .gray {
 	color: gray;
@@ -347,11 +347,11 @@ table.info-list th {
 	background-color: var(--primaryHighlight);
 }
 table.info-list td {
-	background-color: var(--backgroundColorLight);
 	font-family: monospace;
 	font-size: 130%;
 }
 table.info-list tr {
+	background-color: var(--backgroundColorLight);
 	height: 45px;
 }
 
