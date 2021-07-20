@@ -105,7 +105,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		logger.debug("Trying to get Member with index: " + index);
 
 		if (index < 0) {
-			logger.debug("retrieveByIndex: index cannot be negative");
+			logger.error("retrieveByIndex: index cannot be negative");
 			return null;
 		}
 

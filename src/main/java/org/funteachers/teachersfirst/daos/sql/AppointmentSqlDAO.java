@@ -88,7 +88,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		logger.debug("Trying to get Appointment with index: " + index);
 		
 		if (index < 0) {
-			logger.debug("retrieveByIndex: index cannot be negative");
+			logger.error("retrieveByIndex: index cannot be negative");
 			return null;
 		}
 

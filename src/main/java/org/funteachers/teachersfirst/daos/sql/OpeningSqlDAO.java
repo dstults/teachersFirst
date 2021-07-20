@@ -73,7 +73,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		logger.debug("Trying to get Opening with index: " + index);
 
 		if (index < 0) {
-			logger.debug("retrieveByIndex: index cannot be negative");
+			logger.error("retrieveByIndex: index cannot be negative");
 			return null;
 		}
 
