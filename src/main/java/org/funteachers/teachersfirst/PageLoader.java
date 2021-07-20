@@ -122,10 +122,14 @@ public abstract class PageLoader {
 	}
 
 	protected void trySendResponse() {
-		trySendResponse("");
+		trySendResponse("", 200);
 	}
 
-	protected void trySendResponse(String headerOverwrite) {
+	protected void trySendResponse(int statusCode) {
+		trySendResponse("", statusCode);
+	}
+
+	protected void trySendResponse(String headerOverwrite, int statusCode) {
 
 		if (templateName == null) {
 			// Send 404 error response
