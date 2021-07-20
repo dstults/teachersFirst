@@ -37,24 +37,26 @@ public class NewAppointmentAction extends ActionRunner {
 		}
 
 		final String studentIdString = QueryHelpers.getPost(request, "studentId");
-		int studentIdInt;
+		final int studentIdInt;
 		try {
 			studentIdInt = Integer.parseInt(studentIdString);
 		} catch (NumberFormatException e) {
-			studentIdInt = 0;
+			this.sendPostReply("/openings", "", "Could not parse student ID!");
+			return;
 		}
-		if (DataManager.getMemberDAO().retrieveByID(studentIdInt) == null) {
+		final Member student = DataManager.getMemberDAO().retrieveByID(studentIdInt);
+		if (student == null) {
 			this.sendPostReply("/openings", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
 		}
 		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
-		int instructorIdInt;
+		final int instructorIdInt;
 		try {
 			instructorIdInt = Integer.parseInt(instructorIdString);
 		} catch (NumberFormatException e) {
-			instructorIdInt = 0;
+			this.sendPostReply("/openings", "", "Could not parse instructor ID!");
+			return;
 		}
-
 		if (DataManager.getMemberDAO().retrieveByID(instructorIdInt) == null) {
 			this.sendPostReply("/openings", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
@@ -165,11 +167,21 @@ public class NewAppointmentAction extends ActionRunner {
 
 		logger.debug("Attempting to create new appointment ...");
 		
+		// Create appointment
 		Appointment appointment = new Appointment(pa);
 		DataManager.getAppointmentDAO().insert(appointment);
 		logger.debug("Created new appointment: [{}]", appointment);
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
-		
+
+		// Update credits for student
+		float credits = student.getCredits();
+		float length = pa.getLength();
+		credits -= length;
+		String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+		student.setCredits(uid, opName, "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
+		DataManager.getMemberDAO().update(student);
+
+		// Reply to user
 		this.sendPostReply("/appointments", "", "Appointment created!");
 		return;
 	}

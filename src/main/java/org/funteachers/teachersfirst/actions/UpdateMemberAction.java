@@ -82,7 +82,8 @@ public class UpdateMemberAction extends ActionRunner {
 
 		boolean changesMade = false;
 		if (credits != member.getCredits()) {
-			member.setCredits(credits);
+			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+			member.setCredits(uid, opName, "manual update", credits);
 			changesMade = true;
 		}
 		if (phone1 != member.getPhone1()) {

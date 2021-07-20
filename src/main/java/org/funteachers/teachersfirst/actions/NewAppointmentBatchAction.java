@@ -33,25 +33,29 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		}
 
 		final String studentIdString = QueryHelpers.getPost(request, "studentId");
-		int studentIdInt;
+		final int studentIdInt;
 		try {
 			studentIdInt = Integer.parseInt(studentIdString);
 		} catch (NumberFormatException e) {
-			studentIdInt = 0;
+			this.sendPostReply("/make_appointment_batch", "", "Could not parse student ID!");
+			return;
 		}
-		if (DataManager.getMemberDAO().retrieveByID(studentIdInt) == null) {
+		final Member student = DataManager.getMemberDAO().retrieveByID(studentIdInt);
+		if (student == null) {
 			this.sendPostReply("/make_appointment_batch", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
 		}
+
 		final String instructorIdString = QueryHelpers.getPost(request, "instructorId");
-		int instructorIdInt;
+		final int instructorIdInt;
 		try {
 			instructorIdInt = Integer.parseInt(instructorIdString);
 		} catch (NumberFormatException e) {
-			instructorIdInt = 0;
+			this.sendPostReply("/make_appointment_batch", "", "Could not parse instructor ID!");
+			return;
 		}
-
-		if (DataManager.getMemberDAO().retrieveByID(instructorIdInt) == null) {
+		final Member instructor = DataManager.getMemberDAO().retrieveByID(instructorIdInt);
+		if (instructor == null) {
 			this.sendPostReply("/make_appointment_batch", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
 		} else if (studentIdInt == instructorIdInt) {
@@ -151,18 +155,26 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		if(daysOfWeekString.contains("fr")) scheduledDays.add(DayOfWeek.FRIDAY);
 		if(daysOfWeekString.contains("sa")) scheduledDays.add(DayOfWeek.SATURDAY);
 		if (scheduledDays.size() == 0) {
-			this.sendPostReply("/make_openings", "", "Couldn't parse your days of the week.");
+			this.sendPostReply("/make_appointment_batch", "", "Couldn't parse your days of the week.");
+			return;
+		}
+
+		// Create planned appointment list
+		List<PlannedAppointment> plannedAppointments = PlannedAppointment.MakeList(
+			studentIdInt, instructorIdInt, scheduledDays,
+			startYear, startMonth, startDay, startHour, startMinute,
+			endYear, endMonth, endDay, endHour, endMinute);
+		logger.debug("PLANS GOT: " + plannedAppointments.size());
+
+		// Make sure list length greater than zero
+		if (plannedAppointments.size() == 0) {
+			this.sendPostReply("/make_appointment_batch", "", "Could not find any valid planned appointments in provided scope.");
 			return;
 		}
 
 		// Make sure no conflicting appointments
 		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
-		logger.debug("Appointments GOT");
-		List<PlannedAppointment> plannedAppointments = PlannedAppointment.MakeList(
-			studentIdInt, instructorIdInt, scheduledDays,
-			startYear, startMonth, startDay, startHour, startMinute,
-			endYear, endMonth, endDay, endHour, endMinute);
-		logger.debug("PLANS GOT");
+		logger.debug("APPOINTMENTS GOT: " + allAppointments.size());
 
 		// Might be very first appointment, in which case this is null
 		if (allAppointments != null) {
@@ -177,8 +189,12 @@ public class NewAppointmentBatchAction extends ActionRunner {
 
 		StringBuilder sb = new StringBuilder("Batch appointment creation results://");
 		logger.debug("Attempting to batch-create new appointments ...");
+
+		int successCount = 0;
+		float lengthEach = plannedAppointments.get(0).getLength();
 		for (PlannedAppointment plan : plannedAppointments) {
 			if (plan.getResult().contains("OK")) {
+				successCount++;
 				Appointment appointment = new Appointment(plan);
 				DataManager.getAppointmentDAO().insert(appointment);
 				sb.append("OK: %5B").append(appointment.getDateFormatted()).append("%5D//");
@@ -189,6 +205,16 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			}
 		}
 		sb.append("- End of List -");
+
+		// Deduct credits from student based on number of successful creations times length of each
+		if (successCount > 0 && lengthEach > 0.0) {
+			float credits = student.getCredits();
+			credits -= successCount * lengthEach;
+			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+			student.setCredits(uid, opName, "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
+			DataManager.getMemberDAO().update(student);
+		}
+
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		this.sendPostReply("/appointments", "", sb.toString());
 		return;

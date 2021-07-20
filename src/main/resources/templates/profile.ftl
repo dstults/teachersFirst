@@ -16,7 +16,7 @@
 			<td>
 				<div class="profile-basic-stats">
 					<div class="full-width-grid h1-like">${member.displayName}</div>
-					<#if isAdmin || isInstructor && member.isStudent><div style="background-color: var(--primaryHighlight);" class="full-width-grid h3-like data-view" id="credits">Credit-Hours:&nbsp;&nbsp;${member.credits}<img class="right-float-img-button" src="/images/edit-box.svg" onclick="editCredits();"></div></#if>
+					<#if isAdmin || isInstructor && member.isStudent><div style="background-color: var(--primaryHighlight);" class="full-width-grid h3-like data-view" id="credits">Credit-Hours:&nbsp;&nbsp;${member.credits?c}<img class="right-float-img-button" src="/images/edit-box.svg" onclick="editCredits();"></div></#if>
 					<#if isAdmin || isInstructor || isSelf><div class="bold-left">Member ID:</div><div class="data-view">${member.recID}</div><div></div></#if>
 					<#if isAdmin || isInstructor || isSelf><div class="bold-left">Login name:</div><div class="data-view" id="login-name">${member.loginName}</div><div></div></#if>
 					<#if isAdmin || isInstructor || isSelf><div class="bold-left">Gender:</div><div class="data-view" id="gender">${member.genderWord}</div><img src="/images/edit-box.svg" class="disabled" title="Cannot update gender here, talk to your system administrator."></#if>
@@ -74,7 +74,7 @@
 	<#if isAdmin || isInstructor && member.isStudent>
 	// Set up credits
 	const creditsBox = document.getElementById('credits');
-	let credits = ${member.credits};
+	let credits = ${member.credits?c};
 	const editCredits = async _ => {
 		const warningMsg = memberIsStudent ? '' : '\n\nWARNING: USER IS NOT A STUDENT. THIS WOULD NOT MAKE SENSE.';
 		if (!confirm(memberName + ' currently has ' + credits + ' credits, would you like to update?' + warningMsg)) {

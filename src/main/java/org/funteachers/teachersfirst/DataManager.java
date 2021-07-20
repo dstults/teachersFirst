@@ -9,10 +9,7 @@ import freemarker.core.ParseException;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.daos.*;
-import org.funteachers.teachersfirst.daos.sql.AppointmentSqlDAO;
-import org.funteachers.teachersfirst.daos.sql.MemberSqlDAO;
-import org.funteachers.teachersfirst.daos.sql.OpeningSqlDAO;
-import org.funteachers.teachersfirst.daos.sql.ServiceSqlDAO;
+import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.obj.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -58,6 +55,7 @@ public class DataManager {
 	private static DAO<Service> serviceDAO = null;
 	private static DAO<Appointment> appointmentDAO = null;
 	private static DAO<Opening> openingDAO = null;
+	private static DAO<LoggedEvent> loggedEventDAO = null;
 
 	// Meta "construct" and "destruct" (and "reset")
 
@@ -126,6 +124,10 @@ public class DataManager {
 		if (!DataManager.openingDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the openingDAO.");
 		DataManager.allDAOs.add(DataManager.openingDAO);
 
+		DataManager.loggedEventDAO = new LoggedEventSqlDAO();
+		if (!DataManager.loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
+		DataManager.allDAOs.add(DataManager.loggedEventDAO);
+
 	}
 
 	public static void terminateDAOs() {
@@ -169,6 +171,9 @@ public class DataManager {
 		} else if (DataManager.openingDAO == null) {
 			logger.warn("WARNING: Database connection validation FAILED (DataManager.openingDAO == null).");
 			return false;
+		} else if (DataManager.loggedEventDAO == null) {
+			logger.warn("WARNING: Database connection validation FAILED (DataManager.loggedEventDAO == null).");
+			return false;
 		} else if (DataManager.memberDAO.retrieveByIndex(0) == null) {
 			logger.error("ERROR: Database connection validation FAILED (DataManager.memberDAO.retrieveByIndex(0) == null).");
 			return false;
@@ -190,6 +195,10 @@ public class DataManager {
 
 	public static DAO<Opening> getOpeningDAO() {
 		return DataManager.openingDAO;
+	}
+
+	public static DAO<LoggedEvent> getLoggedEventDAO() {
+		return DataManager.loggedEventDAO;
 	}
 
 }

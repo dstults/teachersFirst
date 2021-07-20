@@ -69,8 +69,8 @@
 </body>
 <#if userId gt 0>
 <script>
-	const isAdmin = <#if isAdmin>true<#else>false</#if>;
-	const isInstructor = <#if isInstructor>true<#else>false</#if>;
+	const isAdmin = ${isAdmin?c};
+	const isInstructor = ${isInstructor?c};
 	let allFutureData = null;
 	let filteredFutureData = null;
 	let futureAppointmentPage = 0;

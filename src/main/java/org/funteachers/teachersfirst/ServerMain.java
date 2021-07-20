@@ -10,6 +10,7 @@ import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.actions.*;
+import org.funteachers.teachersfirst.obj.LoggedEvent;
 import org.funteachers.teachersfirst.pages.*;
 
 @WebServlet(name = "teachersFirst", urlPatterns = { "/" }, loadOnStartup = 0)
@@ -54,6 +55,8 @@ public class ServerMain extends HttpServlet {
 		logger.info("Initializing the DAOs...");
 		DataManager.initializeDAOs();
 		logger.info("Successfully initialized the DAOs!");
+
+		LoggedEvent.log(0, "SERVER INIT");
 
 		logger.warn("");
 		logger.warn("Servlet initialization complete!");

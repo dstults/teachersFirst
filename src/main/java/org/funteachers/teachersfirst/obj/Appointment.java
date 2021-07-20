@@ -80,7 +80,7 @@ public class Appointment implements IJsonnable {
 	}
 
 	public void setRecID(int recID) {
-		// Updates the recID of POJOs that have just been added to the database
+		// Updates the recID of objects that have just been added to the database
 		if (recID <= 0){ throw new IllegalArgumentException("setRecID: recID cannot be negative."); }
 		if (this.recId != (-1)){ throw new IllegalArgumentException("setRecID: Object has already been added to the database (recID != 1)."); }
 
@@ -119,6 +119,11 @@ public class Appointment implements IJsonnable {
 
 	public String getEndTimeFormatted() {
 		return this.endTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+	}
+
+	public float getLength() {
+		float diff = this.endTime.getTime() - this.startTime.getTime();
+		return diff / (60 * 60 * 1000);
 	}
 
 	public String getDateFormatted() {
