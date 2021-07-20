@@ -25,12 +25,12 @@ public class ProfilePage extends PageLoader {
 		}
 		Member member = null;
 
-		// Make sure logged in
+		// Check DAO connection
 		if (uid > 0) {
 			boolean isSelf = memberId == uid;
 			templateDataMap.put("isSelf", isSelf);
 
-			// Try to get member data
+			// Get data from DAO
 			try {
 				member = DataManager.getMemberDAO().retrieveByID(memberId);
 			} catch (IndexOutOfBoundsException ex) {

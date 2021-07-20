@@ -36,7 +36,7 @@ public class AppointmentsPage extends PageLoader {
 				filterMemberId = uid;
 			}
 			
-			// make sure we're logged in
+			// Check DAO connection
 			if (uid > 0) {
 				// TODO: This is json mode now! This should probably say something like:
 				// {"message":"Unable to contact database!"}
@@ -51,6 +51,7 @@ public class AppointmentsPage extends PageLoader {
 					DataManager.resetDAOs();
 					return;
 				}
+				// Get data from DAO
 				final List<Member> allMembers = DataManager.getMemberDAO().retrieveAll();
 				final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
 				
