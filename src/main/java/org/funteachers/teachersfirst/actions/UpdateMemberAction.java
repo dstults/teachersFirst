@@ -93,30 +93,37 @@ public class UpdateMemberAction extends ActionRunner {
 
 		// Check to see if any changes made
 		boolean changesMade = false;
+		boolean updateNeeded = false;
 		if (credits != member.getCredits()) {
 			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
 			member.setCredits(uid, opName, "manual update", credits);
-			changesMade = false; // This has its own personalized SQL update
+			changesMade = true;
+			updateNeeded = false; // This has its own personalized SQL update
 		}
 		if (phone1 != member.getPhone1()) {
 			member.setPhone1(phone1);
 			changesMade = true;
+			updateNeeded = true;
 		}
 		if (phone2 != member.getPhone2()) {
 			member.setPhone2(phone2);
 			changesMade = true;
+			updateNeeded = true;
 		}
 		if (email != member.getEmail()) {
 			member.setEmail(email);
 			changesMade = true;
+			updateNeeded = true;
 		}
 		if (selfIntroduction != member.getSelfIntroduction()) {
 			member.setSelfIntroduction(selfIntroduction);
 			changesMade = true;
+			updateNeeded = true;
 		}
 		if (instructorNotes != member.getInstructorNotes()) {
 			member.setInstructorNotes(instructorNotes);
 			changesMade = true;
+			updateNeeded = true;
 		}
 		if (!changesMade) {
 			this.sendJsonReply("No changes detected, aborting!");
@@ -126,8 +133,10 @@ public class UpdateMemberAction extends ActionRunner {
 		//Member member2 = DataManager.getMemberDAO().retrieveByID(memberId);
 		//this.sendJsonReply("Success!//" + member2.toString() + "//Changed to://" + member.toString());
 
-		member.update();
-		logger.debug("Updated: [{}]", member);
+		if (updateNeeded) {
+			member.update();
+			logger.debug("Updated: [{}]", member);
+		}
 		
 		// Log user into session
 		this.sendJsonReply("Success!");

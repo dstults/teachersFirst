@@ -245,9 +245,10 @@ public class Member implements IJsonnable {
 	}
 
 	public void setCredits(int operator, String operatorName, String method, float credits) {
+		float oldCredits = this.credits;
 		this.credits = credits;
 		DataManager.getMemberDAO().update(this); // Only try to log below if this succeeds.
-		LoggedEvent.log(operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + this.credits + "] > [" + credits + "]");
+		LoggedEvent.log(operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
 	}
 
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {
