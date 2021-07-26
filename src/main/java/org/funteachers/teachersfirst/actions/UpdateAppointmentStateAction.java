@@ -7,9 +7,9 @@ import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.obj.*;
 
-public class MissOrCompleteAppointmentAction extends ActionRunner {
+public class UpdateAppointmentStateAction extends ActionRunner {
 
-	public MissOrCompleteAppointmentAction(HttpServletRequest request, HttpServletResponse response) {
+	public UpdateAppointmentStateAction(HttpServletRequest request, HttpServletResponse response) {
 		super(request, response);
 	}
 
