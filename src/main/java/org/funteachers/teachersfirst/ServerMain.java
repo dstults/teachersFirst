@@ -208,6 +208,9 @@ public class ServerMain extends HttpServlet {
 				case "delete_appointment":
 					new DeleteAppointmentAction(request, response).RunAction();
 					break;
+				case "refund_appointment":
+					new MissOrCompleteAppointmentAction(request, response, "refund").RunAction();
+					break;
 				case "miss_appointment":
 					new MissOrCompleteAppointmentAction(request, response, "miss").RunAction();
 					break;
