@@ -69,8 +69,12 @@
 </body>
 <#if userId gt 0>
 <script>
+	const STATE = {REFUNDED: -2, MISSED: -1, UNKNOWN: 0, COMPLETED: 1, CANCELLED: 2};
+
+	const myId = ${userId?c};
 	const isAdmin = ${isAdmin?c};
 	const isInstructor = ${isInstructor?c};
+
 	let allFutureData = null;
 	let filteredFutureData = null;
 	let futureAppointmentPage = 0;
@@ -116,13 +120,14 @@
 			instructor.href = '';
 			status.innerHTML = '';
 		} else {
-			if (isAdmin && appointment.isMyAppointment) {
+			const isMyAppointment = myId == appointment.instructorId || myId == appointment.studentId;
+			if (isAdmin && isMyAppointment) {
 				tableRow.classList.add('soft-highlight');
 			} else {
 				tableRow.classList.remove('soft-highlight');
 			}
 			arrayIndex.innerHTML = 1 + row + (isPast ? pastRows * pastAppointmentPage : futureRows * futureAppointmentPage);
-			if (isAdmin || !isPast || appointment.completionState == 0) {
+			if (isAdmin || !isPast || appointment.completionState == STATE.CANCELLED) {
 				const child = document.createElement('a');
 				child.classList.add('red');
 				child.classList.add('size2p2');
@@ -131,7 +136,7 @@
 				child.innerHTML = 'X';
 				controls.appendChild(child);
 			}
-			if (isPast && (isAdmin || appointment.completionState == -1)) {
+			if (isPast && (isAdmin || (myId == appointment.instructorId && appointment.completionState == STATE.UNKNOWN))) {
 				if (controls.firstChild) {
 					controls.appendChild(document.createTextNode('   '));
 				}
@@ -148,6 +153,14 @@
 				child2.href = 'javascript:confirmCompleteAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
 				child2.innerHTML = '&#9745;';
 				controls.appendChild(child2);
+			} else if (appointment.completionState == STATE.MISSED && (isAdmin || myId == appointment.instructorId)) {
+				if (controls.firstChild) {
+					controls.appendChild(document.createTextNode('   '));
+				}
+				const child = document.createElement('p');
+				child.classList.add('green');
+					child.innerHTML = 'R';
+				controls.appendChild(child);
 			}
 			if (recId) recId.innerHTML = appointment.id;
 			date.innerHTML = appointment.dateFormatted;
@@ -157,20 +170,27 @@
 			student.href = '/profile?memberId=' + appointment.studentId;
 			instructor.innerHTML = appointment.instructorName;
 			instructor.href = '/profile?memberId=' + appointment.instructorId;
-			if (!isPast) {
-				status.innerHTML = appointment.schedulingVerified ? 'verified' : 'NOT VERIFIED';
-			} else {
-				switch (appointment.completionState) {
-					case -1:
-						status.innerHTML = 'NEEDS COMPLETION CONFIRMATION';
-						break;
-					case 0:
-						status.innerHTML = 'CANCELLED';
-						break;
-					case 1:
-						status.innerHTML = 'completed';
-						break;
-				}
+			
+			switch (appointment.completionState) {
+				case STATE.UNKNOWN:
+					if (isPast) {
+						status.innerHTML = '? NEEDS CONFIRMATION ?';
+					} else {
+						status.innerHTML = appointment.schedulingVerified ? 'verified' : 'NOT VERIFIED';
+					}
+					break;
+				case STATE.MISSED:
+					status.innerHTML = '! MISSED !';
+					break;
+				case STATE.REFUNDED:
+					status.innerHTML = 'REFUNDED';
+					break;
+				case STATE.COMPLETED:
+					status.innerHTML = 'completed';
+					break;
+				case STATE.CANCELLED:
+					status.innerHTML = 'x CANCELLED x';
+					break;
 			}
 		}
 	};
