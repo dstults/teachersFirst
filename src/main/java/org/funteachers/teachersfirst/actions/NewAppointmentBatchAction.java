@@ -212,7 +212,6 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			credits -= successCount * lengthEach;
 			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
 			student.setCredits(uid, opName, "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
-			DataManager.getMemberDAO().update(student);
 		}
 
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");

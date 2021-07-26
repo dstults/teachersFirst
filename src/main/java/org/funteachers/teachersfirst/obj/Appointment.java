@@ -3,6 +3,7 @@ package org.funteachers.teachersfirst.obj;
 import java.time.format.DateTimeFormatter;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.daos.DAO;
 
 import java.sql.Timestamp;
 
@@ -158,12 +159,28 @@ public class Appointment implements IJsonnable {
 		DataManager.getAppointmentDAO().update(this);
 	}
 
-	public boolean setCompletionState(int value) {
-		//TODO: input-validate to return false
-		//TODO: log appointment validation
+	public boolean setCompletionState(int value, int operator, String operatorName) {
+		if (!this.hasRefundableValue()) return false;
 
 		this.completionState = value;
 		DataManager.getAppointmentDAO().update(this);
+		
+		if (!this.hasRefundableValue()) {
+			final DAO<Member> memberDAO = DataManager.getMemberDAO();
+			final Member student = memberDAO.retrieveByID(this.studentId);
+			final String refundProcess;
+			if (value == STATE_CANCELLED) {
+				refundProcess = "cancel auto-refund";
+			} else if (value == STATE_MISSED_REFUNDED) {
+				refundProcess = "missed manual refund";
+			} else {
+				throw new IllegalArgumentException("Invalid refund process!");
+			}
+			final float myCredits = this.getLength();
+			final float newCredits = student.getCredits() + myCredits;
+			student.setCredits(operator, operatorName, "appointment[" + this.recId + "] " + refundProcess + " len=" + myCredits + " hrs", newCredits);
+		}
+
 		return true;
 	}
 
@@ -189,8 +206,33 @@ public class Appointment implements IJsonnable {
 
 	// ----------------------------------------------------------------
 
+	public boolean canBeDeleted() {
+		return canBeDeleted(this.completionState);
+	}
+
+	public static boolean canBeDeleted(int state) {
+		switch (state) {
+			case STATE_MISSED_REFUNDED:
+				return false;
+			case STATE_MISSED:
+				return false;
+			case STATE_UNKNOWN:
+				return false;			
+			case STATE_COMPLETED:
+				return false;
+			case STATE_CANCELLED:
+				return true;
+			default: 
+				throw new IllegalArgumentException("Need to add support for canBeDeleted for completionState of [" + state + "]");
+		}
+	}
+
 	public boolean hasRefundableValue() {
-		switch (this.completionState) {
+		return hasRefundableValue(this.completionState);
+	}
+
+	public static boolean hasRefundableValue(int state) {
+		switch (state) {
 			case STATE_MISSED_REFUNDED:
 				return false;
 			case STATE_MISSED:
@@ -202,7 +244,7 @@ public class Appointment implements IJsonnable {
 			case STATE_CANCELLED:
 				return false;
 			default: 
-				throw new IllegalArgumentException("Need to add support for hasRefundableValue for completionState of [" + this.completionState + "]");
+				throw new IllegalArgumentException("Need to add support for hasRefundableValue for completionState of [" + state + "]");
 		}
 	}
 

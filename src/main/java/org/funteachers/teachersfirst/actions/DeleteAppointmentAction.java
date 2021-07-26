@@ -47,19 +47,13 @@ public class DeleteAppointmentAction extends ActionRunner {
 			return;
 		}
 
-		// Can only delete cancelled appointments
-		if (appointment.getCompletionState() != Appointment.STATE_CANCELLED) {
-			this.sendPostReply("/appointments", "", "Can only delete cancelled appointments.");
+		// Must be admin or appointment must be cancelled
+		if (!isAdmin && !appointment.canBeDeleted()) {
+			this.sendPostReply("/appointments", "", "Not enough privileges / Cannot delete appointment of this state.");
 			return;
 		}
 
 		if (!isAdmin) {
-
-			// Make sure is at least an instructor
-			if (!isInstructor) {
-				this.sendPostReply("/appointments", "", "Not enough privileges to delete appointments.");
-				return;
-			}
 
 			// Make sure deleting party is the instructor for the class
 			if (appointment.getInstructorID() != uid) {
@@ -92,12 +86,10 @@ public class DeleteAppointmentAction extends ActionRunner {
 		if (giveRefund) {
 			final DAO<Member> memberDAO = DataManager.getMemberDAO();
 			final Member student = memberDAO.retrieveByID(appointment.getStudentID());
-			float credits = student.getCredits();
-			float length = appointment.getLength();
-			credits += length;
-			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+			final float length = appointment.getLength();
+			final float credits = student.getCredits() + length;
+			final String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
 			student.setCredits(uid, opName, "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
-			memberDAO.update(student);
 		}
 
 		// Send response

@@ -107,7 +107,8 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 		// --------------------------------------------------------------------------------------------
 
 		logger.debug("Attempting to set appointment [{}] state to [{}] ...", appointmentIdString, newState);
-		appointment.setCompletionState(newState);
+		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+		appointment.setCompletionState(newState, uid, userName);
 		logger.debug("Updated appointment ID: [{}]", appointmentIdString);
 
 		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " updated!");
