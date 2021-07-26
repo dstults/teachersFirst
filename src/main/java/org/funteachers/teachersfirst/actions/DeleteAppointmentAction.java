@@ -12,7 +12,11 @@ public class DeleteAppointmentAction extends ActionRunner {
 	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
+
+		// --------------------------------------------------------------------------------------------
+		// INPUT VALIDATION
+		// --------------------------------------------------------------------------------------------
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
@@ -20,6 +24,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 			return;
 		}
 
+		// Attempt to parse appointment ID
 		final String appointmentIdString = QueryHelpers.getPost(request, "appointmentId");
 		int appointmentIdInt;
 		try {
@@ -27,42 +32,69 @@ public class DeleteAppointmentAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			appointmentIdInt = 0;
 		}
-		final Appointment appointment = DataManager.getAppointmentDAO().retrieveByID(appointmentIdInt);
+
+		// Check connection to database
+		final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
+		if (appointmentDAO == null) {
+			this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
+			return;
+		}
+
+		// Check that appointment exists
+		final Appointment appointment = appointmentDAO.retrieveByID(appointmentIdInt);
 		if (appointment == null) {
 			this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
 			return;
 		}
 
-		// Make sure the person has the authority
-		if (!isAdmin && !appointment.getIsMyAppointment(uid)) {
-			this.sendPostReply("/appointments", "", "Not your appointment, cannot cancel.");
+		// Must be admin or appointment must be cancelled
+		if (!isAdmin && !appointment.canBeDeleted()) {
+			this.sendPostReply("/appointments", "", "Not enough privileges / Cannot delete appointment of this state.");
 			return;
 		}
 
-		// Make sure even if they have the authority, whether they can delete things in the past
-		if (!isAdmin && DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-			this.sendPostReply("/appointments", "", "Appointment has already happened, cannot delete.");
-			return;
-		}
+		if (!isAdmin) {
 
-		logger.debug("Attempting to delete appointment " + appointment.toString() + " ...");
+			// Make sure deleting party is the instructor for the class
+			if (appointment.getInstructorID() != uid) {
+				this.sendPostReply("/appointments", "", "Not appointment instructor, cannot delete.");
+				return;
+			}
+
+			// Only admin can delete past appointments
+			if (DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
+				this.sendPostReply("/appointments", "", "Need admin privileges to delete past appointments.");
+				return;
+			}
+
+		}
 		
-		DataManager.getAppointmentDAO().delete(appointmentIdInt);
+		// --------------------------------------------------------------------------------------------
+		// PERFORM ACTION
+		// --------------------------------------------------------------------------------------------
+
+		// Check whether to refund after appointment deletion
+		final boolean giveRefund = appointment.hasRefundableValue();
+
+		// Delete the appointment
+		logger.debug("Attempting to delete appointment " + appointment.toString() + " ...");
+		appointmentDAO.delete(appointmentIdInt);
 		//logger.info(DataManager.getAppointmentDAO().size() + " records total");
 		logger.debug("Deleted appointment ID: [{}]", appointmentIdString);
 		
-		// Update credits for student
-		final DAO<Member> memberDAO = DataManager.getMemberDAO();
-		final Member student = memberDAO.retrieveByID(appointment.getStudentID());
-		float credits = student.getCredits();
-		float length = appointment.getLength();
-		credits += length;
-		String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-		student.setCredits(uid, opName, "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
-		memberDAO.update(student);
-		
+		// Update credits for student when applicable
+		if (giveRefund) {
+			final DAO<Member> memberDAO = DataManager.getMemberDAO();
+			final Member student = memberDAO.retrieveByID(appointment.getStudentID());
+			final float length = appointment.getLength();
+			final float credits = student.getCredits() + length;
+			final String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+			student.setCredits(uid, opName, "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
+		}
+
 		// Send response
-		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " deleted!");
+		String refundText = giveRefund ? " Credit(s) refunded!" : " No credits refunded.";
+		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " deleted!" + refundText);
 		return;
 	}
 	

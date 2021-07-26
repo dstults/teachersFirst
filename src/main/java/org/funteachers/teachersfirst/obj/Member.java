@@ -245,9 +245,10 @@ public class Member implements IJsonnable {
 	}
 
 	public void setCredits(int operator, String operatorName, String method, float credits) {
-		LoggedEvent.log(operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + this.credits + "] > [" + credits + "]");
+		float oldCredits = this.credits;
 		this.credits = credits;
-		//TODO: This should do the SQL update right here and the update for credits should be removed from the generic update
+		DataManager.getMemberDAO().update(this); // Only try to log below if this succeeds.
+		LoggedEvent.log(operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
 	}
 
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {

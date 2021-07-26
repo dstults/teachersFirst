@@ -15,7 +15,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 
 		// INPUT: {action: make_appointment_batch}, {instructorId: 1}, {studentId: 2}, {daysOfWeek: SuMoWeThSa}, {startDate: 2021-05-02}, {startTime: 09:00}, {endDate: 2021-05-08}, {endTime: 10:00}
 		// OUTPUT: Invalid value for MonthOfYear (Line 164)
@@ -212,7 +212,6 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			credits -= successCount * lengthEach;
 			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
 			student.setCredits(uid, opName, "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
-			DataManager.getMemberDAO().update(student);
 		}
 
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");

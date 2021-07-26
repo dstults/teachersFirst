@@ -10,6 +10,7 @@ import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.actions.*;
+import org.funteachers.teachersfirst.obj.Appointment;
 import org.funteachers.teachersfirst.obj.LoggedEvent;
 import org.funteachers.teachersfirst.pages.*;
 
@@ -119,10 +120,10 @@ public class ServerMain extends HttpServlet {
 					break;
 
 				case "/log_in": // intentionally different - debug/json use
-					new LogInAction(request, response).RunAction(); // action, not page
+					new LogInAction(request, response).runAction(); // action, not page
 					return; // don't log
 				case "/log_out": // intentionally different - debug/json use
-					new LogOutAction(request, response).RunAction(); // action, not page
+					new LogOutAction(request, response).runAction(); // action, not page
 					return; // don't log
 
 				case "/dynamic.css":
@@ -185,37 +186,43 @@ public class ServerMain extends HttpServlet {
 		try {
 			switch (action) {
 				case "log_in":
-					new LogInAction(request, response).RunAction();
+					new LogInAction(request, response).runAction();
 					break;
 				case "log_out":
-					new LogOutAction(request, response).RunAction();
+					new LogOutAction(request, response).runAction();
 					break;
 				case "register_member":
-					new OpenRegisterAction(request, response).RunAction();
+					new OpenRegisterAction(request, response).runAction();
 					break;
 				case "update_member":
-					new UpdateMemberAction(request, response).RunAction();
+					new UpdateMemberAction(request, response).runAction();
 					break;
 				case "make_openings":
-					new NewOpeningsAction(request, response).RunAction();
+					new NewOpeningsAction(request, response).runAction();
 					break;
 				case "make_appointment":
-					new NewAppointmentAction(request, response).RunAction();
+					new NewAppointmentAction(request, response).runAction();
 					break;
 				case "make_appointment_batch":
-					new NewAppointmentBatchAction(request, response).RunAction();
+					new NewAppointmentBatchAction(request, response).runAction();
 					break;
 				case "delete_appointment":
-					new DeleteAppointmentAction(request, response).RunAction();
+					new DeleteAppointmentAction(request, response).runAction();
+					break;
+				case "refund_appointment":
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_MISSED_REFUNDED).runAction();
 					break;
 				case "miss_appointment":
-					new MissOrCompleteAppointmentAction(request, response, "miss").RunAction();
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_MISSED).runAction();
 					break;
 				case "complete_appointment":
-					new MissOrCompleteAppointmentAction(request, response, "complete").RunAction();
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_COMPLETED).runAction();
+					break;
+				case "cancel_appointment":
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_CANCELLED).runAction();
 					break;
 				case "delete_opening":
-					new DeleteOpeningAction(request, response).RunAction();
+					new DeleteOpeningAction(request, response).runAction();
 					break;
 
 				case "reset_daos":

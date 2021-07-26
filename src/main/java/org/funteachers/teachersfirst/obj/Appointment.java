@@ -2,14 +2,19 @@ package org.funteachers.teachersfirst.obj;
 
 import java.time.format.DateTimeFormatter;
 
-import javax.naming.OperationNotSupportedException;
-
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.daos.DAO;
 
 import java.sql.Timestamp;
 
 public class Appointment implements IJsonnable {
-    
+
+	public static final int STATE_MISSED_REFUNDED = -2;
+	public static final int STATE_MISSED = -1;
+	public static final int STATE_UNKNOWN = 0;
+	public static final int STATE_COMPLETED = 1;
+	public static final int STATE_CANCELLED = 2;
+
 	private int recId;
 	private int studentId;
 	private int instructorId;
@@ -20,7 +25,6 @@ public class Appointment implements IJsonnable {
 
 	private String studentName; // Temporary/Prettification use only -- should not be saved to database
 	private String instructorName; // Temporary/Prettification use only -- should not be saved to database
-	private boolean isMyAppointment; // Temporary/Prettification use only -- should not be saved to database
 
 	// ----------------------------------------------------------------
 	
@@ -52,7 +56,7 @@ public class Appointment implements IJsonnable {
 		this.startTime = plan.getStartTime();
 		this.endTime = plan.getEndTime();
 		this.schedulingVerified = false;
-		this.completionState = -1;
+		this.completionState = STATE_UNKNOWN;
 	}
 
 	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime, boolean schedulingVerified, int completionState) {
@@ -62,7 +66,7 @@ public class Appointment implements IJsonnable {
 		if (instructorID < -1) throw new IllegalArgumentException("Invalid argument: instructorID < -1");
 		if (startTime == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
 		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
-		if (completionState < -1 || completionState > 1) throw new IllegalArgumentException("Invalid argument: completionState range is -1 to 1");
+		if (completionState < -2 || completionState > 2) throw new IllegalArgumentException("Invalid argument: completionState range is -2 to 2");
 		
 		this.recId = recID;
 		this.studentId = studentID;
@@ -100,7 +104,7 @@ public class Appointment implements IJsonnable {
 	public int getInstructorID() {
 		return this.instructorId;
 	}
-	
+
 	public boolean getIsMyAppointment(int memberId) {
 		return this.studentId == memberId || this.instructorId == memberId;
 	}
@@ -143,15 +147,15 @@ public class Appointment implements IJsonnable {
 	}
 
 	public boolean getCompletionUnconfirmed() {
-		return this.completionState == -1;
-	}
-
-	public boolean getWasNotCompleted() {
-		return this.completionState == 0;
+		return this.completionState == STATE_UNKNOWN;
 	}
 
 	public boolean getWasCompleted() {
-		return this.completionState == 1;
+		return this.completionState == STATE_COMPLETED;
+	}
+
+	public boolean getWasCancelled() {
+		return this.completionState == STATE_CANCELLED;
 	}
 
 	public void setSchedulingVerified(boolean value) {
@@ -159,22 +163,29 @@ public class Appointment implements IJsonnable {
 		DataManager.getAppointmentDAO().update(this);
 	}
 
-	public void setCompletionState(String value) {
-		switch (value) {
-			case "complete":
-				setCompletionState(1);
-				break;
-			case "miss":
-				setCompletionState(0);
-				break;
-			default:
-			throw new IllegalArgumentException("Invalid argument: completionState = " + value);
-		}
-	}
+	public boolean setCompletionState(int value, int operator, String operatorName) {
+		if (!this.hasRefundableValue()) return false;
 
-	public void setCompletionState(int value) {
 		this.completionState = value;
 		DataManager.getAppointmentDAO().update(this);
+		
+		if (!this.hasRefundableValue()) {
+			final DAO<Member> memberDAO = DataManager.getMemberDAO();
+			final Member student = memberDAO.retrieveByID(this.studentId);
+			final String refundProcess;
+			if (value == STATE_CANCELLED) {
+				refundProcess = "cancel auto-refund";
+			} else if (value == STATE_MISSED_REFUNDED) {
+				refundProcess = "missed manual refund";
+			} else {
+				throw new IllegalArgumentException("Invalid refund process!");
+			}
+			final float myCredits = this.getLength();
+			final float newCredits = student.getCredits() + myCredits;
+			student.setCredits(operator, operatorName, "appointment[" + this.recId + "] " + refundProcess + " len=" + myCredits + " hrs", newCredits);
+		}
+
+		return true;
 	}
 
 	public String getStatusText() {
@@ -199,6 +210,50 @@ public class Appointment implements IJsonnable {
 
 	// ----------------------------------------------------------------
 
+	public boolean canBeDeleted() {
+		return canBeDeleted(this.completionState);
+	}
+
+	public static boolean canBeDeleted(int state) {
+		switch (state) {
+			case STATE_MISSED_REFUNDED:
+				return false;
+			case STATE_MISSED:
+				return false;
+			case STATE_UNKNOWN:
+				return false;			
+			case STATE_COMPLETED:
+				return false;
+			case STATE_CANCELLED:
+				return true;
+			default: 
+				throw new IllegalArgumentException("Need to add support for canBeDeleted for completionState of [" + state + "]");
+		}
+	}
+
+	public boolean hasRefundableValue() {
+		return hasRefundableValue(this.completionState);
+	}
+
+	public static boolean hasRefundableValue(int state) {
+		switch (state) {
+			case STATE_MISSED_REFUNDED:
+				return false;
+			case STATE_MISSED:
+				return true;
+			case STATE_UNKNOWN:
+				return true;			
+			case STATE_COMPLETED:
+				return true;
+			case STATE_CANCELLED:
+				return false;
+			default: 
+				throw new IllegalArgumentException("Need to add support for hasRefundableValue for completionState of [" + state + "]");
+		}
+	}
+
+	// ----------------------------------------------------------------
+
 	public String getStudentName() {
 		if (this.studentName == null || this.studentName == "")
 			return "unset";
@@ -211,20 +266,12 @@ public class Appointment implements IJsonnable {
 		return this.instructorName;
 	}
 
-	public boolean getIsMyAppointment() {
-		return this.isMyAppointment;
-	}
-
 	public void setStudentName(String value) {
 		this.studentName = value;
 	}
 
 	public void setInstructorName(String value) {
 		this.instructorName = value;
-	}
-
-	public void setIsMyAppointment(boolean value) {
-		this.isMyAppointment = value;
 	}
 
 	// ----------------------------------------------------------------
@@ -237,20 +284,19 @@ public class Appointment implements IJsonnable {
 	@Override
 	public String toJson() {
 		return "{\"id\":" + this.recId + "," +
-				"\"instructorId\":" + this.instructorId + "," +
-				"\"instructorName\":\"" + this.getInstructorName() + "\"," +
-				"\"studentId\":" + this.studentId + "," +
-				"\"studentName\":\"" + this.getStudentName() + "\"," +
-				"\"startTime\":\"" + this.startTime + "\"," +
-				"\"endTime\":\"" + this.endTime + "\"," +
-				"\"dateFormatted\":\"" + this.getDateFormatted() + "\"," +
-				"\"startTimeFormatted\":\"" + this.getStartTimeFormatted() + "\"," +
-				"\"endTimeFormatted\":\"" + this.getEndTimeFormatted() + "\"," +
-				"\"isMyAppointment\":" + this.getIsMyAppointment() + "," +
-				"\"schedulingVerified\":" + this.getSchedulingVerified() + "," +
-				"\"completionState\":" + this.getCompletionState() + "," +
-				"\"statusText\":\"" + this.getStatusText() + "\"" +
-				"}";
+			"\"instructorId\":" + this.instructorId + "," +
+			"\"instructorName\":\"" + this.getInstructorName() + "\"," +
+			"\"studentId\":" + this.studentId + "," +
+			"\"studentName\":\"" + this.getStudentName() + "\"," +
+			"\"startTime\":\"" + this.startTime + "\"," +
+			"\"endTime\":\"" + this.endTime + "\"," +
+			"\"dateFormatted\":\"" + this.getDateFormatted() + "\"," +
+			"\"startTimeFormatted\":\"" + this.getStartTimeFormatted() + "\"," +
+			"\"endTimeFormatted\":\"" + this.getEndTimeFormatted() + "\"," +
+			"\"schedulingVerified\":" + this.getSchedulingVerified() + "," +
+			"\"completionState\":" + this.getCompletionState() + "," +
+			"\"statusText\":\"" + this.getStatusText() + "\"" +
+			"}";
 	}
 
 	@Override

@@ -7,7 +7,7 @@
 	<#include "please_login.ftl">
 <#else>
 		<div class="top-buttons">
-			<a href="javascript:filterAppointments();" class="buttonize-link">Filter Appointments</a>
+			<a href="javascript:updateFilter();" class="buttonize-link">Filter Appointments</a>
 		</div>
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
@@ -69,8 +69,13 @@
 </body>
 <#if userId gt 0>
 <script>
+	const STATE = {REFUNDED: -2, MISSED: -1, UNKNOWN: 0, COMPLETED: 1, CANCELLED: 2};
+
+	const myId = ${userId?c};
 	const isAdmin = ${isAdmin?c};
 	const isInstructor = ${isInstructor?c};
+
+	let lastFilter = '';
 	let allFutureData = null;
 	let filteredFutureData = null;
 	let futureAppointmentPage = 0;
@@ -81,11 +86,72 @@
 	let pastAppointmentPage = 0;
 	const pastPageNumberElem = document.getElementById('current-past-page');
 	const pastRows = 15;
-	fetch('https://funteachers.org/appointments?json').then(response => response.json()).then(data => {
-		[ allFutureData, allPastData ] = data;
-		[ filteredFutureData, filteredPastData] = [ allFutureData, allPastData ];		
-		refreshAll();
-	}).catch(err => console.error(err.message));
+
+	const populateData = _ => {
+		fetch('https://funteachers.org/appointments?json').then(response => response.json()).then(data => {
+			[ allFutureData, allPastData ] = data;
+			filterAppointments();
+		}).catch(err => console.error(err.message));
+	};
+	populateData();
+
+	const checkAddControl_Delete = (isPast, controls, appointment, row) => {
+		if (isAdmin || appointment.completionState == STATE.CANCELLED && myId == appointment.instructorId) {
+			if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
+			const child = document.createElement('a');
+			child.classList.add('red');
+			child.classList.add('size2p2');
+			child.classList.add('bold');
+			child.href = 'javascript:confirmDeleteAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
+			child.innerHTML = 'X';
+			controls.appendChild(child);
+		}
+	};
+
+	const checkAddControl_Cancel = (isPast, controls, appointment, row) => {
+		if (!isPast && appointment.completionState == STATE.UNKNOWN && (isAdmin || myId == appointment.instructorId || myId == appointment.studentId)) {
+			if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
+			const child = document.createElement('a');
+			child.classList.add('red');
+			child.classList.add('size2p2');
+			child.classList.add('bold');
+			child.href = 'javascript:confirmCancelAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
+			child.innerHTML = 'C';
+			controls.appendChild(child);
+		}
+	};
+
+	const checkAddControl_MissComplete = (isPast, controls, appointment, row) => {
+		if (isPast && appointment.completionState == STATE.UNKNOWN && (isAdmin || myId == appointment.instructorId)) {
+			if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
+
+			const child1 = document.createElement('a');
+			child1.classList.add('blue');
+			child1.classList.add('size2p4');
+			child1.href = 'javascript:confirmMissAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
+			child1.innerHTML = '&#9746;';
+			controls.appendChild(child1);
+			controls.appendChild(document.createTextNode('   '));
+			const child2 = document.createElement('a');
+			child2.classList.add('green');
+			child2.classList.add('size2p4');
+			child2.href = 'javascript:confirmCompleteAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
+			child2.innerHTML = '&#9745;';
+			controls.appendChild(child2);
+		}
+	};
+
+	const checkAddControl_Refund = (isPast, controls, appointment, row) => {
+		if (appointment.completionState == STATE.MISSED && (isAdmin || myId == appointment.instructorId)) {
+			if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
+			const child = document.createElement('a');
+			child.classList.add('green');
+			child.classList.add('size2p4');
+			child.href = 'javascript:confirmRefundAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
+			child.innerHTML = 'R';
+			controls.appendChild(child);
+		}
+	};
 
 	const renderRow = (isPast, appointment, row) => {
 		const futurePast = isPast ? 'past' : 'future';
@@ -116,39 +182,17 @@
 			instructor.href = '';
 			status.innerHTML = '';
 		} else {
-			if (isAdmin && appointment.isMyAppointment) {
+			const isMyAppointment = myId == appointment.instructorId || myId == appointment.studentId;
+			if (isAdmin && isMyAppointment) {
 				tableRow.classList.add('soft-highlight');
 			} else {
 				tableRow.classList.remove('soft-highlight');
 			}
 			arrayIndex.innerHTML = 1 + row + (isPast ? pastRows * pastAppointmentPage : futureRows * futureAppointmentPage);
-			if (isAdmin || !isPast || appointment.completionState == 0) {
-				const child = document.createElement('a');
-				child.classList.add('red');
-				child.classList.add('size2p2');
-				child.classList.add('bold');
-				child.href = 'javascript:confirmDeleteAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
-				child.innerHTML = 'X';
-				controls.appendChild(child);
-			}
-			if (isPast && (isAdmin || appointment.completionState == -1)) {
-				if (controls.firstChild) {
-					controls.appendChild(document.createTextNode('   '));
-				}
-				const child1 = document.createElement('a');
-				child1.classList.add('blue');
-				child1.classList.add('size2p4');
-				child1.href = 'javascript:confirmMissAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
-				child1.innerHTML = '&#9746;';
-				controls.appendChild(child1);
-				controls.appendChild(document.createTextNode('   '));
-				const child2 = document.createElement('a');
-				child2.classList.add('green');
-				child2.classList.add('size2p4');
-				child2.href = 'javascript:confirmCompleteAppointment(' + isPast + ', ' + appointment.id + ', ' + row + ');';
-				child2.innerHTML = '&#9745;';
-				controls.appendChild(child2);
-			}
+			checkAddControl_Delete(isPast, controls, appointment, row);
+			checkAddControl_Cancel(isPast, controls, appointment, row);
+			checkAddControl_MissComplete(isPast, controls, appointment, row);
+			checkAddControl_Refund(isPast, controls, appointment, row);
 			if (recId) recId.innerHTML = appointment.id;
 			date.innerHTML = appointment.dateFormatted;
 			startTime.innerHTML = appointment.startTimeFormatted;
@@ -157,20 +201,27 @@
 			student.href = '/profile?memberId=' + appointment.studentId;
 			instructor.innerHTML = appointment.instructorName;
 			instructor.href = '/profile?memberId=' + appointment.instructorId;
-			if (!isPast) {
-				status.innerHTML = appointment.schedulingVerified ? 'verified' : 'NOT VERIFIED';
-			} else {
-				switch (appointment.completionState) {
-					case -1:
-						status.innerHTML = 'NEEDS COMPLETION CONFIRMATION';
-						break;
-					case 0:
-						status.innerHTML = 'CANCELLED';
-						break;
-					case 1:
-						status.innerHTML = 'completed';
-						break;
-				}
+			
+			switch (appointment.completionState) {
+				case STATE.UNKNOWN:
+					if (isPast) {
+						status.innerHTML = '? NEEDS CONFIRMATION ?';
+					} else {
+						status.innerHTML = appointment.schedulingVerified ? 'verified' : 'NOT VERIFIED';
+					}
+					break;
+				case STATE.MISSED:
+					status.innerHTML = '! MISSED !';
+					break;
+				case STATE.REFUNDED:
+					status.innerHTML = 'REFUNDED';
+					break;
+				case STATE.COMPLETED:
+					status.innerHTML = 'completed';
+					break;
+				case STATE.CANCELLED:
+					status.innerHTML = 'x CANCELLED x';
+					break;
 			}
 		}
 	};
@@ -245,76 +296,91 @@
 		statusElement.innerHTML = '...updating...';
 		return { controlElement, statusElement };
 	};
+	
+	const updateFilter = _ => {
+		lastFilter = prompt('Search criteria:\n(Student/instructor name or student/instructor ID)').toLowerCase();
+		filterAppointments();
+	};
 	const filterAppointments = _ => {
-		const filter = prompt('Search criteria:\n(Student/instructor name or student/instructor ID)').toLowerCase();
-		if (!filter) {
+		if (!lastFilter) {
 			filteredFutureData = allFutureData;
 			filteredPastData = allPastData;
 		} else {
-			filteredFutureData = allFutureData.filter(a => a.studentName.toLowerCase().includes(filter) || a.instructorName.toLowerCase().includes(filter) || a.studentId == filter || a.instructorId == filter || a.statusText.toLowerCase().includes(filter));
-			filteredPastData = allPastData.filter(a => a.studentName.toLowerCase().includes(filter) || a.instructorName.toLowerCase().includes(filter) || a.studentId == filter || a.instructorId == filter || a.statusText.toLowerCase().includes(filter));
+			filteredFutureData = allFutureData.filter(a => a.studentName.toLowerCase().includes(lastFilter) || a.instructorName.toLowerCase().includes(lastFilter) || a.studentId == lastFilter || a.instructorId == lastFilter || a.statusText.toLowerCase().includes(lastFilter));
+			filteredPastData = allPastData.filter(a => a.studentName.toLowerCase().includes(lastFilter) || a.instructorName.toLowerCase().includes(lastFilter) || a.studentId == lastFilter || a.instructorId == lastFilter || a.statusText.toLowerCase().includes(lastFilter));
 		}
 		futureAppointmentPage = 0;
 		pastAppointmentPage = 0;
 		refreshAll();
-	}
+	};
 
-	const handleDeleteResponse = (xhr, controlElement, statusElement) => {
+	const handleResponse = (xhr, controlElement, statusElement, appointmentId, isPast, row) => {
 		if (xhr.status === 200) {
-			controlElement.innerHTML = '';
+			//controlElement.innerHTML = '-please refresh-';
 			const parser = new DOMParser();
 			const data = parser.parseFromString(xhr.response, 'text/html');
 			const messageBanner = data.getElementById('message-banner');
-			statusElement.innerHTML = messageBanner.innerHTML;
+			alert(messageBanner.innerHTML);
+			populateData();
 		} else {
 			controlElement.innerHTML = 'ERROR';
 		}
 	};
+
+	// Olde response method (inside each xhr creation):
+	//xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
 	const confirmDeleteAppointment = (isPast, appointmentId, row) => {
-		if (confirm('Are you sure you want to delete appointment #' + appointmentId + ' ?')) {
-			const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
-			const xhr = new XMLHttpRequest();
-			xhr.open('POST', '/');
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			//xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-			xhr.onload = () => handleDeleteResponse(xhr, controlElement, statusElement);
-			xhr.send('action=delete_appointment&appointmentId=' + appointmentId);
-		}
-	};
-	const handleCompleteMissResponse = (xhr, controlElement, statusElement, statusText, appointmentId, isPast, row) => {
-		if (xhr.status === 200) {
-			if (statusText.includes('CANCELLED')) {
-				controlElement.innerHTML = '<a href="javascript:confirmDeleteAppointment(' + isPast + ', ' + appointmentId + ', ' + row + ');" class="red size2p2 bold">X</a>';
-			} else {
-				controlElement.innerHTML = '';
-			}
-			statusElement.innerHTML = statusText;
-		} else {
-			controlElement.innerHTML = 'ERROR';
-		}
+		if (!confirm('Are you sure you want to delete appointment #' + appointmentId + ' ?')) return;
+
+		const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.send('action=delete_appointment&appointmentId=' + appointmentId);
 	};
 	const confirmMissAppointment = (isPast, appointmentId, row) => {
-		if (confirm('You\'re sure you did not complete appointment #' + appointmentId + ' ?')) {
-			const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
-			const xhr = new XMLHttpRequest();
-			xhr.open('POST', '/');
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			//xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-			xhr.onload = () => handleCompleteMissResponse(xhr, controlElement, statusElement, 'CANCELLED', appointmentId, isPast, row);
-			xhr.send('action=miss_appointment&appointmentId=' + appointmentId);
-		}
-	}
+		if (!confirm('You\'re sure you did not complete appointment #' + appointmentId + ' ?')) return;
+
+		const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.send('action=miss_appointment&appointmentId=' + appointmentId);
+	};
 	const confirmCompleteAppointment = (isPast, appointmentId, row) => {
-		if (confirm('You\'re sure you completed appointment #' + appointmentId + ' ?')) {
-			const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
-			const xhr = new XMLHttpRequest();
-			xhr.open('POST', '/');
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			//xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-			xhr.onload = () => handleCompleteMissResponse(xhr, controlElement, statusElement, 'completed', appointmentId, isPast, row);
-			xhr.send('action=complete_appointment&appointmentId=' + appointmentId);
-		}
-	}
+		if (!confirm('You\'re sure you completed appointment #' + appointmentId + ' ?')) return;
+
+		const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.send('action=complete_appointment&appointmentId=' + appointmentId);
+	};
+	const confirmRefundAppointment = (isPast, appointmentId, row) => {
+		if (!confirm('You\'re sure you want to refund appointment #' + appointmentId + ' ?')) return;
+
+		const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.send('action=refund_appointment&appointmentId=' + appointmentId);
+		window.lastXhr = xhr; // debug
+	};
+	const confirmCancelAppointment = (isPast, appointmentId, row) => {
+		if (!confirm('You\'re sure you want to cancel appointment #' + appointmentId + ' ?')) return;
+
+		const { controlElement, statusElement } = updateControlAndStatusElements(isPast, row);
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.send('action=cancel_appointment&appointmentId=' + appointmentId);
+		window.lastXhr = xhr; // debug
+	};
 </script>
 </#if>
 </html>

@@ -10,7 +10,7 @@ public class LogInAction extends ActionRunner {
 	public LogInAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 		if (uid > 0) {
 			this.sendPostReply("/appointments", "", "You're already logged in!");
 			return;

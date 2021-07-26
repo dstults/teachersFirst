@@ -15,7 +15,7 @@ public class NewAppointmentAction extends ActionRunner {
 	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
@@ -179,7 +179,6 @@ public class NewAppointmentAction extends ActionRunner {
 		credits -= length;
 		String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
 		student.setCredits(uid, opName, "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
-		DataManager.getMemberDAO().update(student);
 
 		// Reply to user
 		this.sendPostReply("/appointments", "", "Appointment created!");
