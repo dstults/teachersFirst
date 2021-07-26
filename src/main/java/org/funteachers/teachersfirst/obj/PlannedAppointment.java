@@ -121,7 +121,9 @@ public class PlannedAppointment {
 
 	//private boolean hasConflictWithAppointment(Appointment iApt, boolean lastCheck) {
 	private boolean hasConflictWithAppointment(Appointment iApt) {
-			int p1 = iApt.getStudentID();
+		if (iApt.getWasCancelled()) return false;
+
+		int p1 = iApt.getStudentID();
 		int p2 = iApt.getInstructorID();
 		if (p1 == this.studentId || p1 == this.instructorId || p2 == this.studentId || p2 == this.instructorId) {
 			// At least one of the included members is in scheduled appointment and planned appointments

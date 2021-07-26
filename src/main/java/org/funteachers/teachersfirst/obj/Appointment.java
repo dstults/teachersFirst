@@ -154,6 +154,10 @@ public class Appointment implements IJsonnable {
 		return this.completionState == STATE_COMPLETED;
 	}
 
+	public boolean getWasCancelled() {
+		return this.completionState == STATE_CANCELLED;
+	}
+
 	public void setSchedulingVerified(boolean value) {
 		this.schedulingVerified = value;
 		DataManager.getAppointmentDAO().update(this);
