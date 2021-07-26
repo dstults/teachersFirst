@@ -2,8 +2,6 @@ package org.funteachers.teachersfirst.obj;
 
 import java.time.format.DateTimeFormatter;
 
-import javax.naming.OperationNotSupportedException;
-
 import org.funteachers.teachersfirst.*;
 
 import java.sql.Timestamp;
@@ -11,9 +9,10 @@ import java.sql.Timestamp;
 public class Appointment implements IJsonnable {
 
 	public static final int STATE_MISSED_REFUNDED = -2;
-	public static final int STATE_MISSED = 0;
-	public static final int STATE_UNKNOWN = -1;
+	public static final int STATE_MISSED = -1;
+	public static final int STATE_UNKNOWN = 0;
 	public static final int STATE_COMPLETED = 1;
+	public static final int STATE_CANCELLED = 2;
 
 	private int recId;
 	private int studentId;
@@ -66,7 +65,7 @@ public class Appointment implements IJsonnable {
 		if (instructorID < -1) throw new IllegalArgumentException("Invalid argument: instructorID < -1");
 		if (startTime == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
 		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
-		if (completionState < -2 || completionState > 1) throw new IllegalArgumentException("Invalid argument: completionState range is -2 to 1");
+		if (completionState < -2 || completionState > 2) throw new IllegalArgumentException("Invalid argument: completionState range is -2 to 2");
 		
 		this.recId = recID;
 		this.studentId = studentID;
@@ -150,14 +149,6 @@ public class Appointment implements IJsonnable {
 		return this.completionState == STATE_UNKNOWN;
 	}
 
-	public boolean getWasNotCompleted() {
-		return this.completionState == STATE_MISSED || this.completionState == STATE_MISSED_REFUNDED;
-	}
-
-	public boolean getWasRefunded() {
-		return this.completionState == STATE_MISSED_REFUNDED;
-	}
-
 	public boolean getWasCompleted() {
 		return this.completionState == STATE_COMPLETED;
 	}
@@ -194,6 +185,25 @@ public class Appointment implements IJsonnable {
 				break;
 		}
 		return status1 + "/" + status2;
+	}
+
+	// ----------------------------------------------------------------
+
+	public boolean hasRefundableValue() {
+		switch (this.completionState) {
+			case STATE_MISSED_REFUNDED:
+				return false;
+			case STATE_MISSED:
+				return true;
+			case STATE_UNKNOWN:
+				return true;			
+			case STATE_COMPLETED:
+				return true;
+			case STATE_CANCELLED:
+				return false;
+			default: 
+				throw new IllegalArgumentException("Need to add support for hasRefundableValue for completionState of [" + this.completionState + "]");
+		}
 	}
 
 	// ----------------------------------------------------------------

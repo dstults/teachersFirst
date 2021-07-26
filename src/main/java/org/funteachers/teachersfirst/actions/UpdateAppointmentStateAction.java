@@ -19,6 +19,10 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 
 	public void runAction(final int newState) {
 
+		// --------------------------------------------------------------------------------------------
+		// INPUT VALIDATION
+		// --------------------------------------------------------------------------------------------
+
 		// Ensure valid action
 		if (newState != Appointment.STATE_COMPLETED && newState != Appointment.STATE_MISSED && newState != Appointment.STATE_MISSED_REFUNDED) {
 			throw new IllegalArgumentException("Invalid argument: subAction must be 'complete' or 'miss' or 'refund'");
@@ -30,7 +34,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 			return;
 		}
 
-		// Check for a valid appointment ID
+		// Attempt to parse appointment ID
 		final String appointmentIdString = QueryHelpers.getPost(request, "appointmentId");
 		int appointmentIdInt;
 		try {
@@ -43,7 +47,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 		// Verify connection to DB
 		final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
 		if (appointmentDAO == null) {
-			this.sendPostReply("/appointments", "", "Couldn't connect to database, please try again.");
+			this.sendPostReply("/appointments", "", "Could not connect to database, please try again.");
 			return;
 		}
 
@@ -76,7 +80,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 			}
 	
 			// Must not be marked as already refunded if refunding
-			if (appointment.getWasRefunded()) {
+			if (!appointment.hasRefundableValue()) {
 				this.sendPostReply("/appointments", "", "Cannot double-refund appointments that were already refunded.");
 				return;
 			}
@@ -85,12 +89,16 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 
 			// Cannot update state of appointment that was refunded
 			// Note: This is here because I want a different error message than above
-			if (appointment.getWasRefunded()) {
+			if (!appointment.hasRefundableValue()) {
 				this.sendPostReply("/appointments", "", "Cannot update appointment state for appointments that were refunded.");
 				return;
 			}
 
 		}
+
+		// --------------------------------------------------------------------------------------------
+		// PERFORM ACTION
+		// --------------------------------------------------------------------------------------------
 
 		logger.debug("Attempting to set appointment [{}] state to [{}] ...", appointmentIdString, newState);
 		appointment.setCompletionState(newState);
