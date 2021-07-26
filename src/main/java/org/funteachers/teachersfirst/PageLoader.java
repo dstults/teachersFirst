@@ -162,7 +162,7 @@ public abstract class PageLoader {
 
 	protected void trySendJson(String json) {
 		// send json:
-		logger.debug("Attempting to send json...");
+		logger.debug("Attempting to send JSON GET reply...");
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(200);
 		try (ServletOutputStream out = response.getOutputStream()) {
