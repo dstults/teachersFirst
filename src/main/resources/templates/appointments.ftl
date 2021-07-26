@@ -7,7 +7,7 @@
 	<#include "please_login.ftl">
 <#else>
 		<div class="top-buttons">
-			<a href="javascript:filterAppointments();" class="buttonize-link">Filter Appointments</a>
+			<a href="javascript:updateFilter();" class="buttonize-link">Filter Appointments</a>
 		</div>
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
@@ -75,6 +75,7 @@
 	const isAdmin = ${isAdmin?c};
 	const isInstructor = ${isInstructor?c};
 
+	let lastFilter = '';
 	let allFutureData = null;
 	let filteredFutureData = null;
 	let futureAppointmentPage = 0;
@@ -85,11 +86,14 @@
 	let pastAppointmentPage = 0;
 	const pastPageNumberElem = document.getElementById('current-past-page');
 	const pastRows = 15;
-	fetch('https://funteachers.org/appointments?json').then(response => response.json()).then(data => {
-		[ allFutureData, allPastData ] = data;
-		[ filteredFutureData, filteredPastData] = [ allFutureData, allPastData ];		
-		refreshAll();
-	}).catch(err => console.error(err.message));
+
+	const populateData = _ => {
+		fetch('https://funteachers.org/appointments?json').then(response => response.json()).then(data => {
+			[ allFutureData, allPastData ] = data;
+			filterAppointments();
+		}).catch(err => console.error(err.message));
+	};
+	populateData();
 
 	const checkAddControl_Delete = (isPast, controls, appointment, row) => {
 		if (isAdmin || appointment.completionState == STATE.CANCELLED && myId == appointment.instructorId) {
@@ -292,27 +296,32 @@
 		statusElement.innerHTML = '...updating...';
 		return { controlElement, statusElement };
 	};
+	
+	const updateFilter = _ => {
+		lastFilter = prompt('Search criteria:\n(Student/instructor name or student/instructor ID)').toLowerCase();
+		filterAppointments();
+	};
 	const filterAppointments = _ => {
-		const filter = prompt('Search criteria:\n(Student/instructor name or student/instructor ID)').toLowerCase();
-		if (!filter) {
+		if (!lastFilter) {
 			filteredFutureData = allFutureData;
 			filteredPastData = allPastData;
 		} else {
-			filteredFutureData = allFutureData.filter(a => a.studentName.toLowerCase().includes(filter) || a.instructorName.toLowerCase().includes(filter) || a.studentId == filter || a.instructorId == filter || a.statusText.toLowerCase().includes(filter));
-			filteredPastData = allPastData.filter(a => a.studentName.toLowerCase().includes(filter) || a.instructorName.toLowerCase().includes(filter) || a.studentId == filter || a.instructorId == filter || a.statusText.toLowerCase().includes(filter));
+			filteredFutureData = allFutureData.filter(a => a.studentName.toLowerCase().includes(lastFilter) || a.instructorName.toLowerCase().includes(lastFilter) || a.studentId == lastFilter || a.instructorId == lastFilter || a.statusText.toLowerCase().includes(lastFilter));
+			filteredPastData = allPastData.filter(a => a.studentName.toLowerCase().includes(lastFilter) || a.instructorName.toLowerCase().includes(lastFilter) || a.studentId == lastFilter || a.instructorId == lastFilter || a.statusText.toLowerCase().includes(lastFilter));
 		}
 		futureAppointmentPage = 0;
 		pastAppointmentPage = 0;
 		refreshAll();
-	}
+	};
 
 	const handleResponse = (xhr, controlElement, statusElement, appointmentId, isPast, row) => {
 		if (xhr.status === 200) {
-			controlElement.innerHTML = '-please refresh-';
+			//controlElement.innerHTML = '-please refresh-';
 			const parser = new DOMParser();
 			const data = parser.parseFromString(xhr.response, 'text/html');
 			const messageBanner = data.getElementById('message-banner');
-			statusElement.innerHTML = messageBanner.innerHTML;
+			alert(messageBanner.innerHTML);
+			populateData();
 		} else {
 			controlElement.innerHTML = 'ERROR';
 		}
