@@ -218,6 +218,9 @@ public class ServerMain extends HttpServlet {
 				case "complete_appointment":
 					new UpdateAppointmentStateAction(request, response).runAction(Appointment.STATE_COMPLETED);
 					break;
+				case "cancel_appointment":
+					new UpdateAppointmentStateAction(request, response).runAction(Appointment.STATE_CANCELLED);
+					break;
 				case "delete_opening":
 					new DeleteOpeningAction(request, response).runAction();
 					break;
