@@ -314,13 +314,16 @@
 		refreshAll();
 	};
 
-	const handleResponse = (xhr, controlElement, statusElement, appointmentId, isPast, row) => {
+	// Old Method:
+	//const parser = new DOMParser();
+	//const data = parser.parseFromString(xhr.response, 'text/html');
+	//const messageBanner = data.getElementById('message-banner');
+	//alert(messageBanner.innerHTML);
+	const handleResponse = (xhr) => {
 		if (xhr.status === 200) {
-			//controlElement.innerHTML = '-please refresh-';
-			const parser = new DOMParser();
-			const data = parser.parseFromString(xhr.response, 'text/html');
-			const messageBanner = data.getElementById('message-banner');
-			alert(messageBanner.innerHTML);
+			window.temp = xhr;
+			const { message } = JSON.parse(xhr.responseText);
+			//alert(message);
 			populateData();
 		} else {
 			controlElement.innerHTML = 'ERROR';
@@ -336,7 +339,7 @@
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.onload = () => handleResponse(xhr);
 		xhr.send('action=delete_appointment&appointmentId=' + appointmentId);
 	};
 	const confirmMissAppointment = (isPast, appointmentId, row) => {
@@ -346,7 +349,7 @@
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.onload = () => handleResponse(xhr);
 		xhr.send('action=miss_appointment&appointmentId=' + appointmentId);
 	};
 	const confirmCompleteAppointment = (isPast, appointmentId, row) => {
@@ -356,7 +359,7 @@
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.onload = () => handleResponse(xhr);
 		xhr.send('action=complete_appointment&appointmentId=' + appointmentId);
 	};
 	const confirmRefundAppointment = (isPast, appointmentId, row) => {
@@ -366,9 +369,8 @@
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.onload = () => handleResponse(xhr);
 		xhr.send('action=refund_appointment&appointmentId=' + appointmentId);
-		window.lastXhr = xhr; // debug
 	};
 	const confirmCancelAppointment = (isPast, appointmentId, row) => {
 		if (!confirm('You\'re sure you want to cancel appointment #' + appointmentId + ' ?')) return;
@@ -377,9 +379,8 @@
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = () => handleResponse(xhr, controlElement, statusElement, appointmentId, isPast, row);
+		xhr.onload = () => handleResponse(xhr);
 		xhr.send('action=cancel_appointment&appointmentId=' + appointmentId);
-		window.lastXhr = xhr; // debug
 	};
 </script>
 </#if>

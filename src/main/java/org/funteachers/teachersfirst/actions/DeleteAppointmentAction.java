@@ -4,7 +4,6 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
-import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteAppointmentAction extends ActionRunner {
@@ -20,7 +19,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.sendPostReply("/services", "", "Please sign in or register to use this feature!");
+			this.sendJsonReply("Please sign in.");
 			return;
 		}
 
@@ -30,26 +29,27 @@ public class DeleteAppointmentAction extends ActionRunner {
 		try {
 			appointmentIdInt = Integer.parseInt(appointmentIdString);
 		} catch (NumberFormatException e) {
-			appointmentIdInt = 0;
+			this.sendJsonReply("Not a valid appointment ID.");
+			return;
 		}
 
 		// Check connection to database
 		final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
 		if (appointmentDAO == null) {
-			this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
+			this.sendJsonReply("Could not connect to database, please try again.");
 			return;
 		}
 
 		// Check that appointment exists
 		final Appointment appointment = appointmentDAO.retrieveByID(appointmentIdInt);
 		if (appointment == null) {
-			this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " not found!");
+			this.sendJsonReply("Appointment " + appointmentIdString + " not found!");
 			return;
 		}
 
 		// Must be admin or appointment must be cancelled
 		if (!isAdmin && !appointment.canBeDeleted()) {
-			this.sendPostReply("/appointments", "", "Not enough privileges / Cannot delete appointment of this state.");
+			this.sendJsonReply("Not enough privileges / Cannot delete appointment of this state.");
 			return;
 		}
 
@@ -57,13 +57,13 @@ public class DeleteAppointmentAction extends ActionRunner {
 
 			// Make sure deleting party is the instructor for the class
 			if (appointment.getInstructorID() != uid) {
-				this.sendPostReply("/appointments", "", "Not appointment instructor, cannot delete.");
+				this.sendJsonReply("Not appointment instructor, cannot delete.");
 				return;
 			}
 
 			// Only admin can delete past appointments
 			if (DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-				this.sendPostReply("/appointments", "", "Need admin privileges to delete past appointments.");
+				this.sendJsonReply("Need admin privileges to delete past appointments.");
 				return;
 			}
 
@@ -94,7 +94,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 
 		// Send response
 		String refundText = giveRefund ? " Credit(s) refunded!" : " No credits refunded.";
-		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " deleted!" + refundText);
+		this.sendJsonReply("Appointment " + appointmentIdString + " deleted!" + refundText);
 		return;
 	}
 	

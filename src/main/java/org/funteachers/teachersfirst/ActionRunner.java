@@ -53,12 +53,13 @@ public abstract class ActionRunner {
 	// Protected Methods (shared magic between all actions)
 
 	protected void sendJsonReply(String message) {
-		String messageJson = "\"message\": \"" + message.trim() + "\""; // include message even if empty
-		
-		String fullJson = "{ " + messageJson + " }";
+		final String messageJson = "\"message\": \"" + message.trim() + "\""; // include message even if empty
+		final String fullJson = "{ " + messageJson + " }";
 
 		// send json:
-		logger.debug("Attempting to send json...");
+		logger.debug("Attempting to send JSON POST reply...");
+		response.setHeader("Content-Type", "application/json");
+		response.setStatus(200);
 		try (ServletOutputStream out = response.getOutputStream()) {
 			out.println(fullJson);
 		} catch (IOException e) {
