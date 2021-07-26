@@ -9,23 +9,27 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class UpdateAppointmentStateAction extends ActionRunner {
 
-	public UpdateAppointmentStateAction(HttpServletRequest request, HttpServletResponse response) {
+	final int newState;
+
+	public UpdateAppointmentStateAction(HttpServletRequest request, HttpServletResponse response, int newState) {
 		super(request, response);
+
+		this.newState = newState;
 	}
 
 	public void runAction() {
-		throw new NotAcceptableException("Use RunAction(int) with sub-action as int value.");
-	}
-
-	public void runAction(final int newState) {
 
 		// --------------------------------------------------------------------------------------------
 		// INPUT VALIDATION
 		// --------------------------------------------------------------------------------------------
 
 		// Ensure valid action
-		if (newState != Appointment.STATE_COMPLETED && newState != Appointment.STATE_MISSED && newState != Appointment.STATE_MISSED_REFUNDED) {
-			throw new IllegalArgumentException("Invalid argument: subAction must be 'complete' or 'miss' or 'refund'");
+		if (newState != Appointment.STATE_COMPLETED &&
+			newState != Appointment.STATE_MISSED &&
+			newState != Appointment.STATE_MISSED_REFUNDED &&
+			newState != Appointment.STATE_CANCELLED) {
+
+				throw new IllegalArgumentException("Unhandled newState for update appointment to.");
 		}
 
 		// This should not be possible for anyone not logged in.
@@ -58,10 +62,12 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 			return;
 		}
 
-		// Appointment must be in past
-		if (!DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-			this.sendPostReply("/appointments", "", "Cannot update state of appointments that haven't happened yet.");
-			return;
+		// Appointment must be in past unless we are cancelling
+		if (newState != Appointment.STATE_CANCELLED) {
+			if (!DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
+				this.sendPostReply("/appointments", "", "Cannot update state of appointments that haven't happened yet.");
+				return;
+			}
 		}
 
 		// Make sure is admin or instructor modifying own class
@@ -103,7 +109,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 		logger.debug("Attempting to set appointment [{}] state to [{}] ...", appointmentIdString, newState);
 		appointment.setCompletionState(newState);
 		logger.debug("Updated appointment ID: [{}]", appointmentIdString);
-		
+
 		this.sendPostReply("/appointments", "", "Appointment " + appointmentIdString + " updated!");
 		return;
 	}
