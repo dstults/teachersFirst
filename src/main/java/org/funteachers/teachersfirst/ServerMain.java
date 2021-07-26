@@ -210,16 +210,16 @@ public class ServerMain extends HttpServlet {
 					new DeleteAppointmentAction(request, response).runAction();
 					break;
 				case "refund_appointment":
-					new UpdateAppointmentStateAction(request, response).runAction(Appointment.STATE_MISSED_REFUNDED);
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_MISSED_REFUNDED).runAction();
 					break;
 				case "miss_appointment":
-					new UpdateAppointmentStateAction(request, response).runAction(Appointment.STATE_MISSED);
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_MISSED).runAction();
 					break;
 				case "complete_appointment":
-					new UpdateAppointmentStateAction(request, response).runAction(Appointment.STATE_COMPLETED);
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_COMPLETED).runAction();
 					break;
 				case "cancel_appointment":
-					new UpdateAppointmentStateAction(request, response).runAction(Appointment.STATE_CANCELLED);
+					new UpdateAppointmentStateAction(request, response, Appointment.STATE_CANCELLED).runAction();
 					break;
 				case "delete_opening":
 					new DeleteOpeningAction(request, response).runAction();
