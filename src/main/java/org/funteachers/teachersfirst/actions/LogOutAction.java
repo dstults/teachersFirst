@@ -9,7 +9,7 @@ public class LogOutAction extends ActionRunner {
 	public LogOutAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 		// Do this no matter what to make sure it's clean:
 		Security.logout(request, "User " + uid + " normal log out.");
 		if (uid > 0 ) {

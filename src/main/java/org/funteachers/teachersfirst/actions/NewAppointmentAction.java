@@ -15,7 +15,7 @@ public class NewAppointmentAction extends ActionRunner {
 	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {

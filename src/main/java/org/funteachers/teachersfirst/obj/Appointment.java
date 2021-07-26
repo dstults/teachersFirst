@@ -10,8 +10,8 @@ import java.sql.Timestamp;
 
 public class Appointment implements IJsonnable {
 
-	public static final int STATE_INCOMPLETE_REFUNDED = -2;
-	public static final int STATE_INCOMPLETE = 0;
+	public static final int STATE_MISSED_REFUNDED = -2;
+	public static final int STATE_MISSED = 0;
 	public static final int STATE_UNKNOWN = -1;
 	public static final int STATE_COMPLETED = 1;
 
@@ -151,11 +151,11 @@ public class Appointment implements IJsonnable {
 	}
 
 	public boolean getWasNotCompleted() {
-		return this.completionState == STATE_INCOMPLETE || this.completionState == STATE_INCOMPLETE_REFUNDED;
+		return this.completionState == STATE_MISSED || this.completionState == STATE_MISSED_REFUNDED;
 	}
 
 	public boolean getWasRefunded() {
-		return this.completionState == STATE_INCOMPLETE_REFUNDED;
+		return this.completionState == STATE_MISSED_REFUNDED;
 	}
 
 	public boolean getWasCompleted() {
@@ -165,19 +165,6 @@ public class Appointment implements IJsonnable {
 	public void setSchedulingVerified(boolean value) {
 		this.schedulingVerified = value;
 		DataManager.getAppointmentDAO().update(this);
-	}
-
-	public boolean setCompletionState(String value) {
-		switch (value) {
-			case "complete":
-				return setCompletionState(STATE_COMPLETED);
-			case "miss":
-				return setCompletionState(STATE_INCOMPLETE);
-			case "refund":
-				return setCompletionState(STATE_INCOMPLETE_REFUNDED);
-			default:
-				throw new IllegalArgumentException("Invalid argument: completionState = " + value);
-		}
 	}
 
 	public boolean setCompletionState(int value) {

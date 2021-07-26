@@ -15,7 +15,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 
 		// INPUT: {action: make_appointment_batch}, {instructorId: 1}, {studentId: 2}, {daysOfWeek: SuMoWeThSa}, {startDate: 2021-05-02}, {startTime: 09:00}, {endDate: 2021-05-08}, {endTime: 10:00}
 		// OUTPUT: Invalid value for MonthOfYear (Line 164)

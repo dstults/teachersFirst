@@ -13,7 +13,7 @@ public class OpenRegisterAction extends ActionRunner {
 	public OpenRegisterAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 
 		// This version of this process requires that you're not signed in.
 		if (uid > 0) {

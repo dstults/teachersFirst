@@ -21,7 +21,7 @@ public class UpdateMemberAction extends ActionRunner {
 	}
 
 	@Override
-	public void RunAction() {
+	public void runAction() {
 
 		if (uid <= 0) {
 			this.sendJsonReply("You must be signed in to do this!");

@@ -48,7 +48,7 @@ public abstract class ActionRunner {
 
 	// Public entry point
 
-	public abstract void RunAction();
+	public abstract void runAction();
 
 	// Protected Methods (shared magic between all actions)
 
