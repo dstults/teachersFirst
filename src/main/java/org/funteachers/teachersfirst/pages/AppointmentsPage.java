@@ -1,6 +1,5 @@
 package org.funteachers.teachersfirst.pages;
 
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.servlet.http.*;
 
@@ -61,7 +60,6 @@ public class AppointmentsPage extends PageLoader {
 					if ((isAdmin && filterMemberId == -1) || appointment.getIsMyAppointment(uid)) {
 						appointment.setInstructorName(MemberHelpers.FindNameByID(allMembers, appointment.getInstructorID()));
 						appointment.setStudentName(MemberHelpers.FindNameByID(allMembers, appointment.getStudentID()));
-						appointment.setIsMyAppointment(appointment.getIsMyAppointment(uid));
 						if (DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
 							pastAppointments.add(appointment);
 						} else {

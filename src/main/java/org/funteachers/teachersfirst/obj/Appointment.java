@@ -9,7 +9,12 @@ import org.funteachers.teachersfirst.*;
 import java.sql.Timestamp;
 
 public class Appointment implements IJsonnable {
-    
+
+	public static final int STATE_INCOMPLETE_REFUNDED = -2;
+	public static final int STATE_INCOMPLETE = 0;
+	public static final int STATE_UNKNOWN = -1;
+	public static final int STATE_COMPLETED = 1;
+
 	private int recId;
 	private int studentId;
 	private int instructorId;
@@ -20,7 +25,6 @@ public class Appointment implements IJsonnable {
 
 	private String studentName; // Temporary/Prettification use only -- should not be saved to database
 	private String instructorName; // Temporary/Prettification use only -- should not be saved to database
-	private boolean isMyAppointment; // Temporary/Prettification use only -- should not be saved to database
 
 	// ----------------------------------------------------------------
 	
@@ -52,7 +56,7 @@ public class Appointment implements IJsonnable {
 		this.startTime = plan.getStartTime();
 		this.endTime = plan.getEndTime();
 		this.schedulingVerified = false;
-		this.completionState = -1;
+		this.completionState = STATE_UNKNOWN;
 	}
 
 	public Appointment(int recID, int studentID, int instructorID, Timestamp startTime, Timestamp endTime, boolean schedulingVerified, int completionState) {
@@ -62,7 +66,7 @@ public class Appointment implements IJsonnable {
 		if (instructorID < -1) throw new IllegalArgumentException("Invalid argument: instructorID < -1");
 		if (startTime == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
 		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
-		if (completionState < -1 || completionState > 1) throw new IllegalArgumentException("Invalid argument: completionState range is -1 to 1");
+		if (completionState < -2 || completionState > 1) throw new IllegalArgumentException("Invalid argument: completionState range is -2 to 1");
 		
 		this.recId = recID;
 		this.studentId = studentID;
@@ -100,7 +104,7 @@ public class Appointment implements IJsonnable {
 	public int getInstructorID() {
 		return this.instructorId;
 	}
-	
+
 	public boolean getIsMyAppointment(int memberId) {
 		return this.studentId == memberId || this.instructorId == memberId;
 	}
@@ -143,15 +147,19 @@ public class Appointment implements IJsonnable {
 	}
 
 	public boolean getCompletionUnconfirmed() {
-		return this.completionState == -1;
+		return this.completionState == STATE_UNKNOWN;
 	}
 
 	public boolean getWasNotCompleted() {
-		return this.completionState == 0;
+		return this.completionState == STATE_INCOMPLETE || this.completionState == STATE_INCOMPLETE_REFUNDED;
+	}
+
+	public boolean getWasRefunded() {
+		return this.completionState == STATE_INCOMPLETE_REFUNDED;
 	}
 
 	public boolean getWasCompleted() {
-		return this.completionState == 1;
+		return this.completionState == STATE_COMPLETED;
 	}
 
 	public void setSchedulingVerified(boolean value) {
@@ -159,22 +167,26 @@ public class Appointment implements IJsonnable {
 		DataManager.getAppointmentDAO().update(this);
 	}
 
-	public void setCompletionState(String value) {
+	public boolean setCompletionState(String value) {
 		switch (value) {
 			case "complete":
-				setCompletionState(1);
-				break;
+				return setCompletionState(STATE_COMPLETED);
 			case "miss":
-				setCompletionState(0);
-				break;
+				return setCompletionState(STATE_INCOMPLETE);
+			case "refund":
+				return setCompletionState(STATE_INCOMPLETE_REFUNDED);
 			default:
-			throw new IllegalArgumentException("Invalid argument: completionState = " + value);
+				throw new IllegalArgumentException("Invalid argument: completionState = " + value);
 		}
 	}
 
-	public void setCompletionState(int value) {
+	public boolean setCompletionState(int value) {
+		//TODO: input-validate to return false
+		//TODO: log appointment validation
+
 		this.completionState = value;
 		DataManager.getAppointmentDAO().update(this);
+		return true;
 	}
 
 	public String getStatusText() {
@@ -211,20 +223,12 @@ public class Appointment implements IJsonnable {
 		return this.instructorName;
 	}
 
-	public boolean getIsMyAppointment() {
-		return this.isMyAppointment;
-	}
-
 	public void setStudentName(String value) {
 		this.studentName = value;
 	}
 
 	public void setInstructorName(String value) {
 		this.instructorName = value;
-	}
-
-	public void setIsMyAppointment(boolean value) {
-		this.isMyAppointment = value;
 	}
 
 	// ----------------------------------------------------------------
@@ -237,20 +241,19 @@ public class Appointment implements IJsonnable {
 	@Override
 	public String toJson() {
 		return "{\"id\":" + this.recId + "," +
-				"\"instructorId\":" + this.instructorId + "," +
-				"\"instructorName\":\"" + this.getInstructorName() + "\"," +
-				"\"studentId\":" + this.studentId + "," +
-				"\"studentName\":\"" + this.getStudentName() + "\"," +
-				"\"startTime\":\"" + this.startTime + "\"," +
-				"\"endTime\":\"" + this.endTime + "\"," +
-				"\"dateFormatted\":\"" + this.getDateFormatted() + "\"," +
-				"\"startTimeFormatted\":\"" + this.getStartTimeFormatted() + "\"," +
-				"\"endTimeFormatted\":\"" + this.getEndTimeFormatted() + "\"," +
-				"\"isMyAppointment\":" + this.getIsMyAppointment() + "," +
-				"\"schedulingVerified\":" + this.getSchedulingVerified() + "," +
-				"\"completionState\":" + this.getCompletionState() + "," +
-				"\"statusText\":\"" + this.getStatusText() + "\"" +
-				"}";
+			"\"instructorId\":" + this.instructorId + "," +
+			"\"instructorName\":\"" + this.getInstructorName() + "\"," +
+			"\"studentId\":" + this.studentId + "," +
+			"\"studentName\":\"" + this.getStudentName() + "\"," +
+			"\"startTime\":\"" + this.startTime + "\"," +
+			"\"endTime\":\"" + this.endTime + "\"," +
+			"\"dateFormatted\":\"" + this.getDateFormatted() + "\"," +
+			"\"startTimeFormatted\":\"" + this.getStartTimeFormatted() + "\"," +
+			"\"endTimeFormatted\":\"" + this.getEndTimeFormatted() + "\"," +
+			"\"schedulingVerified\":" + this.getSchedulingVerified() + "," +
+			"\"completionState\":" + this.getCompletionState() + "," +
+			"\"statusText\":\"" + this.getStatusText() + "\"" +
+			"}";
 	}
 
 	@Override
