@@ -1,4 +1,5 @@
 .console-frame {
+	z-index: 10000;
 	position: absolute;
 	left: 15px;
 	top: 240px;
