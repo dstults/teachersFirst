@@ -36,8 +36,17 @@
 	</div>
 	<script src="scripts/dragElement.js"></script>
 	<script src="scripts/messageConsole.js"></script>
-	</#if>
 	<#if message != "">
+	<script>
+		let bannerMessage = `${message}`;
+		bannerMessage = bannerMessage.replaceAll('\n', ' // ');
+		bannerMessage = bannerMessage.replaceAll('<br>', ' // ');
+		const messages = bannerMessage.split(' // ');
+		for (const msg of messages)
+			addMessage(msg);
+	</script>
+	</#if>
+	<#elseif message != "">
 	<div id="message-banner" class="banner">
 		<p>${message}</p>
 	</div>
