@@ -12,12 +12,19 @@ let pastAppointmentPage = 0;
 const pastPageNumberElem = document.getElementById('current-past-page');
 const pastRows = 15;
 
+// TODO: Redo this with async / await.
+// TODO: Needs to catch non-error response outside 20x (!resp.ok) <---
 const populateData = _ => {
-	addMessage('Getting appointment data...');
-	fetch('https://funteachers.org/appointments?json').then(response => response.json()).then(data => {
+	//addMessage('Fetching appointment data.');
+	fetch('https://funteachers.org/appointments?json').then(response => {
+		if (response.ok) {
+			return response.json();
+		} else {
+			throw new Error('Status[' + response.status + '] ' + response.statusText);
+		}
+	}).then(data => {
 		[ allFutureData, allPastData ] = data;
 		filterAppointments();
-		addMessage('DONE!');
 	}).catch(err => addError(err.message));
 };
 populateData();
@@ -250,7 +257,7 @@ const handleResponse = (xhr) => {
 	if (xhr.status === 200) {
 		window.temp = xhr;
 		const { message } = JSON.parse(xhr.responseText);
-		//alert(message);
+		addMessage(message);
 		populateData();
 	} else {
 		controlElement.innerHTML = 'ERROR';
