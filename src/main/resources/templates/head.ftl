@@ -4,4 +4,5 @@
 	<title>${title}</title>
 	<link rel="stylesheet" href="/dynamic.css">
 	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/messageConsole.css">
 </head>
