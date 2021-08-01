@@ -33,8 +33,8 @@ Get yours today!
  - v0.5 Input validation and opening error detection
  - v0.6 Polish to Minimal Viable Product
  - v0.7 Fully customizable profile and transition to JS-based view
+ - v0.8 Credit economy and transaction logging
 
 ## Under contruction:
- - v0.8 Credit economy and transaction logging
  - v0.9 Administrative additions (create, modify and disable other accounts)
  - v1.0 Attractive enhancements
