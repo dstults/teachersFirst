@@ -1,0 +1,65 @@
+.console-frame {
+	position: absolute;
+	left: 15px;
+	top: 240px;
+	border: 2px solid black;
+	background-color: rgba(192, 192, 192, 0.65);
+	color: black;
+	overflow: hidden;
+	font-family: monospace;
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+	padding: 4px;
+	border-radius: 8px;
+}
+.console-topbar {
+	min-width: 150px;
+	display: grid;
+	grid-gap: 4px;
+	grid-template-columns: auto 20px;
+}
+.console-drag-bar {
+	font-size: 18px;
+	text-align: center;
+	cursor: pointer;
+	border-radius: 4px;
+}
+.console-drag-bar:hover {
+	background-color: rgba(255, 255, 0, 0.5);
+}
+.console-closer {
+	border: 1px solid black;
+	width: 20px;
+	font-size: 20px;
+	cursor: pointer;
+	vertical-align: middle;
+	text-align: center;
+}
+.console-closer:hover {
+	text-shadow: 0 0 3px rgb(255, 0, 0);
+}
+.console-message-list {
+	font-size: 14px;
+	border: 1px solid black;
+	margin: 5px auto 0 auto;
+	width: 380px;
+	height: 160px;
+	overflow-y: scroll;
+	padding: 2px;
+}
+.console-message-list>li {
+	margin: 0;
+	animation: message-pop 0.7s linear 0.2s;
+}
+
+@keyframes message-pop {
+	0%, 100% {
+		color: black;
+		text-shadow: none;
+	}
+	12.5%, 37.5%, 62.5%, 87.5% {
+		text-shadow: 0 0 3px rgb(255, 0, 0);
+	}
+	0%, 25%, 50%, 75% {
+		text-shadow: 0 0 3px rgb(255, 255, 0);
+	}
+}
