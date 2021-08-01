@@ -37,3 +37,10 @@ const addMessage = (text) => {
 	consoleMessageList.scrollTop = consoleMessageList.scrollHeight;
 	setTimeout(_ => newLine.style.animation = 'none', 1000);
 };
+
+const addError = (text) => {
+	if (!text) return;
+
+	addMessage('ERROR: ' + text);
+	console.error(text);
+};

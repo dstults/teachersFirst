@@ -13,12 +13,14 @@ const pastPageNumberElem = document.getElementById('current-past-page');
 const pastRows = 15;
 
 const populateData = _ => {
+	addMessage('Getting appointment data...');
 	fetch('https://funteachers.org/appointments?json').then(response => response.json()).then(data => {
 		[ allFutureData, allPastData ] = data;
 		filterAppointments();
-	}).catch(err => console.error(err.message));
+		addMessage('DONE!');
+	}).catch(err => addError(err.message));
 };
-//populateData();
+populateData();
 
 const checkAddControl_Delete = (isPast, controls, appointment, row) => {
 	if (isAdmin || appointment.completionState == STATE.CANCELLED && myId == appointment.instructorId) {
