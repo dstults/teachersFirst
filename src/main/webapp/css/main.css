@@ -77,7 +77,7 @@ header a, .buttonize-link {
 	align-items: center;
 	text-align: center;
 }
-.top-nav-list>li {
+.top-nav-list li, .page-content-550 li {
 	display: inline;
 	margin: 0 0.8rem;
 	padding-left: 2rem;
