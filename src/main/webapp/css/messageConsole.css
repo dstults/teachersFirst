@@ -1,6 +1,6 @@
 .console-frame {
 	z-index: 10000;
-	position: absolute;
+	position: fixed;
 	left: 15px;
 	top: 240px;
 	border: 2px solid black;
