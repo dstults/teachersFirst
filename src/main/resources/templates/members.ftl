@@ -21,8 +21,7 @@
 				<th style="width: 165px;">Name</th>
 				<th style="width: 50px;">ID</th>
 				<#if isAdmin || isInstructor><th style="width: 50px;" class="credits"><img src="images/credit-coin.svg" height="22" style="vertical-align: bottom;"></th></#if>
-				<th style="width: 135px;">Gender</th>
-				<th style="width: 88px;">Age</th>
+				<th style="width: 165px;">Category</th>
 				<th style="width: 135px;">Phone</th>
 				<th style="width: 135px;">Email</th>
 			</tr>
@@ -32,8 +31,7 @@
 				<td id="member-row-${i?c}-displayName"></td>
 				<td id="member-row-${i?c}-recId"></td>
 				<#if isAdmin || isInstructor><td id="member-row-${i?c}-credits" class="credits"></td></#if>
-				<td id="member-row-${i?c}-gender"></td>
-				<td id="member-row-${i?c}-age"></td>
+				<td id="member-row-${i?c}-category"></td>
 				<td id="member-row-${i?c}-phones"></td>
 				<td id="member-row-${i?c}-email"></td>
 			</tr>
@@ -61,6 +59,10 @@
 		refreshAll();
 	}).catch(err => console.error(err.message));
 	
+	const boyImage = '<img src="images/boy.svg" style="background-color: hsl(220, 100%, 85%);height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
+	const girlImage = '<img src="images/girl.svg" style="background-color: hsl(0, 80%, 90%); height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
+	const phoneImage = '<img src="images/phone.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
+	const emailImage = '<img src="images/email.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
 	const renderRow = (member, row) => {
 		const rowName = 'member-row-' + row;
 		const tableRow = document.getElementById(rowName);
@@ -70,8 +72,7 @@
 		const recId = document.getElementById(rowName + '-recId');
 		while (recId.firstChild) recId.removeChild(recId.firstChild); // safely remove child elements (anchor-link)
 		<#if isAdmin || isInstructor>const credits = document.getElementById(rowName + '-credits');</#if>
-		const gender = document.getElementById(rowName + '-gender');
-		const age = document.getElementById(rowName + '-age');
+		const category = document.getElementById(rowName + '-category');
 		const phones = document.getElementById(rowName + '-phones');
 		const email = document.getElementById(rowName + '-email');
 		if (!member) {
@@ -80,8 +81,7 @@
 			displayName.innerHTML = '';
 			recId.innerHTML = '';
 			<#if isAdmin || isInstructor>credits.innerHTML = '';</#if>
-			gender.innerHTML = '';
-			age.innerHTML = '';
+			category.innerHTML = '';
 			phones.innerHTML = '';
 			email.innerHTML = '';
 		} else {
@@ -94,10 +94,24 @@
 			displayName.innerHTML = '<a href="/profile?memberId=' + member.id + '">' + member.displayName + '</a>';
 			recId.innerHTML = '<a href="/profile?memberId=' + member.id + '">' + member.id + '</a>';
 			<#if isAdmin || isInstructor>credits.innerHTML = member.credits;</#if>
-			age.innerHTML = member.age < 18 ? member.age : member.ageClass;
-			gender.innerHTML = member.gender;
-			phones.innerHTML = member.phone1 + '<br>' + member.phone2;
-			email.innerHTML = member.email;
+			switch (member.gender) {
+				case 'm':
+					category.innerHTML = boyImage;
+					break;
+				case 'f':
+					category.innerHTML = girlImage;
+					break;
+				default:
+					category.innerHTML = '-';
+					break;
+			}
+			category.innerHTML += '<span style="vertical-align: middle;"> / ' + (member.age < 18 ? member.age : member.ageClass) + '</span>';
+			phones.innerHTML = '';
+			if (member.phone1) phones.innerHTML += phoneImage + '<span style="vertical-align: middle;"> ' + member.phone1 + '</span>';
+			if (member.phone1 && member.phone2) phones.innerHTML += '<br>';
+			if (member.phone2) phones.innerHTML += phoneImage + '<span style="vertical-align: middle;"> ' + member.phone2 + '</span>';
+			email.innerHTML = '';
+			if (member.email) email.innerHTML += emailImage + '<span style="vertical-align: middle;"> ' + member.email + '</span>';
 		}
 	};
 
