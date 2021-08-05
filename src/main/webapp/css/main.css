@@ -1,5 +1,9 @@
 /* general */
 
+@font-face {
+	font-family: joeLetter;
+	src: url('/fonts/Joe-Letter.ttf');
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -25,24 +29,28 @@ th, td {
 	/* white-space: nowrap; */
 }
 .main-title-text {
-	margin: auto;
-	width: 100%;
-	text-align: center;
+	margin: 0 auto;
+	width: fit-content;
+	height: 100px;
 	z-index: 1;
 	padding-bottom: 3rem;
+	color: white;
+	/* user-select: none; */
 }
 .main-title-text h1 {
-	font-size: 7rem;
+    display: inline;
+	font-family: joeLetter;
+	font-size: 9rem;
 	padding: 1rem;
-	user-select: none;
-	width: fit-content;
 	margin: auto;
+    text-shadow: 3px 3px 5px black;
 }
-.main-title-text h6 {
-	font-size: 2rem;
+.main-title-text h3 {
+    display: inline;
+	font-size: 3rem;
 	font-weight: 300;
-	width: fit-content;
 	margin: auto;
+    text-shadow: 2px 2px 3px black;
 }
 .top-right-button {
 	position: absolute;
@@ -55,6 +63,7 @@ th, td {
 	width: 15rem;
 	border: 1px solid black;
 	background-color: var(--primaryHighlight);
+	text-align: center;
 }
 .welcome-text {
 	background-color: none;
@@ -111,6 +120,8 @@ header a, .buttonize-link {
 }
 /* used by most datasheets */
 .page-content-750-1000 {
+	background-color: var(--backgroundColor);
+	opacity: 0.85;
 	margin: 0 auto;
 	min-width: 750px;
 	width: 80%;
@@ -119,6 +130,8 @@ header a, .buttonize-link {
 }
 /* used by calendar */
 .page-content-800-1200 {
+	background-color: var(--backgroundColor);
+	opacity: 0.85;
 	margin: 0 auto;
 	min-width: 800px;
 	width: 90%;

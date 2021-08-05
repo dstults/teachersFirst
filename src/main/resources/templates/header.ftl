@@ -1,16 +1,15 @@
 	<header>
 		<div class="main-title-text">
 			<h1>${websiteTitle}</h1>
-			<h6>${websiteSubtitle}</h6>
-				<#if userId gt 0>
-				<div class="top-right-button welcome-text gray">Welcome, <span class="black">${userName}</span></div>
-				<a href="/logout"><div class="top-right-button slightly-lower mouseover faded">Log Out</div></a>
-				<#else>
-				<a href="/login"><div class="top-right-button navy mouseover">Log In</div></a>
-				<#if canRegister><a href="/register"><div class="top-right-button slightly-lower navy mouseover">Register</div></a></#if>
-				</#if>
-			</div>
+			<h3>${websiteSubtitle}</h3>
 		</div>
+		<#if userId gt 0>
+		<div class="top-right-button welcome-text gray">Welcome, <span class="black">${userName}</span></div>
+		<a href="/logout"><div class="top-right-button slightly-lower mouseover faded">Log Out</div></a>
+		<#else>
+		<a href="/login"><div class="top-right-button navy mouseover">Log In</div></a>
+		<#if canRegister><a href="/register"><div class="top-right-button slightly-lower navy mouseover">Register</div></a></#if>
+		</#if>
 		<nav>
 			<ul class="top-nav-list">
 				<li><a href="/services" class="nav-link">Services</a></li>
@@ -34,8 +33,8 @@
 		<ul id="console-message-list" class="console-message-list" style="display: none;">
 		</ul>
 	</div>
-	<script src="scripts/dragElement.js"></script>
-	<script src="scripts/messageConsole.js"></script>
+	<script src="/scripts/dragElement.js"></script>
+	<script src="/scripts/messageConsole.js"></script>
 	<#if message != "">
 	<script>
 		let bannerMessage = `${message}`;
