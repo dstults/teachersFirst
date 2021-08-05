@@ -94,26 +94,33 @@ header a, .buttonize-link {
 	opacity: 0.5;
 }
 .c1 {
-    top: -200px;
-    left: -500px;
-    transform: rotate(-10deg);
-    width: 1800px;
-    height: 500px;
+	top: -200px;
+	left: -500px;
+	width: 1800px;
+	height: 500px;
+	transform: rotate(-10deg);
 }
 .c2 {
 	top: -200px;
-    bottom: 0;
-    left: -400px;
-    width: 650px;
-    height: 1400px;
-    transform: rotate(-10deg);
+	bottom: 0;
+	left: -400px;
+	width: 650px;
+	height: 1400px;
+	transform: rotate(-10deg);
 }
 .c3 {
-	bottom: -40%;
-	left: -10%;
-	transform: rotate(10deg);
-	width: 1300px;
-	height: 500px;
+	bottom: -300px;
+	left: -100px;
+	width: 1700px;
+	height: 400px;
+	transform: rotate(11deg);
+}
+.c4 {
+	bottom: -200px;
+	right: -300px;
+	width: 600px;
+	height: 1200px;
+	transform: rotate(5deg);
 }
 .top-nav-list {
 	margin: 0 auto;
