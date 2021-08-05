@@ -23,6 +23,8 @@ a {
 }
 table {
 	table-layout: fixed;
+	background-color: var(--backgroundColor);
+	opacity: 0.85;
 }
 th, td {
 	overflow: hidden;
@@ -38,19 +40,19 @@ th, td {
 	/* user-select: none; */
 }
 .main-title-text h1 {
-    display: inline;
+	display: inline;
 	font-family: joeLetter;
 	font-size: 9rem;
 	padding: 1rem;
 	margin: auto;
-    text-shadow: 3px 3px 5px black;
+	text-shadow: 3px 3px 5px black;
 }
 .main-title-text h3 {
-    display: inline;
+	display: inline;
 	font-size: 3rem;
 	font-weight: 300;
 	margin: auto;
-    text-shadow: 2px 2px 3px black;
+	text-shadow: 2px 2px 3px black;
 }
 .top-right-button {
 	position: absolute;
@@ -74,6 +76,8 @@ th, td {
 .slightly-lower {
 	top: 50px;
 }
+
+/* header */
 header {
 	width: 100%;
 	margin-bottom: 2rem;
@@ -81,6 +85,42 @@ header {
 header a, .buttonize-link {
 	text-decoration: none;
 	color: black;
+}
+.side-circle {
+	position: fixed;
+	border-radius: 50%;
+	background-color: var(--primaryHighlight);
+	z-index: -100;
+	opacity: 0.5;
+}
+.c1 {
+	top: -200px;
+	left: -500px;
+	width: 1800px;
+	height: 500px;
+	transform: rotate(-10deg);
+}
+.c2 {
+	top: -200px;
+	bottom: 0;
+	left: -400px;
+	width: 650px;
+	height: 1400px;
+	transform: rotate(-10deg);
+}
+.c3 {
+	bottom: -300px;
+	left: -100px;
+	width: 1700px;
+	height: 400px;
+	transform: rotate(11deg);
+}
+.c4 {
+	bottom: -200px;
+	right: -300px;
+	width: 600px;
+	height: 1200px;
+	transform: rotate(5deg);
 }
 .top-nav-list {
 	margin: 0 auto;
@@ -109,7 +149,7 @@ header a, .buttonize-link {
 	transition: all 0.1s ease-in-out;
 }
 
-/* generics */
+/* shared */
 
 /* used by most forms */
 .page-content-550 {
@@ -120,8 +160,6 @@ header a, .buttonize-link {
 }
 /* used by most datasheets */
 .page-content-750-1000 {
-	background-color: var(--backgroundColor);
-	opacity: 0.85;
 	margin: 0 auto;
 	min-width: 750px;
 	width: 80%;
@@ -130,8 +168,6 @@ header a, .buttonize-link {
 }
 /* used by calendar */
 .page-content-800-1200 {
-	background-color: var(--backgroundColor);
-	opacity: 0.85;
 	margin: 0 auto;
 	min-width: 800px;
 	width: 90%;
@@ -301,8 +337,8 @@ input[type=radio] {
 }
 .info-list td.credits {
 	background-color: hsla(56, 50%, 92%, 0.8);
-    color: hsl(56, 80%, 35%);
-    font-size: 20px;
+	color: hsl(56, 80%, 35%);
+	font-size: 20px;
 }
 
 
