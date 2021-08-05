@@ -1,4 +1,7 @@
 	<header>
+		<div class="side-circle c1"></div>
+		<div class="side-circle c2"></div>
+		<div class="side-circle c3"></div>
 		<div class="main-title-text">
 			<h1>${websiteTitle}</h1>
 			<h3>${websiteSubtitle}</h3>
