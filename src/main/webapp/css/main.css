@@ -17,6 +17,13 @@ body {
 a {
 	text-decoration: none;
 }
+table {
+	table-layout: fixed;
+}
+th, td {
+	overflow: hidden;
+	/* white-space: nowrap; */
+}
 .main-title-text {
 	margin: auto;
 	width: 100%;
@@ -276,6 +283,14 @@ input[type=radio] {
 	font-size: 2.5rem;
 	display: block;
 }
+.info-list th.credits {
+	/* background-color: hsla(56, 85%, 65%, 0.6); */
+}
+.info-list td.credits {
+	background-color: hsla(56, 50%, 92%, 0.8);
+    color: hsl(56, 80%, 35%);
+    font-size: 20px;
+}
 
 
 .openings-subtitle {
@@ -340,7 +355,9 @@ table.info-list {
 table.info-list, table.info-list th, table.info-list td {
 	border: 1px solid black;
 	padding: 5px 10px;
-	text-align: center;	
+}
+table.info-list th, table.info-list td {
+	word-break: break-word;
 }
 table.info-list th {
 	font-size: 1.5rem;
@@ -368,7 +385,6 @@ table.info-list tr {
 }
 table.openings-calendar {
 	margin: 1rem auto;
-	table-layout: fixed;
 	border: 2px solid black;
 	box-shadow: 2px 2px 2px black;
 }
@@ -413,7 +429,6 @@ table.openings-calendar div.highlight {
 	width: 100%;
 }
 .profile-table {
-	table-layout: fixed;
 	padding: 15px 10px;
 	width: 100%;
 	border: 2px solid black;
