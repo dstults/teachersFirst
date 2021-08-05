@@ -1,5 +1,9 @@
 /* general */
 
+@font-face {
+	font-family: joeLetter;
+	src: url('/fonts/Joe-Letter.ttf');
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -32,6 +36,7 @@ th, td {
 	padding-bottom: 3rem;
 }
 .main-title-text h1 {
+	font-family: joeLetter;
 	font-size: 7rem;
 	padding: 1rem;
 	user-select: none;

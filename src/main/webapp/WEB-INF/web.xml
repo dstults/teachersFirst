@@ -15,9 +15,10 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
+		<url-pattern>/css/*</url-pattern>
+		<url-pattern>/fonts/*</url-pattern>
 		<url-pattern>/images/*</url-pattern>
 		<url-pattern>/scripts/*</url-pattern>
-		<url-pattern>/css/*</url-pattern>
 		<url-pattern>/favicon.ico</url-pattern>
 		<url-pattern>/robots.txt</url-pattern>
 	</servlet-mapping>
