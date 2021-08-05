@@ -17,21 +17,21 @@
 		</div>
 		<table class="info-list">
 			<tr>
-				<th>#</th>
-				<th>Name</th>
-				<th>ID</th>
-				<#if isAdmin || isInstructor><th>Credits</th></#if>
-				<th>Gender</th>
-				<th>Age</th>
-				<th>Phone</th>
-				<th>Email</th>
+				<th style="width: 50px;">#</th>
+				<th style="width: 165px;">Name</th>
+				<th style="width: 50px;">ID</th>
+				<#if isAdmin || isInstructor><th style="width: 50px;" class="credits"><img src="images/credit-coin.svg" height="22" style="vertical-align: bottom;"></th></#if>
+				<th style="width: 135px;">Gender</th>
+				<th style="width: 88px;">Age</th>
+				<th style="width: 135px;">Phone</th>
+				<th style="width: 135px;">Email</th>
 			</tr>
 			<#list 0..11 as i>
 			<tr id="member-row-${i?c}">
 				<td id="member-row-${i?c}-arrayIndex"></td>
 				<td id="member-row-${i?c}-displayName"></td>
 				<td id="member-row-${i?c}-recId"></td>
-				<#if isAdmin || isInstructor><td id="member-row-${i?c}-credits"></td></#if>
+				<#if isAdmin || isInstructor><td id="member-row-${i?c}-credits" class="credits"></td></#if>
 				<td id="member-row-${i?c}-gender"></td>
 				<td id="member-row-${i?c}-age"></td>
 				<td id="member-row-${i?c}-phones"></td>
