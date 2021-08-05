@@ -20,7 +20,15 @@
 		</div>
 		<table class="info-list">
 			<tr>
-				<th style="width: 50px;">#</th><th style="width: 135px;">Controls</th><#if isAdmin || isInstructor><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th style="width: 265px;">Status</th>
+				<th style="width: 50px;">#</th>
+				<th style="width: 135px;">Controls</th>
+				<#if isAdmin || isInstructor><th style="width: 50px;">No.</th></#if>
+				<th style="width: 108px;">Date</th>
+				<th style="width: 66px;">Start</th>
+				<th style="width: 66px;">End</th>
+				<th style="width: 135px;">Attendee</th>
+				<th style="width: 135px;">Instructor</th>
+				<th style="width: 165px;">Status</th>
 			</tr>
 			<#list 0..9 as i>
 			<tr id="future-row-${i?c}">
@@ -48,7 +56,15 @@
 		</div>
 		<table class="info-list">
 			<tr>
-				<th style="width: 50px;">#</th><#if isAdmin || isInstructor><th style="width: 135px;">Controls</th><th>No.</th></#if><th>Date</th><th>Start</th><th>End</th><th>Attendee</th><th>Instructor</th><th style="width: 265px;">Status</th>
+				<th style="width: 50px;">#</th>
+				<th style="width: 135px;">Controls</th>
+				<#if isAdmin || isInstructor><th style="width: 50px;">No.</th></#if>
+				<th style="width: 108px;">Date</th>
+				<th style="width: 66px;">Start</th>
+				<th style="width: 66px;">End</th>
+				<th style="width: 135px;">Attendee</th>
+				<th style="width: 135px;">Instructor</th>
+				<th style="width: 165px;">Status</th>
 			</tr>
 			<#list 0..14 as i>
 			<tr id="past-row-${i?c}">
