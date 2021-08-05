@@ -14,18 +14,21 @@ const pastRows = 15;
 
 // TODO: Redo this with async / await.
 // TODO: Needs to catch non-error response outside 20x (!resp.ok) <---
-const populateData = _ => {
+const populateData = async _ => {
 	//addMessage('Fetching appointment data.');
-	fetch('https://funteachers.org/appointments?json').then(response => {
+	try {
+		const response = await fetch('https://funteachers.org/appointments?json');
 		if (response.ok) {
-			return response.json();
+			const json = await response.json();
+			[ allFutureData, allPastData ] = json;
+			filterAppointments();
+			return;
 		} else {
 			throw new Error('Status[' + response.status + '] ' + response.statusText);
 		}
-	}).then(data => {
-		[ allFutureData, allPastData ] = data;
-		filterAppointments();
-	}).catch(err => addError(err.message));
+	} catch (err) {
+		addError(err.message);
+	}
 };
 populateData();
 
