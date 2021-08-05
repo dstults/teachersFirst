@@ -20,7 +20,7 @@
 				<th style="width: 50px;">#</th>
 				<th style="width: 165px;">Name</th>
 				<th style="width: 50px;">ID</th>
-				<#if isAdmin || isInstructor><th style="width: 50px;" class="credits"><img src="images/credit-coin.svg" height="22" style="vertical-align: bottom;"></th></#if>
+				<#if isAdmin || isInstructor><th style="width: 50px;" class="credits"><img src="/images/credit-coin.svg" height="22" style="vertical-align: bottom;"></th></#if>
 				<th style="width: 165px;">Category</th>
 				<th style="width: 135px;">Phone</th>
 				<th style="width: 135px;">Email</th>
@@ -59,10 +59,10 @@
 		refreshAll();
 	}).catch(err => console.error(err.message));
 	
-	const boyImage = '<img src="images/boy.svg" style="background-color: hsl(220, 100%, 85%);height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
-	const girlImage = '<img src="images/girl.svg" style="background-color: hsl(0, 80%, 90%); height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
-	const phoneImage = '<img src="images/phone.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
-	const emailImage = '<img src="images/email.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
+	const boyImage = '<img src="/images/boy.svg" style="background-color: hsl(220, 100%, 85%);height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
+	const girlImage = '<img src="/images/girl.svg" style="background-color: hsl(0, 80%, 90%); height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
+	const phoneImage = '<img src="/images/phone.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
+	const emailImage = '<img src="/images/email.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
 	const renderRow = (member, row) => {
 		const rowName = 'member-row-' + row;
 		const tableRow = document.getElementById(rowName);
