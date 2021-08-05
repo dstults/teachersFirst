@@ -111,7 +111,25 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 		appointment.setCompletionState(newState, uid, userName);
 		logger.debug("Updated appointment ID: [{}]", appointmentIdString);
 
-		this.sendJsonReply("Appointment " + appointmentIdString + " updated!");
+		final String operationWord;
+		switch (newState) {
+			case Appointment.STATE_CANCELLED:
+				operationWord = "cancelled";
+				break;
+			case Appointment.STATE_COMPLETED:
+				operationWord = "completed";
+				break;
+			case Appointment.STATE_MISSED:
+				operationWord = "missed";
+				break;
+			case Appointment.STATE_MISSED_REFUNDED:
+				operationWord = "refunded";
+				break;
+			default:
+				operationWord = "marked as state [" + newState + "]";
+				break;
+		}
+		this.sendJsonReply("Appointment " + appointmentIdString + " " + operationWord + "!");
 		return;
 	}
 	
