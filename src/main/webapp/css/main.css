@@ -120,6 +120,8 @@ header a, .buttonize-link {
 }
 /* used by most datasheets */
 .page-content-750-1000 {
+	background-color: var(--backgroundColor);
+	opacity: 0.85;
 	margin: 0 auto;
 	min-width: 750px;
 	width: 80%;
@@ -128,6 +130,8 @@ header a, .buttonize-link {
 }
 /* used by calendar */
 .page-content-800-1200 {
+	background-color: var(--backgroundColor);
+	opacity: 0.85;
 	margin: 0 auto;
 	min-width: 800px;
 	width: 90%;
