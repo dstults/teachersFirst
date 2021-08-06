@@ -65,7 +65,7 @@ public class QueryHelpers {
 
 	public static String getGet(HttpServletRequest request, String keyName, String defaultValue) {
 		if (request.getParameter(keyName) == null) return defaultValue;
-		if (request.getParameter(keyName).isEmpty()) return defaultValue;
+		if (request.getParameter(keyName).isEmpty()) return "";
 		return sanitizeForWeb(request.getParameter(keyName));
 	}
 

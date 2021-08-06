@@ -3,20 +3,9 @@
 <body>
 <#include "header.ftl">
 <div class="page-content-750-1000">
-	<table class="info-list">
-		<tr>
-			<th>Service Name</th><th>Description</th><th>Teachers</th>
-		</tr>
-		<#list services as service>
-		<tr>
-			<td><a href="/openings">${service.name}</a></td>
-			<td>${service.description}</td>
-			<td>
-				<#assign comma=""><#list service.instructorList as instructor>${comma}<a href="/openings?instructorName=${instructor}">${instructor}</a><#assign comma=", "></#list>
-			</td>
-		</tr>
-		</#list>
+	<table id="service-list" class="info-list">
 	</table>
 </div>
 </body>
+<script src="/scripts/serviceOperations.js"></script>
 </html>

@@ -32,12 +32,14 @@ th, td {
 }
 .main-title-text {
 	margin: 0 auto;
-	width: fit-content;
+	/* width: fit-content; */
 	height: 100px;
 	z-index: 1;
 	padding-bottom: 3rem;
 	color: white;
 	/* user-select: none; */
+	overflow: hidden;
+	white-space: nowrap;
 }
 .main-title-text h1 {
 	display: inline;
@@ -487,14 +489,14 @@ table.openings-calendar div.highlight {
 	width: 50%;
 }
 .profile-basic-stats {
-	display: grid;
 	width: 90%;
-	grid-template-columns: 170px auto 33px;
-	margin: 0 0 auto auto;
+	margin: 0 auto;
 }
-.profile-basic-stats > .full-width-grid {
-	grid-column-start: 1;
-	grid-column-end: 4;
+.profile-stat-row {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 162px auto 33px;
+	margin: 0;
 }
 .profile-basic-stats > .bold-left {
 	margin-left: 1rem;
@@ -517,6 +519,7 @@ table.openings-calendar div.highlight {
 .profile-basic-stats .right-float-img-button {
 	height: 100%;
 	margin-right: 0.8rem;
+	margin-top: 0.8rem;
 }
 /* css for make & confirm new appointment(s) page */
 
