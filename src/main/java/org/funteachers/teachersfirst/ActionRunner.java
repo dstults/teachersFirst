@@ -52,7 +52,7 @@ public abstract class ActionRunner {
 
 	// Protected Methods (shared magic between all actions)
 
-	protected void sendJsonReply(String message) {
+	protected void sendJsonMessage(String message) {
 		final String messageJson = "\"message\": \"" + message.trim() + "\""; // include message even if empty
 		final String fullJson = "{ " + messageJson + " }";
 

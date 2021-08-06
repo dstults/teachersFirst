@@ -25,7 +25,7 @@ public class UpdateMemberAction extends ActionRunner {
 
 		// Check if logged in
 		if (uid <= 0) {
-			this.sendJsonReply("You must be signed in to do this!");
+			this.sendJsonMessage("You must be signed in to do this!");
 			return;
 		}
 
@@ -35,25 +35,25 @@ public class UpdateMemberAction extends ActionRunner {
 		try {
 			memberId = Integer.parseInt(memberIdRaw);
 		} catch (NumberFormatException e) {
-			this.sendJsonReply("Couldn't parse the memberId!");
+			this.sendJsonMessage("Couldn't parse the memberId!");
 			return;
 		}
 		if (memberId <= 0) {
-			this.sendJsonReply("Invalid memberId!");
+			this.sendJsonMessage("Invalid memberId!");
 			return;
 		}
 		
 		// Check connection to database
 		DAO<Member> memberDAO = DataManager.getMemberDAO();
 		if (memberDAO == null) {
-			this.sendJsonReply("Error connecting to database, try again!");
+			this.sendJsonMessage("Error connecting to database, try again!");
 			return;
 		}
 
 		// Ensure member exists
 		Member member = memberDAO.retrieveByID(memberId);
 		if (member == null) {
-			this.sendJsonReply("Invalid memberId!");
+			this.sendJsonMessage("Invalid memberId!");
 			return;
 		}
 		final boolean memberIsStudent = member.getIsStudent();
@@ -71,7 +71,7 @@ public class UpdateMemberAction extends ActionRunner {
 		try {
 			credits = Float.parseFloat(creditsRaw);
 		} catch (NumberFormatException e) {
-			this.sendJsonReply("Couldn't parse credits: [ " + creditsRaw + " ]!");
+			this.sendJsonMessage("Couldn't parse credits: [ " + creditsRaw + " ]!");
 			return;
 		}
 
@@ -87,7 +87,7 @@ public class UpdateMemberAction extends ActionRunner {
 		}
 		// Abort operation if not allowed.
 		if (!actionAllowed) {
-			this.sendJsonReply("Operation not allowed.");
+			this.sendJsonMessage("Operation not allowed.");
 			return;
 		}
 
@@ -126,7 +126,7 @@ public class UpdateMemberAction extends ActionRunner {
 			updateNeeded = true;
 		}
 		if (!changesMade) {
-			this.sendJsonReply("No changes detected, aborting!");
+			this.sendJsonMessage("No changes detected, aborting!");
 			return;
 		}
 
@@ -139,7 +139,7 @@ public class UpdateMemberAction extends ActionRunner {
 		}
 		
 		// Log user into session
-		this.sendJsonReply("Success!");
+		this.sendJsonMessage("Success!");
 		return;
 	}
 	
