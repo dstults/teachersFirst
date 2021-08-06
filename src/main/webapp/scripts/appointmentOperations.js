@@ -12,8 +12,6 @@ let pastAppointmentPage = 0;
 const pastPageNumberElem = document.getElementById('current-past-page');
 const pastRows = 15;
 
-// TODO: Redo this with async / await.
-// TODO: Needs to catch non-error response outside 20x (!resp.ok) <---
 const populateData = async _ => {
 	//addMessage('Fetching appointment data.');
 	try {
@@ -24,7 +22,7 @@ const populateData = async _ => {
 			filterAppointments();
 			return;
 		} else {
-			throw new Error('Status[' + response.status + '] ' + response.statusText);
+			throw new Error('Status [' + response.status + '] ' + response.statusText);
 		}
 	} catch (err) {
 		addError(err.message);
