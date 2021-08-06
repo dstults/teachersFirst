@@ -3,7 +3,7 @@ const parseQuery = (queryString) => {
 	if (typeof queryString !== 'string') return {};
 	if (queryString.charAt(0) === '?') queryString = queryString.substring(1);
 	if (queryString.length === 0) return {};
-	
+
 	const s = queryString.split('&');
 	const sLength = s.length;
 	const queryObject = {}
@@ -25,21 +25,9 @@ const parseQuery = (queryString) => {
 };
 
 let windowQuery = parseQuery(window.location.search);
-let memberId = windowQuery.memberId ? windowQuery.memberId : null;
-// These vars are defined in the dynamic page-load script:
-//let operatorId = ###;
-//let memberId = ###;
+let memberId = windowQuery.memberId ? parseInt(windowQuery.memberId) : userId;
 let memberData;
-const memberName = _ => memberData;
-const memberIsAdmin = _ => memberData.isAdmin;
-const memberIsInstructor = _ => memberData.isInstructor;
-const memberIsStudent = _ => memberData.isStudent;
-const credits = _ => memberData.credits;
-const memberPhone1 = _ => memberData.phone1;
-const memberPhone2 = _ => memberData.phone2;
-const memberEmail = _ => memberData.email;
-const introText = _ => memberData.selfIntroduction;
-const notesText = _ => memberData.instructorNotes;
+const isSelf = _ => userId === memberId;
 
 const populateData = async _ => {
 	//addMessage('Fetching profile data for user [' + memberId + '].');
@@ -53,7 +41,8 @@ const populateData = async _ => {
 			refreshAll();
 			return;
 		} else {
-			throw new Error('Status [' + response.status + '] ' + response.statusText);
+			const errorMessage = response.statusText ? ': [' + response.statusText + ']' : '';
+			throw new Error('Status [' + response.status + ']' + errorMessage);
 		}
 	} catch (err) {
 		if (typeof addError === 'function') {
@@ -78,6 +67,13 @@ const introBox = document.getElementById('introduction');
 const notesBox = document.getElementById('instructor-notes');
 
 const refreshAll = _ => {
+	if (isAdmin || isInstructor || isSelf()) {
+		notesBox.style.display = 'block';
+		creditsBox.style.display = 'block';
+	} else {
+		notesBox.style.display = 'none';
+		creditsBox.style.display = 'none';
+	}
 	if (!memberData) {
 		creditsBox.innerHTML = '';
 		memberIdBox.innerHTML = '';

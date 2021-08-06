@@ -30,13 +30,11 @@
 				<p class="bold-left">Introduction:</p>
 				<p class="normal-paragraph data-view italic" id="introduction"></p>
 			</td></tr>
-			<#if isAdmin || isInstructor>
 			<tr><td colspan=2 class="extra-side-padding">
 				<img class="right-float-img-button" src="/images/edit-box.svg" onclick="editNotes();">
 				<p class="bold-left">Instructor Notes:</p>
 				<p class="normal-paragraph data-view italic" id="instructor-notes"></p>
 			</td></tr>
-			</#if>
 		</tr>
 		</table>
 	</div>
@@ -44,6 +42,12 @@
 
 </body>
 <#if userId gt 0>
+<script>
+	const userId = ${userId?c};
+	const isAdmin = ${isAdmin?c};
+	const isInstructor = ${isInstructor?c};
+	const isStudent = ${isStudent?c};
+</script>
 <script src="/scripts/profileOperations.js"></script>
 </#if>
 </html>
