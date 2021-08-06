@@ -158,7 +158,8 @@ public class Member implements IJsonnable {
 	}
 
 	public int getAge() {
-		return DateHelpers.calculateAgeFrom(this.birthdate);
+		int age = DateHelpers.calculateAgeFrom(this.birthdate);
+		return age >= 0 && age < 130 ? age : -1;
 	}
 
 	public String getAgeClass() {
@@ -345,13 +346,21 @@ public class Member implements IJsonnable {
 
 	@Override
 	public String toJson() {
+		return toJsonPrivate();
+	}
+
+	public String toJsonPrivate() {
+		int ageVal = this.getAge();
+		String age = ageVal == -1 ? "null" : String.valueOf(ageVal);
+		String birthdateRaw = this.birthdate.toLocalDateTime().toLocalDate().toString();
+		String birthdate = birthdateRaw.equals("1800-01-01") ? "null" : "\"" + birthdateRaw + "\"";
 		return "{\"id\":" + this.recID + "," +
 				"\"loginName\":\"" + this.loginName + "\"," +
 				//"\"passwordHash\":\"" + this.passwordHash + "\"," +
 				"\"displayName\":\"" + this.displayName + "\"," +
 				"\"credits\":" + this.credits + "," +
-				"\"birthdate\":\"" + this.birthdate.toLocalDateTime().toLocalDate() + "\"," +
-				"\"age\":" + this.getAge() + "," +
+				"\"birthdate\":" + birthdate + "," +
+				"\"age\":" + age + "," +
 				"\"ageClass\":\"" + this.getAgeClass() + "\"," +
 				"\"gender\":\"" + this.gender + "\"," +
 				"\"selfIntroduction\":\"" + this.selfIntroduction + "\"," +
@@ -362,6 +371,15 @@ public class Member implements IJsonnable {
 				"\"isStudent\":" + this.isStudent + "," +
 				"\"isInstructor\":" + this.isInstructor + "," +
 				"\"isAdmin\":" + this.isAdmin +
+				"}";
+	}
+
+	public String toJsonPublic() {
+		return "{\"id\":" + this.recID + "," +
+				"\"displayName\":\"" + this.displayName + "\"," +
+				"\"ageClass\":\"" + this.getAgeClass() + "\"," +
+				"\"gender\":\"" + this.gender + "\"," +
+				"\"selfIntroduction\":\"" + this.selfIntroduction + "\"" +
 				"}";
 	}
 
