@@ -49,11 +49,17 @@ public class ProfilePage extends PageLoader {
 			}
 			
 			if (member != null ) {
-				String json = member.toJson();
+				final boolean showPrivates = isAdmin || isInstructor || uid == memberId;
+				final String json;
+				if (showPrivates) {
+					json = member.toJsonPrivate();
+				} else {
+					json = member.toJsonPublic();
+				}
 				//logger.debug("Json: " + json);
 				trySendJson(json);
 			} else {
-				sendFake404("Please log in.");
+				sendJsonMessage("Could not complete request.");
 			}
 		} else {
 			// FreeMarker
