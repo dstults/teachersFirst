@@ -282,29 +282,29 @@ const sharedReportBack = (fieldName, newText) => {
 const editPhone1 = async _ => {
 	const updatedValue = await getStringPromptChain('phone number (#1)', 'phone1', memberData.phone1, 20);
 	if (updatedValue === null) return;
-	sharedReportBack('Phone number (#1)', memberData.phone1);
+	sharedReportBack('Phone number (#1)', updatedValue);
 };
 
 const editPhone2 = async _ => {
 	const updatedValue = await getStringPromptChain('phone number (#2)', 'phone2', memberData.phone2, 20);
 	if (updatedValue === null) return;
-	sharedReportBack('Phone number (#2)', memberData.phone2);
+	sharedReportBack('Phone number (#2)', updatedValue);
 };
 
 const editEmail = async _ => {
 	const updatedValue = await getStringPromptChain('email', 'email', memberData.email, 50);
 	if (updatedValue === null) return;
-	sharedReportBack('Email', memberData.email);
+	sharedReportBack('Email', updatedValue);
 };
 
 const editIntro = async _ => {
 	const updatedValue = await getStringPromptChain('self-introduction', 'selfIntroduction', memberData.selfIntroduction, 400);
 	if (updatedValue === null) return;
-	sharedReportBack('Self-introduction', memberData.selfIntroduction);
+	sharedReportBack('Self-introduction', updatedValue);
 };
 
 const editNotes = async _ => {
 	const updatedValue = await getStringPromptChain('instructor notes', 'instructorNotes', memberData.instructorNotes, 1000);
 	if (updatedValue === null) return;
-	sharedReportBack('Instructor notes', memberData.instructorNotes);
+	sharedReportBack('Instructor notes', updatedValue);
 };
