@@ -489,14 +489,14 @@ table.openings-calendar div.highlight {
 	width: 50%;
 }
 .profile-basic-stats {
-	display: grid;
 	width: 90%;
-	grid-template-columns: 170px auto 33px;
-	margin: 0 0 auto auto;
+	margin: 0 auto;
 }
-.profile-basic-stats > .full-width-grid {
-	grid-column-start: 1;
-	grid-column-end: 4;
+.profile-stat-row {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 162px auto 33px;
+	margin: 0;
 }
 .profile-basic-stats > .bold-left {
 	margin-left: 1rem;
