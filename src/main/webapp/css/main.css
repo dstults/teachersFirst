@@ -38,6 +38,8 @@ th, td {
 	padding-bottom: 3rem;
 	color: white;
 	/* user-select: none; */
+	overflow: hidden;
+	white-space: nowrap;
 }
 .main-title-text h1 {
 	display: inline;
