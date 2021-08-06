@@ -32,7 +32,7 @@ th, td {
 }
 .main-title-text {
 	margin: 0 auto;
-	width: fit-content;
+	/* width: fit-content; */
 	height: 100px;
 	z-index: 1;
 	padding-bottom: 3rem;
