@@ -78,11 +78,11 @@ public class UpdateMemberAction extends ActionRunner {
 		// To make changes, must be an admin, an instructor, or self.
 		boolean actionAllowed = isAdmin || isInstructor || isStudent && memberId == uid;
 		// To make changes to credits: (1) self is admin or instructor, (2) target not self, (3) target is a student
-		if (member.getCredits() != credits) {
+		if (credits != member.getCredits()) {
 			actionAllowed = (isAdmin || isInstructor) && memberId != uid && memberIsStudent;
 		}
 		// To make changes to instructor notes: (1) self is admin or instructor
-		if (member.getCredits() != credits) {
+		if (instructorNotes != member.getInstructorNotes()) {
 			actionAllowed = isAdmin || isInstructor;
 		}
 		// Abort operation if not allowed.
