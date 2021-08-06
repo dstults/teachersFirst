@@ -9,7 +9,7 @@ const parseQuery = (queryString) => {
 	const queryObject = {}
 	let bit, first, second;
 	for(let i = 0; i < sLength; i++) {
-		bit = s[i].split('='); //TODO: Switch to indexOf first '='
+		bit = s[i].split('='); //TODO: Switch to indexOf for first equals sign
 		first = decodeURIComponent(bit[0]);
 		if (first.length == 0) continue;
 		second = decodeURIComponent(bit[1]);
@@ -34,16 +34,14 @@ const populateData = async _ => {
 	try {
 		const memberIdString = memberId ? 'memberId=' + memberId + '&' : '';
 		const response = await fetch('https://funteachers.org/profile?' + memberIdString + 'json');
-		if (response.ok) {
-			const json = await response.json();
-			memberData = json;
-			console.log(memberData);
-			refreshAll();
-			return;
-		} else {
-			const errorMessage = response.statusText ? ': [' + response.statusText + ']' : '';
-			throw new Error('Status [' + response.status + ']' + errorMessage);
-		}
+		// Check for a bad server response
+		if (!response.ok) throw new Error('Status [' + response.status + ']' + (response.statusText ? ': [' + response.statusText + ']' : ''));
+		// Parse the data, might throw try-catch error
+		const json = await response.json();
+		// Check if an error message was returned
+		if (json.message) throw new Error(json.message);
+		// Assign data to member
+		memberData = json;
 	} catch (err) {
 		if (typeof addError === 'function') {
 			addError(err.message);
@@ -51,62 +49,140 @@ const populateData = async _ => {
 			console.error(err.message);
 		}
 	}
+	refreshAll();
 };
 populateData();
 
+const displayNameBox = document.getElementById('display-name');
+
+const creditsRow = document.getElementById('credits-row');
 const creditsBox = document.getElementById('credits');
+const creditsButton = document.getElementById('credits-button');
+
+const memberIdRow = document.getElementById('member-id-row');
 const memberIdBox = document.getElementById('member-id');
+
+const loginNameRow = document.getElementById('login-name-row');
 const loginNameBox = document.getElementById('login-name');
+
+const genderRow = document.getElementById('gender-row');
 const genderBox = document.getElementById('gender');
+const genderButton = document.getElementById('gender-button');
+
+const birthdateRow = document.getElementById('birthdate-row');
 const birthdateBox = document.getElementById('birthdate');
+const birthdateButton = document.getElementById('birthdate-button');
+
+const ageRow = document.getElementById('age-row');
 const ageBox = document.getElementById('age');
+
+const phone1Row = document.getElementById('phone1-row');
 const phone1Box = document.getElementById('phone1');
+const phone1Button = document.getElementById('phone1-button');
+
+const phone2Row = document.getElementById('phone2-row');
 const phone2Box = document.getElementById('phone2');
+const phone2Button = document.getElementById('phone2-button');
+
+const emailRow = document.getElementById('email-row');
 const emailBox = document.getElementById('email');
+const emailButton = document.getElementById('email-button');
+
+const introRow = document.getElementById('introduction-row');
 const introBox = document.getElementById('introduction');
+const introButton = document.getElementById('introduction-button');
+
+const notesRow = document.getElementById('instructor-notes-row');
 const notesBox = document.getElementById('instructor-notes');
+const notesButton = document.getElementById('instructor-notes-button');
 
 const refreshAll = _ => {
-	if (isAdmin || isInstructor || isSelf()) {
-		notesBox.style.display = 'block';
-		creditsBox.style.display = 'block';
-	} else {
-		notesBox.style.display = 'none';
-		creditsBox.style.display = 'none';
-	}
 	if (!memberData) {
+		// visibilities
+		creditsRow.style.display = 'none';
+		// buttons
+		creditsButton.style.display = 'none';
+		genderButton.style.display = 'none';
+		birthdateButton.style.display = 'none';
+		phone1Button.style.display = 'none';
+		phone2Button.style.display = 'none';
+		emailButton.style.display = 'none';
+		introButton.style.display = 'none';
+		notesButton.style.display = 'none';
+		// values
+		displayNameBox.innerText = '';
 		creditsBox.innerHTML = '';
-		memberIdBox.innerHTML = '';
-		loginNameBox.innerHTML = '';
-		genderBox.innerHTML = '';
-		birthdateBox.innerHTML = '';
-		ageBox.innerHTML = '';
+		memberIdBox.innerText = '';
+		loginNameBox.innerText = '';
+		genderBox.innerText = '';
+		birthdateBox.innerText = '';
+		ageBox.innerText = '';
 		phone1Box.innerText = '';
 		phone2Box.innerText = '';
 		emailBox.innerText = '';
 		introBox.innerText = '';
 		notesBox.innerText = '';
 	} else {
-		creditsBox.innerHTML = 'Credit-Hours:&nbsp;&nbsp;' + memberData.credits + '<img class="right-float-img-button" src="/images/edit-box.svg" onclick="editCredits();">';
-		memberIdBox.innerHTML = memberData.id;
-		loginNameBox.innerHTML = memberData.loginName;
-		genderBox.innerHTML = memberData.gender;
-		birthdateBox.innerHTML = memberData.birthdate;
-		ageBox.innerHTML = memberData.age;
-		phone1Box.innerText = memberData.phone1;
-		phone2Box.innerText = memberData.phone2;
-		emailBox.innerText = memberData.email;
+		if (isAdmin || isInstructor || isSelf()) {
+			// visibilities
+			creditsRow.style.display = 'block';
+			loginNameRow.style.display = 'grid';
+			birthdateRow.style.display = 'grid';
+			phone1Row.style.display = 'grid';
+			phone2Row.style.display = 'grid';
+			emailRow.style.display = 'grid';
+			notesRow.style.display = 'table-row';
+			// buttons
+			if (isAdmin || isInstructor) {
+				creditsButton.style.display = 'block';
+			} else {
+				creditsButton.style.display = 'none';
+			}
+			genderButton.style.display = 'block';
+			introButton.style.display = 'block';
+			phone1Button.style.display = 'block';
+			phone2Button.style.display = 'block';
+			emailButton.style.display = 'block';
+			notesButton.style.display = 'block';
+		} else {
+			// visibilities
+			creditsRow.style.display = 'none';
+			loginNameRow.style.display = 'none';
+			birthdateRow.style.display = 'none';
+			phone1Row.style.display = 'none';
+			phone2Row.style.display = 'none';
+			emailRow.style.display = 'none';		
+			notesRow.style.display = 'none';
+			// buttons
+			genderButton.style.display = 'none';
+			birthdateButton.style.display = 'none';
+			phone1Button.style.display = 'none';
+			phone2Button.style.display = 'none';
+			emailButton.style.display = 'none';
+			introButton.style.display = 'none';
+			notesButton.style.display = 'none';
+		}
+		// values
+		displayNameBox.innerText = memberData.displayName;
+		creditsBox.innerText = memberData.credits;
+		memberIdBox.innerText = memberData.id;
+		loginNameBox.innerText = memberData.loginName ? memberData.loginName : '-';
+		genderBox.innerText = memberData.gender ? memberData.gender : '-';
+		birthdateBox.innerText = memberData.birthdate ? memberData.birthdate : '-';
+		ageBox.innerText = memberData.ageClass + (memberData.age ? ' (' + memberData.age + ')' : '');
+		phone1Box.innerText = memberData.phone1 ? memberData.phone1 : '-';
+		phone2Box.innerText = memberData.phone2 ? memberData.phone2 : '-';
+		emailBox.innerText = memberData.email ? memberData.email : '-';
 		introBox.innerText = memberData.selfIntroduction;
 		notesBox.innerText = memberData.instructorNotes;
 	}
 };
 
-/*
 const sendPostData = async (varName, varValue) => {
 	const data = new URLSearchParams();
 	data.append('action', 'update_member');
 	data.append('memberId', memberId);
-	data.append(varName, varValue);
+	data.append(varName, encodeURIComponent(varValue));
 
 	let jsonReply;
 	try {
@@ -130,58 +206,58 @@ const sendPostData = async (varName, varValue) => {
 
 // Set up credits
 const editCredits = async _ => {
-	const warningMsg = memberIsStudent ? '' : '\n\nWARNING: USER IS NOT A STUDENT. THIS WOULD NOT MAKE SENSE.';
-	if (!confirm(memberName + ' currently has ' + credits + ' credits, would you like to update?' + warningMsg)) {
+	if (!isAdmin && !isInstructor) return;
+	if (!memberData) return;
+
+	const warningMsg = memberData.isStudent ? '' : '\n\nWARNING: USER IS NOT A STUDENT. THIS WOULD NOT MAKE SENSE.';
+	if (!confirm(memberData.displayName + ' currently has ' + memberData.credits + ' credits, would you like to update?' + warningMsg)) {
 		//alert('Operation cancelled.');
 		return;
 	}
-	const input = prompt('Enter the updated number of credits you think user ' + memberName + ' should have:', credits);
+	const input = prompt('Enter the updated number of credits you think user ' + memberData.displayName + ' should have:', memberData.credits);
+	if (input === null) {
+		//alert('Operation cancelled.');
+		return;
+	}
 	const parsed = parseFloat(input);
 	if (isNaN(parsed)) {
 		alert('Could not understand your input. Operation cancelled.');
 		return;
 	}
-	const difference = parsed - credits;
+	const difference = parsed - memberData.credits;
 	if (difference === 0) {
 		alert('Target value same as original value. Operation cancelled.');
 		return;
 	}
 	const increaseDecrease = difference > 0 ? 'Increase' : 'Decrease';
-	if (!confirm(increaseDecrease + ' ' + memberName + '\'s credits by ' + difference + ' to ' + parsed + ', is this correct?\n\nOperator ID: [ ' + operatorId + ' ]\nDate-Time: ' + new Date())) {
+	if (!confirm(increaseDecrease + ' ' + memberData.displayName + '\'s credits by ' + difference + ' to ' + parsed + ', is this correct?\n\nOperator ID: [ ' + userId + ' ]\nDate-Time: ' + new Date())) {
 		//alert('Operation cancelled.');
 		return;
 	}
-	let proposedCredits = parsed;
-	creditsBox.innerHTML = 'Updating ...';
+	let proposedCredits = parsed;	
 	
 	const response = await sendPostData('credits', proposedCredits);
-
-	if (response.message.includes('Success!')) {
-		credits = proposedCredits;
-	} else {
-		alert(response.message);
+	
+	if (!response.message.includes('Success!')) {
+		addError(response.message);
 	}
-	refreshAll();
+	populateData();
 };
 
 const getFormattedString = (unformattedString) => !unformattedString ? '(unset)' : unformattedString;
-const getStringPromptChain = async (dataType, elementBox, postVarName, initialValue, maxLength) => {
-	//if (!confirm('Change ' + memberName + '\'s ' + dataType + '?\n\nCurrently: ' + getFormattedString(initialValue))) {
-	//	return null;
-	//}
-	const regEx = new RegExp(/^[\+\-\=\@\.\'\"\ \:\!\?\,\:\;\_a-zA-Z\d]+$/);
-	const input = prompt('Enter new ' + dataType + ' for ' + memberName + ':\n\nMax Length: ' + maxLength + ' chars', initialValue);
-	if (!input) {
+const getStringPromptChain = async (dataType, postVarName, initialValue, maxLength) => {
+	if (!isAdmin && !isInstructor && !isSelf()) return;
+	if (!memberData) return;
+
+	const input = prompt('Enter new ' + dataType + ' for ' + memberData.displayName + ':\n\nMax Length: ' + maxLength + ' chars', initialValue);
+	if (input === null) {
 		//alert('Operation cancelled!');
 		return null;
 	}
 	const inputTrimmed = input.trim();
-	if (!inputTrimmed) {
-		//alert('Operation cancelled!');
-		return null;
-	}
+	const regEx = new RegExp(/^[\+\-\=\@\.\'\"\ \:\!\?\,\:\;\_a-zA-Z\d]*$/);
 	const parseResult = regEx.exec(inputTrimmed);
-	const parsed = inputTrimmed.length === 0 || (parseResult !== null && parseResult.length > 0) ? parseResult[0] : null;
+	const parsed = parseResult !== null ? parseResult[0] : null;
 	if (parsed === null) {
 		alert('Could not understand user input: [ ' + input + ' ]');
 		return null;
@@ -189,7 +265,6 @@ const getStringPromptChain = async (dataType, elementBox, postVarName, initialVa
 
 	// This is the final filtering process
 	const shortenedValue = parsed.length <= maxLength ? parsed : parsed.substr(0, maxLength - 1);
-	elementBox.innerText = 'Updating ...';
 
 	const response = await sendPostData(postVarName, shortenedValue);
 	if (!response.message.includes('Success!')) {
@@ -201,41 +276,35 @@ const getStringPromptChain = async (dataType, elementBox, postVarName, initialVa
 }
 const sharedReportBack = (fieldName, newText) => {
 	addMessage(fieldName + ' updated to: [ ' + newText + ' ]');
+	populateData();
 };
 
 const editPhone1 = async _ => {
-	const updatedValue = await getStringPromptChain('phone number (#1)', phone1Box, 'phone1', memberPhone1, 20);
-	if (updatedValue === null) return; // alert message handled by shared function
-	memberPhone1 = updatedValue;
-	phone1Box.innerText = memberPhone1;
-	sharedReportBack('Phone number (#1)', memberPhone1);
+	const updatedValue = await getStringPromptChain('phone number (#1)', 'phone1', memberData.phone1, 20);
+	if (updatedValue === null) return;
+	sharedReportBack('Phone number (#1)', memberData.phone1);
 };
 
 const editPhone2 = async _ => {
-	const updatedValue = await getStringPromptChain('phone number (#2)', phone2Box, 'phone2', memberPhone2, 20);
-	if (updatedValue === null) return; // alert message handled by shared function
-	memberPhone2 = updatedValue;
-	sharedReportBack('Phone number (#2)', memberPhone2);
+	const updatedValue = await getStringPromptChain('phone number (#2)', 'phone2', memberData.phone2, 20);
+	if (updatedValue === null) return;
+	sharedReportBack('Phone number (#2)', memberData.phone2);
 };
 
 const editEmail = async _ => {
-	const updatedValue = await getStringPromptChain('email', emailBox, 'email', memberEmail, 50);
-	if (updatedValue === null) return; // alert message handled by shared function
-	memberEmail = updatedValue;
-	sharedReportBack('Email', memberEmail);
+	const updatedValue = await getStringPromptChain('email', 'email', memberData.email, 50);
+	if (updatedValue === null) return;
+	sharedReportBack('Email', memberData.email);
 };
 
 const editIntro = async _ => {
-	const updatedValue = await getStringPromptChain('self-introduction', introBox, 'selfIntroduction', introText, 400);
-	if (updatedValue === null) return; // alert message handled by shared function
-	introText = updatedValue;
-	sharedReportBack('Self-introduction', introText);
+	const updatedValue = await getStringPromptChain('self-introduction', 'selfIntroduction', memberData.selfIntroduction, 400);
+	if (updatedValue === null) return;
+	sharedReportBack('Self-introduction', memberData.selfIntroduction);
 };
 
 const editNotes = async _ => {
-	const updatedValue = await getStringPromptChain('instructor notes', notesBox, 'instructorNotes', notesText, 1000);
-	if (updatedValue === null) return; // alert message handled by shared function
-	notesText = updatedValue;
-	sharedReportBack('Instructor notes', notesText);
+	const updatedValue = await getStringPromptChain('instructor notes', 'instructorNotes', memberData.instructorNotes, 1000);
+	if (updatedValue === null) return;
+	sharedReportBack('Instructor notes', memberData.instructorNotes);
 };
-*/
