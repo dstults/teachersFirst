@@ -12,7 +12,7 @@
 			<td>
 				<div class="profile-basic-stats">
 					<div class="h1-like" id="display-name"></div>
-					<div style="background-color: var(--primaryHighlight);" class="h3-like data-view" id="credits">Credit-Hours:&nbsp;&nbsp;##<img id="credits-button" class="right-float-img-button" src="/images/edit-box.svg" onclick="editCredits();"></div>
+					<div style="background-color: var(--primaryHighlight);" class="h3-like data-view" id="credits-row">Credit-Hours:&nbsp;&nbsp;<span id="credits">##</span><img id="credits-button" class="right-float-img-button" src="/images/edit-box.svg" onclick="editCredits();"></div>
 					<div class="profile-stat-row" id="member-id-row">
 						<div class="bold-left">Member ID:</div><div class="data-view" id="member-id"></div><div></div>
 					</div>
