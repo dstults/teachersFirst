@@ -26,6 +26,32 @@ public class DiagnosticsPage extends PageLoader {
 			return;
 		}
 
+		// Test out custom cookies
+		Cookie testCookie1 = new Cookie("token", "1.1234asdf");
+		testCookie1.setMaxAge(60 * 60 * 24 * 90); // 60s * 60m * 24h * 90d = 90-day cookie
+		//testCookie1.setPath("/"); // / == default
+		testCookie1.setSecure(true);
+		testCookie1.setHttpOnly(true);
+		response.addCookie(testCookie1);
+
+		/*
+		Cookie testCookie2 = new Cookie("token", "lololwhat");
+		//testCookie2.setDomain("dstults.net"); // Setting to anything else will fail for modern browsers
+		testCookie2.setMaxAge(60 * 60); // 60s * 60m = 1-hour cookie
+		testCookie2.setPath("/test"); // this page only
+		//testCookie2.setSecure(false);
+		//testCookie2.setHttpOnly(false);
+		testCookie2.setComment("All your base are belong to us.");
+		response.addCookie(testCookie2);
+		*/
+		
+		/*
+		// Same token and path => Overwrites
+		Cookie testCookie3 = new Cookie("token", "owned");
+		testCookie3.setMaxAge(60 * 60 * 24 * 90); // 60s * 60m * 24h * 90d = 90-day cookie
+		response.addCookie(testCookie3);
+		*/
+
 		// Get needed information dump data
 		final String clientHost = request.getRemoteHost() == clientIp ? "same as IP or resolution disabled" : request.getRemoteHost();
 		final String httpType = request.isSecure() ? "HTTPS" : "_http_";
@@ -103,10 +129,10 @@ public class DiagnosticsPage extends PageLoader {
 			nextCookie.put("Domain", valueOrNotAvailable(cookie.getDomain()));
 			nextCookie.put("Path", valueOrNotAvailable(cookie.getPath()));
 			nextCookie.put("Value", valueOrNotAvailable(cookie.getValue()));
-			nextCookie.put("Max Age", String.valueOf(cookie.getMaxAge()));
+			nextCookie.put("Max Age", String.valueOf(cookie.getMaxAge()));  		// gets stripped on way back
 			nextCookie.put("Version", String.valueOf(cookie.getVersion()));
-			nextCookie.put("Secure", String.valueOf(cookie.getSecure()));
-			nextCookie.put("HTTP-Only", String.valueOf(cookie.isHttpOnly()));
+			nextCookie.put("Secure", String.valueOf(cookie.getSecure()));			// gets stripped on way back
+			nextCookie.put("HTTP-Only", String.valueOf(cookie.isHttpOnly()));		// gets stripped on way back
 			nextCookie.put("Comment", valueOrNotAvailable(cookie.getComment()));
 			results.add(nextCookie);
 		}
