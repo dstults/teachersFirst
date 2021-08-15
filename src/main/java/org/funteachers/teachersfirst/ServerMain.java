@@ -69,7 +69,7 @@ public class ServerMain extends HttpServlet {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
-		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
+		final String logInfo = Security.getRealIp(request) + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
 		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
 			logger.debug("IN - {}", logInfo);
 
@@ -179,7 +179,7 @@ public class ServerMain extends HttpServlet {
 				comma = ", ";
 			}
 		}		
-		final String logInfo = request.getRemoteAddr() + " " + request.getMethod() + " " + pagePath + " " + parameters;
+		final String logInfo = Security.getRealIp(request) + " " + request.getMethod() + " " + pagePath + " " + parameters;
 		logger.debug("IN - {}", logInfo); // Don't log "health" commands
 		final String action = request.getParameter("action") == null ? "" : QueryHelpers.sanitizeForLog(request.getParameter("action"));
 

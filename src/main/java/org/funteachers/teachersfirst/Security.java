@@ -19,8 +19,16 @@ public class Security {
 		whitelistIp("192.168.1.129");
 
 		// Automatic entries:		
-		// WARNING: Jenkins build will fail nslookup, so cannot use this:
+		// WARNING: GitHub build fails this test, so cannot use:
 		//whitelistIp(nsLookup("dstults.net"));
+	}
+
+	public static String getRealIp(HttpServletRequest request) {
+		String proxyResult = request.getHeader("X-FORWARDED-FOR");
+		if (proxyResult != null) return proxyResult;
+
+		String result = request.getRemoteAddr();
+		return result;
 	}
 
 	private static void whitelistIp(String ip) {
@@ -76,8 +84,11 @@ public class Security {
 		logger.debug("User logged out: " + info);
 	}
 
-	// This has its own process to ensure security
+	// !!! This has its own process to ensure security
+	// Must validate a token against a User ID to proceed
 	public static int getUserId(HttpServletRequest request) {
+		
+		// USER ID
 		if (request.getSession().getAttribute("USER_ID") == null) return 0;
 		if (request.getSession().getAttribute("USER_ID").toString() == null) return 0;
 		if (request.getSession().getAttribute("USER_ID").toString().isEmpty()) return 0;

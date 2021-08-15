@@ -27,6 +27,7 @@ public abstract class ActionRunner {
 	protected ActionRunner(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
+
 		uid = Security.getUserId(request);
 		if (uid > 0) {
 			Member member = DataManager.getMemberDAO().retrieveByID(uid);

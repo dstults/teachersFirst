@@ -64,7 +64,8 @@ public abstract class PageLoader {
 		this.request = request;
 		this.response = response;
 		this.templateDataMap = new HashMap<>();
-		getGetMessage(); // Should always check for and assign this even if inevitable security fail will occur
+
+		getGetMessage(); // Checks query for message data
 		jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		// Handle session / cookies
