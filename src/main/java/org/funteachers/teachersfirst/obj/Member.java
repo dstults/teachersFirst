@@ -39,25 +39,25 @@ public class Member implements IJsonnable {
 	public Member(String loginName, String displayName, float credits,
 					String gender,
 					String selfIntroduction, String instructorNotes,
-					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
+					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
-		this(-1, loginName, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
 	}
 
-	// no record id, yes birthdate -- used in code
+	// no record id, yes birthdate -- used in test code
 	public Member(String loginName, String displayName, float credits,
 					Timestamp birthdate, String gender,
 					String selfIntroduction, String instructorNotes,
-					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
+					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
-		this(-1, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
 	}
 
 	// everything
 	public Member(int recID, String loginName, String displayName, float credits,
 				Timestamp birthdate, String gender,
 				String selfIntroduction, String instructorNotes,
-				String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
+				String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (loginName == null) throw new IllegalArgumentException("Invalid argument: loginName is null");
@@ -88,9 +88,9 @@ public class Member implements IJsonnable {
 		this.phone1 = phone1;
 		this.phone2 = phone2;
 		this.email = email;
-		this.isStudent = isStudent;
-		this.isInstructor = isInstructor;
 		this.isAdmin = isAdmin;
+		this.isInstructor = isInstructor;
+		this.isStudent = isStudent;
 	}
 
 	// ----------------------------------------------------------------
@@ -348,9 +348,9 @@ public class Member implements IJsonnable {
 				"\"phone1\":\"" + this.phone1 + "\"," +
 				"\"phone2\":\"" + this.phone2 + "\"," +
 				"\"email\":\"" + this.email + "\"," +
-				"\"isStudent\":" + this.isStudent + "," +
+				"\"isAdmin\":" + this.isAdmin + "," +
 				"\"isInstructor\":" + this.isInstructor + "," +
-				"\"isAdmin\":" + this.isAdmin +
+				"\"isStudent\":" + this.isStudent +
 				"}";
 	}
 
