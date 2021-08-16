@@ -61,6 +61,20 @@ public class MemberSqlDAO implements DAO<Member> {
 		return member;
 	}
 
+	public String retrieveToken(int recID) {
+		//logger.debug("Trying to get Member with ID: " + recID);
+		
+		String query = "SELECT token FROM members WHERE recID=" + recID + ";";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
+		if (rows == null || rows.size() == 0) return null;
+		
+		SQLRow row = rows.get(0);
+		String token = row.getItem("token");
+
+		return token;
+	}
+
 	public Member retrieveByID(int recID) {
 		//logger.debug("Trying to get Member with ID: " + recID);
 		

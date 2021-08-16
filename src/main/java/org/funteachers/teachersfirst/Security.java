@@ -106,16 +106,20 @@ public class Security {
 		logger.debug("User [ ({}) {} ] logged in.", member.getRecID(), member.getLoginName());
 	}
 
-	public void logout(Member member, String info) {
-		clearTokenCookie(member);
+	public void logout(Member member, String info, boolean allDevices) {
+		clearTokenCookie(member, allDevices);
 		logger.debug("User [ ({}) {} ] logged out: [{}]", member.getRecID(), member.getLoginName(), info);
 	}
 
 	private Cookie getCookieByName(String name) {
 		final Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
+
+		if (cookies == null || cookies.length == 0)
+			return null;
+
+		for (Cookie cookie : cookies)
 			if (cookie.getName().equals(name)) return cookie;
-		}
+
 		return null;
 	}
 
@@ -171,12 +175,17 @@ public class Security {
 	}
 
 	private void giveTokenCookie(Member member) {
-		String token = getToken();
-		logger.debug("Giving token [ {} ] to member [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
-
-		// Update database
+		// Check for an already existing token
 		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
-		memberDAO.updateToken(member, token);
+		String token = memberDAO.retrieveToken(member.getRecID());
+		
+		// Make new token if none exists
+		if (token == null || token.isEmpty()) {
+			token = getToken();				
+			// Update database if token generated
+			memberDAO.updateToken(member, token);
+		}
+		logger.debug("Giving token [ {} ] to member [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
 		
 		// Set new cookie
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." +token);
@@ -186,10 +195,10 @@ public class Security {
 		response.addCookie(tokenCookie);
 	}
 
-	private void clearTokenCookie(Member member) {
+	private void clearTokenCookie(Member member, boolean allDevices) {
 
 		// Update database if member provided
-		if (member != null) {
+		if (member != null && allDevices) {
 			MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
 			memberDAO.updateToken(member, null);
 			logger.debug("Clearing token for member [ ({}) {} ]", member.getRecID(), member.getLoginName());
@@ -229,7 +238,7 @@ public class Security {
 		try {
 			uid = Integer.parseInt(matcher.group(1));
 		} catch (Exception e) {
-			clearTokenCookie(null);
+			clearTokenCookie(null, false);
 			logger.debug("Failed to parse UID from token: [ {} ], found [ {} ], expected [ int ]", matcher.group(0), matcher.group(1));
 			return null;
 		}
@@ -239,7 +248,7 @@ public class Security {
 		final Member member = memberDAO.retrieveByIdAndToken(uid, token);
 
 		if (member == null) {
-			clearTokenCookie(null);
+			clearTokenCookie(null, false);
 			logger.debug("Failed token validation for UID [ {} ], token used: [ {} ]", uid, token);
 		} else {
 			refreshCookie(member, token);
@@ -249,6 +258,7 @@ public class Security {
 	}
 
 	// This was replaced by the token method:
+	/*
 	public int getUserId(HttpServletRequest request) {
 		
 		// USER ID
@@ -263,5 +273,6 @@ public class Security {
 		}
 		return 0;
 	}
+	*/
 
 }

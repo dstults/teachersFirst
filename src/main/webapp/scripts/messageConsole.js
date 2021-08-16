@@ -85,3 +85,9 @@ window.onbeforeunload = _ => {
 	sessionStorage.setItem('consoleVisible', consoleMessageList.style.display !== 'none');
 	sessionStorage.setItem('consoleLocation', JSON.stringify({x: consoleFrame.style.left, y: consoleFrame.style.top}));
 };
+
+const clearResetLog = _ => {
+	sessionStorage.removeItem('persistentLog');
+	sessionStorage.removeItem('consoleVisible');
+	sessionStorage.removeItem('consoleLocation');
+}

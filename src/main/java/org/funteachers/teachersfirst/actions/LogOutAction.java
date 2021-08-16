@@ -10,8 +10,10 @@ public class LogOutAction extends ActionRunner {
 
 	@Override
 	public void runAction() {
+		boolean allDevices = QueryHelpers.getGetBool(request, "allDevices");
+		
 		// Do this no matter what to make sure it's clean:
-		security.logout(operator, "Normal log out.");
+		security.logout(operator, "Normal log out.", allDevices);
 		if (uid > 0 ) {
 			this.sendPostReply("/services", "", "Have a nice day!");
 		} else {
