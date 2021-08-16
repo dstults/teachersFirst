@@ -1,7 +1,5 @@
 package org.funteachers.teachersfirst.actions;
 
-import java.util.List;
-
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
@@ -10,7 +8,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class UpdateMemberAction extends ActionRunner {
 
-	public UpdateMemberAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public UpdateMemberAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	private String removeInvalidText(String text) {
 		text = text.trim();
@@ -95,8 +93,7 @@ public class UpdateMemberAction extends ActionRunner {
 		boolean changesMade = false;
 		boolean updateNeeded = false;
 		if (credits != member.getCredits()) {
-			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-			member.setCredits(uid, opName, "manual update", credits);
+			member.setCredits(uid, operator.getLoginName(), "manual update", credits);
 			changesMade = true;
 			updateNeeded = false; // This has its own personalized SQL update
 		}

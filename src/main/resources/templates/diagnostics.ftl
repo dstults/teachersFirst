@@ -99,6 +99,15 @@
 			</#list>
 			</#list>
 		</table>
+		<#list cookieItems as cookie>
+		<h3>Cookie:</h3>
+		<table class="blue">
+			<tr><th style="width: 20%;">Key</th><th>Value</th></tr>
+			<#list cookie as key, value>
+			<tr><td>${key}</td><td>${value}</td></tr>
+			</#list>
+		</table>
+		</#list>
 	</div>
 </body>
 <script>

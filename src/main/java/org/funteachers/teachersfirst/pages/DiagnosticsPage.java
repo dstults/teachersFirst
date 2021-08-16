@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.obj.*;
 public class DiagnosticsPage extends PageLoader {
 
 	// Constructor
-	public DiagnosticsPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public DiagnosticsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 
@@ -18,13 +18,39 @@ public class DiagnosticsPage extends PageLoader {
 	public void loadPage() {
 		
 		// Get initial bit to verify ID and operation
-		final String clientIp = request.getRemoteAddr();
+		final String clientIp = security.getRealIp();
 
 		// Check if whitelisted
 		if (!Security.isWhitelisted(clientIp)) {
-			sendFake404("Unauthorized user attempted to access diagnostics page.");
+			sendFake404("Unauthorized user [ " + clientIp + "] attempted to access diagnostics page.");
 			return;
 		}
+
+		// Test out custom cookies
+		Cookie testCookie1 = new Cookie("token", "1.1234asdf");
+		testCookie1.setMaxAge(60 * 60 * 24 * 90); // 60s * 60m * 24h * 90d = 90-day cookie
+		//testCookie1.setPath("/"); // / == default
+		testCookie1.setSecure(true);
+		testCookie1.setHttpOnly(true);
+		response.addCookie(testCookie1);
+
+		/*
+		Cookie testCookie2 = new Cookie("token", "lololwhat");
+		//testCookie2.setDomain("dstults.net"); // Setting to anything else will fail for modern browsers
+		testCookie2.setMaxAge(60 * 60); // 60s * 60m = 1-hour cookie
+		testCookie2.setPath("/test"); // this page only
+		//testCookie2.setSecure(false);
+		//testCookie2.setHttpOnly(false);
+		testCookie2.setComment("All your base are belong to us.");
+		response.addCookie(testCookie2);
+		*/
+		
+		/*
+		// Same token and path => Overwrites
+		Cookie testCookie3 = new Cookie("token", "owned");
+		testCookie3.setMaxAge(60 * 60 * 24 * 90); // 60s * 60m * 24h * 90d = 90-day cookie
+		response.addCookie(testCookie3);
+		*/
 
 		// Get needed information dump data
 		final String clientHost = request.getRemoteHost() == clientIp ? "same as IP or resolution disabled" : request.getRemoteHost();
@@ -34,6 +60,7 @@ public class DiagnosticsPage extends PageLoader {
 		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
 		final Map<String, String[]> paramMap = request.getParameterMap();
 		final Map<String, String[]> headerItems = dumpHeaderToMap(request);
+		final List<Map<String, String>> cookieItems = dumpCookiesToMap(request);
 
 		final DAO<Member> memberDAO = DataManager.getMemberDAO();
 		final String memberDaoCheckNull = memberDAO != null ? "Member DAO Found" : "NULL MEMBER DAO";
@@ -60,6 +87,7 @@ public class DiagnosticsPage extends PageLoader {
 		templateDataMap.put("fullQuery", sanitizedQuery);
 		templateDataMap.put("paramMap", paramMap);
 		templateDataMap.put("headerItems", headerItems);
+		templateDataMap.put("cookieItems", cookieItems);
 		templateDataMap.put("memberDaoCheckNull", memberDaoCheckNull);
 		templateDataMap.put("memberDaoCheckGet", memberDaoCheckGet);
 		templateDataMap.put("openingDaoCheckNull", openingDaoCheckNull);
@@ -74,7 +102,7 @@ public class DiagnosticsPage extends PageLoader {
 	private Map<String, String[]> dumpHeaderToMap(HttpServletRequest request) {
 		final Enumeration<String> allHeaderNames = request.getHeaderNames();
 
-		Map<String, String[]> result = new HashMap<>();
+		Map<String, String[]> result = new LinkedHashMap<>(); // Needs linked hashmap to retain insertion order
 		while (allHeaderNames.hasMoreElements()) {
 			String next = allHeaderNames.nextElement();
 			Enumeration<String> values = request.getHeaders(next);
@@ -85,6 +113,30 @@ public class DiagnosticsPage extends PageLoader {
 			result.put(next, t.toArray(new String[0]));
 		}
 		return result;
+	}
+
+	private String valueOrNotAvailable(String input) {
+		return input != null ? input : "n/a";
+	}
+
+	private List<Map<String, String>> dumpCookiesToMap(HttpServletRequest request) {
+		final Cookie[] allCookies = request.getCookies();
+
+		List<Map<String, String>> results = new LinkedList<>();
+		for(Cookie cookie : allCookies) {
+			Map<String, String> nextCookie = new LinkedHashMap<>(); // Needs linked hashmap to retain insertion order
+			nextCookie.put("Name", valueOrNotAvailable(cookie.getName()));
+			nextCookie.put("Domain", valueOrNotAvailable(cookie.getDomain()));
+			nextCookie.put("Path", valueOrNotAvailable(cookie.getPath()));
+			nextCookie.put("Value", valueOrNotAvailable(cookie.getValue()));
+			nextCookie.put("Max Age", String.valueOf(cookie.getMaxAge()));  		// gets stripped on way back
+			nextCookie.put("Version", String.valueOf(cookie.getVersion()));
+			nextCookie.put("Secure", String.valueOf(cookie.getSecure()));			// gets stripped on way back
+			nextCookie.put("HTTP-Only", String.valueOf(cookie.isHttpOnly()));		// gets stripped on way back
+			nextCookie.put("Comment", valueOrNotAvailable(cookie.getComment()));
+			results.add(nextCookie);
+		}
+		return results;
 	}
 
 }

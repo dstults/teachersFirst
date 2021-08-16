@@ -6,12 +6,11 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.obj.*;
 
 public class MakeAppointmentPage extends PageLoader {
 
 	// Constructor
-	public MakeAppointmentPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public MakeAppointmentPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

@@ -1,7 +1,6 @@
 package org.funteachers.teachersfirst.actions;
 
 import javax.servlet.http.*;
-import javax.ws.rs.NotAcceptableException;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
@@ -11,8 +10,8 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 
 	final int newState;
 
-	public UpdateAppointmentStateAction(HttpServletRequest request, HttpServletResponse response, int newState) {
-		super(request, response);
+	public UpdateAppointmentStateAction(HttpServletRequest request, HttpServletResponse response, Security security, int newState) {
+		super(request, response, security);
 
 		this.newState = newState;
 	}
@@ -107,8 +106,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 		// --------------------------------------------------------------------------------------------
 
 		logger.debug("Attempting to set appointment [{}] state to [{}] ...", appointmentIdString, newState);
-		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-		appointment.setCompletionState(newState, uid, userName);
+		appointment.setCompletionState(newState, uid, operator.getLoginName());
 		logger.debug("Updated appointment ID: [{}]", appointmentIdString);
 
 		final String operationWord;

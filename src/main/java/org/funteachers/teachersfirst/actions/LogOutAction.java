@@ -6,12 +6,12 @@ import org.funteachers.teachersfirst.*;
 
 public class LogOutAction extends ActionRunner {
 
-	public LogOutAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public LogOutAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {
 		// Do this no matter what to make sure it's clean:
-		Security.logout(request, "User " + uid + " normal log out.");
+		security.logout(operator, "Normal log out.");
 		if (uid > 0 ) {
 			this.sendPostReply("/services", "", "Have a nice day!");
 		} else {

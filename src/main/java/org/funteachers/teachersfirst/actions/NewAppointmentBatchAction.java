@@ -1,18 +1,16 @@
 package org.funteachers.teachersfirst.actions;
 
-import java.sql.Timestamp;
 import java.time.*;
 import java.util.*;
 
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.daos.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class NewAppointmentBatchAction extends ActionRunner {
 
-	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {
@@ -210,8 +208,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		if (successCount > 0 && lengthEach > 0.0) {
 			float credits = student.getCredits();
 			credits -= successCount * lengthEach;
-			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-			student.setCredits(uid, opName, "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
+			student.setCredits(uid, operator.getLoginName(), "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
 		}
 
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");

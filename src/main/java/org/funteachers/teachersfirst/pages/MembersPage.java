@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.obj.*;
 public class MembersPage extends PageLoader {
 
 	// Constructor
-	public MembersPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public MembersPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

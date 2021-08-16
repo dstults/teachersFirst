@@ -8,7 +8,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteAppointmentAction extends ActionRunner {
 
-	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {
@@ -88,8 +88,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 			final Member student = memberDAO.retrieveByID(appointment.getStudentID());
 			final float length = appointment.getLength();
 			final float credits = student.getCredits() + length;
-			final String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-			student.setCredits(uid, opName, "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
+			student.setCredits(uid, operator.getLoginName(), "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
 		}
 
 		// Send response

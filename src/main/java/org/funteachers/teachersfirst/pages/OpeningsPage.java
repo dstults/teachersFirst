@@ -76,7 +76,7 @@ public class OpeningsPage extends PageLoader {
 	}
 
 	// Constructor
-	public OpeningsPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public OpeningsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

@@ -14,7 +14,6 @@ public class Member implements IJsonnable {
 
 	// Login:
 	private String loginName;
-	private String passwordHash;
 
 	// Funtional:
 	private String displayName;
@@ -37,36 +36,32 @@ public class Member implements IJsonnable {
 	private boolean isAdmin;
 
 	// no record id, no birthdate -- this is the default for the new member made by the page
-	public Member(String loginName, String passwordHash, String displayName, float credits,
+	public Member(String loginName, String displayName, float credits,
 					String gender,
 					String selfIntroduction, String instructorNotes,
-					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
+					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
-		this(-1, loginName, passwordHash, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
 	}
 
-	// no record id, yes birthdate -- used in code
-	public Member(String loginName, String passwordHash, String displayName, float credits,
+	// no record id, yes birthdate -- used in test code
+	public Member(String loginName, String displayName, float credits,
 					Timestamp birthdate, String gender,
 					String selfIntroduction, String instructorNotes,
-					String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
+					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
-		this(-1, loginName, passwordHash, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		this(-1, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
 	}
 
 	// everything
-	public Member(int recID, String loginName, String passwordHash, String displayName, float credits,
+	public Member(int recID, String loginName, String displayName, float credits,
 				Timestamp birthdate, String gender,
 				String selfIntroduction, String instructorNotes,
-				String phone1, String phone2, String email, boolean isStudent, boolean isInstructor, boolean isAdmin) {
+				String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (loginName == null) throw new IllegalArgumentException("Invalid argument: loginName is null");
 		if (loginName.isEmpty()) throw new IllegalArgumentException("Invalid argument: loginName is empty");
-		if (passwordHash == null) throw new IllegalArgumentException("Invalid argument: passwordHash is null");
-		//TODO: This is not an error so much as it should be a warning
-		// if (passwordHash.isEmpty()) throw new IllegalArgumentException("Invalid argument: passwordHash is empty");
-		//TODO: SHA1 Password Hash should be 40 chars long -- need hashing first
 		if (displayName == null) throw new IllegalArgumentException("Invalid argument: displayName is null");
 		if (displayName.isEmpty()) throw new IllegalArgumentException("Invalid argument: displayName is empty");
 		if (birthdate == null) throw new IllegalArgumentException("Invalid argument: birthdate is null");
@@ -84,7 +79,6 @@ public class Member implements IJsonnable {
 
 		this.recID = recID;
 		this.loginName = loginName;
-		this.passwordHash = passwordHash;
 		this.displayName = displayName;
 		this.credits = credits;
 		this.birthdate = birthdate;
@@ -94,9 +88,9 @@ public class Member implements IJsonnable {
 		this.phone1 = phone1;
 		this.phone2 = phone2;
 		this.email = email;
-		this.isStudent = isStudent;
-		this.isInstructor = isInstructor;
 		this.isAdmin = isAdmin;
+		this.isInstructor = isInstructor;
+		this.isStudent = isStudent;
 	}
 
 	// ----------------------------------------------------------------
@@ -121,10 +115,6 @@ public class Member implements IJsonnable {
 
 	public String getLoginName() {
 		return this.loginName;
-	}
-
-	public String getPasswordHash() {
-		return this.passwordHash;
 	}
 
 	public String getName() {
@@ -230,14 +220,6 @@ public class Member implements IJsonnable {
 		this.loginName = loginName;
 	}
 
-	public void setPasswordHash(String passwordHash) {
-		if (passwordHash == null) throw new IllegalArgumentException("Invalid argument: passwordHash is null");
-		if (passwordHash.isEmpty()) throw new IllegalArgumentException("Invalid argument: passwordHash is empty");
-		// TODO: SHA1 Password Hash should be 40 chars long -- need hashing first
-
-		this.passwordHash = passwordHash;
-	}
-
 	public void setDisplayName(String name) {
 		if (name == null) throw new IllegalArgumentException("Invalid argument: name is null");
 		if (name.isEmpty()) throw new IllegalArgumentException("Invalid argument: name is empty");
@@ -253,7 +235,7 @@ public class Member implements IJsonnable {
 	}
 
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {
-		//TODO: validate integers?
+		//TODO: validate integers to make sure they make sense
 
 		setBirthdate(DateHelpers.toTimestamp(years, months, days, hours, minutes, seconds));
 	}
@@ -327,7 +309,6 @@ public class Member implements IJsonnable {
 		Member other = (Member) obj; // cast to compare fields
 		if (this.recID != other.recID) return false;
 		if (!this.loginName.equals(other.loginName)) return false;
-		if (!this.passwordHash.equals(other.passwordHash)) return false;
 		if (!this.displayName.equals(other.displayName)) return false;
 		if (!this.birthdate.equals(other.birthdate)) return false;
 		if (!this.gender.equals(other.gender)) return false;
@@ -356,7 +337,6 @@ public class Member implements IJsonnable {
 		String birthdate = birthdateRaw.equals("1800-01-01") ? "null" : "\"" + birthdateRaw + "\"";
 		return "{\"id\":" + this.recID + "," +
 				"\"loginName\":\"" + this.loginName + "\"," +
-				//"\"passwordHash\":\"" + this.passwordHash + "\"," +
 				"\"displayName\":\"" + this.displayName + "\"," +
 				"\"credits\":" + this.credits + "," +
 				"\"birthdate\":" + birthdate + "," +
@@ -368,9 +348,9 @@ public class Member implements IJsonnable {
 				"\"phone1\":\"" + this.phone1 + "\"," +
 				"\"phone2\":\"" + this.phone2 + "\"," +
 				"\"email\":\"" + this.email + "\"," +
-				"\"isStudent\":" + this.isStudent + "," +
+				"\"isAdmin\":" + this.isAdmin + "," +
 				"\"isInstructor\":" + this.isInstructor + "," +
-				"\"isAdmin\":" + this.isAdmin +
+				"\"isStudent\":" + this.isStudent +
 				"}";
 	}
 

@@ -5,12 +5,12 @@ import java.util.List;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.daos.sql.MemberSqlDAO;
 import org.funteachers.teachersfirst.obj.*;
 
 public class OpenRegisterAction extends ActionRunner {
 
-	public OpenRegisterAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public OpenRegisterAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {
@@ -74,18 +74,21 @@ public class OpenRegisterAction extends ActionRunner {
 			}
 		}
 
-		//TODO: Hash password either in JS or here
 		//TODO: Birthdates
 
+		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
 		//Member member = new Member(loginName, password1, displayName, birthdate, gender, "", phone1, phone2, email, true, false, false);
-		Member member = new Member(loginName, password1, displayName, 0, gender, "", "", phone1, phone2, email, true, false, false);
-		int newMemberRecordId = DataManager.getMemberDAO().insert(member);
+		Member member = new Member(loginName, displayName, 0, gender, "", "", phone1, phone2, email, true, false, false);
+		int newMemberRecordId = memberDAO.insert(member);
 		member.setRecID(newMemberRecordId);
-		logger.info(DataManager.getMemberDAO().size() + " records total");
+		logger.info(memberDAO.size() + " records total");
 		logger.debug("Registered new member: [{}]", member);
+
+		// Add password hash to database
+		memberDAO.updatePassword(member, password1);
 		
-		// Log user into session
-		Security.login(request, member);
+		// Log new user in, giving token cookie
+		security.login(member);
 		this.sendPostReply("/appointments", "", "Welcome new user!");
 		return;
 	}

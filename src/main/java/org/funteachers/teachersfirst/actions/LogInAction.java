@@ -7,7 +7,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class LogInAction extends ActionRunner {
 
-	public LogInAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public LogInAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {
@@ -20,7 +20,13 @@ public class LogInAction extends ActionRunner {
 		String password = QueryHelpers.getPost(request, "password");
 
 		if (loginName == null || loginName.isEmpty() || password == null || password.isEmpty()) {
-			this.sendPostReply("/login", "loginName=" + loginName, "Please enter a valid user name and password.");
+			if ((loginName == null || loginName.isEmpty()) && password != null && !password.isEmpty()) {
+				this.sendPostReply("/login", "loginName=" + loginName, "Please enter a valid password.");
+			} else if (loginName != null && !loginName.isEmpty() && (password == null || password.isEmpty())) {
+				this.sendPostReply("/login", "loginName=" + loginName, "Please enter a valid user name.");
+			} else {
+				this.sendPostReply("/login", "loginName=" + loginName, "Please enter a valid user name and password.");
+			}
 			return;
 		}
 
@@ -29,9 +35,8 @@ public class LogInAction extends ActionRunner {
 			return;
 		}
 
-		Member member = Security.checkPassword(loginName, password);
+		Member member = security.checkPassword(loginName, password);
 		if (member != null) {
-			Security.login(request, member);
 			this.sendPostReply("/appointments", "", "Welcome back, " + member.getDisplayName());
 			return;
 		} else {

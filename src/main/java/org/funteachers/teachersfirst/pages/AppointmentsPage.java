@@ -9,7 +9,7 @@ import org.funteachers.teachersfirst.obj.*;
 public class AppointmentsPage extends PageLoader {
 
 	// Constructor
-	public AppointmentsPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public AppointmentsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

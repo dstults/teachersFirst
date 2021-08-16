@@ -1,18 +1,16 @@
 package org.funteachers.teachersfirst.actions;
 
-import java.sql.Timestamp;
 import java.time.*;
 import java.util.*;
 
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.daos.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class NewAppointmentAction extends ActionRunner {
 
-	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {
@@ -177,8 +175,7 @@ public class NewAppointmentAction extends ActionRunner {
 		float credits = student.getCredits();
 		float length = pa.getLength();
 		credits -= length;
-		String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-		student.setCredits(uid, opName, "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
+		student.setCredits(uid, operator.getLoginName(), "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
 
 		// Reply to user
 		this.sendPostReply("/appointments", "", "Appointment created!");

@@ -7,35 +7,17 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.obj.*;
 
 import freemarker.template.*;
 
 public abstract class PageLoader {
 
-	// Declarations
-
-	protected HttpServletRequest request;
-	protected HttpServletResponse response;
-	protected static final Logger logger = LogManager.getLogger(ServerMain.class);
-
-	protected String templateName = null;
-	protected Map<String, Object> templateDataMap;
-	protected int uid;
-	protected boolean isAdmin = false;
-	protected boolean isInstructor = false;
-	protected boolean isStudent = false;
-
-	protected final boolean jsonMode;
-
-	// Static Declarations (shared variables to handle freemarker and DAOs)
-
-	protected static final Configuration freeMarkerConfig = new Configuration(Configuration.getVersion());
-
-	// Static Methods (basically meta-constructors/destructors for class-internal
-	// variables)
-
+	// Statics
+	
+	final protected static Logger logger = LogManager.getLogger(ServerMain.class);
+	
+	final protected static Configuration freeMarkerConfig = new Configuration(Configuration.getVersion());
 	public static void initializeFreeMarker(String resourcesDir) throws ServletException {
 		if (resourcesDir == null) {
 			logger.warn("===========DEBUG HELP===========");
@@ -53,6 +35,25 @@ public abstract class PageLoader {
 		}
 	}
 
+	// =======================================================================================================================
+
+	// Declarations
+
+	final protected HttpServletRequest request;
+	final protected HttpServletResponse response;
+	final protected Security security;
+	final protected Member operator;
+	final protected int uid;
+	final protected String userName;
+	final protected boolean isAdmin;
+	final protected boolean isInstructor;
+	final protected boolean isStudent;
+	final protected Map<String, Object> templateDataMap;
+	final protected boolean jsonMode;
+
+	protected String templateName = null;
+	protected String errorMessage = "";
+
 	private void getGetMessage() {
 		String message = QueryHelpers.getGet(request, "message");
 		message = message.replace("//", "<br>\n			");
@@ -60,45 +61,41 @@ public abstract class PageLoader {
 	}
 
 	// Constructors
-	protected PageLoader(HttpServletRequest request, HttpServletResponse response) {
+	protected PageLoader(HttpServletRequest request, HttpServletResponse response, Security security) {
+		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
+
 		this.request = request;
 		this.response = response;
-		this.templateDataMap = new HashMap<>();
-		getGetMessage(); // Should always check for and assign this even if inevitable security fail will occur
-		jsonMode = QueryHelpers.getGetBool(request, "json");
-
-		// Handle session / cookies
-		uid = Security.getUserId(request);
-		if (uid > 0) {
-			Member member = DataManager.getMemberDAO().retrieveByID(uid);
-			if (member != null) {
-				isAdmin = member.getIsAdmin();
-				isInstructor = member.getIsInstructor();
-				isStudent = member.getIsStudent();
-			} else {
-				Security.logout(request, "Bad session data or failure to contact database, try again later.");
-				templateDataMap.put("message", "Error contacting SQL server. Error code: " + uid + ".a5j // For your own security you will need to log in again.");
-				templateName = "messageOnly.ftl";
-				this.trySendResponse();
-				DataManager.resetDAOs();
-				return; // abort here
-			}
+		this.security = security;
+		this.operator = security.getMemberFromRequestCookieToken();
+		if (operator != null) {
+			this.uid = this.operator.getRecID();
+			this.userName = this.operator.getDisplayName();
+			this.isAdmin = this.operator.getIsAdmin();
+			this.isInstructor = this.operator.getIsInstructor();
+			this.isStudent = this.operator.getIsStudent();
 		} else {
-			if (!DataManager.validateSQLConnection()) {
-				DataManager.resetDAOs();
-			}
+			this.uid = 0;
+			this.userName = "Guest";
+			this.isAdmin = false;
+			this.isInstructor = false;
+			this.isStudent = false;
 		}
-		String userName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
+		//logger.debug("isAdmin [{}] isInstructor [ {} ] isStudent [ {} ]", this.isAdmin, this.isInstructor, this.isStudent);
+
+		this.templateDataMap = new HashMap<>();
+		getGetMessage(); // Checks query for message data
+		this.jsonMode = QueryHelpers.getGetBool(request, "json");
 
 		templateDataMap.put("canRegister", DataManager.enableOpenRegistration);
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
 		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);
 		templateDataMap.put("showWelcome", true);
-		templateDataMap.put("userId", uid);
-		templateDataMap.put("userName", userName);
-		templateDataMap.put("isAdmin", isAdmin);
-		templateDataMap.put("isInstructor", isInstructor);
-		templateDataMap.put("isStudent", isStudent);
+		templateDataMap.put("userId", this.uid);
+		templateDataMap.put("userName", this.userName);
+		templateDataMap.put("isAdmin", this.isAdmin);
+		templateDataMap.put("isInstructor", this.isInstructor);
+		templateDataMap.put("isStudent", this.isStudent);
 	}
 
 	// Public entry point

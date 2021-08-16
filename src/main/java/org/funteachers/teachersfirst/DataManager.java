@@ -5,13 +5,10 @@ import java.util.*;
 
 import javax.servlet.*;
 
-import freemarker.core.ParseException;
-
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.daos.*;
 import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.obj.*;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 

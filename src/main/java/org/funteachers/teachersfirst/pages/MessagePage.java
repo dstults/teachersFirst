@@ -7,7 +7,7 @@ import org.funteachers.teachersfirst.*;
 public class MessagePage extends PageLoader {
 
 	// Constructor
-	public MessagePage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public MessagePage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 	@Override

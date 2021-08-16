@@ -7,7 +7,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteOpeningAction extends ActionRunner {
 
-	public DeleteOpeningAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public DeleteOpeningAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {
