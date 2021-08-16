@@ -45,12 +45,23 @@ public class MemberSqlDAO implements DAO<Member> {
 			return -1;
 		}
 
-		String query = "INSERT INTO members (loginName, passwordHash, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin) VALUES (?,SHA1(?),?,?,?,?,?,?,?,?,?,?,?,?);";
+		String query = "INSERT INTO members (loginName, passwordHash, token, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent) VALUES (?,SHA1(?),SHA1(?),?,?,?,?,?,?,?,?,?,?,?,?);";
 
-		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getPasswordHash(), member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsStudent(), member.getIsInstructor(), member.getIsAdmin());
-		
+		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), "", "", member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsAdmin(), member.getIsInstructor(), member.getIsStudent());
 		logger.debug("Member successfully inserted with ID = " + recID);
 		return recID;
+	}
+
+	private Member getMemberQuery(String query) {
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("Did not find member.");
+			return null;
+		}
+		
+		SQLRow row = rows.get(0);
+		Member member = convertRowToMember(row);
+		return member;
 	}
 
 	public Member retrieveByID(int recID) {
@@ -58,15 +69,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		
 		String query = "SELECT * FROM members WHERE recID=" + recID + ";";
 
-		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
-		if (rows == null || rows.size() == 0) {
-			logger.debug("Did not find member.");
-			return null;
-		}
-		
-		SQLRow row = rows.get(0);
-		Member member = convertRowToMember(row);
-		return member;
+		return getMemberQuery(query);
 	}
 
 	public Member retrieveByLoginName(String loginName) {
@@ -74,33 +77,24 @@ public class MemberSqlDAO implements DAO<Member> {
 		
 		String query = "SELECT * FROM members WHERE loginName='" + loginName +"';";
 
-		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
-		if (rows == null || rows.size() == 0) {
-			logger.debug("Did not find member.");
-			return null;
-		}
-		
-		SQLRow row = rows.get(0);
-		Member member = convertRowToMember(row);
-		return member;
+		return getMemberQuery(query);
 	}
 
 	public Member retrieveByLoginNameAndPassword(String loginName, String passwordHash) {
 		//logger.debug("Trying to get Member with login name and password: " + loginName + " " + passwordHash);
 		
-		String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('"+passwordHash+"');";
+		String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('" + passwordHash + "');";
 
-		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
-		if (rows == null || rows.size() == 0) {
-			logger.debug("Did not find member.");
-			return null;
-		}
-		
-		SQLRow row = rows.get(0);
-		Member member = convertRowToMember(row);
-		return member;
+		return getMemberQuery(query);
 	}
-	
+
+	public Member retrieveByIdAndToken(int recID, String token) {
+		
+		String query = "SELECT * FROM members WHERE recID='" + recID +"' AND token='" + token + "';";
+
+		return getMemberQuery(query);
+	}
+
 	public Member retrieveByIndex(int index) {
 		logger.debug("Trying to get Member with index: " + index);
 
@@ -119,7 +113,7 @@ public class MemberSqlDAO implements DAO<Member> {
 			return null;
 		}
 		
-		SQLRow row = rows.get(rows.size() - 1);
+		SQLRow row = rows.get(rows.size() - 1); // This is different from the rest, frankly I want to delete this entire method.
 		Member member = convertRowToMember(row);
 		return member;
 	}
@@ -192,9 +186,39 @@ public class MemberSqlDAO implements DAO<Member> {
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, String.valueOf(member.getCredits()), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getSelfIntroduction(), member.getInstructorNotes());
 
 		if (success)
-			logger.debug("Member " + member.getRecID() + " successfully updated");
+			logger.debug("DATA for member [ {} ] successfully updated.", member.getRecID());
 		else
-			logger.error("!! Member " + member.getRecID() + " failed to updated !!");
+			logger.error("!! DATA for member [ {} ] failed to update !!", member.getRecID());
+		
+		return success;
+	}
+
+	public boolean updateToken(Member member, String token) {
+		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
+
+		String query = "UPDATE members SET token = ? WHERE recID = " + member.getRecID() + ";";
+
+		boolean success = SQLUtils.executeSqlUpdate(conn, query, token);
+
+		if (success)
+			logger.debug("TOKEN for member [ {} ] successfully updated.", member.getRecID());
+		else
+			logger.error("!! TOKEN for member [ {} ] failed to update !!", member.getRecID());
+		
+		return success;
+	}
+
+	public boolean updatePassword(Member member, String password) {
+		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
+
+		String query = "UPDATE members SET token = SHA1(?) WHERE recID = " + member.getRecID() + ";";
+
+		boolean success = SQLUtils.executeSqlUpdate(conn, query, password);
+
+		if (success)
+			logger.debug("PASSWORD for member [ {} ] successfully updated.", member.getRecID());
+		else
+			logger.error("!! PASSWORD for member [ {} ] failed to update !!", member.getRecID());
 		
 		return success;
 	}
@@ -228,7 +252,6 @@ public class MemberSqlDAO implements DAO<Member> {
 		int recID = Integer.parseInt(row.getItem("recID"));
 
 		String loginName = row.getItem("loginName");
-		String passwordHash = row.getItem("passwordHash");
 
 		String displayName = row.getItem("displayName");
 		float credits = Float.parseFloat(row.getItem("credits"));
@@ -246,7 +269,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		Boolean isInstructor = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
 		Boolean isAdmin = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isAdmin")));
 
-		return new Member(recID, loginName, passwordHash, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		return new Member(recID, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
 	}
 
 }

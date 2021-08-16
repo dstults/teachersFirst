@@ -119,12 +119,13 @@ class SQLUtils {
 	// Member Insert
 	public static int executeSqlMemberInsert(Connection conn,
 			String query,
-			int recID, String loginName, String passwordHash,
+			int recID, String loginName,
+			String passwordHash, String token,
 			String displayName, float credits,
 			Timestamp birthdate, String gender,
 			String selfIntroduction, String instructorNotes,
 			String phone1, String phone2, String email,
-			boolean isStudent, boolean isInstructor, boolean isAdmin) {
+			boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
 		//logger.debug("Executing SQL Insert: " + query);
 
@@ -136,18 +137,19 @@ class SQLUtils {
 			
 			stmt.setString(1, loginName);
 			stmt.setString(2, passwordHash);
-			stmt.setString(3, displayName);
-			stmt.setFloat(4, credits);
-			stmt.setTimestamp(5, birthdate);
-			stmt.setString(6, gender);
-			stmt.setString(7, selfIntroduction);
-			stmt.setString(8, instructorNotes);
-			stmt.setString(9, phone1);
-			stmt.setString(10, phone2);
-			stmt.setString(11, email);
-			stmt.setInt(12, isStudent ? 1 : 0); // SetBoolean doesn't work
-			stmt.setInt(13, isInstructor ? 1 : 0); // SetBoolean doesn't work
-			stmt.setInt(14, isAdmin ? 1 : 0); // SetBoolean doesn't work
+			stmt.setString(3, token);
+			stmt.setString(4, displayName);
+			stmt.setFloat(5, credits);
+			stmt.setTimestamp(6, birthdate);
+			stmt.setString(7, gender);
+			stmt.setString(8, selfIntroduction);
+			stmt.setString(9, instructorNotes);
+			stmt.setString(10, phone1);
+			stmt.setString(11, phone2);
+			stmt.setString(12, email);
+			stmt.setInt(13, isStudent ? 1 : 0); // SetBoolean doesn't work
+			stmt.setInt(14, isInstructor ? 1 : 0); // SetBoolean doesn't work
+			stmt.setInt(15, isAdmin ? 1 : 0); // SetBoolean doesn't work
 			
 			stmt.executeUpdate();
 			
@@ -232,7 +234,11 @@ class SQLUtils {
 			PreparedStatement stmt = conn.prepareStatement(query);
 			
 			for (int i = 0; i <= args.length - 1; i++) {
-				stmt.setString(i + 1, args[i]);
+				if (args[i] == null) {
+					stmt.setNull(i + 1, Types.CHAR);
+				} else {
+					stmt.setString(i + 1, args[i]);
+				}
 			}
 			stmt.executeUpdate();
 			
