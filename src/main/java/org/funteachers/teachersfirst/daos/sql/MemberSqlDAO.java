@@ -54,10 +54,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 	private Member getMemberQuery(String query) {
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
-		if (rows == null || rows.size() == 0) {
-			logger.debug("Did not find member.");
-			return null;
-		}
+		if (rows == null || rows.size() == 0) return null;
 		
 		SQLRow row = rows.get(0);
 		Member member = convertRowToMember(row);
@@ -69,34 +66,35 @@ public class MemberSqlDAO implements DAO<Member> {
 		
 		String query = "SELECT * FROM members WHERE recID=" + recID + ";";
 
-		return getMemberQuery(query);
+		Member member = getMemberQuery(query);
+		if (member == null) logger.debug("retrieveByID [ {} ] failed", recID);
+		return member ;
 	}
 
-	public Member retrieveByLoginName(String loginName) {
-		//logger.debug("Trying to get Member with login name: " + loginName);
+	public Member retrieveByLoginNameAndPassword(String loginName, String password) {
+		//logger.debug("Trying to get Member with login name and password: " + loginName + " " + password);
 		
-		String query = "SELECT * FROM members WHERE loginName='" + loginName +"';";
+		String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('" + password + "');";
 
-		return getMemberQuery(query);
-	}
-
-	public Member retrieveByLoginNameAndPassword(String loginName, String passwordHash) {
-		//logger.debug("Trying to get Member with login name and password: " + loginName + " " + passwordHash);
-		
-		String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('" + passwordHash + "');";
-
-		return getMemberQuery(query);
+		Member member = getMemberQuery(query);
+		// This mustn't be logged for security reasons
+		//if (member == null) logger.debug("retrieveByLoginNameAndPassword [ {} ] / [ {} ] failed", loginName, password);
+		return member ;
 	}
 
 	public Member retrieveByIdAndToken(int recID, String token) {
 		
 		String query = "SELECT * FROM members WHERE recID='" + recID +"' AND token='" + token + "';";
 
-		return getMemberQuery(query);
+		Member member = getMemberQuery(query);
+		// This shouldn't be logged for security reasons
+		// TODO: Comment this out once it's confirmed to be working
+		if (member == null) logger.debug("retrieveByIdAndToken [ {} ] / [ {} ] failed", recID, token);
+		return member ;
 	}
 
 	public Member retrieveByIndex(int index) {
-		logger.debug("Trying to get Member with index: " + index);
+		//logger.debug("Trying to get Member with index: " + index);
 
 		if (index < 0) {
 			logger.error("retrieveByIndex: index cannot be negative");
@@ -265,11 +263,11 @@ public class MemberSqlDAO implements DAO<Member> {
 		String phone2 = row.getItem("phone2");
 		String email = row.getItem("email");
 
-		Boolean isStudent = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isStudent")));
-		Boolean isInstructor = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
 		Boolean isAdmin = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isAdmin")));
+		Boolean isInstructor = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
+		Boolean isStudent = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isStudent")));
 
-		return new Member(recID, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isStudent, isInstructor, isAdmin);
+		return new Member(recID, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
 	}
 
 }

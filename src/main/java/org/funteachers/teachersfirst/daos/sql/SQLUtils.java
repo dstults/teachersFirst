@@ -147,9 +147,9 @@ class SQLUtils {
 			stmt.setString(10, phone1);
 			stmt.setString(11, phone2);
 			stmt.setString(12, email);
-			stmt.setInt(13, isStudent ? 1 : 0); // SetBoolean doesn't work
-			stmt.setInt(14, isInstructor ? 1 : 0); // SetBoolean doesn't work
-			stmt.setInt(15, isAdmin ? 1 : 0); // SetBoolean doesn't work
+			stmt.setInt(13, isAdmin ? 1 : 0);         // SetBoolean doesn't work
+			stmt.setInt(14, isInstructor ? 1 : 0);    // SetBoolean doesn't work
+			stmt.setInt(15, isStudent ? 1 : 0);       // SetBoolean doesn't work
 			
 			stmt.executeUpdate();
 			
