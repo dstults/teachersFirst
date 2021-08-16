@@ -13,37 +13,38 @@ public abstract class ActionRunner {
 
 	// Declarations
 
-	protected HttpServletRequest request;
-	protected HttpServletResponse response;
-	protected int uid;
-	protected boolean isAdmin;
-	protected boolean isInstructor;
-	protected boolean isStudent;
+	final protected static Logger logger = LogManager.getLogger(ServerMain.class);
+
+	final protected HttpServletRequest request;
+	final protected HttpServletResponse response;
+	final protected Security security;
+	final protected Member operator;
+	final protected int uid;
+	final protected boolean isAdmin;
+	final protected boolean isInstructor;
+	final protected boolean isStudent;
+
 	protected String errorMessage = "";
-	protected static final Logger logger = LogManager.getLogger(ServerMain.class);
 
 	// Constructors
 
 	protected ActionRunner(HttpServletRequest request, HttpServletResponse response) {
+		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
+
 		this.request = request;
 		this.response = response;
-
-		uid = Security.getUserId(request);
-		if (uid > 0) {
-			Member member = DataManager.getMemberDAO().retrieveByID(uid);
-			if (member != null) {
-				isAdmin = member.getIsAdmin();
-				isInstructor = member.getIsInstructor();
-				isStudent = member.getIsStudent();
-			} else {
-				errorMessage += " Failed to contact database, try again later. ";
-				DataManager.resetDAOs();
-			}
+		this.security = new Security(this.request, this.response);
+		this.operator = security.getMemberFromRequestCookieToken();
+		if (operator != null) {
+			this.uid = this.operator.getRecID();
+			this.isAdmin = this.operator.getIsAdmin();
+			this.isInstructor = this.operator.getIsInstructor();
+			this.isStudent = this.operator.getIsStudent();
 		} else {
-			if (!DataManager.validateSQLConnection()) {
-				errorMessage += " Failed to contact database, try again later. ";
-				DataManager.resetDAOs();
-			}
+			this.uid = 0;
+			this.isAdmin = false;
+			this.isInstructor = false;
+			this.isStudent = false;
 		}
 	}
 
