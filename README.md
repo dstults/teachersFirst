@@ -21,7 +21,7 @@ For the low, low price of _free_ you can have your very own all-in-one, custom-b
 Get yours today!
 
 ### Screenshot(s):
-![image](https://user-images.githubusercontent.com/20900852/111135625-1ca36600-853a-11eb-89c5-bd2d421d5530.png)
+![image](https://user-images.githubusercontent.com/20900852/129517889-d89ba92c-479b-4094-bd88-ad89c32aa95d.png)
 ![image](https://user-images.githubusercontent.com/20900852/129517721-4a7b9ed6-a036-45dd-a598-5690afda53f9.png)
 
 ### Completed Objectives
