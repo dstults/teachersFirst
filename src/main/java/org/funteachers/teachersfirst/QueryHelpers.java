@@ -69,6 +69,8 @@ public class QueryHelpers {
 		return sanitizeForWeb(request.getParameter(keyName));
 	}
 
+	// Session data is no longer used, cookies and database queries are used instead.
+	/*
 	public static String getSessionValue(HttpServletRequest request, String sessionArg) {
 		return getSessionValue(request, sessionArg, "");
 	}
@@ -79,5 +81,6 @@ public class QueryHelpers {
 		if (request.getSession().getAttribute(sessionArg).toString().isEmpty()) return defaultValue;
 		return request.getSession().getAttribute(sessionArg).toString();
 	}
+	*/
 
 }

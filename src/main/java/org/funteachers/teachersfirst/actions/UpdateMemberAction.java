@@ -95,8 +95,7 @@ public class UpdateMemberAction extends ActionRunner {
 		boolean changesMade = false;
 		boolean updateNeeded = false;
 		if (credits != member.getCredits()) {
-			String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-			member.setCredits(uid, opName, "manual update", credits);
+			member.setCredits(uid, operator.getName(), "manual update", credits);
 			changesMade = true;
 			updateNeeded = false; // This has its own personalized SQL update
 		}

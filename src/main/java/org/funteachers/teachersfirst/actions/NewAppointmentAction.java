@@ -177,8 +177,7 @@ public class NewAppointmentAction extends ActionRunner {
 		float credits = student.getCredits();
 		float length = pa.getLength();
 		credits -= length;
-		String opName = QueryHelpers.getSessionValue(request, "USER_NAME", "Stranger");
-		student.setCredits(uid, opName, "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
+		student.setCredits(uid, operator.getName(), "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
 
 		// Reply to user
 		this.sendPostReply("/appointments", "", "Appointment created!");
