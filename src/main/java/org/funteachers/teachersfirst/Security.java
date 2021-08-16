@@ -124,15 +124,17 @@ public class Security {
 	private void giveTokenCookie(Member member) {
 		// TODO: Make token random and salted
 		String token = "1234asdf";
-		
+		logger.debug("Giving token [ {} ] to member [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
+
 		// Update database
 		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
 		memberDAO.updateToken(member, token);
-		logger.debug("Giving token [ {} ] to member [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
 		
 		// Set new cookie
-		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." + token);
+		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." +token);
 		tokenCookie.setMaxAge(60 * 60 * 24 * 90); // Expires in 90 days
+		tokenCookie.setSecure(true);
+		tokenCookie.setHttpOnly(true);
 		response.addCookie(tokenCookie);
 	}
 
@@ -151,11 +153,14 @@ public class Security {
 		response.addCookie(tokenCookie);
 	}
 
-	private void refreshCookie(int uid, String token) {
+	private void refreshCookie(Member member, String token) {
+		logger.debug("Refreshing token [ {} ] for memberID [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
 
 		// Refresh cookie with new expiration
-		final Cookie tokenCookie = new Cookie("token", uid + "." + token);
+		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." + token);
 		tokenCookie.setMaxAge(60 * 60 * 24 * 90); // Expires in 90 days
+		tokenCookie.setSecure(true);
+		tokenCookie.setHttpOnly(true);
 		response.addCookie(tokenCookie);
 	}
 
@@ -166,7 +171,7 @@ public class Security {
 		if (input == null || input.isEmpty()) return null;
 
 		// check if a valid token
-		final String regex = "[0-9]+.[A-Za-z0-9+\\/=]+";
+		final String regex = "([0-9]+).([A-Za-z0-9+\\/=]+)";
 		final Pattern pattern = Pattern.compile(regex);
 		final Matcher matcher = pattern.matcher(input);
 		if (!matcher.matches()) return null;
@@ -177,7 +182,7 @@ public class Security {
 			uid = Integer.parseInt(matcher.group(1));
 		} catch (Exception e) {
 			clearTokenCookie(null);
-			logger.debug("Failed to parse UID from token: [ {} ]", matcher.group(0));
+			logger.debug("Failed to parse UID from token: [ {} ], found [ {} ], expected [ int ]", matcher.group(0), matcher.group(1));
 			return null;
 		}
 		final String token = matcher.group(2);
@@ -187,9 +192,9 @@ public class Security {
 
 		if (member == null) {
 			clearTokenCookie(null);
-			logger.debug("Failed login for UID [ {} ], token used: [ {} ]", uid, token);
+			logger.debug("Failed token validation for UID [ {} ], token used: [ {} ]", uid, token);
 		} else {
-			refreshCookie(uid, token);
+			refreshCookie(member, token);
 		}
 
 		return member;
