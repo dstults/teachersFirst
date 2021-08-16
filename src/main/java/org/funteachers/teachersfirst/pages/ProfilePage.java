@@ -8,7 +8,7 @@ import org.funteachers.teachersfirst.obj.*;
 public class ProfilePage extends PageLoader {
 
 	// Constructor
-	public ProfilePage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public ProfilePage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

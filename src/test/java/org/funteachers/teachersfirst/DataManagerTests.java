@@ -1,14 +1,6 @@
 package org.funteachers.teachersfirst;
 
-import java.util.*;
-
-import javax.servlet.ServletException;
-import javax.validation.constraints.AssertTrue;
-
-import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DataManagerTests {
 
@@ -17,13 +9,12 @@ class DataManagerTests {
 
 	@Test
 	void testInitializeAndTerminate() {
-		// This entire test should not exist, period.
+		// This test should not exist unless we make a test db.
 		
 		/*
 		try {
 			DataManager.initializeDAOs();
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		*/

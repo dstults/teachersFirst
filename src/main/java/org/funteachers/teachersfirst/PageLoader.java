@@ -7,7 +7,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.obj.*;
 
 import freemarker.template.*;
@@ -62,12 +61,12 @@ public abstract class PageLoader {
 	}
 
 	// Constructors
-	protected PageLoader(HttpServletRequest request, HttpServletResponse response) {
+	protected PageLoader(HttpServletRequest request, HttpServletResponse response, Security security) {
 		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
 
 		this.request = request;
 		this.response = response;
-		this.security = new Security(this.request, this.response);
+		this.security = security;
 		this.operator = security.getMemberFromRequestCookieToken();
 		if (operator != null) {
 			this.uid = this.operator.getRecID();

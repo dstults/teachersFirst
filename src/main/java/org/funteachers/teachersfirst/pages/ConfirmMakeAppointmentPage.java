@@ -1,18 +1,13 @@
 package org.funteachers.teachersfirst.pages;
 
-import java.text.DateFormat;
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.obj.*;
 
 public class ConfirmMakeAppointmentPage extends PageLoader {
 
 	// Constructor
-	public ConfirmMakeAppointmentPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public ConfirmMakeAppointmentPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

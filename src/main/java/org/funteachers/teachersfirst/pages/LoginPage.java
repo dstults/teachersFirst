@@ -1,15 +1,13 @@
 package org.funteachers.teachersfirst.pages;
 
-import java.util.*;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.obj.*;
 
 public class LoginPage extends PageLoader {
 
 	// Constructor
-	public LoginPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public LoginPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

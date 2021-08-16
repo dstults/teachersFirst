@@ -1,8 +1,5 @@
 package org.funteachers.teachersfirst.obj;
 
-import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.*;
-
 import java.util.*;
 
 public class JsonUtils {

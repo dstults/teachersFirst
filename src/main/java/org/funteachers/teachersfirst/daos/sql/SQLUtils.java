@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.*;
 
 class SQLUtils {
 
@@ -249,7 +248,7 @@ class SQLUtils {
 		}
 	}
 
-	//TODO: Switch to generic once the generic is confirmed to be working
+	//TODO: Switch to generic update
 	// Appointment Update
 	public static boolean executeSqlAppointmentUpdate(Connection conn, String query, boolean schedulingVerified, int completionState) {
 		logger.debug("Executing SQL Update to Appointment: " + query);

@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.obj.*;
 

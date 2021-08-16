@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.obj.*;
 public class DiagnosticsPage extends PageLoader {
 
 	// Constructor
-	public DiagnosticsPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public DiagnosticsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 
@@ -18,7 +18,7 @@ public class DiagnosticsPage extends PageLoader {
 	public void loadPage() {
 		
 		// Get initial bit to verify ID and operation
-		final String clientIp = Security.getRealIp(request);
+		final String clientIp = security.getRealIp();
 
 		// Check if whitelisted
 		if (!Security.isWhitelisted(clientIp)) {

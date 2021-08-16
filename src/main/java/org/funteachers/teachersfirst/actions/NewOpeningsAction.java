@@ -13,7 +13,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class NewOpeningsAction extends ActionRunner {
 
-	public NewOpeningsAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public NewOpeningsAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

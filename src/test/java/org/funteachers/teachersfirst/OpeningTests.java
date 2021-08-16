@@ -1,16 +1,9 @@
 package org.funteachers.teachersfirst;
 
-import java.util.*;
-
-import javax.validation.constraints.AssertTrue;
-
-import org.funteachers.teachersfirst.DateHelpers;
 import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.sql.Timestamp;
 
 class OpeningTests {
 
@@ -96,7 +89,7 @@ class OpeningTests {
 	void testEquals() {
 		assertFalse(Alex.equals(null));
 		assertTrue(Alex.equals(Alex));
-		assertFalse(Alex.equals(10));
+		assertFalse(Alex.equals(Riley));
 
 		assertFalse(Alex.equals(new Opening(25, 5, DateHelpers.toTimestamp("2000/06/05 00:00:00"),  DateHelpers.toTimestamp("2000/08/15 00:00:00"))));
 		assertFalse(Alex.equals(new Opening(5, 55, DateHelpers.toTimestamp("2000/06/05 00:00:00"),  DateHelpers.toTimestamp("2000/08/15 00:00:00"))));

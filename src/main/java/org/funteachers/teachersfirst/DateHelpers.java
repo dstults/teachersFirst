@@ -79,7 +79,7 @@ public class DateHelpers {
 		// Thanks to: https://howtodoinjava.com/java/calculate-age-from-date-of-birth/
 		int years = 0;
 		int months = 0;
-		int days;
+		//int days = 0;
 
 		//create calendar object for birthday
 		Calendar birthDay = Calendar.getInstance();
@@ -111,13 +111,13 @@ public class DateHelpers {
 
 		//Calculate the days
 		if (now.get(Calendar.DATE) > birthDay.get(Calendar.DATE)) {
-			days = now.get(Calendar.DATE) - birthDay.get(Calendar.DATE);
+			//days = now.get(Calendar.DATE) - birthDay.get(Calendar.DATE);
 		} else if (now.get(Calendar.DATE) < birthDay.get(Calendar.DATE)) {
-			int today = now.get(Calendar.DAY_OF_MONTH);
+			//int today = now.get(Calendar.DAY_OF_MONTH);
 			now.add(Calendar.MONTH, -1);
-			days = now.getActualMaximum(Calendar.DAY_OF_MONTH) - birthDay.get(Calendar.DAY_OF_MONTH) + today;
+			//days = now.getActualMaximum(Calendar.DAY_OF_MONTH) - birthDay.get(Calendar.DAY_OF_MONTH) + today;
 		} else {
-			days = 0;
+			//days = 0;
 			if (months == 12) {
 				years++;
 				months = 0;

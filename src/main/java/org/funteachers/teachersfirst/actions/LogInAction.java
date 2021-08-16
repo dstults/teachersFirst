@@ -7,7 +7,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class LogInAction extends ActionRunner {
 
-	public LogInAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public LogInAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

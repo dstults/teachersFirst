@@ -1,7 +1,5 @@
 package org.funteachers.teachersfirst.actions;
 
-import java.util.List;
-
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
@@ -10,7 +8,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class UpdateMemberAction extends ActionRunner {
 
-	public UpdateMemberAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public UpdateMemberAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	private String removeInvalidText(String text) {
 		text = text.trim();

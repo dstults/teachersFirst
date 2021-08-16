@@ -235,7 +235,7 @@ public class Member implements IJsonnable {
 	}
 
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {
-		//TODO: validate integers?
+		//TODO: validate integers to make sure they make sense
 
 		setBirthdate(DateHelpers.toTimestamp(years, months, days, hours, minutes, seconds));
 	}

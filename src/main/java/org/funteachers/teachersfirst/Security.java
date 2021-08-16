@@ -1,6 +1,7 @@
 package org.funteachers.teachersfirst;
 
-import java.net.*;
+import java.math.BigInteger;
+import java.security.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -9,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.daos.DAO;
-import org.funteachers.teachersfirst.daos.sql.MemberSqlDAO;
+import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class Security {
@@ -39,14 +39,7 @@ public class Security {
 		//whitelistIp(nsLookup("dstults.net"));
 	}
 
-	public static String getRealIp(HttpServletRequest request) {
-		String proxyResult = request.getHeader("X-FORWARDED-FOR");
-		if (proxyResult != null) return proxyResult;
-
-		String result = request.getRemoteAddr();
-		return result;
-	}
-
+	/*
 	private static void whitelistIp(String ip) {
 		if (ip == null) {
 			logger.warn("Invalid argument: ip is null");
@@ -59,7 +52,9 @@ public class Security {
 		ipWhitelist.add(ip);
 		logger.info("Added IP [ " + ip + " ] to whitelist.");
 	}
+	*/
 
+	/*
 	private static String nsLookup(String domain) {
 		try {
 			InetAddress inetHost = InetAddress.getByName(domain);
@@ -70,6 +65,7 @@ public class Security {
 			return "";
 		}
 	}
+	*/
 
 	// ===================================================================================
 	//   Passwords, Tokens, and Logins
@@ -82,6 +78,14 @@ public class Security {
 	public Security(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
+	}
+
+	public String getRealIp() {
+		String proxyResult = request.getHeader("X-FORWARDED-FOR");
+		if (proxyResult != null) return proxyResult;
+
+		String result = request.getRemoteAddr();
+		return result;
 	}
 
 	public Member checkPassword(String loginName, String password) {
@@ -121,9 +125,53 @@ public class Security {
 		return found.getValue();
 	}
 
+	public static String encryptString(String input)
+	{
+		String algorithm = "SHA-1";
+		// https://www.geeksforgeeks.org/sha-1-hash-in-java/
+		try {
+			// getInstance() method is called with algorithm SHA-1
+			MessageDigest md = MessageDigest.getInstance(algorithm);
+
+			// digest() method is called
+			// to calculate message digest of the input string
+			// returned as array of byte
+			byte[] messageDigest = md.digest(input.getBytes());
+
+			// Convert byte array into signum representation
+			BigInteger no = new BigInteger(1, messageDigest);
+
+			// Convert message digest into hex value
+			String hashtext = no.toString(16);
+
+			// Add preceding 0s to make it 32 bit
+			while (hashtext.length() < 32)
+				hashtext = "0" + hashtext;
+
+			// return the HashText
+			return hashtext;
+
+		} catch (NoSuchAlgorithmException e) {
+
+			logger.error("Do not support [ {} ] algorithm!", algorithm);
+			throw new RuntimeException(e);
+		}
+	}
+
+	private String getToken() {
+		// Salt:
+		StringBuilder sb = new StringBuilder();
+		sb.append(getRealIp());
+		Random rnd = new Random();
+		for (int i = 0; i < 10; i++) {
+			sb.append(rnd.nextInt(10));
+		}
+		String saltStr = encryptString(sb.toString());
+		return saltStr;
+	}
+
 	private void giveTokenCookie(Member member) {
-		// TODO: Make token random and salted
-		String token = "1234asdf";
+		String token = getToken();
 		logger.debug("Giving token [ {} ] to member [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
 
 		// Update database

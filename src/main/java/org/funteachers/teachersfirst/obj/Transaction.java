@@ -1,9 +1,6 @@
 package org.funteachers.teachersfirst.obj;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-
-import org.funteachers.teachersfirst.DateHelpers;
 
 public class Transaction {
 

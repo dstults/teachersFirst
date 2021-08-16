@@ -2,7 +2,6 @@ package org.funteachers.teachersfirst;
 
 import javax.servlet.ServletException;
 
-import org.funteachers.teachersfirst.Security;
 import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
 
@@ -34,15 +33,6 @@ class SecurityTests {
 		Member failedLogin = Security.checkPassword("testMember01", "asd14234123432dsafdsfdsafdas");
 		assertNull(failedLogin);
 		Member goodLogin = Security.checkPassword("mcman", "asdf");
-		
-		//TODO: Get install Mock Http Module
-		assertThrows(NullPointerException.class, () -> Security.login(null, goodLogin));
-
-		//TODO: Get install Mock Http Module
-		assertThrows(NullPointerException.class, () -> Security.getUserId(null));
-
-		//TODO: Get install Mock Http Module
-		assertThrows(NullPointerException.class, () -> Security.logout(null, "unit test"));
 		*/
 	}
 

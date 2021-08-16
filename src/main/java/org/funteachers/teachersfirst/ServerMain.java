@@ -1,7 +1,6 @@
 package org.funteachers.teachersfirst;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 import javax.servlet.*;
@@ -69,7 +68,8 @@ public class ServerMain extends HttpServlet {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
-		final String logInfo = Security.getRealIp(request) + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
+		final Security security = new Security(request, response);
+		final String logInfo = security.getRealIp() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
 		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
 			logger.debug("IN - {}", logInfo);
 
@@ -78,56 +78,56 @@ public class ServerMain extends HttpServlet {
 				case "":
 				case "/":
 				case "/services":
-					new ServicesPage(request, response).loadPage();
+					new ServicesPage(request, response, security).loadPage();
 					break;
 				case "/msg":
 				case "/message":
 				case "/messageOnly":
-					new MessagePage(request, response).loadPage();
+					new MessagePage(request, response, security).loadPage();
 					break;
 				case "/appointments":
-					new AppointmentsPage(request, response).loadPage();
+					new AppointmentsPage(request, response, security).loadPage();
 					break;
 				case "/make_appointment_batch":
-					new MakeAppointmentBatchPage(request, response).loadPage();
+					new MakeAppointmentBatchPage(request, response, security).loadPage();
 					break;
 				case "/make_appointment":
-					new MakeAppointmentPage(request, response).loadPage();
+					new MakeAppointmentPage(request, response, security).loadPage();
 					break;
 				case "/confirm_make_appointment":
-					new ConfirmMakeAppointmentPage(request, response).loadPage();
+					new ConfirmMakeAppointmentPage(request, response, security).loadPage();
 					break;
 				case "/openings":
-					new OpeningsPage(request, response).loadPage();
+					new OpeningsPage(request, response, security).loadPage();
 					break;
 				case "/make_openings":
-					new MakeOpeningsPage(request, response).loadPage();
+					new MakeOpeningsPage(request, response, security).loadPage();
 					break;
 				case "/profile":
-					new ProfilePage(request, response).loadPage();
+					new ProfilePage(request, response, security).loadPage();
 					break;
 				case "/members":
-					new MembersPage(request, response).loadPage();
+					new MembersPage(request, response, security).loadPage();
 					break;
 				case "/register":
-					new RegisterPage(request, response).loadPage();
+					new RegisterPage(request, response, security).loadPage();
 					break;
 				case "/login":
-					new LoginPage(request, response).loadPage();
+					new LoginPage(request, response, security).loadPage();
 					break;
 				case "/logout":
-					new LogoutPage(request, response).loadPage();
+					new LogoutPage(request, response, security).loadPage();
 					break;
 
 				case "/log_in": // intentionally different - debug/json use
-					new LogInAction(request, response).runAction(); // action, not page
+					new LogInAction(request, response, security).runAction(); // action, not page
 					return; // don't log
 				case "/log_out": // intentionally different - debug/json use
-					new LogOutAction(request, response).runAction(); // action, not page
+					new LogOutAction(request, response, security).runAction(); // action, not page
 					return; // don't log
 
 				case "/dynamic.css":
-					new DynamicCssFile(request, response).loadPage();
+					new DynamicCssFile(request, response, security).loadPage();
 					return; // don't log
 
 				case "/health":
@@ -139,7 +139,7 @@ public class ServerMain extends HttpServlet {
 					return; // don't log
 
 				case "/test":
-					new DiagnosticsPage(request, response).loadPage();
+					new DiagnosticsPage(request, response, security).loadPage();
 					break;
 
 				default:
@@ -178,51 +178,52 @@ public class ServerMain extends HttpServlet {
 				parameters += comma + "{" + QueryHelpers.sanitizeForLog(key) + ": " + QueryHelpers.sanitizeForLog(value) + "}";
 				comma = ", ";
 			}
-		}		
-		final String logInfo = Security.getRealIp(request) + " " + request.getMethod() + " " + pagePath + " " + parameters;
+		}
+		final Security security = new Security(request, response);
+		final String logInfo = security.getRealIp() + " " + request.getMethod() + " " + pagePath + " " + parameters;
 		logger.debug("IN - {}", logInfo); // Don't log "health" commands
 		final String action = request.getParameter("action") == null ? "" : QueryHelpers.sanitizeForLog(request.getParameter("action"));
 
 		try {
 			switch (action) {
 				case "log_in":
-					new LogInAction(request, response).runAction();
+					new LogInAction(request, response, security).runAction();
 					break;
 				case "log_out":
-					new LogOutAction(request, response).runAction();
+					new LogOutAction(request, response, security).runAction();
 					break;
 				case "register_member":
-					new OpenRegisterAction(request, response).runAction();
+					new OpenRegisterAction(request, response, security).runAction();
 					break;
 				case "update_member":
-					new UpdateMemberAction(request, response).runAction();
+					new UpdateMemberAction(request, response, security).runAction();
 					break;
 				case "make_openings":
-					new NewOpeningsAction(request, response).runAction();
+					new NewOpeningsAction(request, response, security).runAction();
 					break;
 				case "make_appointment":
-					new NewAppointmentAction(request, response).runAction();
+					new NewAppointmentAction(request, response, security).runAction();
 					break;
 				case "make_appointment_batch":
-					new NewAppointmentBatchAction(request, response).runAction();
+					new NewAppointmentBatchAction(request, response, security).runAction();
 					break;
 				case "delete_appointment":
-					new DeleteAppointmentAction(request, response).runAction();
+					new DeleteAppointmentAction(request, response, security).runAction();
 					break;
 				case "refund_appointment":
-					new UpdateAppointmentStateAction(request, response, Appointment.STATE_MISSED_REFUNDED).runAction();
+					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_MISSED_REFUNDED).runAction();
 					break;
 				case "miss_appointment":
-					new UpdateAppointmentStateAction(request, response, Appointment.STATE_MISSED).runAction();
+					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_MISSED).runAction();
 					break;
 				case "complete_appointment":
-					new UpdateAppointmentStateAction(request, response, Appointment.STATE_COMPLETED).runAction();
+					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_COMPLETED).runAction();
 					break;
 				case "cancel_appointment":
-					new UpdateAppointmentStateAction(request, response, Appointment.STATE_CANCELLED).runAction();
+					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_CANCELLED).runAction();
 					break;
 				case "delete_opening":
-					new DeleteOpeningAction(request, response).runAction();
+					new DeleteOpeningAction(request, response, security).runAction();
 					break;
 
 				case "reset_daos":
@@ -282,6 +283,7 @@ public class ServerMain extends HttpServlet {
 
 	// =================================================================
 
+	/*
 	private static int parseInt(String s) {
 		int i = -1;
 		if (s != null) {
@@ -293,5 +295,6 @@ public class ServerMain extends HttpServlet {
 		}
 		return i;
 	}
+	*/
 
 }

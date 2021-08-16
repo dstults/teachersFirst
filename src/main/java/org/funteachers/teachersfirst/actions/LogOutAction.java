@@ -6,7 +6,7 @@ import org.funteachers.teachersfirst.*;
 
 public class LogOutAction extends ActionRunner {
 
-	public LogOutAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public LogOutAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

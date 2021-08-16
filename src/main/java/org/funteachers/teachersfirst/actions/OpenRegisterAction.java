@@ -5,13 +5,12 @@ import java.util.List;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.daos.*;
 import org.funteachers.teachersfirst.daos.sql.MemberSqlDAO;
 import org.funteachers.teachersfirst.obj.*;
 
 public class OpenRegisterAction extends ActionRunner {
 
-	public OpenRegisterAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public OpenRegisterAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

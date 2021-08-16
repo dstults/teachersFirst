@@ -88,8 +88,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		Member member = getMemberQuery(query);
 		// This shouldn't be logged for security reasons
-		// TODO: Comment this out once it's confirmed to be working
-		if (member == null) logger.debug("retrieveByIdAndToken [ {} ] / [ {} ] failed", recID, token);
+		//if (member == null) logger.debug("retrieveByIdAndToken [ {} ] / [ {} ] failed", recID, token);
 		return member ;
 	}
 

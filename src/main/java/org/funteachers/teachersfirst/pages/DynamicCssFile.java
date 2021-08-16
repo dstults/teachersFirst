@@ -1,16 +1,15 @@
 package org.funteachers.teachersfirst.pages;
 
-import java.util.*;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.DataManager;
 import org.funteachers.teachersfirst.PageLoader;
-import org.funteachers.teachersfirst.obj.*;
+import org.funteachers.teachersfirst.Security;
 
 public class DynamicCssFile extends PageLoader {
 
 	// Constructor
-	public DynamicCssFile(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public DynamicCssFile(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 

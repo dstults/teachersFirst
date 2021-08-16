@@ -8,7 +8,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteAppointmentAction extends ActionRunner {
 
-	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

@@ -2,19 +2,12 @@ package org.funteachers.teachersfirst;
 
 import java.util.*;
 
-import javax.validation.constraints.AssertTrue;
-
-import org.funteachers.teachersfirst.DateHelpers;
 import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import junit.framework.Assert;
 
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
-import java.time.format.*;
 
 class PlannedAppointmentTests {
 

@@ -1,16 +1,9 @@
 package org.funteachers.teachersfirst;
 
-import java.util.*;
-
-import javax.validation.constraints.AssertTrue;
-
-import org.funteachers.teachersfirst.DateHelpers;
 import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.sql.Timestamp;
 
 class AppointmentTests {
 
@@ -125,7 +118,7 @@ class AppointmentTests {
 
 		assertFalse(Appointment4.equals(null));
 		assertTrue(Appointment4.equals(Appointment4));
-		assertFalse(Appointment4.equals(new Opening(2, DateHelpers.toTimestamp("2000/01/01 00:00:00"), DateHelpers.toTimestamp("2000/25/01 00:00:00"))));
+		assertFalse(Appointment4.equals(Appointment3));
 	}
 
 	

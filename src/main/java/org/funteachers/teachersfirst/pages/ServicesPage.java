@@ -15,7 +15,7 @@ public class ServicesPage extends PageLoader {
 	//  - class variables must have appropriate getters
 
 	// Constructor
-	public ServicesPage(HttpServletRequest request, HttpServletResponse response) { super(request, response); }
+	public ServicesPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
 
 	// Page-specific
 
