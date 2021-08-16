@@ -22,7 +22,7 @@ Get yours today!
 
 ### Screenshot(s):
 ![image](https://user-images.githubusercontent.com/20900852/111135625-1ca36600-853a-11eb-89c5-bd2d421d5530.png)
-![image](https://user-images.githubusercontent.com/20900852/111137490-144c2a80-853c-11eb-8ed4-ad4b4fb446dd.png)
+![image](https://user-images.githubusercontent.com/20900852/129517721-4a7b9ed6-a036-45dd-a598-5690afda53f9.png)
 
 ### Completed Objectives
  - v0.0 Getting started
