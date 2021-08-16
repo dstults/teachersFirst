@@ -1,4 +1,4 @@
-# "Teachers First" FOSS CRM v0.8
+# "Teachers First" FOSS CRM v0.9
 
 For help with installation or using the interface, please consult [the WIKI](https://github.com/dstults/teachersFirst/wiki).
 - https://github.com/dstults/teachersFirst/wiki
@@ -34,7 +34,7 @@ Get yours today!
  - v0.6 Polish to Minimal Viable Product
  - v0.7 Fully customizable profile and transition to JS-based view
  - v0.8 Credit economy and transaction logging
+ - v0.9 Attractive enhancements and security
 
 ## Under contruction:
- - v0.9 Administrative additions (create, modify and disable other accounts)
- - v1.0 Attractive enhancements
+ - v1.0 Administrative additions (create, modify and disable other accounts)
