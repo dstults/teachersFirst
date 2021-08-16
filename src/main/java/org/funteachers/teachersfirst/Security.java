@@ -2,7 +2,9 @@ package org.funteachers.teachersfirst;
 
 import java.net.*;
 import java.util.*;
+import java.util.regex.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.*;
@@ -63,12 +65,12 @@ public class Security {
 		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
 		Member member = memberDAO.retrieveByLoginNameAndPassword(loginName, password);
 
-		if(member != null){
-			return member;
+		if (member == null) {
+			logger.debug(loginName + " failed to log in with password: " + password);
+			return null;
 		}
-		// should perform sql query, for now, just does this
-		logger.debug(loginName + " failed to log in with password: " + password);
-		return null;
+
+		return member;
 	}
 
 	public static void login(HttpServletRequest request, Member member) {
@@ -82,6 +84,58 @@ public class Security {
 		request.getSession().setAttribute("USER_ID", 0);
 		request.getSession().setAttribute("USER_NAME", "");
 		logger.debug("User logged out: " + info);
+	}
+
+	private static Cookie getCookieByName(HttpServletRequest request, String name) {
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(name)) return cookie;
+		}
+		return null;
+	}
+
+	private static String getCookieValueByName(HttpServletRequest request, String name) {
+		Cookie found = getCookieByName(request, name);
+		if (found == null) return "";
+		return found.getValue();
+	}
+
+	public Member getMemberFromRequestCookieToken(HttpServletRequest request) {
+
+		// check for a token cookie
+		final String input = getCookieValueByName(request, "token");
+
+		// check if a valid token
+		final String regex = "[0-9]+.[A-Za-z0-9+\\/=]+";
+		final Pattern pattern = Pattern.compile(regex);
+		final Matcher matcher = pattern.matcher(input);
+		if (!matcher.matches()) return null;
+		
+		// check database for match
+		final int uid;
+		try {
+			uid = Integer.parseInt(matcher.group(1));
+		} catch (Exception e) {
+			// TODO: Clear cookie with bad token here
+			logger.debug("Failed to parse UID from token: [ {} ]", matcher.group(0));
+			return null;
+		}
+		final String token = matcher.group(2);
+
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		final Member member = memberDAO.retrieveByIdAndToken(uid, token);
+
+		if (member == null) {
+			// TODO: Clear cookie with bad token here
+			logger.debug("UID [ {} ] failed to log in with token: [ {} ]", uid, token);
+		}
+		// might be null
+		return member;
+
+		// check 
+		int uid = ;
+
+		return 0;
 	}
 
 	// !!! This has its own process to ensure security
