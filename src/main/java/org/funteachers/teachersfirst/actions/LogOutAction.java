@@ -11,7 +11,7 @@ public class LogOutAction extends ActionRunner {
 	@Override
 	public void runAction() {
 		// Do this no matter what to make sure it's clean:
-		Security.logout(request, "User " + uid + " normal log out.");
+		security.logout(operator, "Normal log out.");
 		if (uid > 0 ) {
 			this.sendPostReply("/services", "", "Have a nice day!");
 		} else {
