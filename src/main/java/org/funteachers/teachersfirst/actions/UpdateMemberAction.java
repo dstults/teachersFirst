@@ -95,7 +95,7 @@ public class UpdateMemberAction extends ActionRunner {
 		boolean changesMade = false;
 		boolean updateNeeded = false;
 		if (credits != member.getCredits()) {
-			member.setCredits(uid, operator.getName(), "manual update", credits);
+			member.setCredits(uid, operator.getLoginName(), "manual update", credits);
 			changesMade = true;
 			updateNeeded = false; // This has its own personalized SQL update
 		}

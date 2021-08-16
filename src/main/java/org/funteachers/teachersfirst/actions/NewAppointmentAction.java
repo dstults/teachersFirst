@@ -177,7 +177,7 @@ public class NewAppointmentAction extends ActionRunner {
 		float credits = student.getCredits();
 		float length = pa.getLength();
 		credits -= length;
-		student.setCredits(uid, operator.getName(), "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
+		student.setCredits(uid, operator.getLoginName(), "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
 
 		// Reply to user
 		this.sendPostReply("/appointments", "", "Appointment created!");

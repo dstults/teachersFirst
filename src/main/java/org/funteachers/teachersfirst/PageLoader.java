@@ -71,17 +71,18 @@ public abstract class PageLoader {
 		this.operator = security.getMemberFromRequestCookieToken();
 		if (operator != null) {
 			this.uid = this.operator.getRecID();
-			this.userName = this.operator.getName();
+			this.userName = this.operator.getDisplayName();
 			this.isAdmin = this.operator.getIsAdmin();
 			this.isInstructor = this.operator.getIsInstructor();
 			this.isStudent = this.operator.getIsStudent();
 		} else {
 			this.uid = 0;
-			this.userName = "";
+			this.userName = "Guest";
 			this.isAdmin = false;
 			this.isInstructor = false;
 			this.isStudent = false;
 		}
+		//logger.debug("isAdmin [{}] isInstructor [ {} ] isStudent [ {} ]", this.isAdmin, this.isInstructor, this.isStudent);
 
 		this.templateDataMap = new HashMap<>();
 		getGetMessage(); // Checks query for message data

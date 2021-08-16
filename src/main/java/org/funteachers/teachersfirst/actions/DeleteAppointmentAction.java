@@ -88,8 +88,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 			final Member student = memberDAO.retrieveByID(appointment.getStudentID());
 			final float length = appointment.getLength();
 			final float credits = student.getCredits() + length;
-			final String opName = operator.getName();
-			student.setCredits(uid, opName, "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
+			student.setCredits(uid, operator.getLoginName(), "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
 		}
 
 		// Send response

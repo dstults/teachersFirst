@@ -210,7 +210,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		if (successCount > 0 && lengthEach > 0.0) {
 			float credits = student.getCredits();
 			credits -= successCount * lengthEach;
-			student.setCredits(uid, operator.getName(), "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
+			student.setCredits(uid, operator.getLoginName(), "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
 		}
 
 		logger.info(DataManager.getAppointmentDAO().size() + " records total");
