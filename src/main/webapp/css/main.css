@@ -394,6 +394,13 @@ input[type=radio] {
 	height: auto;
 	margin: 0;
 }
+.left-right-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	margin: 2.5rem auto;
+    width: fit-content;
+    grid-gap: 4rem;
+}
 
 /* datasheets (page-wide tables) */
 

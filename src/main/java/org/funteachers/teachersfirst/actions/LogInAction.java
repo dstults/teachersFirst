@@ -44,7 +44,5 @@ public class LogInAction extends ActionRunner {
 			return;
 		}
 	}
-
-
 	
 }
