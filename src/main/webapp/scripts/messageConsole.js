@@ -60,9 +60,13 @@ const addError = (text) => {
 const persistentLog = sessionStorage.getItem('persistentLog') ? JSON.parse(sessionStorage.getItem('persistentLog')) : [];
 
 const relogMessages = _ => {
-	// Re-populate past log messages without animating
-	for(const logMessage of persistentLog) {
-		writeMessageToConsole(logMessage, false);
+
+	const welcomeUser = (persistentLog.length === 0);
+	if (!welcomeUser) {
+		// Re-populate past log messages without animating
+		for(const logMessage of persistentLog) {
+			writeMessageToConsole(logMessage, false);
+		}
 	}
 
 	// Re-hide if it was shown despite having been minimized before
@@ -74,6 +78,8 @@ const relogMessages = _ => {
 	const consoleLocation = sessionStorage.getItem('consoleLocation') ? JSON.parse(sessionStorage.getItem('consoleLocation')) : {x: consoleFrame.style.left, y: consoleFrame.style.top};
 	consoleFrame.style.left = consoleLocation.x;
 	consoleFrame.style.top = consoleLocation.y;
+
+	if (welcomeUser) addMessage("Welcome!");
 };
 relogMessages();
 
