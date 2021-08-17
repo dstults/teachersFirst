@@ -21,11 +21,6 @@ body {
 a {
 	text-decoration: none;
 }
-table {
-	table-layout: fixed;
-	background-color: var(--backgroundColor);
-	opacity: 0.85;
-}
 th, td {
 	overflow: hidden;
 	/* white-space: nowrap; */
@@ -402,15 +397,24 @@ input[type=radio] {
     grid-gap: 4rem;
 }
 
+/* main tables - unified settings */
+table.info-list, table.openings-calendar, table.profile-box {
+	table-layout: fixed;
+	background-color: var(--backgroundColor);
+	opacity: 0.85;
+	margin: 1rem auto;
+	border: 2px solid black;
+	box-shadow: 2px 2px 2px black;
+}
+
 /* datasheets (page-wide tables) */
 
 table.info-list {
 	width: 100%;
-	margin: 1rem auto;
 	border-collapse: collapse;
 	font-size: 1.2rem;
 }
-table.info-list, table.info-list th, table.info-list td {
+table.info-list th, table.info-list td {
 	border: 1px solid black;
 	padding: 5px 10px;
 }
@@ -440,11 +444,6 @@ table.info-list tr {
 	left: 0;
 	right: auto;
 	bottom: auto;
-}
-table.openings-calendar {
-	margin: 1rem auto;
-	border: 2px solid black;
-	box-shadow: 2px 2px 2px black;
 }
 table.openings-calendar th {
 	font-size: 200%;
@@ -478,22 +477,18 @@ table.openings-calendar div.highlight {
 	font-size: 2rem;
 	text-align: left;
 }
-.profile-table {
+.profile-box {
 	font-size: 2rem;
+	padding: 15px 10px;
+	width: 100%;
+}
+.profile-box td {
+	width: 50%;
 }
 .profile-image {
 	margin-top: 2rem;
 	margin-left: 3rem;
 	width: 100%;
-}
-.profile-table {
-	padding: 15px 10px;
-	width: 100%;
-	border: 2px solid black;
-	box-shadow: 2px 2px 2px black;
-}
-.profile-table td {
-	width: 50%;
 }
 .profile-basic-stats {
 	width: 90%;
