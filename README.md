@@ -20,6 +20,25 @@ For the low, low price of _free_ you can have your very own all-in-one, custom-b
 
 Get yours today!
 
+# Installation
+
+### First Steps
+- [Bare-Metal Instructions](../../wiki/Bare-Metal-Installation)
+- [Docker Instructions](../../wiki/Docker-Installation)
+- [Cloud Instructions](../../wiki/Cloud-Installation)
+
+### First Steps
+- [Custom Configuration](../../wiki/Custom-Configuration)
+- [Custom Pages and Content](../../wiki/Custom-Content)
+
+### Maintenance
+- [Updating](../../wiki/Updating)
+
+
+# Visuals
+
+Check out our [history page](../../wiki/History) to see the evolution of the project over time!
+
 ### Screenshot(s):
 Student Viewing Calendar:
 ![image](https://user-images.githubusercontent.com/20900852/129517889-d89ba92c-479b-4094-bd88-ad89c32aa95d.png)
@@ -27,6 +46,8 @@ Teacher Viewing Students:
 ![image](https://user-images.githubusercontent.com/20900852/129518087-57769414-a2a3-4cb6-b384-0fc531a3a157.png)
 Admin Viewing Appointments:
 ![image](https://user-images.githubusercontent.com/20900852/129517721-4a7b9ed6-a036-45dd-a598-5690afda53f9.png)
+
+# Roadmap
 
 ### Completed Objectives
  - v0.0 Getting started
