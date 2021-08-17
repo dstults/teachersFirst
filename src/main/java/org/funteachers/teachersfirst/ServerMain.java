@@ -1,7 +1,9 @@
 package org.funteachers.teachersfirst;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
+import java.util.regex.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -64,6 +66,7 @@ public class ServerMain extends HttpServlet {
 	}
 
 	@Override
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
@@ -143,11 +146,30 @@ public class ServerMain extends HttpServlet {
 					break;
 
 				default:
+					//String filename = URLDecoder.decode(request.getPathInfo().substring(1), "UTF-8");
+					if (isValidCustomPath(pagePath)) {
+						String filename = pagePath;
+						File file = new File("/var/www/", filename);
+						if (!file.exists() || file.isDirectory()) {
+							logger.debug("====================== CUSTOM FAIL ======================");
+							logger.debug("Is Directory:     {}", file.isDirectory());
+							logger.debug("Sanitized Query:  {}", sanitizedQuery);
+							logger.debug("Page Path:        {}", pagePath);
+							response.sendError(HttpServletResponse.SC_NOT_FOUND);
+							return; // Use above logging instead of standard logging
+						}
+						response.setHeader("Content-Type", getServletContext().getMimeType(filename));
+						response.setHeader("Content-Length", String.valueOf(file.length()));
+						response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+						Files.copy(file.toPath(), response.getOutputStream());
+						break; // Use standard logging
+					}
+
 					logger.debug("====================== Debug Me ======================");
-					logger.debug("Sanitized Query: {}", sanitizedQuery);
-					logger.debug("Page Path: {}", pagePath);
+					logger.debug("Sanitized Query:  {}", sanitizedQuery);
+					logger.debug("Page Path:        {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					return;
+					return; // Use above logging instead of standard logging
 			}
 
 
@@ -245,8 +267,8 @@ public class ServerMain extends HttpServlet {
 
 				default:
 					logger.debug("====================== Debug Me ======================");
-					logger.debug("Post Parameters: {}", parameters);
-					logger.debug("Page Path: {}", pagePath);
+					logger.debug("Post Parameters:  {}", parameters);
+					logger.debug("Page Path:        {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 					return; // use above log instead
 			}
@@ -282,6 +304,26 @@ public class ServerMain extends HttpServlet {
 	}
 
 	// =================================================================
+
+	private boolean isValidCustomPath(String pagePath) {
+		// test for min length
+		if (pagePath.length() < 8) return false;
+		
+		// check for a "custom/"
+		if (!pagePath.substring(0, 8).equals("/custom/")) return false;
+
+		// check for illegal chars
+		final String regex = "[^-_.A-Za-z0-9\\/]";
+		final Pattern pattern = Pattern.compile(regex);
+		final Matcher matcher = pattern.matcher(pagePath);
+		if (matcher.matches()) return false;
+
+		// check for any double dots
+		if (pagePath.lastIndexOf("..") != -1) return false;
+		
+		return true;
+	}
+	
 
 	/*
 	private static int parseInt(String s) {
