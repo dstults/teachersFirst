@@ -87,6 +87,7 @@ public abstract class PageLoader {
 		getGetMessage(); // Checks query for message data
 		this.jsonMode = QueryHelpers.getGetBool(request, "json");
 
+		templateDataMap.put("serverTime", DateHelpers.getNowDateTimeString());
 		templateDataMap.put("canRegister", DataManager.enableOpenRegistration);
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
 		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);

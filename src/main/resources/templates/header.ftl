@@ -14,6 +14,7 @@
 		<a href="/login"><div class="top-right-button navy mouseover">Log In</div></a>
 		<#if canRegister><a href="/register"><div class="top-right-button slightly-lower navy mouseover">Register</div></a></#if>
 		</#if>
+		<#if serverTime?has_content><div class="bottom-right timestamp">${serverTime}</div></#if>
 		<nav>
 			<ul class="top-nav-list">
 				<li><a href="/services" class="nav-link">Services</a></li>
