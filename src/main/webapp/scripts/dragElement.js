@@ -27,9 +27,17 @@ const dragElement = (clickedElement, draggedElement) => {
 		pos2 = pos4 - e.clientY;
 		pos3 = e.clientX;
 		pos4 = e.clientY;
-		// set the element's new position:
-		draggedElement.style.top = (draggedElement.offsetTop - pos2) + 'px';
-		draggedElement.style.left = (draggedElement.offsetLeft - pos1) + 'px';
+		// Make sure element is within bounds
+		let newTop = draggedElement.offsetTop - pos2;
+		if (newTop < 3) newTop = 3;
+		if (newTop > window.innerHeight - draggedElement.offsetHeight) newTop = window.innerHeight - draggedElement.offsetHeight;
+
+		let newLeft = draggedElement.offsetLeft - pos1;
+		if (newLeft < 3) newLeft = 3;
+		if (newLeft > window.innerWidth - draggedElement.offsetWidth) newLeft = window.innerWidth - draggedElement.offsetWidth;
+		// Set new position:
+		draggedElement.style.top = newTop + 'px';
+		draggedElement.style.left = newLeft + 'px';
 	};
 
 	const closeDragElement = _ => {
