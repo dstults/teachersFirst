@@ -7,7 +7,7 @@
 	<#include "please_login.ftl">
 <#else>
 	<div class="page-content-750-1000">
-		<table class="profile-table">
+		<table class="profile-box">
 		<tr><td style="width: 35%;"><img class="profile-image" src="/images/profileNeutral.png"></td>
 			<td>
 				<div class="profile-basic-stats">

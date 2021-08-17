@@ -91,6 +91,14 @@ public abstract class PageLoader {
 		templateDataMap.put("websiteTitle", DataManager.websiteTitle);
 		templateDataMap.put("websiteSubtitle", DataManager.websiteSubtitle);
 		templateDataMap.put("showWelcome", true);
+
+		// TODO: This should be unified into one Zulu output, and handled client-side with JS for dynamic updating purposes
+		// TODO: These should be set by configuration file
+		templateDataMap.put("time1Name", "Beijing");
+		templateDataMap.put("time1Time", DateHelpers.getNowDateTimeString("Asia/Shanghai"));
+		templateDataMap.put("time2Name", "Los Angeles");
+		templateDataMap.put("time2Time", DateHelpers.getNowDateTimeString("America/Los_Angeles"));
+
 		templateDataMap.put("userId", this.uid);
 		templateDataMap.put("userName", this.userName);
 		templateDataMap.put("isAdmin", this.isAdmin);

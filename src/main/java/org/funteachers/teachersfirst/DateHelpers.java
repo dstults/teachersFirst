@@ -10,8 +10,15 @@ import java.util.*;
 public class DateHelpers {
 
 	public static final long millisecondsPerDay = 86_400_000;
-	public static final String homeZoneId = "America/Los_Angeles";
-	public static final ZoneId homeZone = ZoneId.of(homeZoneId);
+	
+	// Time zone samples:
+	//public static final String defaultZoneId = "America/Los_Angeles";
+	//public static final String defaultZoneId = "Etc/UTC";
+	//public static final String defaultZoneId = "Etc/GMT-7";
+	//public static final String defaultZoneId = "Etc/GMT+8";
+	// TODO: Make this into a setting in the config file
+	public static final String defaultZoneId = "Asia/Shanghai";
+	public static final ZoneId defaultZone = ZoneId.of(defaultZoneId);
 
 	public static Timestamp toTimestamp(int year, int month, int day, int hour, int minute, int second) {
 		return toTimestamp(year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second);
@@ -128,7 +135,7 @@ public class DateHelpers {
 	}
 
 	public static boolean isInThePast(LocalDateTime comparedDateTime) {
-		return comparedDateTime.compareTo(LocalDateTime.now()) < 0;
+		return comparedDateTime.compareTo(LocalDateTime.now(defaultZone)) < 0;
 	}
 
 	public static boolean dateIsBetweenDateAndDate(LocalDate time, LocalDate start, LocalDate finish) {
@@ -140,7 +147,7 @@ public class DateHelpers {
 	}
 
 	public static LocalDateTime previousSunday() {
-		final LocalDate today = LocalDate.now(homeZone);
+		final LocalDate today = LocalDate.now(defaultZone);
 		return today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)).atStartOfDay();
 		
 		/* Doesn't do timezones:
@@ -152,7 +159,7 @@ public class DateHelpers {
 	}
 
 	public static LocalDateTime nextSaturday() {
-		final LocalDate today = LocalDate.now(homeZone);
+		final LocalDate today = LocalDate.now(defaultZone);
 		return today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)).atTime(23, 59, 59); // LocalTime.MAX looks ugly when stringified
 
 		/* Doesn't do timezones natively:
@@ -163,10 +170,16 @@ public class DateHelpers {
 		return new Timestamp(cal.getTimeInMillis()); */
 	}
 
+	public static String getNowDateTimeString(String zoneId) {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		LocalDateTime now = LocalDateTime.now(ZoneId.of(zoneId));
+		return dtf.format(now);
+	}
+
 	public static String getNowDateTimeString() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-		LocalDateTime now = LocalDateTime.now();  
-		return dtf.format(now);
+		LocalDateTime now = LocalDateTime.now(defaultZone);
+		return "(Server) " + dtf.format(now);
 	}
 
 	public static String getSystemTimeZone() {

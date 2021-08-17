@@ -15,12 +15,12 @@ public class AppointmentsPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		templateDataMap.put("title", "Appointments");
-
-		// key variables
-		final List<Appointment> futureAppointments = new ArrayList<Appointment>();		
-		final List<Appointment> pastAppointments= new ArrayList<Appointment>();
 		if (jsonMode) {
+			
+			// key variables
+			final List<Appointment> futureAppointments = new ArrayList<Appointment>();		
+			final List<Appointment> pastAppointments= new ArrayList<Appointment>();
+
 			String filterMemberIdString = QueryHelpers.getGet(request, "memberId");
 			int filterMemberId;
 			if (!filterMemberIdString.isEmpty() && isAdmin) {
@@ -35,6 +35,7 @@ public class AppointmentsPage extends PageLoader {
 				filterMemberId = uid;
 			}
 			
+			// TODO: I can delete these on the various pages now that it doesn't even load things without DAO connection!
 			// Check DAO connection
 			if (uid > 0) {
 				// TODO: This is json mode now! This should probably say something like:
@@ -78,8 +79,7 @@ public class AppointmentsPage extends PageLoader {
 		} else {
 
 			// FreeMarker
-			templateDataMap.put("pastAppointments", pastAppointments);
-			templateDataMap.put("futureAppointments", futureAppointments);
+			templateDataMap.put("title", "Appointments");
 			templateName = "appointments.ftl";
 
 			trySendResponse();
