@@ -160,7 +160,9 @@ public class ServerMain extends HttpServlet {
 						}
 						response.setHeader("Content-Type", getServletContext().getMimeType(filename));
 						response.setHeader("Content-Length", String.valueOf(file.length()));
-						response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+						response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");						
+						// Cache for 30 days
+						response.setDateHeader("Expires", System.currentTimeMillis() + 30 * DateHelpers.millisecondsPerDay);
 						Files.copy(file.toPath(), response.getOutputStream());
 						break; // Use standard logging
 					}
