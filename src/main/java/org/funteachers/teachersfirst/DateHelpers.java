@@ -12,7 +12,6 @@ public class DateHelpers {
 	public static final long millisecondsPerDay = 86_400_000;
 	
 	// Time zone samples:
-	//public static final String defaultZoneId = "Asia/Shanghai";
 	//public static final String defaultZoneId = "America/Los_Angeles";
 	//public static final String defaultZoneId = "Etc/UTC";
 	//public static final String defaultZoneId = "Etc/GMT-7";
