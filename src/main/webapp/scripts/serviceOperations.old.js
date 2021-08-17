@@ -4,7 +4,7 @@ const serviceListTable = document.getElementById('service-list');
 const populateData = async _ => {
 	//addMessage('Fetching service data.');
 	try {
-		const response = await fetch('https://funteachers.org/services?json');
+		const response = await fetch('/services?json');
 		if (response.ok) {
 			const json = await response.json();
 			allServices = json;
