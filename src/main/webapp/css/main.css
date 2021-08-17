@@ -96,6 +96,15 @@ th, td {
 	grid-column-start: 1;
 	grid-column-end: 3;
 }
+.body-big-title {
+	color: white;
+	/* font-family: joeLetter; */
+	font-size: 5rem;
+	padding: 1rem;
+	margin: auto;
+	text-shadow: 3px 3px 5px black;
+	text-align: center;
+}
 
 /* header */
 header {

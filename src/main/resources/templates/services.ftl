@@ -2,9 +2,7 @@
 <#include "head.ftl">
 <body>
 <#include "header.ftl">
-<div class="page-content-750-1000">
-	<table id="service-list" class="info-list">
-	</table>
+<div id="services-content" class="page-content-750-1000">
 </div>
 </body>
 <script src="/scripts/serviceOperations.js"></script>
