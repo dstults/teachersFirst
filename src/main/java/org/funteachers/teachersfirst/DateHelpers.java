@@ -10,7 +10,10 @@ import java.util.*;
 public class DateHelpers {
 
 	public static final long millisecondsPerDay = 86_400_000;
-	public static final String homeZoneId = "America/Los_Angeles";
+	
+	// TODO: Make this a setting in the config file
+	//public static final String homeZoneId = "America/Los_Angeles";
+	public static final String homeZoneId = "Asia/Shanghai";
 	public static final ZoneId homeZone = ZoneId.of(homeZoneId);
 
 	public static Timestamp toTimestamp(int year, int month, int day, int hour, int minute, int second) {
