@@ -49,7 +49,6 @@ public class DataManager {
 
 	public static final List<DAO<?>> allDAOs = new ArrayList<>();
 	private static DAO<Member> memberDAO = null;
-	private static DAO<Service> serviceDAO = null;
 	private static DAO<Appointment> appointmentDAO = null;
 	private static DAO<Opening> openingDAO = null;
 	private static DAO<LoggedEvent> loggedEventDAO = null;
@@ -104,11 +103,7 @@ public class DataManager {
 		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
 		initParams += "&user=" + databaseUserID + "&password=" + databasePassword;    
 
-		//DataManager.serviceDAO = new ServiceMemoryDAO();
-		DataManager.serviceDAO = new ServiceSqlDAO();
-		if (!DataManager.serviceDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the serviceDAO.");
-		DataManager.allDAOs.add(DataManager.serviceDAO);
-
+		//DataManager.memberDAO = new MemberMemoryDAO();
 		DataManager.memberDAO = new MemberSqlDAO();
 		if (!DataManager.memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
 		DataManager.allDAOs.add(DataManager.memberDAO);
@@ -180,10 +175,6 @@ public class DataManager {
 
 	public static DAO<Member> getMemberDAO() {
 		return DataManager.memberDAO;
-	}
-
-	public static DAO<Service> getServiceDAO() {
-		return DataManager.serviceDAO;
 	}
 
 	public static DAO<Appointment> getAppointmentDAO() {

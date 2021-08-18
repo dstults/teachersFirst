@@ -1,3 +1,7 @@
+// Note: This was left here as a sample of a memory DAO, however due
+// to the service object being deleted, it is now commented out.
+
+/*
 package org.funteachers.teachersfirst.daos.memory;
 
 import java.util.*;
@@ -166,3 +170,4 @@ public class ServiceMemoryDAO implements DAO<Service> {
 	}
 
 }
+*/
