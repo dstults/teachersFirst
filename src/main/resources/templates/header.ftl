@@ -14,11 +14,7 @@
 		<a href="/login"><div class="top-right-button navy mouseover">Log In</div></a>
 		<#if canRegister><a href="/register"><div class="top-right-button slightly-lower navy mouseover">Register</div></a></#if>
 		</#if>
-		<#if time1Name?has_content && time1Time?has_content && time2Name?has_content && time2Time?has_content><div class="bottom-right timestamp timestamp-grid">
-			<p class="label col1to3">Last Refresh:</p>
-			<p class="label">${time1Name}</p><p>${time1Time}</p>
-			<p class="label">${time2Name}</p><p>${time2Time}</p>
-		</div></#if>
+		<#include "widgetClock.ftl">
 		<nav>
 			<ul class="top-nav-list">
 				<li><a href="/services" class="nav-link">Services</a></li>
@@ -34,16 +30,7 @@
 		</nav>
 	</header>
 	<#if userId gt 0>
-	<div id="console-frame" class="console-frame">
-		<div class="console-topbar">
-			<p id="console-drag-bar" class="console-drag-bar">Messages</p>
-			<p id="console-closer" class="console-closer">-</p>
-		</div>
-		<ul id="console-message-list" class="console-message-list" style="display: none;">
-		</ul>
-	</div>
-	<script src="/scripts/dragElement.js"></script>
-	<script src="/scripts/messageConsole.js"></script>
+	<#include "widgetConsole.ftl">
 	<#if message != "">
 	<script>
 		let bannerMessage = `${message}`;
