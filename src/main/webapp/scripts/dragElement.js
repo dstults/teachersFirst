@@ -1,8 +1,32 @@
 
-// Original version from:
-// https://www.w3schools.com/howto/howto_js_draggable.asp
+const widgets = [];
+
+window.onresize = _ => {
+	if (document.readyState !== "complete") return;
+	let newTop;
+	let newLeft
+	for (const widget of widgets) {
+		if (window.innerWidth < widget.offsetWidth + 20 || window.innerHeight < widget.offsetHeight + 10) continue;
+		newTop = widget.offsetTop;
+		newLeft = widget.offsetLeft;
+		if (newTop > window.innerHeight - widget.offsetHeight - 5) newTop = window.innerHeight - widget.offsetHeight - 5;
+		if (newLeft > window.innerWidth - widget.offsetWidth - 15) newLeft = window.innerWidth - widget.offsetWidth - 15;
+		widget.style.top = newTop + 'px';
+		widget.style.left = newLeft + 'px';
+	}
+};
 
 const dragElement = (clickedElement, draggedElement) => {
+	if (!clickedElement) return;
+	if (!draggedElement) draggedElement = clickedElement;
+	widgets.push(draggedElement);
+
+	// Make sure object is bound to "top" and "left" instead of "bottom" and "right":
+	draggedElement.style.top = draggedElement.offsetTop + 'px';
+	draggedElement.style.left = draggedElement.offsetLeft + 'px';
+	draggedElement.style.right = 'auto';
+	draggedElement.style.bottom = 'auto';
+
 	let pos1 = 0;
 	let pos2 = 0;
 	let pos3 = 0;
@@ -27,14 +51,17 @@ const dragElement = (clickedElement, draggedElement) => {
 		pos2 = pos4 - e.clientY;
 		pos3 = e.clientX;
 		pos4 = e.clientY;
+		
 		// Make sure element is within bounds
+		// Note: Due to the scrollbar, the horizontal needs to be an extra 20 pixels in -- or at least somewhat
 		let newTop = draggedElement.offsetTop - pos2;
 		if (newTop < 3) newTop = 3;
-		if (newTop > window.innerHeight - draggedElement.offsetHeight) newTop = window.innerHeight - draggedElement.offsetHeight;
+		if (newTop > window.innerHeight - draggedElement.offsetHeight - 5) newTop = window.innerHeight - draggedElement.offsetHeight - 5;
 
 		let newLeft = draggedElement.offsetLeft - pos1;
 		if (newLeft < 3) newLeft = 3;
-		if (newLeft > window.innerWidth - draggedElement.offsetWidth) newLeft = window.innerWidth - draggedElement.offsetWidth;
+		if (newLeft > window.innerWidth - draggedElement.offsetWidth - 15) newLeft = window.innerWidth - draggedElement.offsetWidth - 15;
+
 		// Set new position:
 		draggedElement.style.top = newTop + 'px';
 		draggedElement.style.left = newLeft + 'px';
