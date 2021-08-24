@@ -6,6 +6,7 @@ window.onresize = _ => {
 	let newTop;
 	let newLeft
 	for (const widget of widgets) {
+		if (window.innerWidth < widget.offsetWidth + 20 || window.innerHeight < widget.offsetHeight + 10) continue;
 		newTop = widget.offsetTop;
 		newLeft = widget.offsetLeft;
 		if (newTop > window.innerHeight - widget.offsetHeight - 5) newTop = window.innerHeight - widget.offsetHeight - 5;
