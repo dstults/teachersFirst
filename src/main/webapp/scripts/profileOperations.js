@@ -1,4 +1,9 @@
 
+window.onload = _ => {
+	populateData();
+	tryReplaceProfilePicture();
+}
+
 const parseQuery = (queryString) => {
 	if (typeof queryString !== 'string') return {};
 	if (queryString.charAt(0) === '?') queryString = queryString.substring(1);
@@ -51,8 +56,22 @@ const populateData = async _ => {
 	}
 	refreshAll();
 };
-populateData();
 
+const tryReplaceProfilePicture = async _ => {
+	if (!memberId) return; // obtained during page load process
+	try {
+		const response = await fetch('/custom/profiles/u' + memberId + '/profile.png');
+
+		if (!response.ok) throw new Error('User does not appear to have a profile image yet.')
+		
+		// This should automatically refresh 
+		profilePicture.src = '/custom/profiles/u' + memberId + '/profile.png';
+	} catch (err) {
+		console.log(err.message);
+	}
+};
+
+const profilePicture = document.getElementById('profile-picture');
 const displayNameBox = document.getElementById('display-name');
 
 const creditsRow = document.getElementById('credits-row');

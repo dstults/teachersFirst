@@ -8,7 +8,7 @@
 <#else>
 	<div class="page-content-750-1000">
 		<table class="profile-box">
-		<tr><td style="width: 35%;"><img class="profile-image" src="/images/profileNeutral.png"></td>
+		<tr><td style="width: 35%;"><img id="profile-picture" class="profile-image" src="/images/profileNeutral.png"></td>
 			<td>
 				<div class="profile-basic-stats">
 					<div class="h1-like" id="display-name"></div>
