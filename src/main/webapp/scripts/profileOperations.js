@@ -1,4 +1,9 @@
 
+window.onload = _ => {
+	populateData();
+	tryReplaceProfilePicture();
+}
+
 const parseQuery = (queryString) => {
 	if (typeof queryString !== 'string') return {};
 	if (queryString.charAt(0) === '?') queryString = queryString.substring(1);
@@ -51,8 +56,47 @@ const populateData = async _ => {
 	}
 	refreshAll();
 };
-populateData();
 
+const tryReplaceProfilePicture = async _ => {
+	if (!memberId) return; // obtained during page load process
+	
+	try {
+		
+		// TODO: Needs server-side support to avoid error spam.
+		//       Can be addressed in issue to "make secure".
+		
+		// TRY ".png"
+		let imagePath = '/custom/profiles/u' + memberId + '/profile.png';
+		const response1 = await fetch(imagePath);
+		if (response1.ok) {
+			// Will automatically refresh with cached data
+			profilePicture.src = imagePath;
+			return;
+		}
+		
+		// TRY ".jpg"
+		imagePath = '/custom/profiles/u' + memberId + '/profile.jpg';
+		const response2 = await fetch(imagePath);
+		if (response2.ok) {
+			profilePicture.src = imagePath;
+			return;
+		}
+		
+		// TRY ".gif"
+		imagePath = '/custom/profiles/u' + memberId + '/profile.gif';
+		const response3 = await fetch(imagePath);
+		if (response3.ok) {
+			profilePicture.src = imagePath;
+			return;
+		}
+
+		console.log('User does not exist or does not have a profile image.');
+	} catch (err) {
+		// do nothing
+	}
+};
+
+const profilePicture = document.getElementById('profile-picture');
 const displayNameBox = document.getElementById('display-name');
 
 const creditsRow = document.getElementById('credits-row');
