@@ -79,7 +79,7 @@ const relogMessages = _ => {
 	consoleFrame.style.left = consoleLocation.x;
 	consoleFrame.style.top = consoleLocation.y;
 
-	if (welcomeUser) addMessage("Welcome!");
+	if (welcomeUser) addMessage("Console loaded.");
 };
 relogMessages();
 
