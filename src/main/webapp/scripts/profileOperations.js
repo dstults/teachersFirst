@@ -59,15 +59,31 @@ const populateData = async _ => {
 
 const tryReplaceProfilePicture = async _ => {
 	if (!memberId) return; // obtained during page load process
+	
 	try {
-		const response = await fetch('/custom/profiles/u' + memberId + '/profile.png');
-
-		if (!response.ok) throw new Error('User does not appear to have a profile image yet.')
 		
-		// This should automatically refresh 
-		profilePicture.src = '/custom/profiles/u' + memberId + '/profile.png';
+		// CacheStorage.has()
+		
+		// TRY ".png"
+		let imagePath = '/custom/profiles/u' + memberId + '/profile.png';
+		const response1 = await fetch(imagePath);
+		if (response1.ok) {
+			// Will automatically refresh with cached data
+			profilePicture.src = imagePath;
+			return;
+		}
+		
+		// TRY ".jpg"
+		imagePath = '/custom/profiles/u' + memberId + '/profile.jpg';
+		const response2 = await fetch(imagePath);
+		if (response2.ok) {
+			profilePicture.src = imagePath;
+			return;
+		}
+
+		console.log('User does not exist or does not have a profile image.');
 	} catch (err) {
-		console.log(err.message);
+		// do nothing
 	}
 };
 
