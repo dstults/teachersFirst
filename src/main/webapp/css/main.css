@@ -73,19 +73,35 @@ th, td {
 .slightly-lower {
 	top: 50px;
 }
+.bottom-left {
+	position: fixed;
+	left: 10px;
+	bottom: 5px;
+}
 .bottom-right {
 	position: fixed;
 	right: 10px;
 	bottom: 5px;
 }
-.timestamp > .label {
-	text-align: center;
-    font-weight: bold;
-}
 .timestamp {
+	z-index: 101;
 	font-family: 'Courier New', Courier, monospace, sans-serif;
 	font-size: 1.5rem;
 	user-select: none;
+	padding: 5px 10px;
+	z-index: 11;
+    background-color: var(--backgroundColor);
+    border: 1px solid black;
+}
+.timestamp:hover {
+	opacity: 0.75;
+}
+.timestamp:active {
+	opacity: 0.5;
+}
+.timestamp > .label {
+	text-align: center;
+    font-weight: bold;
 }
 .timestamp-grid {
 	display: grid;
