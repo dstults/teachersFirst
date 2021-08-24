@@ -62,7 +62,8 @@ const tryReplaceProfilePicture = async _ => {
 	
 	try {
 		
-		// CacheStorage.has()
+		// TODO: Needs server-side support to avoid error spam.
+		//       Can be addressed in issue to "make secure".
 		
 		// TRY ".png"
 		let imagePath = '/custom/profiles/u' + memberId + '/profile.png';
@@ -77,6 +78,14 @@ const tryReplaceProfilePicture = async _ => {
 		imagePath = '/custom/profiles/u' + memberId + '/profile.jpg';
 		const response2 = await fetch(imagePath);
 		if (response2.ok) {
+			profilePicture.src = imagePath;
+			return;
+		}
+		
+		// TRY ".gif"
+		imagePath = '/custom/profiles/u' + memberId + '/profile.gif';
+		const response3 = await fetch(imagePath);
+		if (response3.ok) {
 			profilePicture.src = imagePath;
 			return;
 		}
