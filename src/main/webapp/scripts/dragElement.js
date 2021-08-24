@@ -1,8 +1,14 @@
 
-// Original version from:
-// https://www.w3schools.com/howto/howto_js_draggable.asp
-
 const dragElement = (clickedElement, draggedElement) => {
+	if (!clickedElement) return;
+	if (!draggedElement) draggedElement = clickedElement;
+
+	// Make sure object is bound to "top" and "left" instead of "bottom" and "right":
+	draggedElement.style.top = draggedElement.offsetTop + 'px';
+	draggedElement.style.left = draggedElement.offsetLeft + 'px';
+	draggedElement.style.right = 'auto';
+	draggedElement.style.bottom = 'auto';
+
 	let pos1 = 0;
 	let pos2 = 0;
 	let pos3 = 0;
