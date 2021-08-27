@@ -15,7 +15,7 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	private Connection conn = null;
 
 	public LoggedEventSqlDAO() {
-		this.conn = null;                                   // conn must be created during init()
+		this.conn = null;
 	}
 
 	public boolean initialize(String initParams) {

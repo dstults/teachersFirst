@@ -15,7 +15,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	private Connection conn = null;
 
 	public OpeningSqlDAO() {
-		this.conn = null;                                   // conn must be created during init()
+		this.conn = null;
 	}
 
 	public boolean initialize(String initParams) {

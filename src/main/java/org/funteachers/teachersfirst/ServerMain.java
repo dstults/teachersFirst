@@ -66,7 +66,6 @@ public class ServerMain extends HttpServlet {
 	}
 
 	@Override
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();

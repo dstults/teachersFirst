@@ -15,7 +15,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	private Connection conn = null;
 
 	public MemberSqlDAO() {
-		this.conn = null;                                   // conn must be created during init()
+		this.conn = null;
 	}
 
 	public boolean initialize(String initParams) {

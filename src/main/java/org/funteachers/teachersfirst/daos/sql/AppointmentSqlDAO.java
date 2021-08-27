@@ -15,7 +15,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	private Connection conn = null;
 
 	public AppointmentSqlDAO() {
-		this.conn = null;                                   // conn must be created during init()
+		this.conn = null;
 	}
 
 	public boolean initialize(String initParams) {
