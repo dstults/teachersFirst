@@ -73,7 +73,7 @@ public class ServerMain extends HttpServlet {
 		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
 		final ConnectionPackage connectionPackage = new ConnectionPackage(request, response);
 		final String logInfo = connectionPackage.getSecurity().getRealIp() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
-		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
+		if (pagePath != "/health" && pagePath != "/dynamic.css" && pagePath != "/dynamic.js") // Don't log "health" or "dynamic.css" requests
 			logger.debug("IN - {}", logInfo);
 
 		try {
@@ -133,6 +133,10 @@ public class ServerMain extends HttpServlet {
 
 				case "/dynamic.css":
 					new DynamicCssFile(connectionPackage).loadPage();
+					connectionPackage.terminate();
+					return; // don't log
+				case "/dynamic.js":
+					new DynamicJsFile(connectionPackage).loadPage();
 					connectionPackage.terminate();
 					return; // don't log
 
