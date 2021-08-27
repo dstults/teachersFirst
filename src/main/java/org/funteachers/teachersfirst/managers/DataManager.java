@@ -114,77 +114,10 @@ public class DataManager {
 
 	}
 
-	public static final List<DAO<?>> allDAOs = new ArrayList<>();
-	private static DAO<Member> memberDAO = null;
-	private static DAO<Appointment> appointmentDAO = null;
-	private static DAO<Opening> openingDAO = null;
-	private static DAO<LoggedEvent> loggedEventDAO = null;
-
-	public static void terminateDAOs() {
-		// memberDAO.terminate();
-		int i = 0;
-		for (DAO<?> iDAO : DataManager.allDAOs) {
-			try {
-				iDAO.terminate();
-			} catch (NullPointerException ex) {
-				// This is a test-only catch, should not throw in normal use
-				System.out.println("=============================================== Error");
-				System.out.println("| DAO #" + i + " TRIED TO TERMINATE WHEN SET TO NULL! | Error");
-				System.out.println("=============================================== Error");
-			}
-			i++;
-		}
-	}
-
-	public static void resetDAOs() {
-
-		DataManager.terminateDAOs();
-
-		DataManager.allDAOs.clear();
-
-		try {
-			DataManager.testInitializeDAOs();
-		} catch (ServletException ex) {
-			System.out.println("===================================== Error");
-			System.out.println("| ERROR CONNECTING TO SQL DATABASE! | Error");
-			System.out.println("===================================== Error");
-		}
-	}
-
-	public static boolean validateSQLConnection() {
-		if (DataManager.memberDAO == null) {
-			logger.warn("WARNING: Database connection validation FAILED (DataManager.memberDAO == null).");
-			return false;
-		} else if (DataManager.appointmentDAO == null) {
-			logger.warn("WARNING: Database connection validation FAILED (DataManager.appointmentDAO == null).");
-			return false;
-		} else if (DataManager.openingDAO == null) {
-			logger.warn("WARNING: Database connection validation FAILED (DataManager.openingDAO == null).");
-			return false;
-		} else if (DataManager.loggedEventDAO == null) {
-			logger.warn("WARNING: Database connection validation FAILED (DataManager.loggedEventDAO == null).");
-			return false;
-		} else if (DataManager.memberDAO.retrieveByIndex(0) == null) {
-			logger.error("ERROR: Database connection validation FAILED (DataManager.memberDAO.retrieveByIndex(0) == null).");
-			return false;
-		}
-		return true;
-	}
-
-	public static DAO<Member> getMemberDAO() {
-		return DataManager.memberDAO;
-	}
-
-	public static DAO<Appointment> getAppointmentDAO() {
-		return DataManager.appointmentDAO;
-	}
-
-	public static DAO<Opening> getOpeningDAO() {
-		return DataManager.openingDAO;
-	}
-
-	public static DAO<LoggedEvent> getLoggedEventDAO() {
-		return DataManager.loggedEventDAO;
+	public static String getInitParams() {
+		return "jdbc:mariadb://" + databaseHostname + ":" + databasePort + "/" + databaseSchema +
+				"?useSSL=false&allowPublicKeyRetrieval=true" +
+				"&user=" + databaseUserID + "&password=" + databasePassword;
 	}
 
 }

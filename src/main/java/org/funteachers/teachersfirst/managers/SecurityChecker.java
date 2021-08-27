@@ -75,10 +75,12 @@ public class SecurityChecker {
 
 	final private HttpServletRequest request;
 	final private HttpServletResponse response;
+	final private ConnectionPackage connectionPackage;
 
-	public SecurityChecker(HttpServletRequest request, HttpServletResponse response) {
+	public SecurityChecker(HttpServletRequest request, HttpServletResponse response, ConnectionPackage connectionPackage) {
 		this.request = request;
 		this.response = response;
+		this.connectionPackage = connectionPackage;
 	}
 
 	public String getRealIp() {
@@ -90,7 +92,7 @@ public class SecurityChecker {
 	}
 
 	public Member checkPassword(String loginName, String password) {
-		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 		Member member = memberDAO.retrieveByLoginNameAndPassword(loginName, password);
 
 		if (member == null) {
@@ -177,7 +179,7 @@ public class SecurityChecker {
 
 	private void giveTokenCookie(Member member) {
 		// Check for an already existing token
-		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 		String token = memberDAO.retrieveToken(member.getRecID());
 		
 		// Make new token if none exists
@@ -200,7 +202,7 @@ public class SecurityChecker {
 
 		// Update database if member provided
 		if (member != null && allDevices) {
-			MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+			MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 			memberDAO.updateToken(member, null);
 			logger.debug("Clearing token for member [ ({}) {} ]", member.getRecID(), member.getLoginName());
 		}
@@ -245,7 +247,7 @@ public class SecurityChecker {
 		}
 		final String token = matcher.group(2);
 
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 		final Member member = memberDAO.retrieveByIdAndToken(uid, token);
 
 		if (member == null) {
