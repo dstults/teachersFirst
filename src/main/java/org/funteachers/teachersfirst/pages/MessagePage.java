@@ -1,14 +1,12 @@
 package org.funteachers.teachersfirst.pages;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 
 public class MessagePage extends PageLoader {
 
 	// Constructor
-	public MessagePage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public MessagePage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 	@Override

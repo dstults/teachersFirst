@@ -2,18 +2,14 @@ package org.funteachers.teachersfirst.actions;
 
 import java.util.List;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.sql.MemberSqlDAO;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class OpenRegisterAction extends ActionRunner {
 
-	public OpenRegisterAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public OpenRegisterAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {
@@ -69,7 +65,7 @@ public class OpenRegisterAction extends ActionRunner {
 		logger.debug(displayName + " attempting to register...");
 		
 		// Making sure unique login name
-		List<Member> members = DataManager.getMemberDAO().retrieveAll();
+		List<Member> members = this.connectionPackage.getMemberDAO().retrieveAll();
 		for (Member member : members) {
 			if (member.getLoginName() == loginName) {
 				this.sendPostReply("/register", retryString, "Login name '" + loginName + "' already taken, please try another.");
@@ -79,7 +75,7 @@ public class OpenRegisterAction extends ActionRunner {
 
 		//TODO: Birthdates
 
-		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
 		//Member member = new Member(loginName, password1, displayName, birthdate, gender, "", phone1, phone2, email, true, false, false);
 		Member member = new Member(loginName, displayName, 0, gender, "", "", phone1, phone2, email, true, false, false);
 		int newMemberRecordId = memberDAO.insert(member);

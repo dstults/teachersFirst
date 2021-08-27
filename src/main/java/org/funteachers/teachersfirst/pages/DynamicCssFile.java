@@ -1,22 +1,19 @@
 package org.funteachers.teachersfirst.pages;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.PageLoader;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 
 public class DynamicCssFile extends PageLoader {
 
 	// Constructor
-	public DynamicCssFile(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public DynamicCssFile(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Dynamic CSS File");
-
+		
 		// FreeMarker
 		templateName = "dynamic-css.ftl";
 		if (isAdmin) {

@@ -2,7 +2,7 @@ package org.funteachers.teachersfirst;
 
 import javax.servlet.ServletException;
 
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
 

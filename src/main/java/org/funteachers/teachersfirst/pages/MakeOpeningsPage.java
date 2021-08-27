@@ -1,15 +1,12 @@
 package org.funteachers.teachersfirst.pages;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.PageLoader;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 
 public class MakeOpeningsPage extends PageLoader {
 
 	// Constructor
-	public MakeOpeningsPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public MakeOpeningsPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 

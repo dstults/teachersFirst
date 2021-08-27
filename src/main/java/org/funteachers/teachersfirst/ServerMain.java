@@ -14,7 +14,7 @@ import org.funteachers.teachersfirst.actions.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 import org.funteachers.teachersfirst.pages.*;
-import org.mariadb.jdbc.internal.util.ConnectionState;
+//import org.mariadb.jdbc.internal.util.ConnectionState;
 
 @WebServlet(name = "teachersFirst", urlPatterns = { "/" }, loadOnStartup = 0)
 public class ServerMain extends HttpServlet {
@@ -61,7 +61,7 @@ public class ServerMain extends HttpServlet {
 		cp.terminateDAOs();
 		logger.info("All tests passed!");
 
-		LoggedEvent.log(0, "SERVER INIT");
+		LoggedEvent.log(cp, 0, "SERVER INIT");
 
 		logger.warn("");
 		logger.warn("Servlet initialization complete!");
@@ -264,7 +264,7 @@ public class ServerMain extends HttpServlet {
 						logger.warn("======================================= Warning");
 						logger.warn("| Issuing manual DAO reset command... | Warning");
 						logger.warn("======================================= Warning");
-						DataManager.resetDAOs();
+						connectionPackage.resetDAOs();
 						logger.warn("======================================= Warning");
 						logger.warn("| Manual reset should have completed. | Warning");
 						logger.warn("======================================= Warning");

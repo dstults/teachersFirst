@@ -1,17 +1,13 @@
 package org.funteachers.teachersfirst.pages;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class ProfilePage extends PageLoader {
 
 	// Constructor
-	public ProfilePage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public ProfilePage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
@@ -37,7 +33,7 @@ public class ProfilePage extends PageLoader {
 				
 				// Get data from DAO
 				try {
-					member = DataManager.getMemberDAO().retrieveByID(memberId);
+					member = this.connectionPackage.getMemberDAO().retrieveByID(memberId);
 				} catch (IndexOutOfBoundsException ex) {
 					templateDataMap.put("message", "Invalid member ID.");
 				}

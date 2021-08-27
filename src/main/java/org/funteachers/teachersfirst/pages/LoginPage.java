@@ -1,15 +1,12 @@
 package org.funteachers.teachersfirst.pages;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 
 public class LoginPage extends PageLoader {
 
 	// Constructor
-	public LoginPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public LoginPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 

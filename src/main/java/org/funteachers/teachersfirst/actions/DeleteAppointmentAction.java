@@ -1,18 +1,13 @@
 package org.funteachers.teachersfirst.actions;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.DateHelpers;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteAppointmentAction extends ActionRunner {
 
-	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public DeleteAppointmentAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {
@@ -38,7 +33,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 		}
 
 		// Check connection to database
-		final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO();
 		if (appointmentDAO == null) {
 			this.sendJsonMessage("Could not connect to database, please try again.");
 			return;
@@ -88,11 +83,11 @@ public class DeleteAppointmentAction extends ActionRunner {
 		
 		// Update credits for student when applicable
 		if (giveRefund) {
-			final DAO<Member> memberDAO = DataManager.getMemberDAO();
+			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
 			final Member student = memberDAO.retrieveByID(appointment.getStudentID());
 			final float length = appointment.getLength();
 			final float credits = student.getCredits() + length;
-			student.setCredits(uid, operator.getLoginName(), "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
+			student.setCredits(this.connectionPackage, uid, operator.getLoginName(), "delete appointment[" + appointmentIdInt + "] len=" + appointment.getLength() + " hrs", credits);
 		}
 
 		// Send response

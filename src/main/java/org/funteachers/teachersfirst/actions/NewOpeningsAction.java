@@ -5,19 +5,14 @@ import java.time.*;
 import java.time.format.*;
 import java.util.*;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.DateHelpers;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class NewOpeningsAction extends ActionRunner {
 
-	public NewOpeningsAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public NewOpeningsAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {
@@ -35,7 +30,7 @@ public class NewOpeningsAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			instructorIdInt = 0;
 		}
-		final boolean instructorExists = DataManager.getMemberDAO().retrieveByID(instructorIdInt) != null;
+		final boolean instructorExists = this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt) != null;
 		String startDateString = QueryHelpers.getPost(request, "startDate");
 		String endDateString = QueryHelpers.getPost(request, "endDate");
 		String daysOfWeekString = QueryHelpers.getPost(request, "daysOfWeek").toLowerCase(); // SuMoTuWdThFrSa
@@ -108,7 +103,7 @@ public class NewOpeningsAction extends ActionRunner {
 		}
 
 		logger.debug("Attempting to create batch openings ...");
-		DAO<Opening> openingDAO = DataManager.getOpeningDAO();
+		DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 		
 		LocalDate startDate = LocalDate.parse(startDateString, formatter);
 		LocalDate today = startDate.plusDays(0);

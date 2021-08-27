@@ -1,14 +1,12 @@
 package org.funteachers.teachersfirst.actions;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 
 public class LogOutAction extends ActionRunner {
 
-	public LogOutAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public LogOutAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {

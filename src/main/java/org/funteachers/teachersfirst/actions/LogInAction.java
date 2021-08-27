@@ -1,15 +1,13 @@
 package org.funteachers.teachersfirst.actions;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class LogInAction extends ActionRunner {
 
-	public LogInAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
+	public LogInAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {

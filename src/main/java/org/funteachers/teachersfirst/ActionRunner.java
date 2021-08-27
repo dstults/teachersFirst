@@ -1,7 +1,6 @@
 package org.funteachers.teachersfirst;
 
 import java.io.*;
-import java.sql.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
@@ -16,10 +15,10 @@ public abstract class ActionRunner {
 
 	final protected static Logger logger = LogManager.getLogger(ServerMain.class);
 
+	final protected ConnectionPackage connectionPackage;
 	final protected HttpServletRequest request;
 	final protected HttpServletResponse response;
 	final protected SecurityChecker security;
-	final protected Connection connection;
 
 	final protected Member operator;
 	final protected int uid;
@@ -34,10 +33,10 @@ public abstract class ActionRunner {
 	protected ActionRunner(ConnectionPackage cp) {
 		if (!cp.validateSQLConnection()) cp.resetDAOs(); // Validate SQL connection first
 
+		this.connectionPackage = cp;
 		this.request = cp.getRequest();
 		this.response = cp.getResponse();
 		this.security = cp.getSecurity();
-		this.connection = cp.getConnection();
 
 		this.operator = security.getMemberFromRequestCookieToken();
 		if (operator != null) {
