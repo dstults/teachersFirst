@@ -3,7 +3,6 @@ package org.funteachers.teachersfirst.managers;
 import java.sql.*;
 import java.util.*;
 
-import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.daos.*;
@@ -35,33 +34,27 @@ public class ConnectionPackage {
 		this.request = request;
 		this.response = response;
 		if (this.request != null && this.response != null) this.security = new SecurityChecker(request, response, this);
+		this.initialize();
 	}
 
-	public void initialize() throws ServletException {
-		String initParams = DataManager.getInitParams();
-
-		// Because one day, these might have different connections to different databases, they need to be initialized
-		// independently -- though because they're passed the same connection in this case, they will initialize once
-		// with the same connection starting only one time.
-
+	public void initialize() {
 		String dbParameters = DataManager.getInitParams();
 		this.connection = SQLUtils.connect(dbParameters);
-		if (this.connection == null) throw new UnavailableException("Unable to initialize the database connection: " + dbParameters);
+		if (this.connection == null) {
+			System.out.println("===================================== Error");
+			System.out.println("| ERROR CONNECTING TO SQL DATABASE! | Error");
+			System.out.println("===================================== Error");
+			logger.warn("ConnectionPackage failed to initialize() new connection!");
+			return;
+		}
 
 		memberDAO = new MemberSqlDAO(this.connection);
-		//if (!memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
 		allDAOs.add(memberDAO);
-
 		appointmentDAO = new AppointmentSqlDAO(this.connection);
-		//if (!appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
 		allDAOs.add(appointmentDAO);
-
 		openingDAO = new OpeningSqlDAO(this.connection);
-		//if (!openingDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the openingDAO.");
 		allDAOs.add(openingDAO);
-
 		loggedEventDAO = new LoggedEventSqlDAO(this.connection);
-		//if (!loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
 		allDAOs.add(loggedEventDAO);
 		
 	}
@@ -103,50 +96,26 @@ public class ConnectionPackage {
 	// ================ METHODS ================
 
 	public void terminate() {
+		if (this.connection == null) {
+
+		}
 		// memberDAO.terminate();
 		SQLUtils.disconnect(this.connection);
 		this.connection = null;
 
-/*		int i = 0;
-		for (DAO<?> iDAO : this.allDAOs) {
-			try {
-				logger.debug("Terminating Appointment SQL DAO...");
-			} catch (NullPointerException ex) {
-				// This is a test-only catch, should not throw in normal use
-				System.out.println("=============================================== Error");
-				System.out.println("| DAO #" + i + " TRIED TO TERMINATE WHEN SET TO NULL! | Error");
-				System.out.println("=============================================== Error");
-			}
-			i++;
-		}*/
 	}
 
 	public boolean reset() {
-
 		this.terminate();
-
 		//this.allDAOs.clear();
-
-		try {
-			this.initialize();
-			return true;
-		} catch (ServletException ex) {
-			System.out.println("===================================== Error");
-			System.out.println("| ERROR CONNECTING TO SQL DATABASE! | Error");
-			System.out.println("===================================== Error");
-			return false;
-		}
+		this.initialize();
+		return this.connection != null;
 	}
 
 	public boolean validate() {
 		if (this.connection == null) {
 			logger.warn("Attempted to validate non-initialized SQL connections. Force initializing!");
-			try {
-				this.initialize();
-			} catch (ServletException e) {
-				logger.warn("Failed to initialize SQL connection(s)!");
-				return false;
-			}
+			this.initialize();
 		}
 
 		boolean didAllTestsPass = true;

@@ -57,7 +57,6 @@ public class ServerMain extends HttpServlet {
 
 		logger.info("Testing database connectivity...");
 		ConnectionPackage connectionPackage = new ConnectionPackage(null, null);
-		connectionPackage.initialize();
 		LoggedEvent.log(connectionPackage, 0, "SERVER INIT");
 		connectionPackage.terminate();
 		logger.info("All tests passed!");
