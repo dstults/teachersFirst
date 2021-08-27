@@ -13,7 +13,7 @@ import org.apache.logging.log4j.*;
 	
 public class ConnectionPackage {
 
-	private static final Logger logger = LogManager.getLogger(AppointmentSqlDAO.class.getName());
+	private static final Logger logger = LogManager.getLogger();
 
 	private HttpServletRequest request;
 	private HttpServletResponse response;

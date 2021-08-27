@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class MemberSqlDAO implements DAO<Member> {
 	
-	private static final Logger logger = LogManager.getLogger(MemberSqlDAO.class.getName());
+	private static final Logger logger = LogManager.getLogger();
 
 	private Connection conn;
 

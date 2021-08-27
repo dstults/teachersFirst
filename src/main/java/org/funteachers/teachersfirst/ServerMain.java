@@ -26,7 +26,7 @@ public class ServerMain extends HttpServlet {
 	private static final String RESOURCES_DIR = "/WEB-INF/classes";
 
 	// Public
-	public static final Logger logger = LogManager.getLogger(ServerMain.class);
+	public static final Logger logger = LogManager.getLogger();
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -48,7 +48,7 @@ public class ServerMain extends HttpServlet {
 		logger.info("Successfully populated the IP whitelist!");
 
 		logger.info("Initializing FreeMarker...");
-		PageLoader.initializeFreeMarker(resourcesDir);
+		FreeMarkerSetup.initializeFreeMarker(resourcesDir);
 		logger.info("Successfully initialized FreeMarker");
 
 		logger.info("Initializing site data...");

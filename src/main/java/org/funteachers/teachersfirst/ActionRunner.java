@@ -13,7 +13,7 @@ public abstract class ActionRunner {
 
 	// Declarations
 
-	final protected static Logger logger = LogManager.getLogger(ServerMain.class);
+	final protected static Logger logger = LogManager.getLogger();
 
 	final protected ConnectionPackage connectionPackage;
 	final protected HttpServletRequest request;

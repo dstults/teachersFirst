@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.managers.DateHelpers;
 
 public class PlannedAppointment {
 	
-	protected static final Logger logger = LogManager.getLogger(ServerMain.class);
+	protected static final Logger logger = LogManager.getLogger();
 
 	public static List<PlannedAppointment> MakeList(
 				int studentId, int instructorId,
