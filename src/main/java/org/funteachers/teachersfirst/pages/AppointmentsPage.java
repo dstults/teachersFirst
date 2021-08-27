@@ -3,7 +3,6 @@ package org.funteachers.teachersfirst.pages;
 import java.util.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.daos.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -16,66 +15,10 @@ public class AppointmentsPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		if (jsonMode) {
-			
-			// key variables
-			final List<Appointment> futureAppointments = new ArrayList<Appointment>();		
-			final List<Appointment> pastAppointments= new ArrayList<Appointment>();
+		if (this.jsonMode) {
 
-			String filterMemberIdString = QueryHelpers.getGet(request, "memberId");
-			int filterMemberId;
-			if (!filterMemberIdString.isEmpty() && isAdmin) {
-				try {
-					filterMemberId = Integer.parseInt(filterMemberIdString);
-				} catch (NumberFormatException e) {
-					filterMemberId = -1;
-				}
-			} else if (filterMemberIdString.isEmpty() && isAdmin) {
-				filterMemberId = -1;
-			} else {
-				filterMemberId = uid;
-			}
-			
-			// TODO: I can delete these on the various pages now that it doesn't even load things without DAO connection!
-			// Check DAO connection
-			if (uid > 0) {
-				// TODO: This is json mode now! This should probably say something like:
-				// {"message":"Unable to contact database!"}
-				final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO();
-				if (appointmentDAO == null || appointmentDAO.retrieveByIndex(0) == null) {
-					if (appointmentDAO == null)
-						templateDataMap.put("message", "Failed to contact database, try again later.");
-					else
-						templateDataMap.put("message", "There isn't any appointment data to display yet.");
-					templateName = "messageOnly.ftl";
-					trySendResponse();
-					this.connectionPackage.reset();
-					return;
-				}
-				// Get data from DAO
-				final List<Member> allMembers = this.connectionPackage.getMemberDAO().retrieveAll();
-				final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
-				
-				// check all DAOs
-				for (Appointment appointment : allAppointments) {
-					// make sure we're either an admin (sees everything) or in one of the appointments
-					if ((isAdmin && filterMemberId == -1) || appointment.getIsMyAppointment(uid)) {
-						appointment.setInstructorName(MemberHelpers.FindNameByID(allMembers, appointment.getInstructorID()));
-						appointment.setStudentName(MemberHelpers.FindNameByID(allMembers, appointment.getStudentID()));
-						if (DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-							pastAppointments.add(appointment);
-						} else {
-							futureAppointments.add(appointment);
-						}
-					}
-				}
-
-				Collections.reverse(pastAppointments);
-			}
-
-			String json = JsonUtils.BuildArrays(futureAppointments, pastAppointments);
-			//logger.debug("Json: " + json);
-			trySendJson(json);
+			// JSON
+			getAppointmentJson();
 
 		} else {
 
@@ -85,6 +28,47 @@ public class AppointmentsPage extends PageLoader {
 
 			trySendResponse();
 		}
+	}
+
+	private void getAppointmentJson() {
+		boolean userIsLoggedIn = this.uid > 0;
+		if (!userIsLoggedIn) {
+			sendJsonMessage("Error: You are not logged in.");
+			return;
+		}
+		boolean connectedToDatabase = this.connectionPackage.getConnection() != null;
+		if (!connectedToDatabase) {
+			sendJsonMessage("Error: Failed to contact database, please try again.");
+			return;
+		}
+
+		// Get data from DAOs
+		final List<Member> allMembers = this.connectionPackage.getMemberDAO().retrieveAll();
+		final List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO().retrieveAll();
+
+		// Filter into these categories
+		final List<Appointment> futureAppointments = new ArrayList<Appointment>();		
+		final List<Appointment> pastAppointments= new ArrayList<Appointment>();
+
+		// TODO: Simplify this process into two queries
+		for (Appointment appointment : allAppointments) {
+			// Make sure we're either an admin (sees everything) or one of the members of the appointment
+			if (this.isAdmin || appointment.getIsMyAppointment(uid)) {
+				appointment.setInstructorName(MemberHelpers.FindNameByID(allMembers, appointment.getInstructorID()));
+				appointment.setStudentName(MemberHelpers.FindNameByID(allMembers, appointment.getStudentID()));
+				if (DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
+					pastAppointments.add(appointment);
+				} else {
+					futureAppointments.add(appointment);
+				}
+			}
+		}
+
+		Collections.reverse(pastAppointments);
+
+		String json = JsonUtils.BuildArrays(futureAppointments, pastAppointments);
+		//logger.debug("Json: " + json);
+		trySendJson(json);
 	}
 
 }

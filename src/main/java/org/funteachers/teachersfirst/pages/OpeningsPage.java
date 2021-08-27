@@ -88,8 +88,8 @@ public class OpeningsPage extends PageLoader {
 
 		LocalDateTime sundayTime = DateHelpers.previousSunday();
 		LocalDateTime saturdayTime = DateHelpers.nextSaturday();
-		final int weekTotal = 5;
-		saturdayTime = saturdayTime.plusWeeks(weekTotal - 1); // -1 because base-0
+		final int weeksToShow = 5;
+		saturdayTime = saturdayTime.plusWeeks(weeksToShow - 1); // -1 because base 0
 		String sundayString = sundayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		String saturdayString = saturdayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
@@ -100,20 +100,20 @@ public class OpeningsPage extends PageLoader {
 
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
 		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
-		if (openingDAO == null || openingDAO.retrieveByIndex(0) == null) {
-			// Failed to contact SQL Server or simply no data
+		boolean noConnection = this.connectionPackage.getConnection() == null || openingDAO == null;
+		boolean noOpenings = openingDAO.retrieveByIndex(0) == null;
+		if (noConnection || noOpenings) {
 			templateName = "openings.ftl";
 			templateDataMap.put("batchEnabled", false);
 			templateDataMap.put("startDate", sundayString);
 			templateDataMap.put("endDate", saturdayString);
 			templateDataMap.put("weeks", weeks);
-			if (openingDAO == null) {
-				templateDataMap.put("message", "Failed to connect with database, please try again.");
-			} else if (openingDAO.retrieveByIndex(0) == null) {
+			if (noConnection) {
+				templateDataMap.put("message", "Failed to contact database, please try again.");
+			} else if (noOpenings) {
 				templateDataMap.put("message", "No opening data.");
 			}
 			trySendResponse();
-			this.connectionPackage.reset();
 			return;
 		}
 
@@ -124,8 +124,8 @@ public class OpeningsPage extends PageLoader {
 		LocalDateTime startTime;
 		LocalDateTime endTime;
 
-		// This would really benefit from specific SQL query optimization
-		for (int day = 0; day < 7 * weekTotal; day++) {
+		// TODO: Optimize SQL queries
+		for (int day = 0; day < 7 * weeksToShow; day++) {
 			// once every week
 			if (day % 7 == 0) {
 				thisWeek = new LinkedList<>();
@@ -166,7 +166,7 @@ public class OpeningsPage extends PageLoader {
 		
 
 		// Go
-		if (jsonMode) {
+		if (this.jsonMode) {
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
 			sb.append("[");
