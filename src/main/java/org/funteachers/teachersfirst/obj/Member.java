@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.*;
 
-import org.funteachers.teachersfirst.DataManager;
-import org.funteachers.teachersfirst.DateHelpers;
+import org.funteachers.teachersfirst.managers.DataManager;
+import org.funteachers.teachersfirst.managers.DateHelpers;
 
 public class Member implements IJsonnable {
 

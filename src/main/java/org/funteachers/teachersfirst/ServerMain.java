@@ -11,6 +11,9 @@ import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.actions.*;
+import org.funteachers.teachersfirst.managers.DataManager;
+import org.funteachers.teachersfirst.managers.DateHelpers;
+import org.funteachers.teachersfirst.managers.QueryHelpers;
 import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.Appointment;
 import org.funteachers.teachersfirst.obj.LoggedEvent;

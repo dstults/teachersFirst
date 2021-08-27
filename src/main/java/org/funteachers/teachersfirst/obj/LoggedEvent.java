@@ -2,7 +2,7 @@ package org.funteachers.teachersfirst.obj;
 
 import java.sql.Timestamp;
 
-import org.funteachers.teachersfirst.DataManager;
+import org.funteachers.teachersfirst.managers.DataManager;
 
 public class LoggedEvent implements IJsonnable {
 

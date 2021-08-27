@@ -3,7 +3,7 @@ package org.funteachers.teachersfirst.pages;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.PageLoader;
-import org.funteachers.teachersfirst.QueryHelpers;
+import org.funteachers.teachersfirst.managers.QueryHelpers;
 import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class MakeOpeningsPage extends PageLoader {

@@ -2,8 +2,8 @@ package org.funteachers.teachersfirst.pages;
 
 import javax.servlet.http.*;
 
-import org.funteachers.teachersfirst.DataManager;
 import org.funteachers.teachersfirst.PageLoader;
+import org.funteachers.teachersfirst.managers.DataManager;
 import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class DynamicCssFile extends PageLoader {

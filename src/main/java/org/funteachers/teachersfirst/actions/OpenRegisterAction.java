@@ -6,6 +6,8 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.sql.MemberSqlDAO;
+import org.funteachers.teachersfirst.managers.DataManager;
+import org.funteachers.teachersfirst.managers.QueryHelpers;
 import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 

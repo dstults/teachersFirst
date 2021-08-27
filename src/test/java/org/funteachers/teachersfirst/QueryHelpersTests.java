@@ -1,5 +1,6 @@
 package org.funteachers.teachersfirst;
 
+import org.funteachers.teachersfirst.managers.QueryHelpers;
 import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
 

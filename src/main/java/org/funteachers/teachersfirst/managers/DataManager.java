@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst;
+package org.funteachers.teachersfirst.managers;
 
 import java.io.*;
 import java.util.*;
@@ -113,6 +113,12 @@ public class DataManager {
 		if (!loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
 
 	}
+
+	public static final List<DAO<?>> allDAOs = new ArrayList<>();
+	private static DAO<Member> memberDAO = null;
+	private static DAO<Appointment> appointmentDAO = null;
+	private static DAO<Opening> openingDAO = null;
+	private static DAO<LoggedEvent> loggedEventDAO = null;
 
 	public static void terminateDAOs() {
 		// memberDAO.terminate();

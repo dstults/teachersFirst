@@ -2,8 +2,8 @@ package org.funteachers.teachersfirst.obj;
 
 import java.sql.Timestamp;
 
-import org.funteachers.teachersfirst.DataManager;
-import org.funteachers.teachersfirst.DateHelpers;
+import org.funteachers.teachersfirst.managers.DataManager;
+import org.funteachers.teachersfirst.managers.DateHelpers;
 
 public class Opening {
 

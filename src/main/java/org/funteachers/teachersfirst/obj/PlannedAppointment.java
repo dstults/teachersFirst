@@ -5,8 +5,8 @@ import java.time.*;
 import java.util.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.DateHelpers;
 import org.funteachers.teachersfirst.ServerMain;
+import org.funteachers.teachersfirst.managers.DateHelpers;
 
 public class PlannedAppointment {
 	

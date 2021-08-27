@@ -3,6 +3,8 @@ package org.funteachers.teachersfirst.pages;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.DataManager;
+import org.funteachers.teachersfirst.managers.QueryHelpers;
 import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class MakeAppointmentBatchPage extends PageLoader {
