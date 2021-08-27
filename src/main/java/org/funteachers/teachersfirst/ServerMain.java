@@ -2,6 +2,9 @@ package org.funteachers.teachersfirst;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.*;
 
@@ -15,6 +18,7 @@ import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 import org.funteachers.teachersfirst.pages.*;
 //import org.mariadb.jdbc.internal.util.ConnectionState;
+//import org.mariadb.jdbc.Driver;
 
 @WebServlet(name = "teachersFirst", urlPatterns = { "/" }, loadOnStartup = 0)
 public class ServerMain extends HttpServlet {
@@ -303,10 +307,14 @@ public class ServerMain extends HttpServlet {
 
 	@Override
 	public void destroy() {
+		
+		deregisterJdbcDrivers();
+		
 		logger.warn("-----------------------------------------");
 		logger.warn("  " + SERVLET_NAME + " destroy() completed!");
 		logger.warn("-----------------------------------------");
 		logger.warn(" ");
+	
 	}
 
 	@Override
@@ -315,6 +323,25 @@ public class ServerMain extends HttpServlet {
 	}
 
 	// =================================================================
+
+	private void deregisterJdbcDrivers() {
+		// Deregister driver:
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		while (drivers.hasMoreElements()) {
+			Driver driver = drivers.nextElement();
+			if (driver.getClass().getClassLoader() == cl) {
+				try {
+					logger.info("Deregistering JDBC driver {}", driver);
+					DriverManager.deregisterDriver(driver);
+				} catch (SQLException ex) {
+					logger.error("Error deregistering JDBC driver {}", driver, ex);
+				}
+			} else {
+				logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader", driver);
+			}
+		}
+	}
 
 	private boolean isValidCustomPath(String pagePath) {
 		// test for min length
