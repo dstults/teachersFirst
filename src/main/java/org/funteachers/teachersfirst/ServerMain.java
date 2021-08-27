@@ -55,13 +55,13 @@ public class ServerMain extends HttpServlet {
 		DataManager.initializeSiteData();
 		logger.info("Successfully initialized site data!");
 
-		logger.info("Testing DAO life cycles...");
-		ConnectionPackage cp = new ConnectionPackage(null, null);
-		cp.initializeDatabaseConnections();
-		cp.terminateDAOs();
+		logger.info("Testing database connectivity...");
+		ConnectionPackage connectionPackage = new ConnectionPackage(null, null);
+		connectionPackage.initialize();
+		LoggedEvent.log(connectionPackage, 0, "SERVER INIT");
+		connectionPackage.terminate();
 		logger.info("All tests passed!");
 
-		LoggedEvent.log(cp, 0, "SERVER INIT");
 
 		logger.warn("");
 		logger.warn("Servlet initialization complete!");
@@ -126,16 +126,16 @@ public class ServerMain extends HttpServlet {
 
 				case "/log_in": // intentionally different - debug/json use
 					new LogInAction(connectionPackage).runAction(); // action, not page
-					connectionPackage.terminateDAOs();
+					connectionPackage.terminate();
 					return; // don't log
 				case "/log_out": // intentionally different - debug/json use
 					new LogOutAction(connectionPackage).runAction(); // action, not page
-					connectionPackage.terminateDAOs();
+					connectionPackage.terminate();
 					return; // don't log
 
 				case "/dynamic.css":
 					new DynamicCssFile(connectionPackage).loadPage();
-					connectionPackage.terminateDAOs();
+					connectionPackage.terminate();
 					return; // don't log
 
 				case "/health":
@@ -144,7 +144,7 @@ public class ServerMain extends HttpServlet {
 					} catch (IOException e) {
 						logger.error("IO Error sending health response: ", e);
 					}
-					connectionPackage.terminateDAOs();
+					connectionPackage.terminate();
 					return; // don't log
 
 				case "/test":
@@ -177,7 +177,7 @@ public class ServerMain extends HttpServlet {
 					logger.debug("Sanitized Query:  {}", sanitizedQuery);
 					logger.debug("Page Path:        {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					connectionPackage.terminateDAOs();
+					connectionPackage.terminate();
 					return; // Use above logging instead of standard logging
 			}
 
@@ -195,7 +195,7 @@ public class ServerMain extends HttpServlet {
 		}
 		long time = System.currentTimeMillis() - startTime;
 		logger.info("OUT- {} {}ms", logInfo, time);
-		connectionPackage.terminateDAOs();
+		connectionPackage.terminate();
 	}
 
 	@Override
@@ -262,9 +262,9 @@ public class ServerMain extends HttpServlet {
 					String secret = QueryHelpers.getPost(request, "secret");
 					if (secret.equals("makeLoveNotWar")) {
 						logger.warn("======================================= Warning");
-						logger.warn("| Issuing manual DAO reset command... | Warning");
+						logger.warn("| Issuing manual connection reset ... | Warning");
 						logger.warn("======================================= Warning");
-						connectionPackage.resetDAOs();
+						connectionPackage.reset();
 						logger.warn("======================================= Warning");
 						logger.warn("| Manual reset should have completed. | Warning");
 						logger.warn("======================================= Warning");
@@ -273,7 +273,7 @@ public class ServerMain extends HttpServlet {
 						logger.warn("SECURITY ALERT: Someone might be trying to damage database, password used: {}", secret);
 						response.sendError(HttpServletResponse.SC_NOT_FOUND);
 					}
-					connectionPackage.terminateDAOs();
+					connectionPackage.terminate();
 					return; // different log
 
 				default:
@@ -281,7 +281,7 @@ public class ServerMain extends HttpServlet {
 					logger.debug("Post Parameters:  {}", parameters);
 					logger.debug("Page Path:        {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					connectionPackage.terminateDAOs();
+					connectionPackage.terminate();
 					return; // use above log instead
 			}
 
@@ -299,7 +299,7 @@ public class ServerMain extends HttpServlet {
 		}
 		long time = System.currentTimeMillis() - startTime;
 		logger.info("OUT- {} {}ms", logInfo, time);
-		connectionPackage.terminateDAOs();
+		connectionPackage.terminate();
 	}
 
 	@Override
