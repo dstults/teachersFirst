@@ -31,7 +31,7 @@ public abstract class ActionRunner {
 	// Constructors
 
 	protected ActionRunner(ConnectionPackage cp) {
-		if (!cp.validateSQLConnection()) cp.resetDAOs(); // Validate SQL connection first
+		if (!cp.validate()) cp.reset(); // Validate SQL connection first
 
 		this.connectionPackage = cp;
 		this.request = cp.getRequest();

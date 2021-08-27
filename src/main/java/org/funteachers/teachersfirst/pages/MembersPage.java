@@ -25,7 +25,7 @@ public class MembersPage extends PageLoader {
 			templateName = "messageOnly.ftl";
 			templateDataMap.put("message", "Failed to connect with database, please try again.");
 			trySendResponse();
-			this.connectionPackage.resetDAOs();
+			this.connectionPackage.reset();
 			return;
 		}
 

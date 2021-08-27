@@ -113,7 +113,7 @@ public class OpeningsPage extends PageLoader {
 				templateDataMap.put("message", "No opening data.");
 			}
 			trySendResponse();
-			this.connectionPackage.resetDAOs();
+			this.connectionPackage.reset();
 			return;
 		}
 

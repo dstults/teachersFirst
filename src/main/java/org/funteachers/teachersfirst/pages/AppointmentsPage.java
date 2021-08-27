@@ -49,7 +49,7 @@ public class AppointmentsPage extends PageLoader {
 						templateDataMap.put("message", "There isn't any appointment data to display yet.");
 					templateName = "messageOnly.ftl";
 					trySendResponse();
-					this.connectionPackage.resetDAOs();
+					this.connectionPackage.reset();
 					return;
 				}
 				// Get data from DAO
