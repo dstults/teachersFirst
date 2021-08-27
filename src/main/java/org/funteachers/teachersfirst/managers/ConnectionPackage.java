@@ -31,22 +31,35 @@ public class ConnectionPackage {
 	
 	// ================ CONSTRUCTOR ================
 
-	ConnectionPackage(HttpServletRequest request, HttpServletResponse response) {
+	public ConnectionPackage(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
-		this.security = new SecurityChecker(request, response, this);
+		if (this.request != null && this.response != null) this.security = new SecurityChecker(request, response, this);
 	}
 
 	public void initializeDatabaseConnections() throws ServletException {
 		String initParams = DataManager.getInitParams();
-		memberDAO = new MemberSqlDAO();
+
+		// Because one day, these might have different connections to different databases, they need to be initialized
+		// independently -- though because they're passed the same connection in this case, they will initialize once
+		// with the same connection starting only one time.
+
+		memberDAO = new MemberSqlDAO(this.connection);
 		if (!memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
-		appointmentDAO = new AppointmentSqlDAO();
+		allDAOs.add(memberDAO);
+
+		appointmentDAO = new AppointmentSqlDAO(this.connection);
 		if (!appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
-		openingDAO = new OpeningSqlDAO();
+		allDAOs.add(appointmentDAO);
+
+		openingDAO = new OpeningSqlDAO(this.connection);
 		if (!openingDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the openingDAO.");
-		loggedEventDAO = new LoggedEventSqlDAO();
+		allDAOs.add(openingDAO);
+
+		loggedEventDAO = new LoggedEventSqlDAO(this.connection);
 		if (!loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
+		allDAOs.add(loggedEventDAO);
+		
 	}
 
 	// ================ GETTERS ================

@@ -11,13 +11,10 @@ import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.actions.*;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.DateHelpers;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
-import org.funteachers.teachersfirst.obj.Appointment;
-import org.funteachers.teachersfirst.obj.LoggedEvent;
+import org.funteachers.teachersfirst.managers.*;
+import org.funteachers.teachersfirst.obj.*;
 import org.funteachers.teachersfirst.pages.*;
+import org.mariadb.jdbc.internal.util.ConnectionState;
 
 @WebServlet(name = "teachersFirst", urlPatterns = { "/" }, loadOnStartup = 0)
 public class ServerMain extends HttpServlet {
@@ -58,8 +55,10 @@ public class ServerMain extends HttpServlet {
 		DataManager.initializeSiteData();
 		logger.info("Successfully initialized site data!");
 
-		logger.info("Testing DAO initialization...");
-		DataManager.testInitializeDAOs();
+		logger.info("Testing DAO life cycles...");
+		ConnectionPackage cp = new ConnectionPackage(null, null);
+		cp.initializeDatabaseConnections();
+		cp.terminateDAOs();
 		logger.info("All tests passed!");
 
 		LoggedEvent.log(0, "SERVER INIT");
@@ -74,8 +73,8 @@ public class ServerMain extends HttpServlet {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
-		final SecurityChecker security = new SecurityChecker(request, response);
-		final String logInfo = security.getRealIp() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
+		final ConnectionPackage connectionPackage = new ConnectionPackage(request, response);
+		final String logInfo = connectionPackage.getSecurity().getRealIp() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
 		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
 			logger.debug("IN - {}", logInfo);
 
@@ -84,56 +83,59 @@ public class ServerMain extends HttpServlet {
 				case "":
 				case "/":
 				case "/services":
-					new ServicesPage(request, response, security).loadPage();
+					new ServicesPage(connectionPackage).loadPage();
 					break;
 				case "/msg":
 				case "/message":
 				case "/messageOnly":
-					new MessagePage(request, response, security).loadPage();
+					new MessagePage(connectionPackage).loadPage();
 					break;
 				case "/appointments":
-					new AppointmentsPage(request, response, security).loadPage();
+					new AppointmentsPage(connectionPackage).loadPage();
 					break;
 				case "/make_appointment_batch":
-					new MakeAppointmentBatchPage(request, response, security).loadPage();
+					new MakeAppointmentBatchPage(connectionPackage).loadPage();
 					break;
 				case "/make_appointment":
-					new MakeAppointmentPage(request, response, security).loadPage();
+					new MakeAppointmentPage(connectionPackage).loadPage();
 					break;
 				case "/confirm_make_appointment":
-					new ConfirmMakeAppointmentPage(request, response, security).loadPage();
+					new ConfirmMakeAppointmentPage(connectionPackage).loadPage();
 					break;
 				case "/openings":
-					new OpeningsPage(request, response, security).loadPage();
+					new OpeningsPage(connectionPackage).loadPage();
 					break;
 				case "/make_openings":
-					new MakeOpeningsPage(request, response, security).loadPage();
+					new MakeOpeningsPage(connectionPackage).loadPage();
 					break;
 				case "/profile":
-					new ProfilePage(request, response, security).loadPage();
+					new ProfilePage(connectionPackage).loadPage();
 					break;
 				case "/members":
-					new MembersPage(request, response, security).loadPage();
+					new MembersPage(connectionPackage).loadPage();
 					break;
 				case "/register":
-					new RegisterPage(request, response, security).loadPage();
+					new RegisterPage(connectionPackage).loadPage();
 					break;
 				case "/login":
-					new LoginPage(request, response, security).loadPage();
+					new LoginPage(connectionPackage).loadPage();
 					break;
 				case "/logout":
-					new LogoutPage(request, response, security).loadPage();
+					new LogoutPage(connectionPackage).loadPage();
 					break;
 
 				case "/log_in": // intentionally different - debug/json use
-					new LogInAction(request, response, security).runAction(); // action, not page
+					new LogInAction(connectionPackage).runAction(); // action, not page
+					connectionPackage.terminateDAOs();
 					return; // don't log
 				case "/log_out": // intentionally different - debug/json use
-					new LogOutAction(request, response, security).runAction(); // action, not page
+					new LogOutAction(connectionPackage).runAction(); // action, not page
+					connectionPackage.terminateDAOs();
 					return; // don't log
 
 				case "/dynamic.css":
-					new DynamicCssFile(request, response, security).loadPage();
+					new DynamicCssFile(connectionPackage).loadPage();
+					connectionPackage.terminateDAOs();
 					return; // don't log
 
 				case "/health":
@@ -142,10 +144,11 @@ public class ServerMain extends HttpServlet {
 					} catch (IOException e) {
 						logger.error("IO Error sending health response: ", e);
 					}
+					connectionPackage.terminateDAOs();
 					return; // don't log
 
 				case "/test":
-					new DiagnosticsPage(request, response, security).loadPage();
+					new DiagnosticsPage(connectionPackage).loadPage();
 					break;
 
 				default:
@@ -174,6 +177,7 @@ public class ServerMain extends HttpServlet {
 					logger.debug("Sanitized Query:  {}", sanitizedQuery);
 					logger.debug("Page Path:        {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
+					connectionPackage.terminateDAOs();
 					return; // Use above logging instead of standard logging
 			}
 
@@ -191,6 +195,7 @@ public class ServerMain extends HttpServlet {
 		}
 		long time = System.currentTimeMillis() - startTime;
 		logger.info("OUT- {} {}ms", logInfo, time);
+		connectionPackage.terminateDAOs();
 	}
 
 	@Override
@@ -206,51 +211,51 @@ public class ServerMain extends HttpServlet {
 				comma = ", ";
 			}
 		}
-		final SecurityChecker security = new SecurityChecker(request, response);
-		final String logInfo = security.getRealIp() + " " + request.getMethod() + " " + pagePath + " " + parameters;
+		final ConnectionPackage connectionPackage = new ConnectionPackage(request, response);
+		final String logInfo = connectionPackage.getSecurity().getRealIp() + " " + request.getMethod() + " " + pagePath + " " + parameters;
 		logger.debug("IN - {}", logInfo); // Don't log "health" commands
 		final String action = request.getParameter("action") == null ? "" : QueryHelpers.sanitizeForLog(request.getParameter("action"));
 
 		try {
 			switch (action) {
 				case "log_in":
-					new LogInAction(request, response, security).runAction();
+					new LogInAction(connectionPackage).runAction();
 					break;
 				case "log_out":
-					new LogOutAction(request, response, security).runAction();
+					new LogOutAction(connectionPackage).runAction();
 					break;
 				case "register_member":
-					new OpenRegisterAction(request, response, security).runAction();
+					new OpenRegisterAction(connectionPackage).runAction();
 					break;
 				case "update_member":
-					new UpdateMemberAction(request, response, security).runAction();
+					new UpdateMemberAction(connectionPackage).runAction();
 					break;
 				case "make_openings":
-					new NewOpeningsAction(request, response, security).runAction();
+					new NewOpeningsAction(connectionPackage).runAction();
 					break;
 				case "make_appointment":
-					new NewAppointmentAction(request, response, security).runAction();
+					new NewAppointmentAction(connectionPackage).runAction();
 					break;
 				case "make_appointment_batch":
-					new NewAppointmentBatchAction(request, response, security).runAction();
+					new NewAppointmentBatchAction(connectionPackage).runAction();
 					break;
 				case "delete_appointment":
-					new DeleteAppointmentAction(request, response, security).runAction();
+					new DeleteAppointmentAction(connectionPackage).runAction();
 					break;
 				case "refund_appointment":
-					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_MISSED_REFUNDED).runAction();
+					new UpdateAppointmentStateAction(connectionPackage, Appointment.STATE_MISSED_REFUNDED).runAction();
 					break;
 				case "miss_appointment":
-					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_MISSED).runAction();
+					new UpdateAppointmentStateAction(connectionPackage, Appointment.STATE_MISSED).runAction();
 					break;
 				case "complete_appointment":
-					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_COMPLETED).runAction();
+					new UpdateAppointmentStateAction(connectionPackage, Appointment.STATE_COMPLETED).runAction();
 					break;
 				case "cancel_appointment":
-					new UpdateAppointmentStateAction(request, response, security, Appointment.STATE_CANCELLED).runAction();
+					new UpdateAppointmentStateAction(connectionPackage, Appointment.STATE_CANCELLED).runAction();
 					break;
 				case "delete_opening":
-					new DeleteOpeningAction(request, response, security).runAction();
+					new DeleteOpeningAction(connectionPackage).runAction();
 					break;
 
 				case "reset_daos":
@@ -268,6 +273,7 @@ public class ServerMain extends HttpServlet {
 						logger.warn("SECURITY ALERT: Someone might be trying to damage database, password used: {}", secret);
 						response.sendError(HttpServletResponse.SC_NOT_FOUND);
 					}
+					connectionPackage.terminateDAOs();
 					return; // different log
 
 				default:
@@ -275,6 +281,7 @@ public class ServerMain extends HttpServlet {
 					logger.debug("Post Parameters:  {}", parameters);
 					logger.debug("Page Path:        {}", pagePath);
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
+					connectionPackage.terminateDAOs();
 					return; // use above log instead
 			}
 
@@ -292,11 +299,11 @@ public class ServerMain extends HttpServlet {
 		}
 		long time = System.currentTimeMillis() - startTime;
 		logger.info("OUT- {} {}ms", logInfo, time);
+		connectionPackage.terminateDAOs();
 	}
 
 	@Override
 	public void destroy() {
-		DataManager.terminateDAOs();
 		logger.warn("-----------------------------------------");
 		logger.warn("  " + SERVLET_NAME + " destroy() completed!");
 		logger.warn("-----------------------------------------");

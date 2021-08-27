@@ -1,20 +1,14 @@
 package org.funteachers.teachersfirst.managers;
 
 import java.io.*;
-import java.util.*;
 
-import javax.servlet.*;
-
-import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.daos.*;
-import org.funteachers.teachersfirst.daos.sql.*;
-import org.funteachers.teachersfirst.obj.*;
+//import org.apache.logging.log4j.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class DataManager {
 	
-	private static final Logger logger = LogManager.getLogger(AppointmentSqlDAO.class.getName());
+	//private static final Logger logger = LogManager.getLogger(AppointmentSqlDAO.class.getName());
 
 	// WEBSITE CUSTOMIZABLE COLORS
 	public static String primaryHighlightAdmin = "#96bbff";
@@ -88,30 +82,6 @@ public class DataManager {
 			enableOpenRegistration = Boolean.parseBoolean(jsonObject.get("enableOpenRegistration").toString());
 		if (jsonObject.containsKey("instructorAdminMakeAppointmentsRequiresOpening"))
 			instructorAdminMakeAppointmentsRequiresOpening = Boolean.parseBoolean(jsonObject.get("instructorAdminMakeAppointmentsRequiresOpening").toString());
-	}
-
-	public static void testInitializeDAOs() throws ServletException {
-
-		// Merge Connection Parameters:
-		String initParams = "jdbc:mariadb://" + databaseHostname + ":" + databasePort + "/" + databaseSchema;
-		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
-		initParams += "&user=" + databaseUserID + "&password=" + databasePassword;    
-
-		DAO<Member> memberDAO = null;
-		DAO<Appointment> appointmentDAO = null;
-		DAO<Opening> openingDAO = null;
-		DAO<LoggedEvent> loggedEventDAO = null;
-		
-		//DataManager.memberDAO = new MemberMemoryDAO();
-		memberDAO = new MemberSqlDAO();
-		if (!memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
-		appointmentDAO = new AppointmentSqlDAO();
-		if (!appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
-		openingDAO = new OpeningSqlDAO();
-		if (!openingDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the openingDAO.");
-		loggedEventDAO = new LoggedEventSqlDAO();
-		if (!loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
-
 	}
 
 	public static String getInitParams() {
