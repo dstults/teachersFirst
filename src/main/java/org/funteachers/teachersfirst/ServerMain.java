@@ -34,7 +34,6 @@ public class ServerMain extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-
 		super.init(config);
 
 		logger.warn("");
@@ -47,23 +46,19 @@ public class ServerMain extends HttpServlet {
 		String resourcesDir = config.getServletContext().getRealPath(RESOURCES_DIR);
 		logger.info("resourcesDir = {}", resourcesDir);
 
-		logger.info("Populating the IP whitelist...");
 		SecurityChecker.populateWhitelist();
-		logger.info("Successfully populated the IP whitelist!");
+		logger.info("IP whitelist populated.");
 
-		logger.info("Initializing FreeMarker...");
 		FreeMarkerSetup.initializeFreeMarker(resourcesDir);
-		logger.info("Successfully initialized FreeMarker");
+		logger.info("FreeMarker initialized.");
 
-		logger.info("Initializing site data...");
 		DataManager.initializeSiteData();
-		logger.info("Successfully initialized site data!");
+		logger.info("Site data initialized.");
 
-		logger.info("Testing database connectivity...");
 		ConnectionPackage connectionPackage = new ConnectionPackage(null, null);
 		LoggedEvent.log(connectionPackage, 0, "SERVER INIT");
 		connectionPackage.terminate();
-		logger.info("All tests passed!");
+		logger.info("Database connectivity tests complete.");
 
 
 		logger.warn("");
