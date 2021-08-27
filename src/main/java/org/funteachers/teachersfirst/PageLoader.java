@@ -7,6 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 import freemarker.template.*;
@@ -41,7 +42,7 @@ public abstract class PageLoader {
 
 	final protected HttpServletRequest request;
 	final protected HttpServletResponse response;
-	final protected Security security;
+	final protected SecurityChecker security;
 	final protected Member operator;
 	final protected int uid;
 	final protected String userName;
@@ -61,7 +62,7 @@ public abstract class PageLoader {
 	}
 
 	// Constructors
-	protected PageLoader(HttpServletRequest request, HttpServletResponse response, Security security) {
+	protected PageLoader(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) {
 		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
 
 		this.request = request;

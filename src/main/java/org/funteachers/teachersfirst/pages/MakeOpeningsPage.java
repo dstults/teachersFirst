@@ -4,12 +4,12 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.PageLoader;
 import org.funteachers.teachersfirst.QueryHelpers;
-import org.funteachers.teachersfirst.Security;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class MakeOpeningsPage extends PageLoader {
 
 	// Constructor
-	public MakeOpeningsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public MakeOpeningsPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 

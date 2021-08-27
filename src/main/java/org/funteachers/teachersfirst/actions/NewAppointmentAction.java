@@ -6,11 +6,12 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class NewAppointmentAction extends ActionRunner {
 
-	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

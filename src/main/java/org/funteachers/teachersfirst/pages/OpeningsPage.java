@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class OpeningsPage extends PageLoader {
@@ -76,7 +77,7 @@ public class OpeningsPage extends PageLoader {
 	}
 
 	// Constructor
-	public OpeningsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public OpeningsPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 

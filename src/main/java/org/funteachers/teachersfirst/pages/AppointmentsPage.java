@@ -5,11 +5,13 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
+
 public class AppointmentsPage extends PageLoader {
 
 	// Constructor
-	public AppointmentsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public AppointmentsPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 

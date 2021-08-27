@@ -4,11 +4,12 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class UpdateMemberAction extends ActionRunner {
 
-	public UpdateMemberAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public UpdateMemberAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	private String removeInvalidText(String text) {
 		text = text.trim();

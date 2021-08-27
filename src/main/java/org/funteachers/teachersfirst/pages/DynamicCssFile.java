@@ -4,12 +4,12 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.DataManager;
 import org.funteachers.teachersfirst.PageLoader;
-import org.funteachers.teachersfirst.Security;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class DynamicCssFile extends PageLoader {
 
 	// Constructor
-	public DynamicCssFile(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public DynamicCssFile(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 

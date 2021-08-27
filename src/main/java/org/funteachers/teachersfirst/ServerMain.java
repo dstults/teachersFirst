@@ -11,6 +11,7 @@ import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.actions.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.Appointment;
 import org.funteachers.teachersfirst.obj.LoggedEvent;
 import org.funteachers.teachersfirst.pages.*;
@@ -43,7 +44,7 @@ public class ServerMain extends HttpServlet {
 		logger.info("resourcesDir = {}", resourcesDir);
 
 		logger.info("Populating the IP whitelist...");
-		Security.populateWhitelist();
+		SecurityChecker.populateWhitelist();
 		logger.info("Successfully populated the IP whitelist!");
 
 		logger.info("Initializing FreeMarker...");
@@ -70,7 +71,7 @@ public class ServerMain extends HttpServlet {
 		long startTime = System.currentTimeMillis();
 		final String pagePath = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String sanitizedQuery = QueryHelpers.getSanitizedFullQueryString(request);
-		final Security security = new Security(request, response);
+		final SecurityChecker security = new SecurityChecker(request, response);
 		final String logInfo = security.getRealIp() + " " + request.getMethod() + " " + pagePath + " " + sanitizedQuery;
 		if (pagePath != "/health" && pagePath != "/dynamic.css") // Don't log "health" or "dynamic.css" requests
 			logger.debug("IN - {}", logInfo);
@@ -202,7 +203,7 @@ public class ServerMain extends HttpServlet {
 				comma = ", ";
 			}
 		}
-		final Security security = new Security(request, response);
+		final SecurityChecker security = new SecurityChecker(request, response);
 		final String logInfo = security.getRealIp() + " " + request.getMethod() + " " + pagePath + " " + parameters;
 		logger.debug("IN - {}", logInfo); // Don't log "health" commands
 		final String action = request.getParameter("action") == null ? "" : QueryHelpers.sanitizeForLog(request.getParameter("action"));

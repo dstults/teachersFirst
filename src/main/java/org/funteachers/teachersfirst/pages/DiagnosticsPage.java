@@ -5,12 +5,13 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class DiagnosticsPage extends PageLoader {
 
 	// Constructor
-	public DiagnosticsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public DiagnosticsPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 
@@ -21,7 +22,7 @@ public class DiagnosticsPage extends PageLoader {
 		final String clientIp = security.getRealIp();
 
 		// Check if whitelisted
-		if (!Security.isWhitelisted(clientIp)) {
+		if (!SecurityChecker.isWhitelisted(clientIp)) {
 			sendFake404("Unauthorized user [ " + clientIp + "] attempted to access diagnostics page.");
 			return;
 		}

@@ -3,12 +3,13 @@ package org.funteachers.teachersfirst.pages;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class ProfilePage extends PageLoader {
 
 	// Constructor
-	public ProfilePage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public ProfilePage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 

@@ -6,11 +6,12 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class NewAppointmentBatchAction extends ActionRunner {
 
-	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

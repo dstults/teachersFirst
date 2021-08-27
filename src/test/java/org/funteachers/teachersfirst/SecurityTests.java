@@ -2,6 +2,7 @@ package org.funteachers.teachersfirst;
 
 import javax.servlet.ServletException;
 
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 import org.junit.jupiter.api.*;
 
@@ -17,10 +18,10 @@ class SecurityTests {
 
 	@Test
 	void testWhitelist() {
-		Security.populateWhitelist();
+		SecurityChecker.populateWhitelist();
 		//String greatIp = Security.nsLookup("dstults.net");
 		//assertTrue(Security.isWhitelisted(greatIp));
-		assertFalse(Security.isWhitelisted("255.255.255.255"));
+		assertFalse(SecurityChecker.isWhitelisted("255.255.255.255"));
 		
 		//String result = Security.nsLookup("3j;k5l45k;43@#!@#$/123][]43kl54");
 		//assertSame(result, "");

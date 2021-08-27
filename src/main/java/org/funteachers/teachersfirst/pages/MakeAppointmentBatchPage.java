@@ -3,11 +3,12 @@ package org.funteachers.teachersfirst.pages;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class MakeAppointmentBatchPage extends PageLoader {
 
 	// Constructor
-	public MakeAppointmentBatchPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public MakeAppointmentBatchPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 

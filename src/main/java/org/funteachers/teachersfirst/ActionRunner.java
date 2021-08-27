@@ -6,6 +6,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public abstract class ActionRunner {
@@ -16,7 +17,7 @@ public abstract class ActionRunner {
 
 	final protected HttpServletRequest request;
 	final protected HttpServletResponse response;
-	final protected Security security;
+	final protected SecurityChecker security;
 	final protected Member operator;
 	final protected int uid;
 	final protected boolean isAdmin;
@@ -27,7 +28,7 @@ public abstract class ActionRunner {
 
 	// Constructors
 
-	protected ActionRunner(HttpServletRequest request, HttpServletResponse response, Security security) {
+	protected ActionRunner(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) {
 		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
 
 		this.request = request;

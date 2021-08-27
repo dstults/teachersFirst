@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst;
+package org.funteachers.teachersfirst.managers;
 
 import java.math.BigInteger;
 import java.security.*;
@@ -10,10 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.*;
+import org.funteachers.teachersfirst.DataManager;
+import org.funteachers.teachersfirst.ServerMain;
 import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.obj.*;
 
-public class Security {
+public class SecurityChecker {
 	
 	private static final Logger logger = LogManager.getLogger(ServerMain.class);
 
@@ -75,7 +77,7 @@ public class Security {
 	final private HttpServletRequest request;
 	final private HttpServletResponse response;
 
-	public Security(HttpServletRequest request, HttpServletResponse response) {
+	public SecurityChecker(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
 	}

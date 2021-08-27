@@ -4,11 +4,12 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteAppointmentAction extends ActionRunner {
 
-	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public DeleteAppointmentAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

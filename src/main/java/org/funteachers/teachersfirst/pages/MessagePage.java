@@ -3,11 +3,12 @@ package org.funteachers.teachersfirst.pages;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class MessagePage extends PageLoader {
 
 	// Constructor
-	public MessagePage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public MessagePage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 	@Override

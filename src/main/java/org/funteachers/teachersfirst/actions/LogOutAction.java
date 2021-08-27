@@ -3,10 +3,11 @@ package org.funteachers.teachersfirst.actions;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class LogOutAction extends ActionRunner {
 
-	public LogOutAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public LogOutAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	@Override
 	public void runAction() {

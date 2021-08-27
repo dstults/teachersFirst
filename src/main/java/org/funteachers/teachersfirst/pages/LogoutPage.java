@@ -3,12 +3,12 @@ package org.funteachers.teachersfirst.pages;
 import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.PageLoader;
-import org.funteachers.teachersfirst.Security;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 
 public class LogoutPage extends PageLoader {
 
 	// Constructor
-	public LogoutPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public LogoutPage(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) { super(request, response, security); }
 
 	// Page-specific
 

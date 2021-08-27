@@ -4,13 +4,14 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.managers.SecurityChecker;
 import org.funteachers.teachersfirst.obj.*;
 
 public class UpdateAppointmentStateAction extends ActionRunner {
 
 	final int newState;
 
-	public UpdateAppointmentStateAction(HttpServletRequest request, HttpServletResponse response, Security security, int newState) {
+	public UpdateAppointmentStateAction(HttpServletRequest request, HttpServletResponse response, SecurityChecker security, int newState) {
 		super(request, response, security);
 
 		this.newState = newState;
