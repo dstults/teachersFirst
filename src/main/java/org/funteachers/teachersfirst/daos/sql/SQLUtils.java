@@ -10,7 +10,9 @@ public class SQLUtils {
 	private static final Logger logger = LogManager.getLogger(SQLUtils.class.getName());
 
 	public static Connection connect(String initParams) {
-		logger.debug("Connecting to " + initParams + "...");
+		// This has been turned off because it's a security risk (the password is in the initParams)
+		//logger.debug("Connecting to " + initParams + "...");
+		logger.debug("Connecting to database...");
 
 		String driverClass = "org.mariadb.jdbc.Driver";
 		try {
@@ -24,11 +26,13 @@ public class SQLUtils {
 		try {
 			conn = DriverManager.getConnection(initParams);
 		} catch (SQLException e) {
-			logger.error("Unable to connect to SQL Database with: " + initParams, e);
+			// Security risk (the password is in the initParams)
+			//logger.error("Unable to connect to SQL Database with: " + initParams, e);
+			logger.error("Unable to connect to SQL Database.", e);
 			return null;
 		}
 
-		logger.debug("Connected!");
+		//logger.debug("Connected to database!");
 		return conn;
 	}
 
