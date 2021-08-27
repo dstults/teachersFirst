@@ -29,6 +29,8 @@ public class ConnectionPackage {
 
 	private Connection connection;
 	
+	// ================ CONSTRUCTOR ================
+
 	ConnectionPackage(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
@@ -47,6 +49,24 @@ public class ConnectionPackage {
 		if (!loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
 	}
 
+	// ================ GETTERS ================
+
+	public HttpServletRequest getRequest() {
+		return request;
+	}
+
+	public HttpServletResponse getResponse() {
+		return response;
+	}
+
+	public SecurityChecker getSecurity() {
+		return security;
+	}
+
+	public Connection getConnection() {
+		return connection;
+	}
+
 	public DAO<Member> getMemberDAO() {
 		return this.memberDAO;
 	}
@@ -62,6 +82,8 @@ public class ConnectionPackage {
 	public DAO<LoggedEvent> getLoggedEventDAO() {
 		return this.loggedEventDAO;
 	}
+
+	// ================ METHODS ================
 
 	public void terminateDAOs() {
 		// memberDAO.terminate();

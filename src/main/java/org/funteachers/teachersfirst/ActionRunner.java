@@ -1,13 +1,13 @@
 package org.funteachers.teachersfirst;
 
 import java.io.*;
+import java.sql.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public abstract class ActionRunner {
@@ -19,6 +19,8 @@ public abstract class ActionRunner {
 	final protected HttpServletRequest request;
 	final protected HttpServletResponse response;
 	final protected SecurityChecker security;
+	final protected Connection connection;
+
 	final protected Member operator;
 	final protected int uid;
 	final protected boolean isAdmin;
@@ -29,12 +31,14 @@ public abstract class ActionRunner {
 
 	// Constructors
 
-	protected ActionRunner(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) {
-		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
+	protected ActionRunner(ConnectionPackage cp) {
+		if (!cp.validateSQLConnection()) cp.resetDAOs(); // Validate SQL connection first
 
-		this.request = request;
-		this.response = response;
-		this.security = security;
+		this.request = cp.getRequest();
+		this.response = cp.getResponse();
+		this.security = cp.getSecurity();
+		this.connection = cp.getConnection();
+
 		this.operator = security.getMemberFromRequestCookieToken();
 		if (operator != null) {
 			this.uid = this.operator.getRecID();

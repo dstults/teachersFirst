@@ -2,15 +2,13 @@ package org.funteachers.teachersfirst;
 
 import java.io.*;
 import java.util.*;
+import java.sql.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.DateHelpers;
-import org.funteachers.teachersfirst.managers.QueryHelpers;
-import org.funteachers.teachersfirst.managers.SecurityChecker;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 import freemarker.template.*;
@@ -46,6 +44,8 @@ public abstract class PageLoader {
 	final protected HttpServletRequest request;
 	final protected HttpServletResponse response;
 	final protected SecurityChecker security;
+	final protected Connection connection;
+
 	final protected Member operator;
 	final protected int uid;
 	final protected String userName;
@@ -65,12 +65,14 @@ public abstract class PageLoader {
 	}
 
 	// Constructors
-	protected PageLoader(HttpServletRequest request, HttpServletResponse response, SecurityChecker security) {
-		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
+	protected PageLoader(ConnectionPackage cp) {
+		if (!cp.validateSQLConnection()) cp.resetDAOs(); // Validate SQL connection first
 
-		this.request = request;
-		this.response = response;
-		this.security = security;
+		this.request = cp.getRequest();
+		this.response = cp.getResponse();
+		this.security = cp.getSecurity();
+		this.connection = cp.getConnection();
+
 		this.operator = security.getMemberFromRequestCookieToken();
 		if (operator != null) {
 			this.uid = this.operator.getRecID();
