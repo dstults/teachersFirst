@@ -5,11 +5,9 @@ import java.util.*;
 
 import org.apache.logging.log4j.*;
 
-class SQLUtils {
+public class SQLUtils {
 
 	private static final Logger logger = LogManager.getLogger(SQLUtils.class.getName());
-
-	private SQLUtils() { }                                          // Hide the implicit public constructor
 
 	public static Connection connect(String initParams) {
 		logger.debug("Connecting to " + initParams + "...");
@@ -88,6 +86,10 @@ class SQLUtils {
 
 	// Default Insert
 	public static int executeSqlInsert(Connection conn, String query, String recID, String... args) {
+		if (conn == null) {
+			logger.error("No connection passed to executeSqlInsert: " + query + " -- recID: " + recID);
+			return -1;
+		}
 		//logger.debug("Executing SQL Insert: " + query);
 
 		int newID = -1;
@@ -276,10 +278,10 @@ class SQLUtils {
 			return;
 		}
 
-		boolean wasClosedOiginally = false;
+		boolean wasClosedOriginally = false;
 		try {
 			if (conn.isClosed()) {
-				wasClosedOiginally = true;
+				wasClosedOriginally = true;
 				String warningMessage = "Warning: Connection was already disconnected while attempting to disconnect.";
 				System.out.println(warningMessage);
 				if (logger != null) logger.error(warningMessage);
@@ -287,7 +289,7 @@ class SQLUtils {
 			}
 			conn.close();
 		} catch (SQLException e) {
-			if (!wasClosedOiginally) {
+			if (!wasClosedOriginally) {
 				// In case happens during test builds or when logger is null:
 				System.out.println("================================================ Error");
 				System.out.println("| SQL EXCEPTION WHILE ATTEMPTING TO DISCONNECT | Error" + e.getStackTrace());
