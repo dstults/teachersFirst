@@ -47,7 +47,8 @@ public class MembersPage extends PageLoader {
 		if (isAdmin || isInstructor) {
 			members = this.connectionPackage.getMemberDAO().retrieveAll();
 		} else {
-			members = List.of(this.connectionPackage.getMemberDAO().retrieveByID(uid));
+			members = this.connectionPackage.getMemberDAO().retrieveAll();
+			members.removeIf(m -> (!m.getIsInstructor() && m.getRecID() != this.uid));
 		}
 
 		String json = JsonUtils.BuildArrays(members);
