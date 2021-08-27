@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class AppointmentSqlDAO implements DAO<Appointment> {
 	
-	private static final Logger logger = LogManager.getLogger(AppointmentSqlDAO.class.getName());
+	private static final Logger logger = LogManager.getLogger();
 
 	private Connection conn;
 

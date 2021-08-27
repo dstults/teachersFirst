@@ -7,7 +7,7 @@ import org.apache.logging.log4j.*;
 
 public class SQLUtils {
 
-	private static final Logger logger = LogManager.getLogger(SQLUtils.class.getName());
+	private static final Logger logger = LogManager.getLogger();
 
 	public static Connection connect(String initParams) {
 		// This has been turned off because it's a security risk (the password is in the initParams)

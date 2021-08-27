@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser;
 
 public class DataManager {
 	
-	//private static final Logger logger = LogManager.getLogger(AppointmentSqlDAO.class.getName());
+	//private static final Logger logger = LogManager.getLogger();
 
 	// WEBSITE CUSTOMIZABLE COLORS
 	public static String primaryHighlightAdmin = "#96bbff";

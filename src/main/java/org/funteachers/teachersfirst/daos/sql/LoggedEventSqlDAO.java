@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	
-	private static final Logger logger = LogManager.getLogger(LoggedEventSqlDAO.class.getName());
+	private static final Logger logger = LogManager.getLogger();
 
 	private final Connection conn;
 

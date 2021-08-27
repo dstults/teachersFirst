@@ -6,7 +6,7 @@ import java.util.*;
 import org.apache.logging.log4j.*;
 
 class SQLRow {
-    private static final Logger logger = LogManager.getLogger(SQLRow.class.getName());
+    private static final Logger logger = LogManager.getLogger();
 
     private Map<String,String> items;
 

@@ -10,7 +10,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class OpeningSqlDAO implements DAO<Opening> {
 	
-	private static final Logger logger = LogManager.getLogger(OpeningSqlDAO.class.getName());
+	private static final Logger logger = LogManager.getLogger();
 
 	private Connection conn;
 

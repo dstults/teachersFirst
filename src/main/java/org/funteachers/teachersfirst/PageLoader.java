@@ -14,31 +14,9 @@ import freemarker.template.*;
 
 public abstract class PageLoader {
 
-	// Statics
-	
-	final protected static Logger logger = LogManager.getLogger(ServerMain.class);
-	
-	final protected static Configuration freeMarkerConfig = new Configuration(Configuration.getVersion());
-	public static void initializeFreeMarker(String resourcesDir) throws ServletException {
-		if (resourcesDir == null) {
-			logger.warn("===========DEBUG HELP===========");
-			logger.warn("Something has broken above here!");
-			logger.warn("FreeMarker is attempting to initialize without a resourcesDir, this should not be possible.");
-			throw new RuntimeException("FreeMarker is attempting to initialize without a resourcesDir.");
-		}
-		String templateDir = resourcesDir + "/templates";
-		try {
-			freeMarkerConfig.setDirectoryForTemplateLoading(new File(templateDir));
-		} catch (IOException e) {
-			String msg = "Template directory not found: " + templateDir;
-			logger.fatal(msg, e);
-			throw new UnavailableException(msg);
-		}
-	}
-
-	// =======================================================================================================================
-
 	// Declarations
+	
+	final protected static Logger logger = LogManager.getLogger();
 
 	final protected ConnectionPackage connectionPackage;
 	final protected HttpServletRequest request;
@@ -145,10 +123,10 @@ public abstract class PageLoader {
 
 	protected void trySendResponse(String headerOverwrite, int statusCode) {
 
-		if (templateName == null) {
+		if (this.templateName == null || this.templateName == "") {
 			// Send 404 error response
 			try {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				this.response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			} catch (IOException e) {
 				logger.error("Unable to send 404 response code.", e);
 			}
@@ -159,9 +137,9 @@ public abstract class PageLoader {
 		response.setStatus(statusCode);
 
 		// Process template:
-		logger.debug("Processing Template: " + templateName);
+		//logger.debug("Processing Template: " + this.templateName);
 		try (PrintWriter out = response.getWriter()) {
-			Template view = freeMarkerConfig.getTemplate(templateName);
+			Template view = FreeMarkerSetup.freeMarkerConfig.getTemplate(this.templateName);
 			view.process(templateDataMap, out);
 		} catch (TemplateException | MalformedTemplateNameException e) {
 			logger.error("Template Error: ", e);
@@ -171,7 +149,7 @@ public abstract class PageLoader {
 	}
 
 	protected void trySendJson(String json) {
-		// send json:
+		// Send JSON:
 		logger.debug("Attempting to send JSON GET reply...");
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(200);
@@ -186,7 +164,7 @@ public abstract class PageLoader {
 		final String messageJson = "\"message\": \"" + message.trim() + "\""; // include message even if empty
 		final String fullJson = "{ " + messageJson + " }";
 
-		// send json:
+		// Send JSON:
 		logger.debug("Attempting to send JSON GET reply...");
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(200);

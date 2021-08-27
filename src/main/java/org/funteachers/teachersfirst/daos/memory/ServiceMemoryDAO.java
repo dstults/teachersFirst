@@ -15,7 +15,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class ServiceMemoryDAO implements DAO<Service> {
 
-	private static final Logger logger = LogManager.getLogger(ServiceMemoryDAO.class.getName());
+	private static final Logger logger = LogManager.getLogger();
 
 	private AtomicInteger nextListRecID;
 	private List<Service> serviceDB;
