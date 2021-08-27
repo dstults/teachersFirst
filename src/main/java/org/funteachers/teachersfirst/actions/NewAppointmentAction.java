@@ -3,14 +3,13 @@ package org.funteachers.teachersfirst.actions;
 import java.time.*;
 import java.util.*;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class NewAppointmentAction extends ActionRunner {
 
-	public NewAppointmentAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public NewAppointmentAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {
@@ -28,7 +27,7 @@ public class NewAppointmentAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			openingIdInt = 0;
 		}
-		final Opening referralOpening = DataManager.getOpeningDAO().retrieveByID(openingIdInt);
+		final Opening referralOpening = this.connectionPackage.getOpeningDAO().retrieveByID(openingIdInt);
 		if (referralOpening == null) {
 			this.sendPostReply("/openings", "", "Opening with ID %5B" + openingIdString + "%5D does not exist!");
 			return;
@@ -42,7 +41,7 @@ public class NewAppointmentAction extends ActionRunner {
 			this.sendPostReply("/openings", "", "Could not parse student ID!");
 			return;
 		}
-		final Member student = DataManager.getMemberDAO().retrieveByID(studentIdInt);
+		final Member student = this.connectionPackage.getMemberDAO().retrieveByID(studentIdInt);
 		if (student == null) {
 			this.sendPostReply("/openings", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
@@ -55,7 +54,7 @@ public class NewAppointmentAction extends ActionRunner {
 			this.sendPostReply("/openings", "", "Could not parse instructor ID!");
 			return;
 		}
-		if (DataManager.getMemberDAO().retrieveByID(instructorIdInt) == null) {
+		if (this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt) == null) {
 			this.sendPostReply("/openings", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
 		} else if (studentIdInt == instructorIdInt) {
@@ -151,7 +150,7 @@ public class NewAppointmentAction extends ActionRunner {
 		}
 
 		// Make sure no conflicting appointments
-		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
+		List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO().retrieveAll();
 		PlannedAppointment pa = new PlannedAppointment(studentIdInt, instructorIdInt,
 				year, month, day, startHour, startMinute, endDay, endHour, endMinute);
 	
@@ -167,15 +166,15 @@ public class NewAppointmentAction extends ActionRunner {
 		
 		// Create appointment
 		Appointment appointment = new Appointment(pa);
-		DataManager.getAppointmentDAO().insert(appointment);
+		this.connectionPackage.getAppointmentDAO().insert(appointment);
 		logger.debug("Created new appointment: [{}]", appointment);
-		logger.info(DataManager.getAppointmentDAO().size() + " records total");
+		logger.info(this.connectionPackage.getAppointmentDAO().size() + " records total");
 
 		// Update credits for student
 		float credits = student.getCredits();
 		float length = pa.getLength();
 		credits -= length;
-		student.setCredits(uid, operator.getLoginName(), "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
+		student.setCredits(this.connectionPackage, uid, operator.getLoginName(), "create appointment[" + appointment.getRecID() + "] len=" + pa.getLength() + " hrs", credits);
 
 		// Reply to user
 		this.sendPostReply("/appointments", "", "Appointment created!");

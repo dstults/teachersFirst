@@ -1,14 +1,13 @@
 package org.funteachers.teachersfirst.actions;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class UpdateMemberAction extends ActionRunner {
 
-	public UpdateMemberAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public UpdateMemberAction(ConnectionPackage cp) { super(cp); }
 
 	private String removeInvalidText(String text) {
 		text = text.trim();
@@ -42,7 +41,7 @@ public class UpdateMemberAction extends ActionRunner {
 		}
 		
 		// Check connection to database
-		DAO<Member> memberDAO = DataManager.getMemberDAO();
+		DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
 		if (memberDAO == null) {
 			this.sendJsonMessage("Error connecting to database, try again!");
 			return;
@@ -93,7 +92,7 @@ public class UpdateMemberAction extends ActionRunner {
 		boolean changesMade = false;
 		boolean updateNeeded = false;
 		if (credits != member.getCredits()) {
-			member.setCredits(uid, operator.getLoginName(), "manual update", credits);
+			member.setCredits(this.connectionPackage, uid, operator.getLoginName(), "manual update", credits);
 			changesMade = true;
 			updateNeeded = false; // This has its own personalized SQL update
 		}
@@ -131,7 +130,7 @@ public class UpdateMemberAction extends ActionRunner {
 		//this.sendJsonReply("Success!//" + member2.toString() + "//Changed to://" + member.toString());
 
 		if (updateNeeded) {
-			member.update();
+			member.update(this.connectionPackage);
 			logger.debug("Updated: [{}]", member);
 		}
 		

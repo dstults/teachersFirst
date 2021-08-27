@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst;
+package org.funteachers.teachersfirst.managers;
 
 import java.math.BigInteger;
 import java.security.*;
@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.*;
+import org.funteachers.teachersfirst.ServerMain;
 import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.obj.*;
 
-public class Security {
+public class SecurityChecker {
 	
 	private static final Logger logger = LogManager.getLogger(ServerMain.class);
 
@@ -74,10 +75,12 @@ public class Security {
 
 	final private HttpServletRequest request;
 	final private HttpServletResponse response;
+	final private ConnectionPackage connectionPackage;
 
-	public Security(HttpServletRequest request, HttpServletResponse response) {
+	public SecurityChecker(HttpServletRequest request, HttpServletResponse response, ConnectionPackage connectionPackage) {
 		this.request = request;
 		this.response = response;
+		this.connectionPackage = connectionPackage;
 	}
 
 	public String getRealIp() {
@@ -89,7 +92,7 @@ public class Security {
 	}
 
 	public Member checkPassword(String loginName, String password) {
-		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 		Member member = memberDAO.retrieveByLoginNameAndPassword(loginName, password);
 
 		if (member == null) {
@@ -176,7 +179,7 @@ public class Security {
 
 	private void giveTokenCookie(Member member) {
 		// Check for an already existing token
-		MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 		String token = memberDAO.retrieveToken(member.getRecID());
 		
 		// Make new token if none exists
@@ -199,7 +202,7 @@ public class Security {
 
 		// Update database if member provided
 		if (member != null && allDevices) {
-			MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+			MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 			memberDAO.updateToken(member, null);
 			logger.debug("Clearing token for member [ ({}) {} ]", member.getRecID(), member.getLoginName());
 		}
@@ -244,7 +247,7 @@ public class Security {
 		}
 		final String token = matcher.group(2);
 
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) DataManager.getMemberDAO();
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
 		final Member member = memberDAO.retrieveByIdAndToken(uid, token);
 
 		if (member == null) {

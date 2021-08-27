@@ -2,8 +2,7 @@ package org.funteachers.teachersfirst.obj;
 
 import java.time.format.DateTimeFormatter;
 
-import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.managers.*;
 
 import java.sql.Timestamp;
 
@@ -67,7 +66,7 @@ public class Appointment implements IJsonnable {
 		if (startTime == null) throw new IllegalArgumentException("Invalid argument: startTime is null");
 		if (endTime == null) throw new IllegalArgumentException("Invalid argument: endTime is null");
 		if (completionState < -2 || completionState > 2) throw new IllegalArgumentException("Invalid argument: completionState range is -2 to 2");
-		
+
 		this.recId = recID;
 		this.studentId = studentID;
 		this.instructorId = instructorID;
@@ -91,8 +90,8 @@ public class Appointment implements IJsonnable {
 		this.recId = recID;
 	}
 
-	public boolean update() {
-		return DataManager.getAppointmentDAO().update(this);
+	public boolean update(ConnectionPackage cp) {
+		return cp.getAppointmentDAO().update(this);
 	}
 
 	// ----------------------------------------------------------------
@@ -158,20 +157,19 @@ public class Appointment implements IJsonnable {
 		return this.completionState == STATE_CANCELLED;
 	}
 
-	public void setSchedulingVerified(boolean value) {
+	public void setSchedulingVerified(ConnectionPackage cp, boolean value) {
 		this.schedulingVerified = value;
-		DataManager.getAppointmentDAO().update(this);
+		cp.getAppointmentDAO().update(this);
 	}
 
-	public boolean setCompletionState(int value, int operator, String operatorName) {
+	public boolean setCompletionState(ConnectionPackage cp, int value, int operator, String operatorName) {
 		if (!this.hasRefundableValue()) return false;
 
 		this.completionState = value;
-		DataManager.getAppointmentDAO().update(this);
+		cp.getAppointmentDAO().update(this);
 		
 		if (!this.hasRefundableValue()) {
-			final DAO<Member> memberDAO = DataManager.getMemberDAO();
-			final Member student = memberDAO.retrieveByID(this.studentId);
+			final Member student = cp.getMemberDAO().retrieveByID(this.studentId);
 			final String refundProcess;
 			if (value == STATE_CANCELLED) {
 				refundProcess = "cancel auto-refund";
@@ -182,7 +180,7 @@ public class Appointment implements IJsonnable {
 			}
 			final float myCredits = this.getLength();
 			final float newCredits = student.getCredits() + myCredits;
-			student.setCredits(operator, operatorName, "appointment[" + this.recId + "] " + refundProcess + " len=" + myCredits + " hrs", newCredits);
+			student.setCredits(cp, operator, operatorName, "appointment[" + this.recId + "] " + refundProcess + " len=" + myCredits + " hrs", newCredits);
 		}
 
 		return true;

@@ -1,8 +1,7 @@
 package org.funteachers.teachersfirst.pages;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.*;
 
 public class ServicesPage extends PageLoader {
 
@@ -12,7 +11,7 @@ public class ServicesPage extends PageLoader {
 	//  - class variables must have appropriate getters
 
 	// Constructor
-	public ServicesPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public ServicesPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 

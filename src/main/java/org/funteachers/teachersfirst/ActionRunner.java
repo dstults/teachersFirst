@@ -6,6 +6,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 
 import org.apache.logging.log4j.*;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public abstract class ActionRunner {
@@ -14,9 +15,11 @@ public abstract class ActionRunner {
 
 	final protected static Logger logger = LogManager.getLogger(ServerMain.class);
 
+	final protected ConnectionPackage connectionPackage;
 	final protected HttpServletRequest request;
 	final protected HttpServletResponse response;
-	final protected Security security;
+	final protected SecurityChecker security;
+
 	final protected Member operator;
 	final protected int uid;
 	final protected boolean isAdmin;
@@ -27,12 +30,14 @@ public abstract class ActionRunner {
 
 	// Constructors
 
-	protected ActionRunner(HttpServletRequest request, HttpServletResponse response, Security security) {
-		if (!DataManager.validateSQLConnection()) DataManager.resetDAOs(); // Validate SQL connection first
+	protected ActionRunner(ConnectionPackage cp) {
+		if (!cp.validate()) cp.reset(); // Validate SQL connection first
 
-		this.request = request;
-		this.response = response;
-		this.security = security;
+		this.connectionPackage = cp;
+		this.request = cp.getRequest();
+		this.response = cp.getResponse();
+		this.security = cp.getSecurity();
+
 		this.operator = security.getMemberFromRequestCookieToken();
 		if (operator != null) {
 			this.uid = this.operator.getRecID();

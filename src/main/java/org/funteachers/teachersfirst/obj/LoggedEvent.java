@@ -2,7 +2,7 @@ package org.funteachers.teachersfirst.obj;
 
 import java.sql.Timestamp;
 
-import org.funteachers.teachersfirst.DataManager;
+import org.funteachers.teachersfirst.managers.*;
 
 public class LoggedEvent implements IJsonnable {
 
@@ -38,9 +38,9 @@ public class LoggedEvent implements IJsonnable {
 
 	// ----------------------------------------------------------------
 
-	public static void log(int operator, String message) {
+	public static void log(ConnectionPackage cp, int operator, String message) {
 		LoggedEvent ev = new LoggedEvent(operator, message);
-		DataManager.getLoggedEventDAO().insert(ev);
+		cp.getLoggedEventDAO().insert(ev);
 	}
 
 	// ----------------------------------------------------------------

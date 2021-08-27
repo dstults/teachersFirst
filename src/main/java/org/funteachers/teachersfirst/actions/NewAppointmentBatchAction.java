@@ -3,14 +3,13 @@ package org.funteachers.teachersfirst.actions;
 import java.time.*;
 import java.util.*;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class NewAppointmentBatchAction extends ActionRunner {
 
-	public NewAppointmentBatchAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public NewAppointmentBatchAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {
@@ -38,7 +37,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.sendPostReply("/make_appointment_batch", "", "Could not parse student ID!");
 			return;
 		}
-		final Member student = DataManager.getMemberDAO().retrieveByID(studentIdInt);
+		final Member student = this.connectionPackage.getMemberDAO().retrieveByID(studentIdInt);
 		if (student == null) {
 			this.sendPostReply("/make_appointment_batch", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
@@ -52,7 +51,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.sendPostReply("/make_appointment_batch", "", "Could not parse instructor ID!");
 			return;
 		}
-		final Member instructor = DataManager.getMemberDAO().retrieveByID(instructorIdInt);
+		final Member instructor = this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt);
 		if (instructor == null) {
 			this.sendPostReply("/make_appointment_batch", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
@@ -171,7 +170,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		}
 
 		// Make sure no conflicting appointments
-		List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
+		List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO().retrieveAll();
 		logger.debug("APPOINTMENTS GOT: " + allAppointments.size());
 
 		// Might be very first appointment, in which case this is null
@@ -194,7 +193,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			if (plan.getResult().contains("OK")) {
 				successCount++;
 				Appointment appointment = new Appointment(plan);
-				DataManager.getAppointmentDAO().insert(appointment);
+				this.connectionPackage.getAppointmentDAO().insert(appointment);
 				sb.append("OK: %5B").append(appointment.getDateFormatted()).append("%5D//");
 				logger.debug("Created new appointment: [{}]", appointment);
 			} else {
@@ -208,10 +207,10 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		if (successCount > 0 && lengthEach > 0.0) {
 			float credits = student.getCredits();
 			credits -= successCount * lengthEach;
-			student.setCredits(uid, operator.getLoginName(), "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
+			student.setCredits(this.connectionPackage, uid, operator.getLoginName(), "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
 		}
 
-		logger.info(DataManager.getAppointmentDAO().size() + " records total");
+		logger.info(this.connectionPackage.getAppointmentDAO().size() + " records total");
 		this.sendPostReply("/appointments", "", sb.toString());
 		return;
 	}

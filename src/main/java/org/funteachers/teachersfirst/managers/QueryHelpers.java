@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst;
+package org.funteachers.teachersfirst.managers;
 
 import java.io.*;
 import java.net.*;

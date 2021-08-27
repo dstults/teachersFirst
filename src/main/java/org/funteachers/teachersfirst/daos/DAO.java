@@ -7,8 +7,8 @@ import java.util.*;
 public interface DAO<T> {
 
     // Life Cycle ----------------------------------------
-    boolean initialize(String initParams);
-    void terminate();
+    //boolean initialize(Connection conn);			// Handled by the ConnectionPackage now.
+    //void terminate();								// Handled by the ConnectionPackage now.
 
     // Create --------------------------------------------
     int insert(T item);

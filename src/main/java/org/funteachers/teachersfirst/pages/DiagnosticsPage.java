@@ -5,12 +5,13 @@ import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class DiagnosticsPage extends PageLoader {
 
 	// Constructor
-	public DiagnosticsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public DiagnosticsPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
@@ -21,7 +22,7 @@ public class DiagnosticsPage extends PageLoader {
 		final String clientIp = security.getRealIp();
 
 		// Check if whitelisted
-		if (!Security.isWhitelisted(clientIp)) {
+		if (!SecurityChecker.isWhitelisted(clientIp)) {
 			sendFake404("Unauthorized user [ " + clientIp + "] attempted to access diagnostics page.");
 			return;
 		}
@@ -62,17 +63,17 @@ public class DiagnosticsPage extends PageLoader {
 		final Map<String, String[]> headerItems = dumpHeaderToMap(request);
 		final List<Map<String, String>> cookieItems = dumpCookiesToMap(request);
 
-		final DAO<Member> memberDAO = DataManager.getMemberDAO();
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
 		final String memberDaoCheckNull = memberDAO != null ? "Member DAO Found" : "NULL MEMBER DAO";
 		final Member member = memberDAO != null ? memberDAO.retrieveByIndex(0) : null;
 		final String memberDaoCheckGet = member != null ? "Member Item Found" : "NO MEMBER ITEM COULD BE RETRIEVED";
 
-		final DAO<Opening> openingDAO = DataManager.getOpeningDAO();
+		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
 		final String openingDaoCheckNull = openingDAO != null ? "Opening DAO Found" : "NULL OPENING DAO";
 		final Opening opening = openingDAO != null ? openingDAO.retrieveByIndex(0) : null;
 		final String openingDaoCheckGet = opening != null ? "Opening Item Found" : "NO OPENING ITEM COULD BE RETRIEVED";
 
-		final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO();
 		final String appointmentDaoCheckNull = appointmentDAO != null ? "Appointment DAO Found" : "NULL APPOINTMENT DAO";
 		final Appointment appointment = appointmentDAO != null ? appointmentDAO.retrieveByIndex(0) : null;
 		final String appointmentDaoCheckGet = appointment != null ? "Appointment Item Found" : "NO APPOINTMENT ITEM COULD BE RETRIEVED";

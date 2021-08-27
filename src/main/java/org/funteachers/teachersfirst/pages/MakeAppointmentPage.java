@@ -3,14 +3,14 @@ package org.funteachers.teachersfirst.pages;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
-import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.*;
 
 public class MakeAppointmentPage extends PageLoader {
 
 	// Constructor
-	public MakeAppointmentPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public MakeAppointmentPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
@@ -29,7 +29,7 @@ public class MakeAppointmentPage extends PageLoader {
 			} catch (NumberFormatException e) {
 				studentIdInt = 0;
 			}
-			final String studentName = studentIdInt > 0 ? DataManager.getMemberDAO().retrieveByID(studentIdInt).getDisplayName() : "";
+			final String studentName = studentIdInt > 0 ? this.connectionPackage.getMemberDAO().retrieveByID(studentIdInt).getDisplayName() : "";
 			final String instructorIdString = QueryHelpers.getGet(request, "instructorId");
 			int instructorIdInt;
 			try {
@@ -37,7 +37,7 @@ public class MakeAppointmentPage extends PageLoader {
 			} catch (NumberFormatException e) {
 				instructorIdInt = 0;
 			}
-			final String instructorName = instructorIdInt > 0 ? DataManager.getMemberDAO().retrieveByID(instructorIdInt).getDisplayName() : "";
+			final String instructorName = instructorIdInt > 0 ? this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt).getDisplayName() : "";
 			final String dateString = QueryHelpers.getGet(request, "date");
 			final String openingStartTimeString = QueryHelpers.getGet(request, "openingStartTime");
 			final String openingEndTimeString = QueryHelpers.getGet(request, "openingEndTime");

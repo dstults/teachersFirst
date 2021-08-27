@@ -4,37 +4,20 @@ import java.sql.*;
 import java.util.*;
 
 import org.apache.logging.log4j.*;
-import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.managers.DateHelpers;
 import org.funteachers.teachersfirst.obj.*;
 
 public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	
 	private static final Logger logger = LogManager.getLogger(LoggedEventSqlDAO.class.getName());
 
-	private Connection conn = null;
+	private final Connection conn;
 
-	public LoggedEventSqlDAO() {
-		this.conn = null;                                   // conn must be created during init()
-	}
+	public LoggedEventSqlDAO(Connection conn) {
+		if (conn == null) throw new IllegalArgumentException("DAO instantiated without connection.");
 
-	public boolean initialize(String initParams) {
-		logger.info("Connecting to the database...");
-
-		conn = SQLUtils.connect(initParams);
-		if (conn == null) {
-			logger.error("Unable to connect to SQL Database: " + initParams);
-			return false;
-		}
-		logger.info("...connected!");
-
-		return true;
-	}
-
-	public void terminate() {
-		logger.debug("Terminating LoggedEvent SQL DAO...");
-		SQLUtils.disconnect(conn);
-		conn = null;
+		this.conn = conn;
 	}
 
 	public int insert(LoggedEvent loggedEvent) {

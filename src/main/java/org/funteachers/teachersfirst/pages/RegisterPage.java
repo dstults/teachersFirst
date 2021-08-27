@@ -1,16 +1,12 @@
 package org.funteachers.teachersfirst.pages;
 
-import javax.servlet.http.*;
-
-import org.funteachers.teachersfirst.DataManager;
 import org.funteachers.teachersfirst.PageLoader;
-import org.funteachers.teachersfirst.QueryHelpers;
-import org.funteachers.teachersfirst.Security;
+import org.funteachers.teachersfirst.managers.*;
 
 public class RegisterPage extends PageLoader {
 
 	// Constructor
-	public RegisterPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public RegisterPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 

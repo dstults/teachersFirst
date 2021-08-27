@@ -1,15 +1,16 @@
 package org.funteachers.teachersfirst.pages;
 
 import java.util.*;
-import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
+
 public class AppointmentsPage extends PageLoader {
 
 	// Constructor
-	public AppointmentsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public AppointmentsPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
@@ -40,7 +41,7 @@ public class AppointmentsPage extends PageLoader {
 			if (uid > 0) {
 				// TODO: This is json mode now! This should probably say something like:
 				// {"message":"Unable to contact database!"}
-				final DAO<Appointment> appointmentDAO = DataManager.getAppointmentDAO();
+				final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO();
 				if (appointmentDAO == null || appointmentDAO.retrieveByIndex(0) == null) {
 					if (appointmentDAO == null)
 						templateDataMap.put("message", "Failed to contact database, try again later.");
@@ -48,11 +49,11 @@ public class AppointmentsPage extends PageLoader {
 						templateDataMap.put("message", "There isn't any appointment data to display yet.");
 					templateName = "messageOnly.ftl";
 					trySendResponse();
-					DataManager.resetDAOs();
+					this.connectionPackage.reset();
 					return;
 				}
 				// Get data from DAO
-				final List<Member> allMembers = DataManager.getMemberDAO().retrieveAll();
+				final List<Member> allMembers = this.connectionPackage.getMemberDAO().retrieveAll();
 				final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
 				
 				// check all DAOs

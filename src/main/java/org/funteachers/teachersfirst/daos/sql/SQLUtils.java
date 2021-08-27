@@ -5,14 +5,14 @@ import java.util.*;
 
 import org.apache.logging.log4j.*;
 
-class SQLUtils {
+public class SQLUtils {
 
 	private static final Logger logger = LogManager.getLogger(SQLUtils.class.getName());
 
-	private SQLUtils() { }                                          // Hide the implicit public constructor
-
 	public static Connection connect(String initParams) {
-		logger.debug("Connecting to " + initParams + "...");
+		// This has been turned off because it's a security risk (the password is in the initParams)
+		//logger.debug("Connecting to " + initParams + "...");
+		logger.debug("Connecting to database...");
 
 		String driverClass = "org.mariadb.jdbc.Driver";
 		try {
@@ -26,11 +26,13 @@ class SQLUtils {
 		try {
 			conn = DriverManager.getConnection(initParams);
 		} catch (SQLException e) {
-			logger.error("Unable to connect to SQL Database with: " + initParams, e);
+			// Security risk (the password is in the initParams)
+			//logger.error("Unable to connect to SQL Database with: " + initParams, e);
+			logger.error("Unable to connect to SQL Database.", e);
 			return null;
 		}
 
-		logger.debug("Connected!");
+		//logger.debug("Connected to database!");
 		return conn;
 	}
 
@@ -88,6 +90,10 @@ class SQLUtils {
 
 	// Default Insert
 	public static int executeSqlInsert(Connection conn, String query, String recID, String... args) {
+		if (conn == null) {
+			logger.error("No connection passed to executeSqlInsert: " + query + " -- recID: " + recID);
+			return -1;
+		}
 		//logger.debug("Executing SQL Insert: " + query);
 
 		int newID = -1;
@@ -276,10 +282,10 @@ class SQLUtils {
 			return;
 		}
 
-		boolean wasClosedOiginally = false;
+		boolean wasClosedOriginally = false;
 		try {
 			if (conn.isClosed()) {
-				wasClosedOiginally = true;
+				wasClosedOriginally = true;
 				String warningMessage = "Warning: Connection was already disconnected while attempting to disconnect.";
 				System.out.println(warningMessage);
 				if (logger != null) logger.error(warningMessage);
@@ -287,7 +293,7 @@ class SQLUtils {
 			}
 			conn.close();
 		} catch (SQLException e) {
-			if (!wasClosedOiginally) {
+			if (!wasClosedOriginally) {
 				// In case happens during test builds or when logger is null:
 				System.out.println("================================================ Error");
 				System.out.println("| SQL EXCEPTION WHILE ATTEMPTING TO DISCONNECT | Error" + e.getStackTrace());

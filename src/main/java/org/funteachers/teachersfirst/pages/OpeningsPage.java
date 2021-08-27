@@ -3,10 +3,10 @@ package org.funteachers.teachersfirst.pages;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
-import javax.servlet.http.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class OpeningsPage extends PageLoader {
@@ -76,7 +76,7 @@ public class OpeningsPage extends PageLoader {
 	}
 
 	// Constructor
-	public OpeningsPage(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public OpeningsPage(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
@@ -99,7 +99,7 @@ public class OpeningsPage extends PageLoader {
 		//logger.debug(saturdayTime.toString());
 
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
-		final DAO<Opening> openingDAO = DataManager.getOpeningDAO();
+		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
 		if (openingDAO == null || openingDAO.retrieveByIndex(0) == null) {
 			// Failed to contact SQL Server or simply no data
 			templateName = "openings.ftl";
@@ -113,12 +113,12 @@ public class OpeningsPage extends PageLoader {
 				templateDataMap.put("message", "No opening data.");
 			}
 			trySendResponse();
-			DataManager.resetDAOs();
+			this.connectionPackage.reset();
 			return;
 		}
 
 		final List<Opening> allOpenings = openingDAO.retrieveAll();
-		final DAO<Member> memberDAO = DataManager.getMemberDAO();
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
 		List<PrettifiedDay> thisWeek = null;
 		PrettifiedDay today;
 		LocalDateTime startTime;

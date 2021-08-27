@@ -4,8 +4,7 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.*;
 
-import org.funteachers.teachersfirst.DataManager;
-import org.funteachers.teachersfirst.DateHelpers;
+import org.funteachers.teachersfirst.managers.*;
 
 public class Member implements IJsonnable {
 
@@ -107,8 +106,8 @@ public class Member implements IJsonnable {
 		this.recID = recID;
 	}
 
-	public boolean update() {
-		return DataManager.getMemberDAO().update(this);
+	public boolean update(ConnectionPackage cp) {
+		return cp.getMemberDAO().update(this);
 	}
 
 	// ----------------------------------------------------------------
@@ -227,11 +226,11 @@ public class Member implements IJsonnable {
 		this.displayName = name;
 	}
 
-	public void setCredits(int operator, String operatorName, String method, float credits) {
+	public void setCredits(ConnectionPackage cp, int operator, String operatorName, String method, float credits) {
 		float oldCredits = this.credits;
 		this.credits = credits;
-		DataManager.getMemberDAO().update(this); // Only try to log below if this succeeds.
-		LoggedEvent.log(operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
+		cp.getMemberDAO().update(this); // Only try to log below if this succeeds.
+		LoggedEvent.log(cp, operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
 	}
 
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {

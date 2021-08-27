@@ -1,13 +1,12 @@
 package org.funteachers.teachersfirst.actions;
 
-import javax.servlet.http.*;
-
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class DeleteOpeningAction extends ActionRunner {
 
-	public DeleteOpeningAction(HttpServletRequest request, HttpServletResponse response, Security security) { super(request, response, security); }
+	public DeleteOpeningAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {
@@ -25,7 +24,7 @@ public class DeleteOpeningAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			openingIdInt = 0;
 		}
-		final Opening opening = DataManager.getOpeningDAO().retrieveByID(openingIdInt);
+		final Opening opening = this.connectionPackage.getOpeningDAO().retrieveByID(openingIdInt);
 		if (opening == null) {
 			this.sendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D not found!");
 			return;
@@ -39,7 +38,7 @@ public class DeleteOpeningAction extends ActionRunner {
 
 		logger.debug("Attempting to delete opening " + opening.toString() + " ...");
 		
-		DataManager.getOpeningDAO().delete(openingIdInt);
+		this.connectionPackage.getOpeningDAO().delete(openingIdInt);
 		//logger.info(DataManager.getOpeningDAO().size() + " records total");
 		logger.debug("Deleted opening ID: [{}]", openingIdInt);
 		
