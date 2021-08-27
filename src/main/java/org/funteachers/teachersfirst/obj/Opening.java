@@ -2,8 +2,7 @@ package org.funteachers.teachersfirst.obj;
 
 import java.sql.Timestamp;
 
-import org.funteachers.teachersfirst.managers.DataManager;
-import org.funteachers.teachersfirst.managers.DateHelpers;
+import org.funteachers.teachersfirst.managers.*;
 
 public class Opening {
 
@@ -53,8 +52,8 @@ public class Opening {
 		this.recID = recID;
 	}
 
-	public boolean update() {
-		return DataManager.getOpeningDAO().update(this);
+	public boolean update(ConnectionPackage cp) {
+		return cp.getOpeningDAO().update(this);
 	}
 
 	// ----------------------------------------------------------------	
