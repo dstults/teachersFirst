@@ -2,7 +2,6 @@ package org.funteachers.teachersfirst.obj;
 
 import java.time.format.DateTimeFormatter;
 
-import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.DataManager;
 import org.funteachers.teachersfirst.managers.DateHelpers;
