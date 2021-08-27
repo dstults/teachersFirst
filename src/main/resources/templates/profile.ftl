@@ -60,12 +60,7 @@
 
 </body>
 <#if userId gt 0>
-<script>
-	const userId = ${userId?c};
-	const isAdmin = ${isAdmin?c};
-	const isInstructor = ${isInstructor?c};
-	const isStudent = ${isStudent?c};
-</script>
+<script src="/scripts/dynamic.js"></script>
 <script src="/scripts/profileOperations.js"></script>
 </#if>
 </html>
