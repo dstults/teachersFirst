@@ -19,7 +19,7 @@
 			<tr>
 				<th style="width: 50px;">#</th>
 				<th style="width: 165px;">Name</th>
-				<th style="width: 50px;">ID</th>
+				<#if isAdmin || isInstructor><th style="width: 50px;">ID</th></#if>
 				<#if isAdmin || isInstructor><th style="width: 50px;" class="credits"><img src="/images/credit-coin.svg" height="22" style="vertical-align: bottom;"></th></#if>
 				<th style="width: 165px;">Category</th>
 				<th style="width: 135px;">Phone</th>
@@ -29,7 +29,7 @@
 			<tr id="member-row-${i?c}">
 				<td id="member-row-${i?c}-arrayIndex"></td>
 				<td id="member-row-${i?c}-displayName"></td>
-				<td id="member-row-${i?c}-recId"></td>
+				<#if isAdmin || isInstructor><td id="member-row-${i?c}-recId"></td></#if>
 				<#if isAdmin || isInstructor><td id="member-row-${i?c}-credits" class="credits"></td></#if>
 				<td id="member-row-${i?c}-category"></td>
 				<td id="member-row-${i?c}-phones"></td>
@@ -41,11 +41,7 @@
 	</#if>
 </body>
 <#if userId gt 0>
-<script>
-	const isAdmin = ${isAdmin?c};
-	const isInstructor = ${isInstructor?c};
-	const isStudent = <#if isStudent>true<#else>false</#if>;
-</script>
+<script src="/dynamic.js"></script>
 <script src="/scripts/memberOperations.js"></script>
 </#if>
 </html>

@@ -13,58 +13,68 @@ public class ProfilePage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		templateDataMap.put("title", "Profile");
+		if (this.jsonMode) {
 
-		// Go
-		if (jsonMode) {
-			final String memberIdString = QueryHelpers.getGet(request, "memberId", Integer.toString(uid));
-			int memberId;
-			try {
-				memberId = Integer.parseInt(memberIdString);
-			} catch (NumberFormatException e) {
-				memberId = 0;
-			}
-			Member member = null;
-			
-			// Check DAO connection
-			if (uid > 0) {
-				boolean isSelf = memberId == uid;
-				templateDataMap.put("isSelf", isSelf);
-				
-				// Get data from DAO
-				try {
-					member = this.connectionPackage.getMemberDAO().retrieveByID(memberId);
-				} catch (IndexOutOfBoundsException ex) {
-					templateDataMap.put("message", "Invalid member ID.");
-				}
-				
-				// Check authority to view: user is self, student is viewing instructor, or instructor/admin sees all
-				if (isAdmin || isInstructor || uid == memberId || (isStudent && member.getIsInstructor())) {
-					// OK
-				} else {
-					member = null; // clear this back out
-					templateDataMap.put("message", "Error retrieving member data.");
-				}
-			}
-			
-			if (member != null ) {
-				final boolean showPrivates = isAdmin || isInstructor || uid == memberId;
-				final String json;
-				if (showPrivates) {
-					json = member.toJsonPrivate();
-				} else {
-					json = member.toJsonPublic();
-				}
-				//logger.debug("Json: " + json);
-				trySendJson(json);
-			} else {
-				sendJsonMessage("Could not complete request.");
-			}
+			// JSON
+			getProfileJson();
+
 		} else {
+
 			// FreeMarker
+			templateDataMap.put("title", "Profile");
 			templateName = "profile.ftl";
 
 			trySendResponse();
+		}
+	}
+
+	private void getProfileJson() {
+		boolean userIsLoggedIn = this.uid > 0;
+		if (!userIsLoggedIn) {
+			sendJsonMessage("Error: You are not logged in.");
+			return;
+		}
+		boolean connectedToDatabase = this.connectionPackage.getConnection() != null;
+		if (!connectedToDatabase) {
+			sendJsonMessage("Error: Failed to contact database, please try again.");
+			return;
+		}
+
+		final String memberIdString = QueryHelpers.getGet(request, "memberId", Integer.toString(uid));
+		int memberId;
+		try {
+			memberId = Integer.parseInt(memberIdString);
+		} catch (NumberFormatException e) {
+			memberId = 0;
+		}
+		
+		// Get data from DAO
+		final Member member;
+		try {
+			member = this.connectionPackage.getMemberDAO().retrieveByID(memberId);
+		} catch (IndexOutOfBoundsException ex) {
+			sendJsonMessage("Error: Invalid member ID.");
+			return;
+		}
+
+		// Check for authority to view profile
+		if (!this.operator.canViewMember(member)) {
+			sendJsonMessage("Error retrieving member data.");
+			return;
+		}
+		
+		if (member != null ) {
+			final boolean showPrivates = isAdmin || isInstructor || uid == memberId;
+			final String json;
+			if (showPrivates) {
+				json = member.toJsonPrivate();
+			} else {
+				json = member.toJsonPublic();
+			}
+			//logger.debug("Json: " + json);
+			trySendJson(json);
+		} else {
+			sendJsonMessage("Could not complete request.");
 		}
 	}
 

@@ -3,7 +3,6 @@ package org.funteachers.teachersfirst.pages;
 import java.util.*;
 
 import org.funteachers.teachersfirst.*;
-import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -16,42 +15,45 @@ public class MembersPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		templateDataMap.put("title", "Members");
+		if (this.jsonMode) {
 
-		// Check DAO connection
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
-		if (memberDAO == null) {
-			// Failed to contact SQL Server
-			templateName = "messageOnly.ftl";
-			templateDataMap.put("message", "Failed to connect with database, please try again.");
+			// JSON
+			getMemberJson();
+
+		} else {
+
+			// FreeMarker
+			templateDataMap.put("title", "Members");
+			templateName = "members.ftl";
+
 			trySendResponse();
-			this.connectionPackage.reset();
+		}
+	}
+
+	private void getMemberJson() {
+		boolean userIsLoggedIn = this.uid > 0;
+		if (!userIsLoggedIn) {
+			sendJsonMessage("Error: You are not logged in.");
+			return;
+		}
+		boolean connectedToDatabase = this.connectionPackage.getConnection() != null;
+		if (!connectedToDatabase) {
+			sendJsonMessage("Error: Failed to contact database, please try again.");
 			return;
 		}
 
 		// Get data from DAO
 		final List<Member> members;
-		if (uid > 0) {
-			if (isAdmin || isInstructor) members = this.connectionPackage.getMemberDAO().retrieveAll();
-			else members = List.of(this.connectionPackage.getMemberDAO().retrieveByID(uid));
+		if (isAdmin || isInstructor) {
+			members = this.connectionPackage.getMemberDAO().retrieveAll();
 		} else {
-			members = null;
+			members = this.connectionPackage.getMemberDAO().retrieveAll();
+			members.removeIf(m -> (!m.getIsInstructor() && m.getRecID() != this.uid));
 		}
 
-		if (jsonMode) {
-			// JSON
-			String json = JsonUtils.BuildArrays(members);
+		String json = JsonUtils.BuildArrays(members);
 
-			// Go
-			trySendJson(json);
-		} else {
-			// FreeMarker
-			templateName = "members.ftl";
-			templateDataMap.put("members", members);
-
-			// Go
-			trySendResponse();
-		}
+		trySendJson(json);
 	}
 
 }

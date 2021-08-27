@@ -210,6 +210,10 @@ public class Member implements IJsonnable {
 		return this.isAdmin;
 	}
 
+	public boolean canViewMember(Member other) {
+		return this.isAdmin || this.isInstructor || this.recID == other.recID || other.isInstructor;
+	}
+
 	// ----------------------------------------------------------------
 
 	public void setLoginName(String loginName) {

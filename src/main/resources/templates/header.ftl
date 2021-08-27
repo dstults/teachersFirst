@@ -21,10 +21,8 @@
 				<li><a href="/openings" class="nav-link">Openings</a></li>
 				<#if userId gt 0>
 				<li><a href="/appointments" class="nav-link">Appointments</a></li>
-				<li><a href="/profile" class="nav-link">Profile</a></li>
-				<#if isAdmin || isInstructor>
 				<li><a href="/members" class="nav-link">Members</a></li>
-				</#if>
+				<li><a href="/profile" class="nav-link">Profile</a></li>
 				</#if>
 			</ul>
 		</nav>

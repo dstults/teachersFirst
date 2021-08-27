@@ -175,19 +175,12 @@ const refreshAll = _ => {
 			phone1Row.style.display = 'grid';
 			phone2Row.style.display = 'grid';
 			emailRow.style.display = 'grid';
-			notesRow.style.display = 'table-row';
 			// buttons
-			if (isAdmin || isInstructor) {
-				creditsButton.style.display = 'block';
-			} else {
-				creditsButton.style.display = 'none';
-			}
 			genderButton.style.display = 'block';
 			introButton.style.display = 'block';
 			phone1Button.style.display = 'block';
 			phone2Button.style.display = 'block';
 			emailButton.style.display = 'block';
-			notesButton.style.display = 'block';
 		} else {
 			// visibilities
 			creditsRow.style.display = 'none';
@@ -196,7 +189,6 @@ const refreshAll = _ => {
 			phone1Row.style.display = 'none';
 			phone2Row.style.display = 'none';
 			emailRow.style.display = 'none';		
-			notesRow.style.display = 'none';
 			// buttons
 			genderButton.style.display = 'none';
 			birthdateButton.style.display = 'none';
@@ -204,6 +196,14 @@ const refreshAll = _ => {
 			phone2Button.style.display = 'none';
 			emailButton.style.display = 'none';
 			introButton.style.display = 'none';
+		}
+		if (isAdmin || isInstructor) {
+			notesRow.style.display = 'table-row';
+			creditsButton.style.display = 'block';
+			notesButton.style.display = 'block';
+		} else {
+			notesRow.style.display = 'none';
+			creditsButton.style.display = 'none';
 			notesButton.style.display = 'none';
 		}
 		// values
