@@ -16,7 +16,7 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class SecurityChecker {
 	
-	private static final Logger logger = LogManager.getLogger(ServerMain.class);
+	private static final Logger logger = LogManager.getLogger();
 
 	// ===================================================================================
 	//   IP Whitelist
@@ -214,7 +214,8 @@ public class SecurityChecker {
 	}
 
 	private void refreshCookie(Member member, String token) {
-		logger.debug("Refreshing token [ {} ] for memberID [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
+		// Security warning: token should not actually be logged -- this has been removed though because it's spammy
+		//logger.debug("Refreshing token maxAge for memberID [ ({}) {} ]", member.getRecID(), member.getLoginName());
 
 		// Refresh cookie with new expiration
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." + token);
