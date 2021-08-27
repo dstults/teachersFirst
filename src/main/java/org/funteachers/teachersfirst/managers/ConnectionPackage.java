@@ -105,14 +105,14 @@ public class ConnectionPackage {
 
 	}
 
-	public boolean reset() {
+	public boolean reseto() {
 		this.terminate();
 		//this.allDAOs.clear();
 		this.initialize();
 		return this.connection != null;
 	}
 
-	public boolean validate() {
+	public boolean validateo() {
 		if (this.connection == null) {
 			logger.warn("Attempted to validate non-initialized SQL connections. Force initializing!");
 			this.initialize();

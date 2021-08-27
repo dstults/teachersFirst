@@ -43,7 +43,7 @@ public abstract class PageLoader {
 
 	// Constructors
 	protected PageLoader(ConnectionPackage cp) {
-		if (!cp.validate()) cp.reset(); // Validate SQL connection first
+		if (!cp.validate()) cp.reset(); // Try to validate-reset SQL connection
 
 		this.connectionPackage = cp;
 		this.request = cp.getRequest();
