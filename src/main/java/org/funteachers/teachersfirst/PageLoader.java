@@ -137,7 +137,7 @@ public abstract class PageLoader {
 		response.setStatus(statusCode);
 
 		// Process template:
-		logger.debug("Processing Template: " + this.templateName);
+		//logger.debug("Processing Template: " + this.templateName);
 		try (PrintWriter out = response.getWriter()) {
 			Template view = FreeMarkerSetup.freeMarkerConfig.getTemplate(this.templateName);
 			view.process(templateDataMap, out);
