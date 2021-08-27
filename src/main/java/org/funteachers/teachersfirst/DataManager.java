@@ -47,12 +47,6 @@ public class DataManager {
 	private static String databasePassword = "";
 	private static String databaseSchema = "";
 
-	public static final List<DAO<?>> allDAOs = new ArrayList<>();
-	private static DAO<Member> memberDAO = null;
-	private static DAO<Appointment> appointmentDAO = null;
-	private static DAO<Opening> openingDAO = null;
-	private static DAO<LoggedEvent> loggedEventDAO = null;
-
 	// Meta "construct" and "destruct" (and "reset")
 
 	public static void initializeSiteData() {
@@ -96,29 +90,27 @@ public class DataManager {
 			instructorAdminMakeAppointmentsRequiresOpening = Boolean.parseBoolean(jsonObject.get("instructorAdminMakeAppointmentsRequiresOpening").toString());
 	}
 
-	public static void initializeDAOs() throws ServletException {
+	public static void testInitializeDAOs() throws ServletException {
 
 		// Merge Connection Parameters:
 		String initParams = "jdbc:mariadb://" + databaseHostname + ":" + databasePort + "/" + databaseSchema;
 		initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
 		initParams += "&user=" + databaseUserID + "&password=" + databasePassword;    
 
+		DAO<Member> memberDAO = null;
+		DAO<Appointment> appointmentDAO = null;
+		DAO<Opening> openingDAO = null;
+		DAO<LoggedEvent> loggedEventDAO = null;
+		
 		//DataManager.memberDAO = new MemberMemoryDAO();
-		DataManager.memberDAO = new MemberSqlDAO();
-		if (!DataManager.memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
-		DataManager.allDAOs.add(DataManager.memberDAO);
-
-		DataManager.appointmentDAO = new AppointmentSqlDAO();
-		if (!DataManager.appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
-		DataManager.allDAOs.add(DataManager.appointmentDAO);
-
-		DataManager.openingDAO = new OpeningSqlDAO();
-		if (!DataManager.openingDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the openingDAO.");
-		DataManager.allDAOs.add(DataManager.openingDAO);
-
-		DataManager.loggedEventDAO = new LoggedEventSqlDAO();
-		if (!DataManager.loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
-		DataManager.allDAOs.add(DataManager.loggedEventDAO);
+		memberDAO = new MemberSqlDAO();
+		if (!memberDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the memberDAO.");
+		appointmentDAO = new AppointmentSqlDAO();
+		if (!appointmentDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the appointmentDAO.");
+		openingDAO = new OpeningSqlDAO();
+		if (!openingDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the openingDAO.");
+		loggedEventDAO = new LoggedEventSqlDAO();
+		if (!loggedEventDAO.initialize(initParams)) throw new UnavailableException("Unable to initialize the loggedEventDAO.");
 
 	}
 
@@ -145,7 +137,7 @@ public class DataManager {
 		DataManager.allDAOs.clear();
 
 		try {
-			DataManager.initializeDAOs();
+			DataManager.testInitializeDAOs();
 		} catch (ServletException ex) {
 			System.out.println("===================================== Error");
 			System.out.println("| ERROR CONNECTING TO SQL DATABASE! | Error");

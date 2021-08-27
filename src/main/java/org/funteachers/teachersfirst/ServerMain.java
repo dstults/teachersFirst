@@ -54,9 +54,9 @@ public class ServerMain extends HttpServlet {
 		DataManager.initializeSiteData();
 		logger.info("Successfully initialized site data!");
 
-		logger.info("Initializing the DAOs...");
-		DataManager.initializeDAOs();
-		logger.info("Successfully initialized the DAOs!");
+		logger.info("Testing DAO initialization...");
+		DataManager.testInitializeDAOs();
+		logger.info("All tests passed!");
 
 		LoggedEvent.log(0, "SERVER INIT");
 
