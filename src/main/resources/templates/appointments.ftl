@@ -85,11 +85,7 @@
 </body>
 <#if userId gt 0>
 <!-- <script src="/dynamic.js"></script> -->
-<script>
-	const myId = ${userId?c};
-	const isAdmin = ${isAdmin?c};
-	const isInstructor = ${isInstructor?c};
-</script>
+<script src="/dynamic.js"></script>
 <script src="/scripts/appointmentOperations.js"></script>
 </#if>
 </html>

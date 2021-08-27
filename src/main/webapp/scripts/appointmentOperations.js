@@ -31,7 +31,7 @@ const populateData = async _ => {
 populateData();
 
 const checkAddControl_Delete = (isPast, controls, appointment, row) => {
-	if (isAdmin || appointment.completionState == STATE.CANCELLED && myId == appointment.instructorId) {
+	if (isAdmin || appointment.completionState == STATE.CANCELLED && userId == appointment.instructorId) {
 		if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
 		const child = document.createElement('a');
 		child.classList.add('red');
@@ -44,7 +44,7 @@ const checkAddControl_Delete = (isPast, controls, appointment, row) => {
 };
 
 const checkAddControl_Cancel = (isPast, controls, appointment, row) => {
-	if (!isPast && appointment.completionState == STATE.UNKNOWN && (isAdmin || myId == appointment.instructorId || myId == appointment.studentId)) {
+	if (!isPast && appointment.completionState == STATE.UNKNOWN && (isAdmin || userId == appointment.instructorId || userId == appointment.studentId)) {
 		if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
 		const child = document.createElement('a');
 		child.classList.add('red');
@@ -57,7 +57,7 @@ const checkAddControl_Cancel = (isPast, controls, appointment, row) => {
 };
 
 const checkAddControl_MissComplete = (isPast, controls, appointment, row) => {
-	if (isPast && appointment.completionState == STATE.UNKNOWN && (isAdmin || myId == appointment.instructorId)) {
+	if (isPast && appointment.completionState == STATE.UNKNOWN && (isAdmin || userId == appointment.instructorId)) {
 		if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
 
 		const child1 = document.createElement('a');
@@ -77,7 +77,7 @@ const checkAddControl_MissComplete = (isPast, controls, appointment, row) => {
 };
 
 const checkAddControl_Refund = (isPast, controls, appointment, row) => {
-	if (appointment.completionState == STATE.MISSED && (isAdmin || myId == appointment.instructorId)) {
+	if (appointment.completionState == STATE.MISSED && (isAdmin || userId == appointment.instructorId)) {
 		if (controls.firstChild) controls.appendChild(document.createTextNode('   '));
 		const child = document.createElement('a');
 		child.classList.add('green');
@@ -117,7 +117,7 @@ const renderRow = (isPast, appointment, row) => {
 		instructor.href = '';
 		status.innerHTML = '';
 	} else {
-		const isMyAppointment = myId == appointment.instructorId || myId == appointment.studentId;
+		const isMyAppointment = userId == appointment.instructorId || userId == appointment.studentId;
 		if (isAdmin && isMyAppointment) {
 			tableRow.classList.add('soft-highlight');
 		} else {

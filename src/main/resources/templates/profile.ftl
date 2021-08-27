@@ -60,7 +60,7 @@
 
 </body>
 <#if userId gt 0>
-<script src="/scripts/dynamic.js"></script>
+<script src="/dynamic.js"></script>
 <script src="/scripts/profileOperations.js"></script>
 </#if>
 </html>

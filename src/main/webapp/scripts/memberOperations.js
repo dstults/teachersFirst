@@ -23,7 +23,7 @@ const renderRow = (member, row) => {
 	const displayName = document.getElementById(rowName + '-displayName');
 	while (displayName.firstChild) displayName.removeChild(displayName.firstChild); // safely remove child elements (anchor-link)
 	const recId = document.getElementById(rowName + '-recId');
-	while (recId.firstChild) recId.removeChild(recId.firstChild); // safely remove child elements (anchor-link)
+	if (recId) while (recId.firstChild) recId.removeChild(recId.firstChild); // safely remove child elements (anchor-link)
 	const credits = document.getElementById(rowName + '-credits');
 	const category = document.getElementById(rowName + '-category');
 	const phones = document.getElementById(rowName + '-phones');
@@ -32,7 +32,7 @@ const renderRow = (member, row) => {
 		tableRow.classList.remove('soft-highlight');
 		arrayIndex.innerHTML = '';
 		displayName.innerHTML = '';
-		recId.innerHTML = '';
+		if (recId) recId.innerHTML = '';
 		if (credits) credits.innerHTML = '';
 		category.innerHTML = '';
 		phones.innerHTML = '';
@@ -45,7 +45,7 @@ const renderRow = (member, row) => {
 		}
 		arrayIndex.innerHTML = 1 + row + currentPage * memberRows;
 		displayName.innerHTML = '<a href="/profile?memberId=' + member.id + '">' + member.displayName + '</a>';
-		recId.innerHTML = '<a href="/profile?memberId=' + member.id + '">' + member.id + '</a>';
+		if (recId) recId.innerHTML = '<a href="/profile?memberId=' + member.id + '">' + member.id + '</a>';
 		if (credits) credits.innerHTML = member.credits;
 		switch (member.gender) {
 			case 'm':
