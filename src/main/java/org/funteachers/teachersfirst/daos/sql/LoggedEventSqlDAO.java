@@ -12,30 +12,12 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	
 	private static final Logger logger = LogManager.getLogger(LoggedEventSqlDAO.class.getName());
 
-	private Connection conn;
+	private final Connection conn;
 
 	public LoggedEventSqlDAO(Connection conn) {
+		if (conn == null) throw new IllegalArgumentException("DAO instantiated without connection.");
+
 		this.conn = conn;
-	}
-
-	public boolean initialize(String initParams) {
-		if (conn != null) return true;
-		logger.info("Connecting to the database...");
-
-		conn = SQLUtils.connect(initParams);
-		if (conn == null) {
-			logger.error("Unable to connect to SQL Database: " + initParams);
-			return false;
-		}
-		logger.info("...connected!");
-
-		return true;
-	}
-
-	public void terminate() {
-		logger.debug("Terminating LoggedEvent SQL DAO...");
-		SQLUtils.disconnect(conn);
-		conn = null;
 	}
 
 	public int insert(LoggedEvent loggedEvent) {

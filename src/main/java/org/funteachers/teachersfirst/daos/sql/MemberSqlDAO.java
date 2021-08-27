@@ -15,27 +15,9 @@ public class MemberSqlDAO implements DAO<Member> {
 	private Connection conn;
 
 	public MemberSqlDAO(Connection conn) {
+		if (conn == null) throw new IllegalArgumentException("DAO instantiated without connection.");
+
 		this.conn = conn;
-	}
-
-	public boolean initialize(String initParams) {
-		if (conn != null) return true;
-		logger.info("Connecting to the database...");
-
-		conn = SQLUtils.connect(initParams);
-		if (conn == null) {
-			logger.error("Unable to connect to SQL Database: " + initParams);
-			return false;
-		}
-		logger.info("...connected!");
-
-		return true;
-	}
-
-	public void terminate() {
-		logger.debug("Terminating Member SQL DAO...");
-		SQLUtils.disconnect(conn);
-		conn = null;
 	}
 
 	public int insert(Member member) {
