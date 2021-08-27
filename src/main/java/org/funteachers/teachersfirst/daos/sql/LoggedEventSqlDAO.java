@@ -12,13 +12,14 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	
 	private static final Logger logger = LogManager.getLogger(LoggedEventSqlDAO.class.getName());
 
-	private Connection conn = null;
+	private Connection conn;
 
-	public LoggedEventSqlDAO() {
-		this.conn = null;
+	public LoggedEventSqlDAO(Connection conn) {
+		this.conn = conn;
 	}
 
 	public boolean initialize(String initParams) {
+		if (conn != null) return true;
 		logger.info("Connecting to the database...");
 
 		conn = SQLUtils.connect(initParams);

@@ -12,13 +12,14 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	
 	private static final Logger logger = LogManager.getLogger(OpeningSqlDAO.class.getName());
 
-	private Connection conn = null;
+	private Connection conn;
 
-	public OpeningSqlDAO() {
-		this.conn = null;
+	public OpeningSqlDAO(Connection conn) {
+		this.conn = conn;
 	}
 
 	public boolean initialize(String initParams) {
+		if (conn != null) return true;
 		logger.info("Connecting to the database...");
 
 		conn = SQLUtils.connect(initParams);

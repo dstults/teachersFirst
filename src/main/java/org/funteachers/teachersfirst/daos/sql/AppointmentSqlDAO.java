@@ -12,13 +12,14 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	
 	private static final Logger logger = LogManager.getLogger(AppointmentSqlDAO.class.getName());
 
-	private Connection conn = null;
+	private Connection conn;
 
-	public AppointmentSqlDAO() {
-		this.conn = null;
+	public AppointmentSqlDAO(Connection conn) {
+		this.conn = conn;
 	}
 
 	public boolean initialize(String initParams) {
+		if (conn != null) return true;
 		logger.info("Connecting to the database...");
 
 		conn = SQLUtils.connect(initParams);

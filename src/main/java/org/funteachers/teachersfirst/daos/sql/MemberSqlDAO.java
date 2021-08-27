@@ -12,13 +12,14 @@ public class MemberSqlDAO implements DAO<Member> {
 	
 	private static final Logger logger = LogManager.getLogger(MemberSqlDAO.class.getName());
 
-	private Connection conn = null;
+	private Connection conn;
 
-	public MemberSqlDAO() {
-		this.conn = null;
+	public MemberSqlDAO(Connection conn) {
+		this.conn = conn;
 	}
 
 	public boolean initialize(String initParams) {
+		if (conn != null) return true;
 		logger.info("Connecting to the database...");
 
 		conn = SQLUtils.connect(initParams);
