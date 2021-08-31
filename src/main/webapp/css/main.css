@@ -424,11 +424,6 @@ input[type=radio] {
 .openings-text h1 {
 	text-align: center;
 }
-.new-opening h1 {
-	margin-bottom: 2rem;
-	margin: auto;
-	font-size: 2.5rem;
-}
 .second-value {
 	float: right;
 }
