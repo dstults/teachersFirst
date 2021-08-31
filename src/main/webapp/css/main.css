@@ -221,10 +221,12 @@ header a, .buttonize-link {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	gap: 16px;
+	align-items: center;
 }
 .form-grid-days-of-week {
 	display: grid;
-    grid-template-columns: 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr; /* DOW [] x7 */
+	grid-template-columns: 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr; /* DOW [] x7 */
 	justify-items: center;
 	align-items: center;
 	margin: 0 -20px;
@@ -634,6 +636,11 @@ input[type=submit]:hover {
 	padding: 10px 15px;
 	border-radius: 8px;
 	margin: auto;
+}
+.back-button {
+	height: 4rem;
+	line-height: 4rem;
+	width: 16rem;
 }
 
 /* Animations */
