@@ -33,6 +33,7 @@ const handlePost = () => {
 		return;
 	}
 
+	const actionType = document.getElementById('actionType').value;
 	const instructorId = document.getElementById('instructorId').value;
 	const studentId = document.getElementById('studentId').value;
 	const startDate = document.getElementById('startDate').value;
@@ -50,6 +51,6 @@ const handlePost = () => {
 		xhr.open('POST', '/');
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-		xhr.send('action=make_appointment_batch&instructorId=' + instructorId + '&studentId=' + studentId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
+		xhr.send('action=' + actionType + '&instructorId=' + instructorId + '&studentId=' + studentId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
 	}
 }

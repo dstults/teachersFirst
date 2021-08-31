@@ -11,6 +11,7 @@
 		<h1>Please make new appointments:</h1>
 		<br>
 		<form method="post" action="/" onsubmit = "return false;">
+			<input id="actionType" type="hidden" value="make_appointment_batch">
 			<div class="form-grid-full-rows">
 				<p class="label">Instructor ID:</p>
 				<input type="text" id="instructorId" value="${instructorId}" placeholder="##">
@@ -47,7 +48,7 @@
 				<p class="label">End Time: </p>
 				<input type="time" id="endTime" value="${endTime}">
 			</div>
-			
+			<br>
 			<div class="form-flex-row">
 				<input type="submit" id="submitOpening" value="Create Appointments" onclick="handlePost();">
 			</div>
