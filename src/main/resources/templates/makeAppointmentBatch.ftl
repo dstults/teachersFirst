@@ -14,7 +14,9 @@
 			<input id="actionType" type="hidden" value="make_appointment_batch">
 			<div class="form-grid-full-rows">
 				<p class="label">Instructor ID:</p>
-				<input type="text" id="instructorId" value="${instructorId}" placeholder="##">
+				<select id="instructorId" value="null">
+					<option value="null">-</option>
+				</select>
 				<p class="label">Student ID:</p>
 				<select id="studentId" value="null">
 					<option value="null">-</option>
@@ -60,6 +62,6 @@
 	</div>
 </div>
 </body>
-<!--<script src="/dynamic.js"></script>-->
+<script src="/dynamic.js"></script>
 <script src="/scripts/batchAppointmentOperations.js"></script>
 </html>

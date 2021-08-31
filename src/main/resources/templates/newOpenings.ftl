@@ -54,7 +54,7 @@
 	</div>
 </div>
 </body>
-
+<script src="/dynamic.js"></script>
 <script>
 const handlePost = () => {
 	const sunday = document.getElementById('sunday').checked ? document.getElementById('sunday').value : '';

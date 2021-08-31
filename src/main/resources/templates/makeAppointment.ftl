@@ -53,6 +53,7 @@
 
 </body>
 <#if userId gt 0>
+<script src="/dynamic.js"></script>
 <script>
 //const startTimes = [<#list possibleStartTimes as possibleStartTime>'${possibleStartTime}',</#list>];
 const durations = [<#list possibleDurations as possibleDuration>'${possibleDuration}',</#list>];
