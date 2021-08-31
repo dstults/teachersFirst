@@ -11,19 +11,14 @@
 		<h1>Please make new appointments:</h1>
 
 		<form method="post" action="/" onsubmit = "return false;">
-			<ul>
-				<li>
-					<label for="instructorId" style="margin-top: 1.3rem;">Instructor ID:</label>
-					<input type="text" id="instructorId" value="${instructorId}" style="width: 32rem;" placeholder="##">
-				</li>
-				<li class="second-value">
-					<label for="studentId" style="margin-top: 1.3rem;">Student ID:</label>
-					<select type="text" id="studentId" value="null" style="width: 32rem;">
-						<option value="null">-</option>
-					</select>
-				</li>
-			</ul>
-
+			<div class="form-grid">
+				<p class="label">Instructor ID:</p>
+				<input type="text" id="instructorId" value="${instructorId}" placeholder="##">
+				<p class="label">Student ID:</p>
+				<select id="studentId" value="null">
+					<option value="null">-</option>
+				</select>
+			</div>
 			<ul class="day-list">
 				<li>
 					<input type="checkbox" id="sunday" value="Su"${sundayChecked}>
