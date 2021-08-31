@@ -90,8 +90,8 @@ th, td {
 	user-select: none;
 	padding: 5px 10px;
 	z-index: 11;
-    background-color: var(--backgroundColor);
-    border: 1px solid black;
+	background-color: var(--backgroundColor);
+	border: 1px solid black;
 }
 .timestamp:hover {
 	opacity: 0.75;
@@ -101,7 +101,7 @@ th, td {
 }
 .timestamp > .label {
 	text-align: center;
-    font-weight: bold;
+	font-weight: bold;
 }
 .timestamp-grid {
 	display: grid;
@@ -202,7 +202,40 @@ header a, .buttonize-link {
 	margin: 0 auto;
 	font-size: 2rem;
 	width: 550px;
-	text-align: center;
+}
+.form-grid-full-rows {
+	display: grid;
+	gap: 8px;
+	grid-template-columns: 1fr 2fr;
+	justify-items: center;
+	align-items: center;
+}
+.form-grid-datetime-rows {
+	display: grid;
+	gap: 12px 4px;
+	grid-template-columns: 1fr 2fr 1fr 1fr;
+	justify-items: center;
+	align-items: center;
+}
+.form-flex-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	gap: 16px;
+	align-items: center;
+}
+.form-grid-days-of-week {
+	display: grid;
+	grid-template-columns: 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr; /* DOW [] x7 */
+	justify-items: center;
+	align-items: center;
+	margin: 0 -20px;
+}
+.form-grid-full-rows p.label, .form-grid-datetime-rows p.label, .form-grid-days-of-week label {
+	width: 100%;
+	margin-right: 10%;
+	text-align: right;
+	user-select: none;
 }
 /* used by most datasheets */
 .page-content-750-1000 {
@@ -221,9 +254,6 @@ header a, .buttonize-link {
 	text-align: center;
 }
 
-.page-content-550 p {
-	line-height: 200%;
-}
 .data-view {
 	background-color: var(--backgroundColorLight);
 	font-family: monospace;
@@ -396,25 +426,8 @@ input[type=radio] {
 .openings-text h1 {
 	text-align: center;
 }
-.new-opening h1 {
-	margin-bottom: 2rem;
-	margin: auto;
-	font-size: 2.5rem;
-}
 .second-value {
 	float: right;
-}
-.day-list {
-	display: inline-block;
-	margin-top: 2rem;
-}
-.day-list li {
-	float: left;
-	margin-left: -.5rem;
-	font-weight: lighter;
-}
-.new-opening input[type=submit] {
-	margin-top: 2rem;
 }
 .top-buttons {
 	text-align: center;
@@ -442,8 +455,8 @@ input[type=radio] {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	margin: 2.5rem auto;
-    width: fit-content;
-    grid-gap: 4rem;
+	width: fit-content;
+	gap: 4rem;
 }
 
 /* main tables - unified settings */
@@ -539,7 +552,7 @@ table.openings-calendar div.highlight {
 	margin-left: 3rem;
 	width: 100%;
 	height: 30rem;
-    object-fit: cover;
+	object-fit: cover;
 }
 .profile-basic-stats {
 	width: 90%;
@@ -576,21 +589,8 @@ table.openings-calendar div.highlight {
 }
 /* css for make & confirm new appointment(s) page */
 
-.make-appointment, .confirm-appointment, .new-opening {
-	margin: auto;
-	width: fit-content;
-	font-size: 2rem;
-	text-align: left;
-	font-size: 2rem;
-	font-weight: bold;
-	line-height: 200%;
-}
 .make-appointment label {
 	margin-right: 1rem;
-}
-.make-appointment input[type=submit], .confirm-appointment input[type=submit] {
-	display: block;
-	margin-top: 1rem;
 }
 .select {
 	display: block;
@@ -608,11 +608,9 @@ label {
 	font-weight: bold;
 	float: left;
 }
-input[type=text], input[type=password], input[type=email] {
+input[type=text], input[type=password], input[type=email], select {
 	width: 100%;
-	padding: 12px 20px;
-	margin: 8px 0 0 0;
-	display: inline-block;
+	padding: 6px 12px;
 	border: none;
 	border-radius: 4px;
 	box-sizing: border-box;
@@ -638,6 +636,11 @@ input[type=submit]:hover {
 	padding: 10px 15px;
 	border-radius: 8px;
 	margin: auto;
+}
+.back-button {
+	height: 4rem;
+	line-height: 4rem;
+	width: 16rem;
 }
 
 /* Animations */

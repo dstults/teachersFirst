@@ -2,12 +2,12 @@
 <#include "head.ftl">
 <body>
 <#include "header.ftl">
-
-<#if userId lte 0>
+<div class="page-content-550">
+	<#if userId lte 0>
 	<#include "please_login.ftl">
-<#else>
-
-<div class="make-appointment">
+	<#else>
+	<h1>Make Appointment:</h1>
+	<br>
 	<form method="get" action="/confirm_make_appointment">
 		<input type="hidden" name="openingId" value="${openingId}">
 		<input type="hidden" name="studentId" value="${studentId}">
@@ -16,36 +16,40 @@
 		<input type="hidden" name="openingStartTime" value="${openingStartTime}">
 		<input type="hidden" name="openingEndTime" value="${openingEndTime}">
 
-		<p>Student: <a href="/profile?memberId=${studentId}">${studentName}</a></p>
-		<p>Instructor: <a href="/profile?memberId=${instructorId}">${instructorName}</a></p>
-		<p>Date: ${date}</p>
-		<p>Available from: ${openingStartTime}</p>
-		<p>Available till: ${openingEndTime}</p>
-
-		<label for="appointmentStartTime">Choose a start time: </label>
-		<select name="appointmentStartTime" id="appointmentStartTime" onchange="adjustDurations(this);">
-			<#list possibleStartTimes as possibleStartTime>
+		<div class="form-grid-full-rows">
+			<p class="label">Student:</p><p><a href="/profile?memberId=${studentId}">${studentName}</a></p>
+			<p class="label">Instructor:</p><p><a href="/profile?memberId=${instructorId}">${instructorName}</a></p>
+			<p class="label">Date:</p><p>${date}</p>
+			<p class="label">Available from:</p><p>${openingStartTime}</p>
+			<p class="label">Available till:</p><p>${openingEndTime}</p>
+		</div>
+		<br>
+		<div class="form-grid-full-rows">
+			<label for="appointmentStartTime">Start Time:</label>
+			<select name="appointmentStartTime" id="appointmentStartTime" onchange="adjustDurations(this);">
+				<#list possibleStartTimes as possibleStartTime>
 				<#if possibleStartTime = defaultStartTime>
 				<option value="${possibleStartTime}" selected="selected">${possibleStartTime}</option>
 				<#else>
 				<option value="${possibleStartTime}">${possibleStartTime}</option>
 				</#if>
-			</#list>
-		</select>
-		<br>
-
-		<label for="appointmentDuration">Choose the class duration: </label>
-		<select name="appointmentDuration" id="appointmentDuration">
-			<#list possibleDurations as possibleDuration>
+				</#list>
+			</select>
+			<label for="appointmentDuration">Duration:</label>
+			<select name="appointmentDuration" id="appointmentDuration">
+				<#list possibleDurations as possibleDuration>
 				<#if possibleDuration = defaultDuration>
 				<option value="${possibleDuration}" selected="selected">${possibleDuration}</option>
 				<#else>
 				<option value="${possibleDuration}">${possibleDuration}</option>
 				</#if>
-			</#list>
-		</select>
-
-		<input type="submit" value="Make Appointment">
+				</#list>
+			</select>
+		</div>
+		<br>
+		<div class="form-flex-row">
+			<input type="submit" value="Make Appointment">
+		</div>
 	</form>
 </div>
 
@@ -53,6 +57,7 @@
 
 </body>
 <#if userId gt 0>
+<script src="/dynamic.js"></script>
 <script>
 //const startTimes = [<#list possibleStartTimes as possibleStartTime>'${possibleStartTime}',</#list>];
 const durations = [<#list possibleDurations as possibleDuration>'${possibleDuration}',</#list>];

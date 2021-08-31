@@ -187,7 +187,11 @@ public class DateHelpers {
 	}
 
 	public static String convertMinutesToHM(int minutes) {
-		if (minutes >= 120) {
+		if (minutes == 60) {
+			return "1 hour";
+		} else if (minutes >= 120 && minutes % 60 == 0) {
+			return (minutes / 60) + " hours";
+		} else if (minutes >= 120) {
 			return (minutes / 60) + " hours " + (minutes % 60) + " minutes";
 		} else if (minutes >= 60) {
 			return (minutes / 60) + " hour " + (minutes % 60) + " minutes";

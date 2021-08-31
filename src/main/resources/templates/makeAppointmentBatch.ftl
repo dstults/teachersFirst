@@ -3,123 +3,61 @@
 <body>
 <#include "header.ftl">
 <div class="page-content-550">
-	<div class="new-opening">
-		<#if userId lte 0>
-			<#include "please_login.ftl">
-		<#elseif isAdmin || isInstructor>
-
-		<h1>Please make new appointments:</h1>
-
-		<form method="post" action="/" onsubmit = "return false;">
-			<ul>
-				<li>
-					<label for="instructorId" style="margin-top: 1.3rem;">Instructor ID:</label>
-					<input type="text" id="instructorId" value="${instructorId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
-				</li>
-				<li class="second-value">
-					<label for="studentId" style="margin-top: 1.3rem;">Student ID:</label>
-					<input type="text" id="studentId" value="${studentId}" style="width: 100px; margin-left: 1.2rem; text-align: center;" placeholder="##">
-				</li>
-			</ul>
-
-			<ul class="day-list">
-				<li>
-					<input type="checkbox" id="sunday" value="Su"${sundayChecked}>
-					<label for="sunday">Sun</label>
-				</li>
-				<li>
-					<input type="checkbox" id="monday" value="Mo"${mondayChecked}>
-					<label for="monday">Mon</label>
-				</li>
-				<li>
-					<input type="checkbox" id="tuesday" value="Tu"${tuesdayChecked}>
-					<label for="tuesday">Tue</label>
-				</li>
-				<li>
-					<input type="checkbox" id="wednesday" value="We"${wednesdayChecked}>
-					<label for="wednesday">Wed</label>
-				</li>
-				<li>
-					<input type="checkbox" id="thursday" value="Th"${thursdayChecked}>
-					<label for="thursday">Thu</label>
-				</li>
-				<li>
-					<input type="checkbox" id="friday" value="Fr"${fridayChecked}>
-					<label for="friday">Fri</label>
-				</li>
-				<li>
-					<input type="checkbox" id="saturday" value="Sa"${saturdayChecked}>
-					<label for="saturday">Sat</label>
-				</li>
-			</ul>
-
-			<ul>
-				<li>
-					<label for="startDate">Start Date: </label>
-					<input type="date" id="startDate" value="${startDate}">
-				</li>
-				<li class="second-value">
-					<label for="startTime">Start Time: </label>
-					<input type="time" id="startTime" value="${startTime}">
-				</li>
-			</ul>
-			<ul>
-				<li>
-					<label for="endDate">End Date: </label>
-					<input type="date" id="endDate" value="${endDate}">
-				</li>
-				<li class="second-value">
-					<label for="endTime">End Time: </label>
-					<input type="time" id="endTime" value="${endTime}">
-				</li>
-			</ul>
-			
+	<#if userId lte 0>
+	<#include "please_login.ftl">
+	<#elseif isAdmin || isInstructor>
+	<h1>Batch Appointments:</h1>
+	<br>
+	<form method="post" action="/" onsubmit = "return false;">
+		<input id="actionType" type="hidden" value="make_appointment_batch">
+		<div class="form-grid-full-rows">
+			<p class="label">Instructor ID:</p>
+			<select id="instructorId" value="null">
+				<option value="null">-</option>
+			</select>
+			<p class="label">Student ID:</p>
+			<select id="studentId" value="null">
+				<option value="null">-</option>
+			</select>
+		</div>
+		<br>
+		<div class="form-grid-days-of-week">
+			<label for="sunday">Sun</label>
+			<input type="checkbox" id="sunday" value="Su"${sundayChecked}>
+			<label for="monday">Mon</label>
+			<input type="checkbox" id="monday" value="Mo"${mondayChecked}>
+			<label for="tuesday">Tue</label>
+			<input type="checkbox" id="tuesday" value="Tu"${tuesdayChecked}>
+			<label for="wednesday">Wed</label>
+			<input type="checkbox" id="wednesday" value="We"${wednesdayChecked}>
+			<label for="thursday">Thu</label>
+			<input type="checkbox" id="thursday" value="Th"${thursdayChecked}>
+			<label for="friday">Fri</label>
+			<input type="checkbox" id="friday" value="Fr"${fridayChecked}>
+			<label for="saturday">Sat</label>
+			<input type="checkbox" id="saturday" value="Sa"${saturdayChecked}>
+		</div>
+		<br>
+		<div class="form-grid-datetime-rows">
+			<p class="label">Start Date: </p>
+			<input type="date" id="startDate" value="${startDate}">
+			<p class="label">Start Time: </p>
+			<input type="time" id="startTime" value="${startTime}">
+			<p class="label">End Date: </p>
+			<input type="date" id="endDate" value="${endDate}">
+			<p class="label">End Time: </p>
+			<input type="time" id="endTime" value="${endTime}">
+		</div>
+		<br>
+		<div class="form-flex-row">
 			<input type="submit" id="submitOpening" value="Create Appointments" onclick="handlePost();">
-		</form>
-
-		<#else>
-			<p>Sorry, but you must be a teacher to use this feature.</p>
-		</#if>
-	</div>
+		</div>
+	</form>
+	<#else>
+	<p>Sorry, but you must be a teacher to use this feature.</p>
+	</#if>
 </div>
 </body>
-
-<script>
-const handlePost = () => {
-	const sunday = document.getElementById('sunday').checked ? document.getElementById('sunday').value : '';
-	const monday = document.getElementById('monday').checked ? document.getElementById('monday').value : '';
-	const tuesday = document.getElementById('tuesday').checked ? document.getElementById('tuesday').value : '';
-	const wednesday = document.getElementById('wednesday').checked ? document.getElementById('wednesday').value : '';
-	const thursday = document.getElementById('thursday').checked ? document.getElementById('thursday').value : '';
-	const friday = document.getElementById('friday').checked ? document.getElementById('friday').value : '';
-	const saturday = document.getElementById('saturday').checked ? document.getElementById('saturday').value : '';
-	const daysOfWeek = sunday + monday + tuesday + wednesday + thursday + friday + saturday; 
-
-	if (daysOfWeek == '') {
-		alert('Please select which days of the week will be enabled.');
-		return;
-	}
-
-	const instructorId = document.getElementById('instructorId').value;
-	const studentId = document.getElementById('studentId').value;
-	const startDate = document.getElementById('startDate').value;
-	const startTime = document.getElementById('startTime').value;
-	const endDate = document.getElementById('endDate').value;
-	const endTime = document.getElementById('endTime').value;
-
-	if (confirm('Please confirm:' + 
-			'\nInstructor ID: ' + instructorId + '   Days of the Week: ' + daysOfWeek +
-			'\nStudent ID: ' + studentId +
-			'\nDates: ' + startDate + ' - ' + endDate +
-			'\nTimes: ' + startTime + ' - ' + endTime)) {
-
-		const xhr = new XMLHttpRequest();
-		xhr.open('POST', '/');
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-		xhr.send('action=make_appointment_batch&instructorId=' + instructorId + '&studentId=' + studentId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
-	}
-}
-</script>
-
+<script src="/dynamic.js"></script>
+<script src="/scripts/batchAppointmentOperations.js"></script>
 </html>
