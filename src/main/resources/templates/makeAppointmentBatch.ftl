@@ -6,7 +6,7 @@
 	<#if userId lte 0>
 	<#include "please_login.ftl">
 	<#elseif isAdmin || isInstructor>
-	<h1>Please make new appointments:</h1>
+	<h1>Batch Appointments:</h1>
 	<br>
 	<form method="post" action="/" onsubmit = "return false;">
 		<input id="actionType" type="hidden" value="make_appointment_batch">
