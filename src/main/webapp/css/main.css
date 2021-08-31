@@ -224,10 +224,10 @@ header a, .buttonize-link {
 }
 .form-grid-days-of-week {
 	display: grid;
-	gap: 8px;
-	grid-template-columns: 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr; /* DOW [] x7 */
+    grid-template-columns: 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr 3fr 1fr; /* DOW [] x7 */
 	justify-items: center;
 	align-items: center;
+	margin: 0 -20px;
 }
 .form-grid-full-rows p.label, .form-grid-datetime-rows p.label, .form-grid-days-of-week label {
 	width: 100%;
@@ -432,9 +432,6 @@ input[type=radio] {
 .second-value {
 	float: right;
 }
-.new-opening input[type=submit] {
-	margin-top: 2rem;
-}
 .top-buttons {
 	text-align: center;
 }
@@ -597,10 +594,6 @@ table.openings-calendar div.highlight {
 
 .make-appointment label {
 	margin-right: 1rem;
-}
-.make-appointment input[type=submit], .confirm-appointment input[type=submit] {
-	display: block;
-	margin-top: 1rem;
 }
 .select {
 	display: block;
