@@ -90,8 +90,8 @@ th, td {
 	user-select: none;
 	padding: 5px 10px;
 	z-index: 11;
-    background-color: var(--backgroundColor);
-    border: 1px solid black;
+	background-color: var(--backgroundColor);
+	border: 1px solid black;
 }
 .timestamp:hover {
 	opacity: 0.75;
@@ -101,7 +101,7 @@ th, td {
 }
 .timestamp > .label {
 	text-align: center;
-    font-weight: bold;
+	font-weight: bold;
 }
 .timestamp-grid {
 	display: grid;
@@ -202,20 +202,38 @@ header a, .buttonize-link {
 	margin: 0 auto;
 	font-size: 2rem;
 	width: 550px;
-	text-align: center;
 }
-.form-grid {
+.form-grid-full-rows {
 	display: grid;
 	gap: 8px;
 	grid-template-columns: 1fr 2fr;
 	justify-items: center;
+	align-items: center;
 }
-.form-grid p.label {
+.form-grid-datetime-rows {
+	display: grid;
+	gap: 12px 4px;
+	grid-template-columns: 1fr 2fr 1fr 1fr;
+	justify-items: center;
+	align-items: center;
+}
+.form-flex-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+.form-grid-days-of-week {
+	display: grid;
+	gap: 8px;
+	grid-template-columns: 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr 2fr 1fr; /* DOW [] x7 */
+	justify-items: center;
+	align-items: center;
+}
+.form-grid-full-rows p.label, .form-grid-datetime-rows p.label, .form-grid-days-of-week label {
 	width: 100%;
-    margin-right: 10%;
-    text-align: right;
-    align-self: center;
-    justify-self: center;
+	margin-right: 10%;
+	text-align: right;
+	user-select: none;
 }
 /* used by most datasheets */
 .page-content-750-1000 {
@@ -414,15 +432,6 @@ input[type=radio] {
 .second-value {
 	float: right;
 }
-.day-list {
-	display: inline-block;
-	margin-top: 2rem;
-}
-.day-list li {
-	float: left;
-	margin-left: -.5rem;
-	font-weight: lighter;
-}
 .new-opening input[type=submit] {
 	margin-top: 2rem;
 }
@@ -452,8 +461,8 @@ input[type=radio] {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	margin: 2.5rem auto;
-    width: fit-content;
-    grid-gap: 4rem;
+	width: fit-content;
+	gap: 4rem;
 }
 
 /* main tables - unified settings */
@@ -549,7 +558,7 @@ table.openings-calendar div.highlight {
 	margin-left: 3rem;
 	width: 100%;
 	height: 30rem;
-    object-fit: cover;
+	object-fit: cover;
 }
 .profile-basic-stats {
 	width: 90%;
@@ -586,15 +595,6 @@ table.openings-calendar div.highlight {
 }
 /* css for make & confirm new appointment(s) page */
 
-.make-appointment, .confirm-appointment, .new-opening {
-	margin: auto;
-	width: fit-content;
-	font-size: 2rem;
-	text-align: left;
-	font-size: 2rem;
-	font-weight: bold;
-	line-height: 200%;
-}
 .make-appointment label {
 	margin-right: 1rem;
 }
