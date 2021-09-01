@@ -28,9 +28,9 @@ public class MemberSqlDAO implements DAO<Member> {
 			return -1;
 		}
 
-		String query = "INSERT INTO members (loginName, passwordHash, token, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent) VALUES (?,SHA1(?),SHA1(?),?,?,?,?,?,?,?,?,?,?,?,?);";
+		String query = "INSERT INTO members (loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
-		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), "", "", member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsAdmin(), member.getIsInstructor(), member.getIsStudent());
+		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsAdmin(), member.getIsInstructor(), member.getIsStudent());
 		logger.debug("Member successfully inserted with ID = " + recID);
 		return recID;
 	}
@@ -205,7 +205,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public boolean updatePassword(Member member, String password) {
 		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
 
-		String query = "UPDATE members SET token = SHA1(?) WHERE recID = " + member.getRecID() + ";";
+		String query = "UPDATE members SET passwordHash = SHA1(?) WHERE recID = " + member.getRecID() + ";";
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, password);
 

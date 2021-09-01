@@ -125,7 +125,6 @@ public class SQLUtils {
 	public static int executeSqlMemberInsert(Connection conn,
 			String query,
 			int recID, String loginName,
-			String passwordHash, String token,
 			String displayName, float credits,
 			Timestamp birthdate, String gender,
 			String selfIntroduction, String instructorNotes,
@@ -141,20 +140,18 @@ public class SQLUtils {
 			PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 			
 			stmt.setString(1, loginName);
-			stmt.setString(2, passwordHash);
-			stmt.setString(3, token);
-			stmt.setString(4, displayName);
-			stmt.setFloat(5, credits);
-			stmt.setTimestamp(6, birthdate);
-			stmt.setString(7, gender);
-			stmt.setString(8, selfIntroduction);
-			stmt.setString(9, instructorNotes);
-			stmt.setString(10, phone1);
-			stmt.setString(11, phone2);
-			stmt.setString(12, email);
-			stmt.setInt(13, isAdmin ? 1 : 0);         // SetBoolean doesn't work
-			stmt.setInt(14, isInstructor ? 1 : 0);    // SetBoolean doesn't work
-			stmt.setInt(15, isStudent ? 1 : 0);       // SetBoolean doesn't work
+			stmt.setString(2, displayName);
+			stmt.setFloat(3, credits);
+			stmt.setTimestamp(4, birthdate);
+			stmt.setString(5, gender);
+			stmt.setString(6, selfIntroduction);
+			stmt.setString(7, instructorNotes);
+			stmt.setString(8, phone1);
+			stmt.setString(9, phone2);
+			stmt.setString(10, email);
+			stmt.setInt(11, isAdmin ? 1 : 0);         // SetBoolean doesn't work
+			stmt.setInt(12, isInstructor ? 1 : 0);    // SetBoolean doesn't work
+			stmt.setInt(13, isStudent ? 1 : 0);       // SetBoolean doesn't work
 			
 			stmt.executeUpdate();
 			

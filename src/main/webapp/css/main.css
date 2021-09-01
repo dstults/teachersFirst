@@ -210,6 +210,9 @@ header a, .buttonize-link {
 	justify-items: center;
 	align-items: center;
 }
+.form-grid-full-rows-halfsies {
+	grid-template-columns: 1fr 1fr;
+}
 .form-grid-datetime-rows {
 	display: grid;
 	gap: 12px 4px;
@@ -217,12 +220,30 @@ header a, .buttonize-link {
 	justify-items: center;
 	align-items: center;
 }
+.form-grid-gender-rows {
+	display: grid;
+	column-gap: 6px;
+	grid-template-columns: 24px auto;
+	align-items: center;
+}
+.form-flex-column {
+	display: flex;
+	flex-direction: column;
+	/* justify-items: center;
+	align-items: center; */
+}
 .form-flex-row {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
 	gap: 16px;
+	justify-items: center;
 	align-items: center;
+}
+.h1-right-floater {
+	float: right;
+	font-size: 70%;
+	text-align: right;
 }
 .form-grid-days-of-week {
 	display: grid;
@@ -263,20 +284,8 @@ header a, .buttonize-link {
 .required {
 	color: red;
 }
-input[type=radio] {
-	border-radius: 50%;
-	position: relative;
-	float: left;
-	display: block;
-	margin: 8px 8px 0 0;
-}
-.radio {
-	font-weight: lighter;
-	margin-right: 1.5rem;
-}
-.gender {
-	display: block;
-	margin-right: 2rem;
+.desired {
+	color: magenta;
 }
 
 .banner {

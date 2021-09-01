@@ -198,16 +198,16 @@ public class Member implements IJsonnable {
 		return this.email;
 	}
 
-	public boolean getIsStudent() {
-		return this.isStudent;
+	public boolean getIsAdmin() {
+		return this.isAdmin;
 	}
 
 	public boolean getIsInstructor() {
 		return this.isInstructor;
 	}
 
-	public boolean getIsAdmin() {
-		return this.isAdmin;
+	public boolean getIsStudent() {
+		return this.isStudent;
 	}
 
 	public boolean canViewMember(Member other) {

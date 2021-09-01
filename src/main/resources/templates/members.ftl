@@ -6,6 +6,9 @@
 	<#if userId lte 0>
 	<#include "please_login.ftl">
 	<#else>
+		<div class="top-buttons">
+			<#if isAdmin || isInstructor><a href="/create_user" class="buttonize-link">Create User</a></#if>
+		</div>
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
 				<a href="javascript:prevPage();">Prev Page</a>
