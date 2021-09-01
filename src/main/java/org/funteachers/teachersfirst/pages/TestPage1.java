@@ -32,12 +32,14 @@ public class TestPage1 extends PageLoader {
 		// ========================= Place content below this line
 
 		// Test out custom cookies
+		/*
 		Cookie testCookie1 = new Cookie("token", "1.1234asdf");
 		testCookie1.setMaxAge(60 * 60 * 24 * 90); // 60s * 60m * 24h * 90d = 90-day cookie
 		//testCookie1.setPath("/"); // / == default
 		testCookie1.setSecure(true);
 		testCookie1.setHttpOnly(true);
 		response.addCookie(testCookie1);
+		*/
 
 		/*
 		Cookie testCookie2 = new Cookie("token", "lololwhat");
@@ -83,7 +85,7 @@ public class TestPage1 extends PageLoader {
 		final String appointmentDaoCheckGet = appointment != null ? "Appointment Item Found" : "NO APPOINTMENT ITEM COULD BE RETRIEVED";
 
 		// FreeMarker
-		templateName = "diagnostics.ftl";
+		templateName = "test1.ftl";
 		templateDataMap.put("clientIp", clientIp);
 		templateDataMap.put("clientHost", clientHost);
 		templateDataMap.put("httpType", httpType);
