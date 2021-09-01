@@ -266,24 +266,6 @@ public class ServerMain extends HttpServlet {
 					new DeleteOpeningAction(connectionPackage).runAction();
 					break;
 
-				case "reset_daos":
-					String secret = QueryHelpers.getPost(request, "secret");
-					if (secret.equals("makeLoveNotWar")) {
-						logger.warn("======================================= Warning");
-						logger.warn("| Issuing manual connection reset ... | Warning");
-						logger.warn("======================================= Warning");
-						connectionPackage.reset();
-						logger.warn("======================================= Warning");
-						logger.warn("| Manual reset should have completed. | Warning");
-						logger.warn("======================================= Warning");
-						response.sendError(HttpServletResponse.SC_OK, "OK");
-					} else {
-						logger.warn("SECURITY ALERT: Someone might be trying to damage database, password used: {}", secret);
-						response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					}
-					connectionPackage.terminate();
-					return; // different log
-
 				default:
 					logger.debug("====================== Debug Me ======================");
 					logger.debug("Post Parameters:  {}", parameters);
