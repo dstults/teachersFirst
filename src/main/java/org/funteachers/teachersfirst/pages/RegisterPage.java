@@ -27,8 +27,9 @@ public class RegisterPage extends PageLoader {
 		}
 
 		// General
-		templateDataMap.put("title", "Register");
 		templateName = "register.ftl";
+		templateDataMap.put("title", "Register");
+		templateDataMap.put("registerOther", !this.selfRegister);
 		
 		// Get query data
 		String loginName = QueryHelpers.getGet(request, "loginName");
@@ -41,7 +42,9 @@ public class RegisterPage extends PageLoader {
 		// Add query data to FM
 		templateDataMap.put("loginName", loginName);
 		templateDataMap.put("displayName", displayName);
-		templateDataMap.put("gender", gender);
+		templateDataMap.put("maleChecked", gender.equals("m") ? " checked" : "");
+		templateDataMap.put("femaleChecked", gender.equals("f") ? " checked" : "");
+		templateDataMap.put("otherChecked", !gender.equals("m") && !gender.equals("f") ? " checked" : "");
 		templateDataMap.put("phone1", phone1);
 		templateDataMap.put("phone2", phone2);
 		templateDataMap.put("email", email);
