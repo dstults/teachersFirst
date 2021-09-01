@@ -25,7 +25,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.sendPostReply("/services", "", "Please sign in or register to use this feature!");
 			return;
 		}
-		if (DataManager.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
+		if (GlobalConfig.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
 			this.sendPostReply("/services", "", "Batch appointment function disabled.");
 		}
 

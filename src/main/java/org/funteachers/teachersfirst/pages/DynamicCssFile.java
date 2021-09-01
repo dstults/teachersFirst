@@ -17,20 +17,20 @@ public class DynamicCssFile extends PageLoader {
 		// FreeMarker
 		templateName = "dynamic-css.ftl";
 		if (isAdmin) {
-			templateDataMap.putIfAbsent("primaryHighlight", DataManager.primaryHighlightAdmin);
-			templateDataMap.putIfAbsent("primaryHighlightDark", DataManager.primaryHighlightDarkAdmin);
-			templateDataMap.putIfAbsent("backgroundColor", DataManager.backgroundColorAdmin);
-			templateDataMap.putIfAbsent("backgroundColorLight", DataManager.backgroundColorLightAdmin);
+			templateDataMap.putIfAbsent("primaryHighlight", GlobalConfig.primaryHighlightAdmin);
+			templateDataMap.putIfAbsent("primaryHighlightDark", GlobalConfig.primaryHighlightDarkAdmin);
+			templateDataMap.putIfAbsent("backgroundColor", GlobalConfig.backgroundColorAdmin);
+			templateDataMap.putIfAbsent("backgroundColorLight", GlobalConfig.backgroundColorLightAdmin);
 		} else if (isInstructor) {
-			templateDataMap.putIfAbsent("primaryHighlight", DataManager.primaryHighlightInstructor);
-			templateDataMap.putIfAbsent("primaryHighlightDark", DataManager.primaryHighlightDarkInstructor);
-			templateDataMap.putIfAbsent("backgroundColor", DataManager.backgroundColorInstructor);
-			templateDataMap.putIfAbsent("backgroundColorLight", DataManager.backgroundColorLightInstructor);
+			templateDataMap.putIfAbsent("primaryHighlight", GlobalConfig.primaryHighlightInstructor);
+			templateDataMap.putIfAbsent("primaryHighlightDark", GlobalConfig.primaryHighlightDarkInstructor);
+			templateDataMap.putIfAbsent("backgroundColor", GlobalConfig.backgroundColorInstructor);
+			templateDataMap.putIfAbsent("backgroundColorLight", GlobalConfig.backgroundColorLightInstructor);
 		} else {
-			templateDataMap.putIfAbsent("primaryHighlight", DataManager.primaryHighlightGeneral);
-			templateDataMap.putIfAbsent("primaryHighlightDark", DataManager.primaryHighlightDarkGeneral);
-			templateDataMap.putIfAbsent("backgroundColor", DataManager.backgroundColorGeneral);	
-			templateDataMap.putIfAbsent("backgroundColorLight", DataManager.backgroundColorLightGeneral);
+			templateDataMap.putIfAbsent("primaryHighlight", GlobalConfig.primaryHighlightGeneral);
+			templateDataMap.putIfAbsent("primaryHighlightDark", GlobalConfig.primaryHighlightDarkGeneral);
+			templateDataMap.putIfAbsent("backgroundColor", GlobalConfig.backgroundColorGeneral);	
+			templateDataMap.putIfAbsent("backgroundColorLight", GlobalConfig.backgroundColorLightGeneral);
 		}
 
 		// Go

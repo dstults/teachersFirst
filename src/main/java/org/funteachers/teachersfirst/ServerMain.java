@@ -52,7 +52,7 @@ public class ServerMain extends HttpServlet {
 		FreeMarkerSetup.initializeFreeMarker(resourcesDir);
 		logger.info("FreeMarker initialized.");
 
-		DataManager.initializeSiteData();
+		GlobalConfig.initializeSiteData();
 		logger.info("Site data initialized.");
 
 		ConnectionPackage connectionPackage = new ConnectionPackage(null, null);
@@ -230,7 +230,7 @@ public class ServerMain extends HttpServlet {
 					new LogOutAction(connectionPackage).runAction();
 					break;
 				case "register_member":
-					new OpenRegisterAction(connectionPackage).runAction();
+					new AddMemberAction(connectionPackage).runAction();
 					break;
 				case "update_member":
 					new UpdateMemberAction(connectionPackage).runAction();

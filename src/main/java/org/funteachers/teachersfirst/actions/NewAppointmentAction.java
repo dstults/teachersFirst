@@ -133,7 +133,7 @@ public class NewAppointmentAction extends ActionRunner {
 		LocalDateTime startTimeLdt = LocalDateTime.of(year, month, day, startHour, startMinute, 0);
 		LocalDateTime endTimeLdt = LocalDateTime.of(year, month, day, endHour, endMinute, 0);
 
-		if (DataManager.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
+		if (GlobalConfig.instructorAdminMakeAppointmentsRequiresOpening || (!isAdmin && !isInstructor)) {
 			// Make sure within scope of openings
 			if (!DateHelpers.timeIsBetweenTimeAndTime(
 					startTimeLdt,
