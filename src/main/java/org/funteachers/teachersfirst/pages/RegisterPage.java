@@ -12,7 +12,7 @@ public class RegisterPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		if (!DataManager.enableOpenRegistration) {
+		if (!DataManager.enableOpenRegistration && !this.isInstructor && !this.isAdmin) {
 			this.sendFake404("WARNING: User attempted to load open registration page when said page should not be visible.");
 			return;
 		}

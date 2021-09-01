@@ -113,6 +113,7 @@ public class ServerMain extends HttpServlet {
 					new MembersPage(connectionPackage).loadPage();
 					break;
 				case "/register":
+				case "/create_user":
 					new RegisterPage(connectionPackage).loadPage();
 					break;
 				case "/login":
