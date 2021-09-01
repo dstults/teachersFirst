@@ -38,7 +38,7 @@ public class ConnectionPackage {
 	}
 
 	public void initialize() {
-		String dbParameters = DataManager.getInitParams();
+		String dbParameters = GlobalConfig.getInitParams();
 		this.connection = SQLUtils.connect(dbParameters);
 		if (this.connection == null) {
 			System.out.println("===================================== Error");

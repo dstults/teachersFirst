@@ -17,7 +17,7 @@ public class RegisterPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		if (this.selfRegister && !DataManager.enableOpenRegistration) {
+		if (this.selfRegister && !GlobalConfig.enableOpenRegistration) {
 			this.sendFake404("WARNING: User attempted to load open registration page when said page should not be visible.");
 			return;
 		}

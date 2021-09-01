@@ -19,7 +19,7 @@ public class OpenRegisterAction extends ActionRunner {
 			this.sendPostReply("/logout", "", "Please sign out before trying to register a new account!");
 			return;
 		}
-		if (registerSelf && !DataManager.enableOpenRegistration) {
+		if (registerSelf && !GlobalConfig.enableOpenRegistration) {
 			this.sendPostReply("/services", "", "Open registration is disabled!");
 			return;
 		}

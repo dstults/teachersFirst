@@ -6,7 +6,7 @@ import java.io.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-public class DataManager {
+public class GlobalConfig {
 	
 	//private static final Logger logger = LogManager.getLogger();
 

@@ -52,7 +52,7 @@ public class ServerMain extends HttpServlet {
 		FreeMarkerSetup.initializeFreeMarker(resourcesDir);
 		logger.info("FreeMarker initialized.");
 
-		DataManager.initializeSiteData();
+		GlobalConfig.initializeSiteData();
 		logger.info("Site data initialized.");
 
 		ConnectionPackage connectionPackage = new ConnectionPackage(null, null);
