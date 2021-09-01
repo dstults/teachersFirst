@@ -8,16 +8,18 @@ import org.funteachers.teachersfirst.daos.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
-public class DiagnosticsPage extends PageLoader {
+public class TestPage1 extends PageLoader {
 
 	// Constructor
-	public DiagnosticsPage(ConnectionPackage cp) { super(cp); }
+	public TestPage1(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
 	@Override
 	public void loadPage() {
 		
+		// ========================= Diagnostic security checks
+
 		// Get initial bit to verify ID and operation
 		final String clientIp = security.getRealIp();
 
@@ -26,6 +28,8 @@ public class DiagnosticsPage extends PageLoader {
 			sendFake404("Unauthorized user [ " + clientIp + "] attempted to access diagnostics page.");
 			return;
 		}
+
+		// ========================= Place content below this line
 
 		// Test out custom cookies
 		Cookie testCookie1 = new Cookie("token", "1.1234asdf");

@@ -152,8 +152,11 @@ public class ServerMain extends HttpServlet {
 					connectionPackage.terminate();
 					return; // don't log
 
-				case "/test":
-					new DiagnosticsPage(connectionPackage).loadPage();
+				case "/test1":
+					new TestPage1(connectionPackage).loadPage();
+					break;
+				case "/test2":
+					new TestPage2(connectionPackage).loadPage();
 					break;
 
 				default:
