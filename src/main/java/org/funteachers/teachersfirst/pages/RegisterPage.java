@@ -5,15 +5,24 @@ import org.funteachers.teachersfirst.managers.*;
 
 public class RegisterPage extends PageLoader {
 
+	private boolean selfRegister;
+
 	// Constructor
-	public RegisterPage(ConnectionPackage cp) { super(cp); }
+	public RegisterPage(ConnectionPackage cp, boolean selfRegister) {
+		super(cp);
+		this.selfRegister = selfRegister;
+	}
 
 	// Page-specific
 
 	@Override
 	public void loadPage() {
-		if (!DataManager.enableOpenRegistration && !this.isInstructor && !this.isAdmin) {
+		if (this.selfRegister && !DataManager.enableOpenRegistration) {
 			this.sendFake404("WARNING: User attempted to load open registration page when said page should not be visible.");
+			return;
+		}
+		if (!this.selfRegister && !this.isInstructor && !this.isAdmin) {
+			this.sendFake404("WARNING: A non-administrator, non-instructor user is attempting to create a new user.");
 			return;
 		}
 
