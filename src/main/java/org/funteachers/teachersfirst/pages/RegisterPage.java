@@ -26,7 +26,11 @@ public class RegisterPage extends PageLoader {
 			return;
 		}
 
+		// General
 		templateDataMap.put("title", "Register");
+		templateName = "register.ftl";
+		
+		// Get query data
 		String loginName = QueryHelpers.getGet(request, "loginName");
 		String displayName = QueryHelpers.getGet(request, "displayName");
 		String gender = QueryHelpers.getGet(request, "gender");
@@ -34,14 +38,13 @@ public class RegisterPage extends PageLoader {
 		String phone2 = QueryHelpers.getGet(request, "phone2");
 		String email = QueryHelpers.getGet(request, "email");
 
-		// FreeMarker
+		// Add query data to FM
 		templateDataMap.put("loginName", loginName);
 		templateDataMap.put("displayName", displayName);
 		templateDataMap.put("gender", gender);
 		templateDataMap.put("phone1", phone1);
 		templateDataMap.put("phone2", phone2);
 		templateDataMap.put("email", email);
-		templateName = "register.ftl";
 
 		// Go
 		trySendResponse();
