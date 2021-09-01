@@ -7,9 +7,9 @@ import org.funteachers.teachersfirst.daos.sql.MemberSqlDAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
-public class OpenRegisterAction extends ActionRunner {
+public class AddMemberAction extends ActionRunner {
 
-	public OpenRegisterAction(ConnectionPackage cp) { super(cp); }
+	public AddMemberAction(ConnectionPackage cp) { super(cp); }
 
 	@Override
 	public void runAction() {

@@ -230,7 +230,7 @@ public class ServerMain extends HttpServlet {
 					new LogOutAction(connectionPackage).runAction();
 					break;
 				case "register_member":
-					new OpenRegisterAction(connectionPackage).runAction();
+					new AddMemberAction(connectionPackage).runAction();
 					break;
 				case "update_member":
 					new UpdateMemberAction(connectionPackage).runAction();
