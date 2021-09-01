@@ -38,7 +38,7 @@
 		</div>
 		<br>
 		<div class="form-flex-row">
-			<input type="submit" value="Register">
+			<#if registerOther><input type="submit" value="Create User"><#else><input type="submit" value="Register"></#if>
 		</div>
 	</form>
 	<#else>
