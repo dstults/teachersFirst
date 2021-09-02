@@ -23,9 +23,9 @@ Get yours today!
 # Installation
 
 ### First Steps
-- [Bare-Metal Instructions](../../wiki/Bare-Metal-Installation)
-- [Docker Instructions](../../wiki/Docker-Installation)
-- [Cloud Instructions](../../wiki/Cloud-Installation)
+- [Bare-Metal Instructions](../../wiki/Installation,-Bare-Metal)
+- [Docker Instructions](../../wiki/Installation,-Docker)
+- [Cloud Instructions](../../wiki/Installation,-Cloud)
 
 ### First Steps
 - [Custom Configuration](../../wiki/Custom-Configuration)
