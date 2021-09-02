@@ -61,6 +61,10 @@ public class TestPage1 extends PageLoader {
 
 		// Get needed information dump data
 		final String clientHost = request.getRemoteHost() == clientIp ? "same as IP or resolution disabled" : request.getRemoteHost();
+		// Note #1: To enable getRemoteHost reverse lookup (slower!) you need to add "enablelookups=true" to
+		//     the <Connector ... /> tag in server.xml.
+		// Note #2: When behind a proxy (load balancer), Client IP will be the source IP, while client Host
+		//      will actually show you the closest proxy's IP address.
 		final String httpType = request.isSecure() ? "HTTPS" : "_http_";
 		final String pathInfo = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String uriPath = request.getRequestURI() == null ? "" : request.getRequestURI();
