@@ -4,61 +4,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Darren's Page o' Diagnostics</title>
-	<style>
-		html {
-			background-color: azure;
-			word-break: break-all;
-		}
-		p { margin: 0; }
-		p.gray { color: gray; }
-		p.blue { color: blue; }
-		p.green { color: green; }
-		h3 { color: navy; }
-		div.container {
-			margin: 5vw auto;
-			max-width: 900px;
-			border: 1px solid black;
-			background-color: white;
-			padding: 1vw;
-			font-size: 1.5rem;
-		}
-		button {
-			margin: 0 auto;
-			width: 100px;
-			height: 37px;
-			font-size: 21px;
-			vertical-align: middle;
-		}
-		code {
-			display: inline-block;
-			margin: 0 7px;
-			min-width: 150px;
-			padding: 5px;
-			border: 1px solid black;
-			border-radius: 3px;
-			background-color: rgba(64, 64, 64, 50%);
-			color: rgb(255, 224, 128);
-			font-size: 1rem;
-			vertical-align: middle;
-			line-height: 120%;
-		}
-		table {
-			border-collapse: collapse;
-			margin: 1em auto;
-			color: blue;
-			padding: 1vw;
-			width: 90%;
-			max-width: 880px;
-		}
-		td, th {
-			border: 1px solid navy;
-			text-align: center;
-			padding: 3px;
-			font-size: 0.75em;
-		}
-		tr:nth-child(even) { background-color: rgb(32, 32, 32, 0.2); }
-	</style>
+	<title>Diagnostics</title>
+	<link rel="stylesheet" href="/css/diagnostics.css">
 </head>
 <body>
 	<div class="container">

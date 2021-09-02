@@ -8,16 +8,18 @@ import org.funteachers.teachersfirst.daos.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
-public class DiagnosticsPage extends PageLoader {
+public class TestPage1 extends PageLoader {
 
 	// Constructor
-	public DiagnosticsPage(ConnectionPackage cp) { super(cp); }
+	public TestPage1(ConnectionPackage cp) { super(cp); }
 
 	// Page-specific
 
 	@Override
 	public void loadPage() {
 		
+		// ========================= Diagnostic security checks
+
 		// Get initial bit to verify ID and operation
 		final String clientIp = security.getRealIp();
 
@@ -27,13 +29,17 @@ public class DiagnosticsPage extends PageLoader {
 			return;
 		}
 
+		// ========================= Place content below this line
+
 		// Test out custom cookies
+		/*
 		Cookie testCookie1 = new Cookie("token", "1.1234asdf");
 		testCookie1.setMaxAge(60 * 60 * 24 * 90); // 60s * 60m * 24h * 90d = 90-day cookie
 		//testCookie1.setPath("/"); // / == default
 		testCookie1.setSecure(true);
 		testCookie1.setHttpOnly(true);
 		response.addCookie(testCookie1);
+		*/
 
 		/*
 		Cookie testCookie2 = new Cookie("token", "lololwhat");
@@ -55,6 +61,10 @@ public class DiagnosticsPage extends PageLoader {
 
 		// Get needed information dump data
 		final String clientHost = request.getRemoteHost() == clientIp ? "same as IP or resolution disabled" : request.getRemoteHost();
+		// Note #1: To enable getRemoteHost reverse lookup (slower!) you need to add "enablelookups=true" to
+		//     the <Connector ... /> tag in server.xml.
+		// Note #2: When behind a proxy (load balancer), Client IP will be the source IP, while client Host
+		//      will actually show you the closest proxy's IP address.
 		final String httpType = request.isSecure() ? "HTTPS" : "_http_";
 		final String pathInfo = request.getPathInfo() == null ? "" : request.getPathInfo();
 		final String uriPath = request.getRequestURI() == null ? "" : request.getRequestURI();
@@ -79,7 +89,7 @@ public class DiagnosticsPage extends PageLoader {
 		final String appointmentDaoCheckGet = appointment != null ? "Appointment Item Found" : "NO APPOINTMENT ITEM COULD BE RETRIEVED";
 
 		// FreeMarker
-		templateName = "diagnostics.ftl";
+		templateName = "test1.ftl";
 		templateDataMap.put("clientIp", clientIp);
 		templateDataMap.put("clientHost", clientHost);
 		templateDataMap.put("httpType", httpType);
