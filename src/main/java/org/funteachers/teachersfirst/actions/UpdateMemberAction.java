@@ -9,11 +9,16 @@ public class UpdateMemberAction extends ActionRunner {
 
 	public UpdateMemberAction(ConnectionPackage cp) { super(cp); }
 
-	private String removeInvalidText(String text) {
+	private String removeInvalidText(int maxLength, String text) {
 		text = text.trim();
-		final String newText = text.replaceAll("[^\\+\\-\\=\\@\\.\\'\\\"\\ \\:\\!\\?\\,\\:\\;\\_a-zA-Z\\d]", "");
-		if (text != newText)
-			logger.debug(text + " => changed to => " + newText);
+		String newText = text.replaceAll("[^\\+\\-\\=\\@\\.\\'\\\"\\ \\:\\!\\?\\,\\:\\;\\_a-zA-Z\\d]", "");
+		if (text != newText) {
+			logger.debug("Invalid input detected! {} => changed to => {}", text, newText);
+		}
+		if (newText.length() > maxLength) {
+			logger.debug("Input too long! Shortening to [{}] characters!", maxLength);
+			newText = newText.substring(0, maxLength);
+		}
 		return newText;
 	}
 
@@ -56,12 +61,12 @@ public class UpdateMemberAction extends ActionRunner {
 		final boolean memberIsStudent = member.getIsStudent();
 
 		// Get string elements from post
-		final String creditsRaw = removeInvalidText(QueryHelpers.getPost(request, "credits", String.valueOf(member.getCredits())));
-		final String phone1 = removeInvalidText(QueryHelpers.getPost(request, "phone1", member.getPhone1()));
-		final String phone2 = removeInvalidText(QueryHelpers.getPost(request, "phone2", member.getPhone2()));
-		final String email = removeInvalidText(QueryHelpers.getPost(request, "email", member.getEmail()));
-		final String selfIntroduction = removeInvalidText(QueryHelpers.getPost(request, "selfIntroduction", member.getSelfIntroduction()));
-		final String instructorNotes = removeInvalidText(QueryHelpers.getPost(request, "instructorNotes", member.getInstructorNotes()));
+		final String creditsRaw = removeInvalidText(12, QueryHelpers.getPost(request, "credits", String.valueOf(member.getCredits())));
+		final String phone1 = removeInvalidText(20, QueryHelpers.getPost(request, "phone1", member.getPhone1()));
+		final String phone2 = removeInvalidText(20, QueryHelpers.getPost(request, "phone2", member.getPhone2()));
+		final String email = removeInvalidText(40, QueryHelpers.getPost(request, "email", member.getEmail()));
+		final String selfIntroduction = removeInvalidText(800, QueryHelpers.getPost(request, "selfIntroduction", member.getSelfIntroduction()));
+		final String instructorNotes = removeInvalidText(800, QueryHelpers.getPost(request, "instructorNotes", member.getInstructorNotes()));
 
 		// Parse integer elements from post
 		final float credits;
@@ -90,37 +95,42 @@ public class UpdateMemberAction extends ActionRunner {
 
 		// Check to see if any changes made
 		boolean changesMade = false;
-		boolean updateNeeded = false;
+		boolean useGeneralUpdate = false;
 		if (credits != member.getCredits()) {
+			logger.debug("Changed member credits from [ {} ] to [ {} ]", member.getCredits(), credits);
 			member.setCredits(this.connectionPackage, uid, operator.getLoginName(), "manual update", credits);
 			changesMade = true;
-			updateNeeded = false; // This has its own personalized SQL update
+			//useGeneralUpdate = useGeneralUpdate;
 		}
-		if (phone1 != member.getPhone1()) {
+		if (!phone1.equals(member.getPhone1())) {
+			logger.debug("Changed member phone1 from [ {} ] to [ {} ]", member.getPhone1(), phone1);
 			member.setPhone1(phone1);
 			changesMade = true;
-			updateNeeded = true;
+			useGeneralUpdate = true;
 		}
-		if (phone2 != member.getPhone2()) {
+		if (!phone2.equals(member.getPhone2())) {
+			logger.debug("Changed member phone2 from [ {} ] to [ {} ]", member.getPhone2(), phone2);
 			member.setPhone2(phone2);
 			changesMade = true;
-			updateNeeded = true;
+			useGeneralUpdate = true;
 		}
-		if (email != member.getEmail()) {
-			member.setEmail(email);
+		if (!email.equals(member.getEmail())) {
 			logger.debug("Changed member email from [ {} ] to [ {} ]", member.getEmail(), email);
+			member.setEmail(email);
 			changesMade = true;
-			updateNeeded = true;
+			useGeneralUpdate = true;
 		}
-		if (selfIntroduction != member.getSelfIntroduction()) {
+		if (!selfIntroduction.equals(member.getSelfIntroduction())) {
+			logger.debug("Changed member self-introduction!"); // too long to log fully
 			member.setSelfIntroduction(selfIntroduction);
 			changesMade = true;
-			updateNeeded = true;
+			useGeneralUpdate = true;
 		}
-		if (instructorNotes != member.getInstructorNotes()) {
+		if (!instructorNotes.equals(member.getInstructorNotes())) {
+			logger.debug("Changed member instructor notes!"); // too long to log fully
 			member.setInstructorNotes(instructorNotes);
 			changesMade = true;
-			updateNeeded = true;
+			useGeneralUpdate = true;
 		}
 		if (!changesMade) {
 			this.sendJsonMessage("No changes detected, aborting!");
@@ -130,7 +140,7 @@ public class UpdateMemberAction extends ActionRunner {
 		//Member member2 = DataManager.getMemberDAO().retrieveByID(memberId);
 		//this.sendJsonReply("Success!//" + member2.toString() + "//Changed to://" + member.toString());
 
-		if (updateNeeded) {
+		if (useGeneralUpdate) {
 			member.update(this.connectionPackage);
 			logger.debug("Updated: [{}]", member);
 		}
