@@ -258,14 +258,6 @@ header a, .buttonize-link {
 	text-align: right;
 	user-select: none;
 }
-/* used by most datasheets */
-.page-content-750-1000 {
-	margin: 0 auto;
-	min-width: 750px;
-	width: 80%;
-	max-width: 1000px;
-	text-align: center;
-}
 /* used by calendar */
 .page-content-800-1200 {
 	margin: 0 auto;
@@ -465,7 +457,6 @@ header a, .buttonize-link {
 	font-size: 20px;
 }
 
-
 .openings-subtitle {
 	width: 80%;
 	margin: 1.4rem auto .4rem auto;
@@ -508,13 +499,28 @@ header a, .buttonize-link {
 }
 
 /* main tables - unified settings */
+.container-750-1000 {
+	margin: 0 auto;
+	min-width: 750px;
+	width: 100%;
+	max-width: 1000px;
+	text-align: center;
+}
 table.info-list, table.openings-calendar, table.profile-box {
 	table-layout: fixed;
 	background-color: var(--backgroundColor);
 	opacity: 0.85;
-	margin: 1rem auto;
+	margin: 1rem auto 0 auto;
 	border: 2px solid black;
 	box-shadow: 2px 2px 2px black;
+}
+.buttoned-panel {
+	display: grid;
+	grid-template-columns: auto auto;
+}
+.buttoned-panel>.buttoned-panel-main {
+	grid-column: 1/2;
+	grid-row: 1/2;
 }
 
 /* datasheets (page-wide tables) */
@@ -590,7 +596,8 @@ table.openings-calendar div.highlight {
 .profile-box {
 	font-size: 2rem;
 	padding: 15px 10px;
-	width: 100%;
+	min-width: 750px;
+	max-width: 1000px;
 }
 .profile-box td {
 	width: 50%;

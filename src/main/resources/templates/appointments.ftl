@@ -2,10 +2,10 @@
 <#include "head.ftl">
 <body>
 <#include "header.ftl">
-	<div class="page-content-750-1000">
 <#if userId lte 0>
 	<#include "please_login.ftl">
 <#else>
+	<div class="container-750-1000">
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
 				<a href="javascript:futurePagePrev();">Prev Page</a>
@@ -43,7 +43,10 @@
 			</tr>
 			</#list>
 		</table>
-		<br>
+	</div>
+	<br>
+	<br>
+	<div class="container-750-1000">
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
 				<a href="javascript:pastPagePrev();">Prev Page</a>
@@ -81,11 +84,10 @@
 			</tr>
 			</#list>
 		</table>
-</#if>
 	</div>
+</#if>
 </body>
 <#if userId gt 0>
-<!-- <script src="/dynamic.js"></script> -->
 <script src="/dynamic.js"></script>
 <script src="/scripts/appointmentOperations.js"></script>
 </#if>
