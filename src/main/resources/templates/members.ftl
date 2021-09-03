@@ -27,14 +27,14 @@
 				<th style="width: 135px;">Phone</th>
 				<th style="width: 135px;">Email</th>
 			</tr>
-			<#list 0..11 as i>
+			<#list 0..9 as i>
 			<tr id="member-row-${i?c}">
 				<td id="member-row-${i?c}-arrayIndex"></td>
 				<td id="member-row-${i?c}-displayName"></td>
 				<#if isAdmin || isInstructor><td id="member-row-${i?c}-recId"></td></#if>
 				<#if isAdmin || isInstructor><td id="member-row-${i?c}-credits" class="credits"></td></#if>
 				<td id="member-row-${i?c}-category"></td>
-				<td id="member-row-${i?c}-phones"></td>
+				<td id="member-row-${i?c}-phones" style="font-size: 100%;"></td>
 				<td id="member-row-${i?c}-email" style="word-break: break-all;"></td>
 			</tr>
 			</#list>

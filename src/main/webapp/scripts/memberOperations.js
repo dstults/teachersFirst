@@ -4,7 +4,7 @@ const currentPageElem = document.getElementById('current-page');
 
 let allMemberData = null;
 let filteredMemberData = null;
-const memberRows = 12;
+const memberRows = 10;
 
 fetch('https://funteachers.org/members?json').then(response => response.json()).then(data => {
 	allMemberData = data;
@@ -12,10 +12,10 @@ fetch('https://funteachers.org/members?json').then(response => response.json()).
 	refreshAll();
 }).catch(err => console.error(err.message));
 
-const boyImage = '<img src="/images/boy.svg" style="background-color: hsl(220, 100%, 85%);height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
-const girlImage = '<img src="/images/girl.svg" style="background-color: hsl(0, 80%, 90%); height: 38px;padding: 2px;vertical-align: middle;border-radius: 10px;width: 32px;">';
-const phoneImage = '<img src="/images/phone.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
-const emailImage = '<img src="/images/email.svg" style="vertical-align: middle; background-color: hsl(0, 0%, 100%); height: 24px; width: 24px; padding: 2px; border-radius: 6px;">';
+const boyImage = '<img src="/images/boy.svg" class="data-view-icon-gender male">';
+const girlImage = '<img src="/images/girl.svg" class="data-view-icon-gender female">';
+const phoneImage = '<img src="/images/phone.svg" class="data-view-icon-small">';
+const emailImage = '<img src="/images/email.svg" class="data-view-icon-small">';
 const renderRow = (member, row) => {
 	const rowName = 'member-row-' + row;
 	const tableRow = document.getElementById(rowName);
