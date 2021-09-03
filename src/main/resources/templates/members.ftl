@@ -35,7 +35,7 @@
 				<#if isAdmin || isInstructor><td id="member-row-${i?c}-credits" class="credits"></td></#if>
 				<td id="member-row-${i?c}-category"></td>
 				<td style="font-size: 100%; padding: 0;"><div id="member-row-${i?c}-phones" style="height: 42px; margin: 2px 0;"></div></td>
-				<td id="member-row-${i?c}-email" style="word-break: break-all;"></td>
+				<td id="member-row-${i?c}-email" style="word-break: break-all; font-size: 100%;"></td>
 			</tr>
 			</#list>
 		</table>
