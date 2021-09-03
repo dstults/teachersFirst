@@ -6,9 +6,6 @@
 <#if userId lte 0>
 	<#include "please_login.ftl">
 <#else>
-		<div class="top-buttons">
-			<a href="javascript:updateFilter();" class="buttonize-link">Filter Appointments</a>
-		</div>
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
 				<a href="javascript:futurePagePrev();">Prev Page</a>
@@ -16,7 +13,9 @@
 				<a href="javascript:futurePageNext();">Next Page</a>
 			</div>
 			<h2 class="info-list-subtitle">Upcoming appointments</h2>
-			<div></div>
+			<div class="data-chart-top-right-buttons">
+				<a href="javascript:updateFilter();" class="data-chart-button"><img src="/images/search.svg" height="22" style="vertical-align: middle;"> Filter</a>
+			</div>
 		</div>
 		<table class="info-list">
 			<tr>
@@ -44,7 +43,7 @@
 			</tr>
 			</#list>
 		</table>
-
+		<br>
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
 				<a href="javascript:pastPagePrev();">Prev Page</a>
@@ -52,7 +51,9 @@
 				<a href="javascript:pastPageNext();">Next Page</a>
 			</div>
 			<h2 class="info-list-subtitle">Previous appointments</h2>
-			<div></div>
+			<div class="data-chart-top-right-buttons">
+				<a href="javascript:updateFilter();" class="data-chart-button"><img src="/images/search.svg" height="22" style="vertical-align: middle;"> Filter</a>
+			</div>
 		</div>
 		<table class="info-list">
 			<tr>

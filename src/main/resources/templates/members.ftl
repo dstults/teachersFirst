@@ -6,9 +6,6 @@
 	<#if userId lte 0>
 	<#include "please_login.ftl">
 	<#else>
-		<div class="top-buttons">
-			<#if isAdmin || isInstructor><a href="/create_user" class="buttonize-link">Create User</a></#if>
-		</div>
 		<div class="info-list-title-container">
 			<div class="info-list-page-controls">
 				<a href="javascript:prevPage();">Prev Page</a>
@@ -16,7 +13,9 @@
 				<a href="javascript:nextPage();">Next Page</a>
 			</div>
 			<h2 class="info-list-subtitle">Members</h2>
-			<div></div>
+			<div class="data-chart-top-right-buttons">
+				<#if isAdmin || isInstructor><a href="/create_user" class="data-chart-button"><img src="/images/add-user.svg" height="22" style="vertical-align: middle;"> Add</a></#if>
+			</div>
 		</div>
 		<table class="info-list">
 			<tr>
@@ -36,7 +35,7 @@
 				<#if isAdmin || isInstructor><td id="member-row-${i?c}-credits" class="credits"></td></#if>
 				<td id="member-row-${i?c}-category"></td>
 				<td id="member-row-${i?c}-phones"></td>
-				<td id="member-row-${i?c}-email"></td>
+				<td id="member-row-${i?c}-email" style="word-break: break-all;"></td>
 			</tr>
 			</#list>
 		</table>
