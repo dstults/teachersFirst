@@ -12,10 +12,10 @@ fetch('https://funteachers.org/members?json').then(response => response.json()).
 	refreshAll();
 }).catch(err => console.error(err.message));
 
-const boyImage = '<img src="/images/boy.svg" class="data-view-icon-gender male">';
-const girlImage = '<img src="/images/girl.svg" class="data-view-icon-gender female">';
-const phoneImage = '<img src="/images/phone.svg" class="data-view-icon-small">';
-const emailImage = '<img src="/images/email.svg" class="data-view-icon-small">';
+const boyImage = '<img src="/images/boy.svg" class="data-chart-icon-gender male">';
+const girlImage = '<img src="/images/girl.svg" class="data-chart-icon-gender female">';
+const phoneImage = '<img src="/images/phone.svg" class="data-chart-icon-small">';
+const emailImage = '<img src="/images/email.svg" class="data-chart-icon-small">';
 const renderRow = (member, row) => {
 	const rowName = 'member-row-' + row;
 	const tableRow = document.getElementById(rowName);

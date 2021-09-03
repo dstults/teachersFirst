@@ -240,24 +240,6 @@ header a, .buttonize-link {
 	justify-items: center;
 	align-items: center;
 }
-.data-chart-top-right-buttons {
-	display: flex;
-	flex-direction: row-reverse;
-	gap: 16px;
-	align-items: center;
-}
-.data-chart-button {
-	font-size: 12px;
-    background-color: var(--primaryHighlight);
-    border-radius: 8px;
-    width: 10rem;
-    height: 3.6rem;
-    line-height: 3.6rem;
-	color: black;
-}
-.data-chart-button:hover, .data-chart-button:focus {
-	background-color: var(--primaryHighlightDark);
-}
 .h1-right-floater {
 	float: right;
 	font-size: 70%;
@@ -293,13 +275,13 @@ header a, .buttonize-link {
 	text-align: center;
 }
 
-.data-view {
+.data-chart {
 	background-color: var(--backgroundColorLight);
 	font-family: monospace;
 	line-height: 115%;
 	line-height: 105%;
 }
-.data-view-icon-small {
+.data-chart-icon-small {
 	vertical-align: middle;
     background-color: hsl(0, 0%, 100%);
     height: 20px;
@@ -307,12 +289,30 @@ header a, .buttonize-link {
     padding: 2px;
     border-radius: 6px;
 }
-.data-view-icon-gender {
+.data-chart-icon-gender {
     height: 38px;
     padding: 2px;
     vertical-align: middle;
     border-radius: 10px;
     width: 32px;
+}
+.data-chart-top-right-buttons {
+	display: flex;
+	flex-direction: row-reverse;
+	gap: 16px;
+	align-items: center;
+}
+.data-chart-button {
+	font-size: 12px;
+	background-color: var(--primaryHighlight);
+	border-radius: 8px;
+	width: 10rem;
+	height: 3.6rem;
+	line-height: 3.6rem;
+	color: black;
+}
+.data-chart-button:hover, .data-chart-button:focus {
+	background-color: var(--primaryHighlightDark);
 }
 .male {
 	background-color: hsl(220, 100%, 85%);
