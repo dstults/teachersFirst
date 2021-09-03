@@ -108,6 +108,7 @@ public class UpdateMemberAction extends ActionRunner {
 		}
 		if (email != member.getEmail()) {
 			member.setEmail(email);
+			logger.debug("Changed member email from [ {} ] to [ {} ]", member.getEmail(), email);
 			changesMade = true;
 			updateNeeded = true;
 		}

@@ -63,7 +63,7 @@ public abstract class ActionRunner {
 		final String fullJson = "{ " + messageJson + " }";
 
 		// send json:
-		logger.debug("Attempting to send JSON POST reply...");
+		//logger.debug("Attempting to send JSON POST reply...");
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(200);
 		try (ServletOutputStream out = response.getOutputStream()) {
