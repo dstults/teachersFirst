@@ -92,6 +92,7 @@ th, td {
 	z-index: 11;
 	background-color: var(--backgroundColor);
 	border: 1px solid black;
+	cursor: all-scroll;
 }
 .timestamp:hover {
 	opacity: 0.75;
@@ -258,14 +259,6 @@ header a, .buttonize-link {
 	text-align: right;
 	user-select: none;
 }
-/* used by most datasheets */
-.page-content-750-1000 {
-	margin: 0 auto;
-	min-width: 750px;
-	width: 80%;
-	max-width: 1000px;
-	text-align: center;
-}
 /* used by calendar */
 .page-content-800-1200 {
 	margin: 0 auto;
@@ -283,18 +276,18 @@ header a, .buttonize-link {
 }
 .data-chart-icon-small {
 	vertical-align: middle;
-    background-color: hsl(0, 0%, 100%);
-    height: 20px;
-    width: 20px;
-    padding: 2px;
-    border-radius: 6px;
+	background-color: hsl(0, 0%, 100%);
+	height: 20px;
+	width: 20px;
+	padding: 2px;
+	border-radius: 6px;
 }
 .data-chart-icon-gender {
-    height: 32px;
-    padding: 2px;
-    vertical-align: middle;
-    border-radius: 10px;
-    width: 32px;
+	height: 32px;
+	padding: 2px;
+	vertical-align: middle;
+	border-radius: 10px;
+	width: 32px;
 }
 .data-chart-top-right-buttons {
 	display: flex;
@@ -465,7 +458,6 @@ header a, .buttonize-link {
 	font-size: 20px;
 }
 
-
 .openings-subtitle {
 	width: 80%;
 	margin: 1.4rem auto .4rem auto;
@@ -482,7 +474,6 @@ header a, .buttonize-link {
 }
 .buttonize-link {
 	display: inline-block;
-	/* margin: 1rem; */
 	text-align: center;
 	font-size: 16px;
 	background-color: var(--primaryHighlight);
@@ -508,17 +499,23 @@ header a, .buttonize-link {
 }
 
 /* main tables - unified settings */
+.container-750-1000 {
+	margin: 0 auto;
+	min-width: 750px;
+	width: 100%;
+	max-width: 1000px;
+	text-align: center;
+}
 table.info-list, table.openings-calendar, table.profile-box {
 	table-layout: fixed;
 	background-color: var(--backgroundColor);
 	opacity: 0.85;
-	margin: 1rem auto;
+	margin: 1rem auto 0 auto;
 	border: 2px solid black;
 	box-shadow: 2px 2px 2px black;
 }
 
 /* datasheets (page-wide tables) */
-
 table.info-list {
 	width: 100%;
 	border-collapse: collapse;
@@ -583,16 +580,74 @@ table.openings-calendar div.highlight {
 
 /* profile page */
 
+.buttoned-panel {
+	margin: 0 auto;
+    width: fit-content;
+	display: grid;
+	grid-template-columns: max-content max-content;
+	column-gap: 2rem;
+}
+.buttoned-panel>.buttoned-panel-main {
+	grid-column: 1/2;
+	grid-row: 1/2;
+}
+.buttoned-panel>.buttoned-panel-buttons {
+	display: flex;
+	flex-direction: column;
+	max-width: 112px;
+	align-items: center;
+	gap: 1rem;
+	padding-top: 3rem;
+	padding-bottom: 1.5rem;
+}
+.buttoned-panel-buttons>a {
+	font-size: 1.2rem;
+	background-color: var(--primaryHighlight);
+	color: black;
+	border-radius: 8px;
+	width: 8rem;
+	height: 8rem;
+
+	display: grid;
+	align-content: center;
+	text-align: center;
+	justify-items: center;
+}
+.buttoned-panel-buttons>a:hover {
+	background-color: var(--primaryHighlightDark);
+}
+.buttoned-panel-buttons>a.last {
+	margin-top: auto;
+}
+.buttoned-panel-buttons>a.disabled {
+	background-color: var(--backgroundColorLight);
+	color: gray;
+	cursor: default;
+}
+.buttoned-panel-buttons>a.red {
+	background-color: hsla(0, 100%, 80%, 70%);
+	color: darkred;
+	font-weight: bold;
+}
+.buttoned-panel-buttons>a.red:hover {
+	background-color: hsl(0, 100%, 90%);
+	color: red;
+}
+
 .profile-page-nodata {
 	font-size: 2rem;
 	text-align: left;
 }
-.profile-box {
+table.profile-box {
+	margin: 0;
 	font-size: 2rem;
 	padding: 15px 10px;
+	min-width: 750px;
 	width: 100%;
+	max-width: 1000px;
+	text-align: center;
 }
-.profile-box td {
+table.profile-box td {
 	width: 50%;
 }
 .profile-image {
@@ -635,6 +690,8 @@ table.openings-calendar div.highlight {
 	margin-right: 0.8rem;
 	margin-top: 0.8rem;
 }
+
+
 /* css for make & confirm new appointment(s) page */
 
 .make-appointment label {
