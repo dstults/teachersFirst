@@ -336,19 +336,19 @@ const editPhone2 = async _ => {
 };
 
 const editEmail = async _ => {
-	const updatedValue = await getStringPromptChain('email', 'email', memberData.email, 50);
+	const updatedValue = await getStringPromptChain('email', 'email', memberData.email, 40);
 	if (updatedValue === null) return;
 	sharedReportBack('Email', updatedValue);
 };
 
 const editIntro = async _ => {
-	const updatedValue = await getStringPromptChain('self-introduction', 'selfIntroduction', memberData.selfIntroduction, 400);
+	const updatedValue = await getStringPromptChain('self-introduction', 'selfIntroduction', memberData.selfIntroduction, 800);
 	if (updatedValue === null) return;
 	sharedReportBack('Self-introduction', updatedValue);
 };
 
 const editNotes = async _ => {
-	const updatedValue = await getStringPromptChain('instructor notes', 'instructorNotes', memberData.instructorNotes, 1000);
+	const updatedValue = await getStringPromptChain('instructor notes', 'instructorNotes', memberData.instructorNotes, 800);
 	if (updatedValue === null) return;
 	sharedReportBack('Instructor notes', updatedValue);
 };

@@ -150,7 +150,7 @@ public abstract class PageLoader {
 
 	protected void trySendJson(String json) {
 		// Send JSON:
-		logger.debug("Attempting to send JSON GET reply...");
+		//logger.debug("Attempting to send JSON GET reply...");
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(200);
 		try (ServletOutputStream out = response.getOutputStream()) {
@@ -165,7 +165,7 @@ public abstract class PageLoader {
 		final String fullJson = "{ " + messageJson + " }";
 
 		// Send JSON:
-		logger.debug("Attempting to send JSON GET reply...");
+		//logger.debug("Attempting to send JSON GET reply...");
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(200);
 		try (ServletOutputStream out = response.getOutputStream()) {
