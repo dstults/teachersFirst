@@ -131,6 +131,25 @@ public class MemberSqlDAO implements DAO<Member> {
 		return members;
 	}
 	
+	public List<Member> retrieveAllUndeleted() {
+		logger.debug("Getting all undeleted members...");
+		
+		final String query = "SELECT * FROM members WHERE isDeleted=0 ORDER BY recID;";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("No members found!");
+			return null;
+		}
+
+		List<Member> members = new ArrayList<>();
+		for (SQLRow row : rows) {
+			Member member = convertRowToMember(row);
+			members.add(member);
+		}
+		return members;
+	}
+	
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Member IDs...");
 
