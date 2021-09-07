@@ -39,9 +39,9 @@ public class Member implements IJsonnable {
 	public Member(String loginName, String displayName, float credits,
 					String gender,
 					String selfIntroduction, String instructorNotes,
-					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent, boolean isDeleted) {
+					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
-		this(-1, loginName, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent, isDeleted);
+		this(-1, loginName, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent, false);
 	}
 
 	// no record id, yes birthdate -- used in test code

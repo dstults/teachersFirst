@@ -298,8 +298,9 @@ public class MemberSqlDAO implements DAO<Member> {
 		Boolean isAdmin = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isAdmin")));
 		Boolean isInstructor = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
 		Boolean isStudent = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isStudent")));
+		Boolean isDeleted = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isDeleted")));
 
-		return new Member(recID, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
+		return new Member(recID, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent, isDeleted);
 	}
 
 }
