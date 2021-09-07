@@ -216,8 +216,7 @@ public class Member implements IJsonnable {
 	}
 
 	public boolean getIsDeleted() {
-		if (this.isDeleted) return false;
-		return this.isStudent;
+		return this.isDeleted;
 	}
 
 	private String getIsDeletedString() {
