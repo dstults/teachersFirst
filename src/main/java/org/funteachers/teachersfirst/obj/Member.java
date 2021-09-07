@@ -33,6 +33,7 @@ public class Member implements IJsonnable {
 	private boolean isStudent;
 	private boolean isInstructor;
 	private boolean isAdmin;
+	private boolean isDeleted;
 
 	// no record id, no birthdate -- this is the default for the new member made by the page
 	public Member(String loginName, String displayName, float credits,
@@ -40,23 +41,23 @@ public class Member implements IJsonnable {
 					String selfIntroduction, String instructorNotes,
 					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
 
-		this(-1, loginName, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
+		this(-1, loginName, displayName, credits, DateHelpers.toTimestamp("1800/01/01 01:01:01"), gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent, false);
 	}
 
 	// no record id, yes birthdate -- used in test code
 	public Member(String loginName, String displayName, float credits,
 					Timestamp birthdate, String gender,
 					String selfIntroduction, String instructorNotes,
-					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
+					String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent, boolean isDeleted) {
 
-		this(-1, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
+		this(-1, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent, isDeleted);
 	}
 
 	// everything
 	public Member(int recID, String loginName, String displayName, float credits,
 				Timestamp birthdate, String gender,
 				String selfIntroduction, String instructorNotes,
-				String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent) {
+				String phone1, String phone2, String email, boolean isAdmin, boolean isInstructor, boolean isStudent, boolean isDeleted) {
 
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (loginName == null) throw new IllegalArgumentException("Invalid argument: loginName is null");
@@ -90,6 +91,7 @@ public class Member implements IJsonnable {
 		this.isAdmin = isAdmin;
 		this.isInstructor = isInstructor;
 		this.isStudent = isStudent;
+		this.isDeleted = isDeleted;
 	}
 
 	// ----------------------------------------------------------------
@@ -117,11 +119,11 @@ public class Member implements IJsonnable {
 	}
 
 	public String getName() {
-		return this.loginName + "/" + this.displayName;
+		return this.loginName + "/" + this.displayName + this.getIsDeletedString();
 	}
 
 	public String getDisplayName() {
-		return this.displayName;
+		return this.displayName + this.getIsDeletedString();
 	}
 
 	public float getCredits() {
@@ -137,7 +139,7 @@ public class Member implements IJsonnable {
 	}
 
 	public String getBirthDateFormatted() {
-		return this.birthdate.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+		return getBirthDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
 	}
 
 	public String getBirthDateView() {
@@ -199,15 +201,26 @@ public class Member implements IJsonnable {
 	}
 
 	public boolean getIsAdmin() {
+		if (this.isDeleted) return false;
 		return this.isAdmin;
 	}
 
 	public boolean getIsInstructor() {
+		if (this.isDeleted) return false;
 		return this.isInstructor;
 	}
 
 	public boolean getIsStudent() {
+		if (this.isDeleted) return false;
 		return this.isStudent;
+	}
+
+	public boolean getIsDeleted() {
+		return this.isDeleted;
+	}
+
+	private String getIsDeletedString() {
+		return this.isDeleted ? " (DELETED)" : "";
 	}
 
 	public boolean canViewMember(Member other) {
@@ -292,15 +305,19 @@ public class Member implements IJsonnable {
 		this.isAdmin = isAdmin;
 	}
 
+	public void setIsDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
 	// ----------------------------------------------------------------
 
 	@Override
 	public String toString() {
-		String recordLogin = "(R:" + this.recID + "/L:" + this.loginName + ") ";
-		String permissions = (this.isStudent ? "1" : "0") + "-" + (this.isInstructor ? "1" : "0") + "-"	+ (this.isAdmin ? "1" : "0");
-		String ageGenderPermissions = " (A:" + this.getAge() + "/G:" + this.gender	+ "/P:" + permissions + ")";
+		String recordLogin = "(R:" + this.getRecID() + "/L:" + this.getLoginName() + ") ";
+		String permissions = (this.getIsStudent() ? "1" : "0") + "-" + (this.getIsInstructor() ? "1" : "0") + "-"	+ (this.getIsAdmin() ? "1" : "0");
+		String ageGenderPermissions = " (A:" + this.getAge() + "/G:" + this.getGender()	+ "/P:" + permissions + ")";
 
-		return recordLogin + this.displayName + ageGenderPermissions;
+		return recordLogin + this.getDisplayName() + ageGenderPermissions;
 	}
 
 	@Override
@@ -323,6 +340,7 @@ public class Member implements IJsonnable {
 		if (this.isStudent != other.isStudent) return false;
 		if (this.isInstructor != other.isInstructor) return false;
 		if (this.isAdmin != other.isAdmin) return false;
+		if (this.isDeleted != other.isDeleted) return false;
 
 		// no failures, good match
 		return true;
@@ -336,33 +354,33 @@ public class Member implements IJsonnable {
 	public String toJsonPrivate() {
 		int ageVal = this.getAge();
 		String age = ageVal == -1 ? "null" : String.valueOf(ageVal);
-		String birthdateRaw = this.birthdate.toLocalDateTime().toLocalDate().toString();
+		String birthdateRaw = this.getBirthDate().toString();
 		String birthdate = birthdateRaw.equals("1800-01-01") ? "null" : "\"" + birthdateRaw + "\"";
-		return "{\"id\":" + this.recID + "," +
-				"\"loginName\":\"" + this.loginName + "\"," +
-				"\"displayName\":\"" + this.displayName + "\"," +
-				"\"credits\":" + this.credits + "," +
+		return "{\"id\":" + this.getRecID() + "," +
+				"\"loginName\":\"" + this.getLoginName() + "\"," +
+				"\"displayName\":\"" + this.getDisplayName() + "\"," +
+				"\"credits\":" + this.getCredits() + "," +
 				"\"birthdate\":" + birthdate + "," +
 				"\"age\":" + age + "," +
 				"\"ageClass\":\"" + this.getAgeClass() + "\"," +
-				"\"gender\":\"" + this.gender + "\"," +
-				"\"selfIntroduction\":\"" + this.selfIntroduction + "\"," +
-				"\"instructorNotes\":\"" + this.instructorNotes + "\"," +
-				"\"phone1\":\"" + this.phone1 + "\"," +
-				"\"phone2\":\"" + this.phone2 + "\"," +
-				"\"email\":\"" + this.email + "\"," +
-				"\"isAdmin\":" + this.isAdmin + "," +
-				"\"isInstructor\":" + this.isInstructor + "," +
-				"\"isStudent\":" + this.isStudent +
+				"\"gender\":\"" + this.getGender() + "\"," +
+				"\"selfIntroduction\":\"" + this.getSelfIntroduction() + "\"," +
+				"\"instructorNotes\":\"" + this.getInstructorNotes() + "\"," +
+				"\"phone1\":\"" + this.getPhone1() + "\"," +
+				"\"phone2\":\"" + this.getPhone2() + "\"," +
+				"\"email\":\"" + this.getEmail() + "\"," +
+				"\"isAdmin\":" + this.getIsAdmin() + "," +
+				"\"isInstructor\":" + this.getIsInstructor() + "," +
+				"\"isStudent\":" + this.getIsStudent() +
 				"}";
 	}
 
 	public String toJsonPublic() {
-		return "{\"id\":" + this.recID + "," +
-				"\"displayName\":\"" + this.displayName + "\"," +
+		return "{\"id\":" + this.getRecID() + "," +
+				"\"displayName\":\"" + this.getDisplayName() + "\"," +
 				"\"ageClass\":\"" + this.getAgeClass() + "\"," +
-				"\"gender\":\"" + this.gender + "\"," +
-				"\"selfIntroduction\":\"" + this.selfIntroduction + "\"" +
+				"\"gender\":\"" + this.getGender() + "\"," +
+				"\"selfIntroduction\":\"" + this.getSelfIntroduction() + "\"" +
 				"}";
 	}
 

@@ -5,6 +5,7 @@ import java.util.*;
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
+import org.funteachers.teachersfirst.daos.sql.*;
 
 public class MembersPage extends PageLoader {
 
@@ -42,12 +43,19 @@ public class MembersPage extends PageLoader {
 			return;
 		}
 
+		final boolean showDeleted = QueryHelpers.getGetBool(request, "deleted");
+
 		// Get data from DAO
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
 		final List<Member> members;
 		if (isAdmin || isInstructor) {
-			members = this.connectionPackage.getMemberDAO().retrieveAll();
+			if (showDeleted) {
+				members = memberDAO.retrieveAll();
+			} else {
+				members = memberDAO.retrieveAllUndeleted();
+			}
 		} else {
-			members = this.connectionPackage.getMemberDAO().retrieveAll();
+			members = memberDAO.retrieveAllUndeleted();
 			members.removeIf(m -> (!m.getIsInstructor() && m.getRecID() != this.uid));
 		}
 

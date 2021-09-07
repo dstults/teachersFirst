@@ -28,7 +28,7 @@ public class MemberSqlDAO implements DAO<Member> {
 			return -1;
 		}
 
-		String query = "INSERT INTO members (loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+		final String query = "INSERT INTO members (loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
 		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsAdmin(), member.getIsInstructor(), member.getIsStudent());
 		logger.debug("Member successfully inserted with ID = " + recID);
@@ -47,7 +47,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public String retrieveToken(int recID) {
 		//logger.debug("Trying to get Member with ID: " + recID);
 		
-		String query = "SELECT token FROM members WHERE recID=" + recID + ";";
+		final String query = "SELECT token FROM members WHERE recID=" + recID + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) return null;
@@ -61,7 +61,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByID(int recID) {
 		//logger.debug("Trying to get Member with ID: " + recID);
 		
-		String query = "SELECT * FROM members WHERE recID=" + recID + ";";
+		final String query = "SELECT * FROM members WHERE recID=" + recID + ";";
 
 		Member member = getMemberQuery(query);
 		if (member == null) logger.debug("retrieveByID [ {} ] failed", recID);
@@ -71,7 +71,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public Member retrieveByLoginNameAndPassword(String loginName, String password) {
 		//logger.debug("Trying to get Member with login name and password: " + loginName + " " + password);
 		
-		String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('" + password + "');";
+		final String query = "SELECT * FROM members WHERE loginName='" + loginName +"' AND passwordHash=SHA1('" + password + "');";
 
 		Member member = getMemberQuery(query);
 		// This mustn't be logged for security reasons
@@ -81,7 +81,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 	public Member retrieveByIdAndToken(int recID, String token) {
 		
-		String query = "SELECT * FROM members WHERE recID='" + recID +"' AND token='" + token + "';";
+		final String query = "SELECT * FROM members WHERE recID='" + recID +"' AND token='" + token + "';";
 
 		Member member = getMemberQuery(query);
 		// This shouldn't be logged for security reasons
@@ -99,7 +99,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		int limiter = index + 1;
 
-		String query = "SELECT * FROM members ORDER BY recID LIMIT " + limiter + ";";
+		final String query = "SELECT * FROM members ORDER BY recID LIMIT " + limiter + ";";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -115,7 +115,26 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Member> retrieveAll() {
 		logger.debug("Getting all members...");
 		
-		String query = "SELECT * FROM members ORDER BY recID;";
+		final String query = "SELECT * FROM members ORDER BY recID;";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("No members found!");
+			return null;
+		}
+
+		List<Member> members = new ArrayList<>();
+		for (SQLRow row : rows) {
+			Member member = convertRowToMember(row);
+			members.add(member);
+		}
+		return members;
+	}
+	
+	public List<Member> retrieveAllUndeleted() {
+		logger.debug("Getting all undeleted members...");
+		
+		final String query = "SELECT * FROM members WHERE isDeleted=0 ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -134,7 +153,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Getting all Member IDs...");
 
-		String query = "SELECT recID FROM members ORDER BY recID;";
+		final String query = "SELECT recID FROM members ORDER BY recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -154,7 +173,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public List<Member> search(String keyword) {
 		logger.debug("Searching for member with '" + keyword + "'");
 
-		String query = "SELECT * FROM members WHERE userName LIKE ? ORDER BY recID;";
+		final String query = "SELECT * FROM members WHERE userName LIKE ? ORDER BY recID;";
 
 		keyword = "%" + keyword + "%";
 
@@ -175,7 +194,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public boolean update(Member member) {
 		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
 
-		String query = "UPDATE members SET credits = ?, phone1 = ?, phone2 = ?, email = ?, selfIntroduction = ?, instructorNotes = ? WHERE recID = " + member.getRecID() + ";";
+		final String query = "UPDATE members SET credits = ?, phone1 = ?, phone2 = ?, email = ?, selfIntroduction = ?, instructorNotes = ? WHERE recID = " + member.getRecID() + ";";
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, String.valueOf(member.getCredits()), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getSelfIntroduction(), member.getInstructorNotes());
 
@@ -190,7 +209,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public boolean updateToken(Member member, String token) {
 		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
 
-		String query = "UPDATE members SET token = ? WHERE recID = " + member.getRecID() + ";";
+		final String query = "UPDATE members SET token = ? WHERE recID = " + member.getRecID() + ";";
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, token);
 
@@ -205,7 +224,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	public boolean updatePassword(Member member, String password) {
 		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
 
-		String query = "UPDATE members SET passwordHash = SHA1(?) WHERE recID = " + member.getRecID() + ";";
+		final String query = "UPDATE members SET passwordHash = SHA1(?) WHERE recID = " + member.getRecID() + ";";
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, password);
 
@@ -218,16 +237,52 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 
 	public void delete(int recID) {
+		if (recID <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
 		logger.debug("Trying to delete Member with ID: " + recID);
 
-		String query = "DELETE FROM members WHERE recID=" + recID;
+		final String query = "DELETE FROM members WHERE recID=" + recID;
 		SQLUtils.executeSql(conn, query);
 	}
+
+	public void softDelete(int recID) {
+		if (recID <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
+		logger.debug("Trying to soft delete Member with ID: " + recID);
+
+		final String query = "UPDATE members SET isDeleted = 1 WHERE recID = " + recID + ";";
+		SQLUtils.executeSql(conn, query);
+		logger.debug("Should have soft deleted! Be sure to check (and delete this message if it worked)!");
+	}
+
+	public void softUndelete(int recID) {
+		if (recID <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
+		logger.debug("Trying to soft undelete Member with ID: " + recID);
+
+		final String query = "UPDATE members SET isDeleted = 0 WHERE recID = " + recID + ";";
+		SQLUtils.executeSql(conn, query);
+		logger.debug("Should have soft deleted! Be sure to check (and delete this message if it worked)!");
+	}
+
+/*
+	public boolean update(Member member) {
+		if (member.getRecID() <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
+
+		final String query = "UPDATE members SET credits = ?, phone1 = ?, phone2 = ?, email = ?, selfIntroduction = ?, instructorNotes = ? WHERE recID = " + member.getRecID() + ";";
+
+		boolean success = SQLUtils.executeSqlUpdate(conn, query, String.valueOf(member.getCredits()), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getSelfIntroduction(), member.getInstructorNotes());
+
+		if (success)
+			logger.debug("DATA for member [ {} ] successfully updated.", member.getRecID());
+		else
+			logger.error("!! DATA for member [ {} ] failed to update !!", member.getRecID());
+		
+		return success;
+	}
+*/
 	
 	public int size() {
 		logger.debug("Getting the number of rows...");
 
-		String query = "SELECT COUNT(*) AS cnt FROM members;";
+		final String query = "SELECT COUNT(*) AS cnt FROM members;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -262,8 +317,9 @@ public class MemberSqlDAO implements DAO<Member> {
 		Boolean isAdmin = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isAdmin")));
 		Boolean isInstructor = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isInstructor")));
 		Boolean isStudent = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isStudent")));
+		Boolean isDeleted = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("isDeleted")));
 
-		return new Member(recID, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent);
+		return new Member(recID, loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent, isDeleted);
 	}
 
 }

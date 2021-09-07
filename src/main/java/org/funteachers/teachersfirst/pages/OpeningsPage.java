@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -124,7 +125,6 @@ public class OpeningsPage extends PageLoader {
 		LocalDateTime startTime;
 		LocalDateTime endTime;
 
-		// TODO: Optimize SQL queries
 		for (int day = 0; day < 7 * weeksToShow; day++) {
 			// once every week
 			if (day % 7 == 0) {
@@ -143,11 +143,14 @@ public class OpeningsPage extends PageLoader {
 			today = new PrettifiedDay(dateName, dateColor, openingsToday);
 			thisWeek.add(today);
 
+			// TODO: Optimize SQL query: Should ignore deleted user openings and only search within start and end dates
 			// scan all openings for any that fall within the day
 			for (Opening iOpening : allOpenings) {
 				if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
 
-					String iName = memberDAO.retrieveByID(iOpening.getInstructorID()).getDisplayName();
+					Member member = memberDAO.retrieveByID(iOpening.getInstructorID());
+					if (member == null || member.getIsDeleted()) continue;
+					String iName = member.getDisplayName();
 					boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
 					//logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
 
