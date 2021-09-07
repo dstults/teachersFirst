@@ -70,6 +70,7 @@
 </body>
 <#if userId gt 0>
 <script src="/dynamic.js"></script>
+<script src="/scripts/utils.js"></script>
 <script src="/scripts/profileOperations.js"></script>
 <#if isAdmin || isInstructor><script src="/scripts/profileOperationsAdv.js"></script></#if>
 </#if>

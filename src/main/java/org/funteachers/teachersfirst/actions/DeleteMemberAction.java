@@ -14,11 +14,11 @@ public class DeleteMemberAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.sendPostReply("/members", "", "Please sign in or register to use this feature!");
+			this.sendJsonMessage("Please sign in or register to use this feature!");
 			return;
 		}
 
-		final String memberIdString = QueryHelpers.getPost(request, "memberId");
+		final String memberIdString = QueryHelpers.getPost(request, "memberID");
 		int memberIdInt;
 		try {
 			memberIdInt = Integer.parseInt(memberIdString);
@@ -28,13 +28,19 @@ public class DeleteMemberAction extends ActionRunner {
 		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
 		final Member member = memberDAO.retrieveByID(memberIdInt);
 		if (member == null) {
-			this.sendPostReply("/members", "", "Member %5B" + memberIdString + "%5D not found!");
+			this.sendJsonMessage("Member %5B" + memberIdString + "%5D not found!");
 			return;
 		}
 
+		logger.debug("User {} is trying to delete user {}", this.operator.getRecID(), member.getRecID());
+		logger.debug("Operator is admin? {} ", this.operator.getIsAdmin(), member.getRecID());
+		logger.debug(this.operator == member);
+		logger.debug(!this.operator.getIsAdmin() && !this.operator.getIsInstructor());
+		logger.debug(!this.operator.getIsAdmin() && this.operator.getIsAdmin());
+
 		// Make sure the person has the authority
 		if (Permissions.MemberCanDeleteMember(this.operator, member)) {
-			this.sendPostReply("/members", "", "Not your member, cannot delete.");
+			this.sendJsonMessage("You are not authorized to delete member.");
 			return;
 		}
 
@@ -44,7 +50,7 @@ public class DeleteMemberAction extends ActionRunner {
 		//logger.info(DataManager.getMemberDAO().size() + " records total");
 		logger.debug("Soft-deleted member ID: [{}]", memberIdInt);
 		
-		this.sendPostReply("/members", "", "Member %5B" + memberIdString + "%5D, deleted!");
+		this.sendJsonMessage("Member %5B" + memberIdString + "%5D, deleted!");
 		return;
 	}
 	

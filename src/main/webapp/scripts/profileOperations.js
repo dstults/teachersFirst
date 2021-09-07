@@ -35,17 +35,16 @@ let memberData;
 const isSelf = _ => userId === memberId;
 
 const populateData = async _ => {
-	//addMessage('Fetching profile data for user [' + memberId + '].');
 	try {
 		const memberIdString = memberId ? 'memberId=' + memberId + '&' : '';
 		const response = await fetch('https://funteachers.org/profile?' + memberIdString + 'json');
-		// Check for a bad server response
+
 		if (!response.ok) throw new Error('Status [' + response.status + ']' + (response.statusText ? ': [' + response.statusText + ']' : ''));
-		// Parse the data, might throw try-catch error
+
 		const json = await response.json();
-		// Check if an error message was returned
+
 		if (json.message) throw new Error(json.message);
-		// Assign data to member
+
 		memberData = json;
 	} catch (err) {
 		if (typeof addError === 'function') {
