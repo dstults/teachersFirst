@@ -119,7 +119,7 @@ public class OpeningsPage extends PageLoader {
 		}
 
 		final List<Opening> allOpenings = openingDAO.retrieveAll();
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
 		List<PrettifiedDay> thisWeek = null;
 		PrettifiedDay today;
 		LocalDateTime startTime;
