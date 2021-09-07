@@ -238,6 +238,9 @@ public class ServerMain extends HttpServlet {
 				case "update_member":
 					new UpdateMemberAction(connectionPackage).runAction();
 					break;
+				case "delete_member":
+					new DeleteMemberAction(connectionPackage).runAction();
+					break;
 				case "make_openings":
 					new NewOpeningsAction(connectionPackage).runAction();
 					break;
