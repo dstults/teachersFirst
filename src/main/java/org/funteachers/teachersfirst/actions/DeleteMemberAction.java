@@ -32,14 +32,8 @@ public class DeleteMemberAction extends ActionRunner {
 			return;
 		}
 
-		logger.debug("User {} is trying to delete user {}", this.operator.getRecID(), member.getRecID());
-		logger.debug("Operator is admin? {} ", this.operator.getIsAdmin(), member.getRecID());
-		logger.debug(this.operator == member);
-		logger.debug(!this.operator.getIsAdmin() && !this.operator.getIsInstructor());
-		logger.debug(!this.operator.getIsAdmin() && this.operator.getIsAdmin());
-
 		// Make sure the person has the authority
-		if (Permissions.MemberCanDeleteMember(this.operator, member)) {
+		if (!Permissions.MemberCanDeleteMember(this.operator, member)) {
 			this.sendJsonMessage("You are not authorized to delete member.");
 			return;
 		}

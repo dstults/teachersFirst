@@ -31,7 +31,7 @@ public class DeleteOpeningAction extends ActionRunner {
 		}
 
 		// Make sure the person has the authority
-		if (Permissions.MemberCanDeleteOpening(this.operator, opening)) {
+		if (!Permissions.MemberCanDeleteOpening(this.operator, opening)) {
 			this.sendPostReply("/openings", "", "Not your opening, cannot delete.");
 			return;
 		}
