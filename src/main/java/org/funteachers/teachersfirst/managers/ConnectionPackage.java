@@ -129,8 +129,8 @@ public class ConnectionPackage {
 			this.initialize();
 		}
 
+		this.isConnectionHealthy = true;
 		String comma = "";
-		boolean didAllTestsPass = true;
 		if (this.connection == null) {
 			this.connectionStatusMessage += comma + "Cannot establish connection";
 			logger.error("ERROR: Failed to establish database connection!");
@@ -168,11 +168,9 @@ public class ConnectionPackage {
 			comma = ",";
 		}
 
-		// Close early if any errors found above
-		if (!this.isConnectionHealthy) return false;
-		this.connectionStatusMessage = "good";
-		this.isConnectionHealthy = true;
-		return true;
+		if (this.isConnectionHealthy) this.connectionStatusMessage = "good";
+
+		return this.isConnectionHealthy;
 	}
 
 }

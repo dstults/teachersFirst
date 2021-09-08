@@ -26,7 +26,7 @@ public class HealthPage extends PageLoader {
 			// Prevent potential unhandled exceptions for bad future updates
 			status = "undetermined";
 		}
-		String json = "{\n\t\"controller\": \"good\",\n\t\"database\": \"" + this.connectionPackage.getConnectionStatusMessage() + "\"\n\t\"status\": \"" + status + "\"\n}";
+		String json = "{\n\t\"controller\": \"good\",\n\t\"database\": \"" + this.connectionPackage.getConnectionStatusMessage() + "\",\n\t\"status\": \"" + status + "\"\n}";
 
 		// Go
 		trySendJson(json);
