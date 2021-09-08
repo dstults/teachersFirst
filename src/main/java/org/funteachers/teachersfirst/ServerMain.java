@@ -144,11 +144,7 @@ public class ServerMain extends HttpServlet {
 					return; // don't log
 
 				case "/health":
-					try {
-						response.sendError(HttpServletResponse.SC_OK, "OK");
-					} catch (IOException e) {
-						logger.error("IO Error sending health response: ", e);
-					}
+					new HealthPage(connectionPackage).loadPage();
 					connectionPackage.terminate();
 					return; // don't log
 

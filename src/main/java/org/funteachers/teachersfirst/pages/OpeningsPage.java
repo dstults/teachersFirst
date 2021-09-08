@@ -6,7 +6,6 @@ import java.util.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
-import org.funteachers.teachersfirst.daos.sql.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
