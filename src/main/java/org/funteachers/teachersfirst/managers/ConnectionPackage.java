@@ -15,18 +15,21 @@ public class ConnectionPackage {
 
 	private static final Logger logger = LogManager.getLogger();
 
+	// Packaged for convenience
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	private SecurityChecker security;
 	
-	final List<DAO<?>> allDAOs = new ArrayList<>();
+	// Database-related
+	final private List<DAO<?>> allDAOs = new ArrayList<>();
 	private DAO<Member> memberDAO;
 	private DAO<Appointment> appointmentDAO;
 	private DAO<Opening> openingDAO;
 	private DAO<LoggedEvent> loggedEventDAO;
 
-	private SecurityChecker security;
-
 	private Connection connection;
+	private String connectionStatusMessage = "";
+	private boolean isConnectionHealthy;
 	
 	// ================ CONSTRUCTOR ================
 
@@ -112,38 +115,64 @@ public class ConnectionPackage {
 		return this.connection != null;
 	}
 
+	public String getConnectionStatusMessage() {
+		return this.connectionStatusMessage;
+	}
+
+	public boolean getIsConnectionHealthy() {
+		return this.isConnectionHealthy;
+	}
+
 	public boolean validate() {
 		if (this.connection == null) {
 			logger.warn("Attempted to validate non-initialized SQL connections. Force initializing!");
 			this.initialize();
 		}
 
+		String comma = "";
 		boolean didAllTestsPass = true;
 		if (this.connection == null) {
+			this.connectionStatusMessage += comma + "Cannot establish connection";
 			logger.error("ERROR: Failed to establish database connection!");
-			didAllTestsPass = false;
+			this.isConnectionHealthy = false;
+			comma = ",";
 		}
 		if (this.memberDAO == null) {
+			this.connectionStatusMessage += comma + "memberDAO == null";
 			logger.warn("WARNING: Database connection validation FAILED (memberDAO == null).");
-			didAllTestsPass = false;
+			this.isConnectionHealthy = false;
+			comma = ",";
 		}
 		if (this.appointmentDAO == null) {
+			this.connectionStatusMessage += comma + "appointmentDAO == null";
 			logger.warn("WARNING: Database connection validation FAILED (appointmentDAO == null).");
-			didAllTestsPass = false;
+			this.isConnectionHealthy = false;
+			comma = ",";
 		} 
 		if (this.openingDAO == null) {
+			this.connectionStatusMessage += comma + "openingDAO == null";
 			logger.warn("WARNING: Database connection validation FAILED (openingDAO == null).");
-			didAllTestsPass = false;
+			this.isConnectionHealthy = false;
+			comma = ",";
 		}
 		if (this.loggedEventDAO == null) {
+			this.connectionStatusMessage += comma + "loggedEventDAO == null";
 			logger.warn("WARNING: Database connection validation FAILED (loggedEventDAO == null).");
-			didAllTestsPass = false;
+			this.isConnectionHealthy = false;
+			comma = ",";
 		}
 		if (this.memberDAO.retrieveByIndex(0) == null) {
+			this.connectionStatusMessage += comma + "memberDAO.retrieveByIndex(0) == null";
 			logger.error("ERROR: Database connection validation FAILED (memberDAO.retrieveByIndex(0) == null).");
-			didAllTestsPass = false;
+			this.isConnectionHealthy = false;
+			comma = ",";
 		}
-		return didAllTestsPass;
+
+		// Close early if any errors found above
+		if (!this.isConnectionHealthy) return false;
+		this.connectionStatusMessage = "good";
+		this.isConnectionHealthy = true;
+		return true;
 	}
 
 }
