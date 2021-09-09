@@ -28,7 +28,9 @@ public class HealthPage extends PageLoader {
 		}
 		String json = "{\n\t\"controller\": \"good\",\n\t\"database\": \"" + this.connectionPackage.getConnectionStatusMessage() + "\",\n\t\"status\": \"" + status + "\"\n}";
 
-		// Go
+		// Make respondable to anyone:
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		trySendJson(json);
 	}
 
