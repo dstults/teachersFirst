@@ -62,4 +62,4 @@ Admin Viewing Appointments:
  - v0.9 Attractive enhancements and security
 
 ## Under contruction:
- - v1.0 Administrative add-ons, full DevOps rollout
+ - v1.0 Administrative add-ons, staging server rollout
