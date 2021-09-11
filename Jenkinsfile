@@ -4,15 +4,24 @@ pipeline {
 	stages {
 	
 		stage ("build") {
-			echo 'building the application...'
+			steps {
+				echo 'Starting application build...'
+				echo 'Build completed (not really)...'
+			}
 		}
 	
 		stage ("test") {
-			echo 'testing the application...'
+			steps {
+				echo 'Starting application test...'
+				echo 'Test completed (not really)...'
+			}
 		}
 	
 		stage ("deploy") {
-			echo 'deploying the application...'
+			steps {
+				echo 'Starting application deployment...'
+				echo 'Deployment completed (not really)...'
+			}
 		}
 	
 	}
