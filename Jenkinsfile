@@ -8,35 +8,38 @@ pipeline {
 
 	stages {
 
-		stage ('Init') {
+		/*
+		stage ('Debug') {
 			steps {
-				sh 'echo "Working Directory = ${PWD}"'
-				sh 'echo "PATH = ${PATH}"'
-				sh 'echo "M2_HOME = ${M2_HOME}"'
+				//sh 'printenv';
+				//sh 'echo "Working Directory = ${PWD}"'
+				//sh 'echo "PATH = ${PATH}"'
+				//sh 'echo "M2_HOME = ${M2_HOME}"'
 			}
 		}
-		
+		*/
+
 		stage ("Build") {
 			steps {
-				echo 'Starting application build...'
-                		sh 'mvn -B -DskipTests clean package'
-				echo 'Build completed!'
+				echo 'Starting application build...';
+                sh 'mvn -B -DskipTests clean package';
+				echo 'Build completed!';
 			}
 		}
 	
 		stage ("Test") {
 			steps {
-				echo 'Starting application test...'
-				sh 'mvn test'
-				echo 'Testing completed (although not really)!'
+				echo 'Starting application test...';
+				sh 'mvn test';
+				echo 'Testing completed (although not really)!';
 			}
 		}
 	
 		stage ("Deploy") {
 			steps {
-				echo 'Starting application deployment...'
-				sh '../deploy.sh'
-				echo 'Deployment completed!'
+				echo 'Starting application deployment...';
+				sh '../deploy.sh ' + env.GIT_BRANCH;
+				echo 'Deployment completed!';
 			}
 		}
 	
