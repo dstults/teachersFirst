@@ -2,7 +2,11 @@ package org.funteachers.teachersfirst.obj;
 
 import java.sql.Timestamp;
 
+import org.funteachers.teachersfirst.ServerMain;
+import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.*;
+
+//import org.apache.logging.log4j.*;
 
 public class LoggedEvent implements IJsonnable {
 
@@ -40,7 +44,12 @@ public class LoggedEvent implements IJsonnable {
 
 	public static void log(ConnectionPackage cp, int operator, String message) {
 		LoggedEvent ev = new LoggedEvent(operator, message);
-		cp.getLoggedEventDAO().insert(ev);
+		DAO<LoggedEvent> daoLe = cp.getLoggedEventDAO();
+		if (daoLe != null) {
+			daoLe.insert(ev);
+		} else {
+			ServerMain.logger.warn("Could not log message to database: [{}]", message);
+		}
 	}
 
 	// ----------------------------------------------------------------
