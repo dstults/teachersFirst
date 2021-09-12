@@ -44,12 +44,16 @@ public class LoggedEvent implements IJsonnable {
 
 	public static void log(ConnectionPackage cp, int operator, String message) {
 		LoggedEvent ev = new LoggedEvent(operator, message);
-		DAO<LoggedEvent> daoLe = cp.getLoggedEventDAO();
-		if (daoLe != null) {
-			daoLe.insert(ev);
-		} else {
-			ServerMain.logger.warn("Could not log message to database: [{}]", message);
+		if (cp == null) {
+			ServerMain.logger.warn("Could not log message to database (no connection package): [{}]", message);
+			return;
 		}
+		DAO<LoggedEvent> daoLe = cp.getLoggedEventDAO();
+		if (daoLe == null) {
+			ServerMain.logger.warn("Could not log message to database (no database connection): [{}]", message);
+			return;
+		}
+		daoLe.insert(ev);
 	}
 
 	// ----------------------------------------------------------------
