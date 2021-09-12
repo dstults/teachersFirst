@@ -3,24 +3,32 @@ pipeline {
 
 	stages {
 	
-		stage ("build") {
+		stage ("Build") {
 			steps {
 				echo 'Starting application build...'
-				echo 'Build completed (not really)...'
+                		sh 'mvn -B -DskipTests clean package'
+				echo 'Build completed!'
 			}
 		}
 	
-		stage ("test") {
+		stage ("Test") {
 			steps {
 				echo 'Starting application test...'
-				echo 'Test completed (not really)...'
+				sh 'mvn test'
+				echo 'Testing completed!'
+			}
+			post {
+				always {
+					junit 'target/surefire-reports/*.xml'
+				}
 			}
 		}
 	
-		stage ("deploy") {
+		stage ("Deploy") {
 			steps {
 				echo 'Starting application deployment...'
-				echo 'Deployment completed (not really)...'
+				sh './jenkins/scripts/deliver.sh'
+				echo 'Deployment completed! -- (Not really, though.)'
 			}
 		}
 	
