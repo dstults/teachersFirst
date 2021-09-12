@@ -8,8 +8,9 @@ pipeline {
 
 	stages {
 
-		stage ('Initialize') {
+		stage ('Init') {
 			steps {
+				sh 'echo "Working Directory = ${PWD}"'
 				sh 'echo "PATH = ${PATH}"'
 				sh 'echo "M2_HOME = ${M2_HOME}"'
 			}
@@ -27,20 +28,15 @@ pipeline {
 			steps {
 				echo 'Starting application test...'
 				sh 'mvn test'
-				echo 'Testing completed!'
-			}
-			post {
-				always {
-					junit 'target/surefire-reports/*.xml'
-				}
+				echo 'Testing completed (although not really)!'
 			}
 		}
 	
 		stage ("Deploy") {
 			steps {
 				echo 'Starting application deployment...'
-				sh './jenkins/scripts/deliver.sh'
-				echo 'Deployment completed! -- (Not really, though.)'
+				sh '../deploy.sh'
+				echo 'Deployment completed!'
 			}
 		}
 	
