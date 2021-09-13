@@ -31,7 +31,7 @@ public abstract class ActionRunner {
 	// Constructors
 
 	protected ActionRunner(ConnectionPackage cp) {
-		if (!cp.validate()) cp.reset(); // Try to validate-reset SQL connection
+		//if (!cp.validate()) cp.reset(); // Try to validate-reset SQL connection
 
 		this.connectionPackage = cp;
 		this.request = cp.getRequest();
@@ -50,6 +50,7 @@ public abstract class ActionRunner {
 			this.isInstructor = false;
 			this.isStudent = false;
 		}
+
 	}
 
 	// Public entry point

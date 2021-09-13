@@ -28,7 +28,7 @@ public class SQLUtils {
 		} catch (SQLException e) {
 			// Security risk (the password is in the initParams)
 			//logger.error("Unable to connect to SQL Database with: " + initParams, e);
-			logger.error("Unable to connect to SQL Database.", e);
+			logger.error("Unable to connect to SQL Database."); // , e);  // This is way too verbose, esp. when it's such a clear error.
 			return null;
 		}
 
@@ -272,12 +272,7 @@ public class SQLUtils {
 	}
 
 	public static void disconnect(Connection conn) {
-		if (conn == null) {
-			// This happens during test runs and that's a good thing. But there won't be a logger to use.
-			// Also we REALLY want to log this when it happens when an actual servlet is running.
-			if (logger != null) logger.error("CONNECTION WAS NULL WHEN ATTEMPTING TO DISCONNECT.");
-			return;
-		}
+		if (conn == null) return;
 
 		boolean wasClosedOriginally = false;
 		try {
