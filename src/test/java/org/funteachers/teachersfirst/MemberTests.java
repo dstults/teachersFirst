@@ -14,9 +14,9 @@ class MemberTests {
 
 	@BeforeEach
 	void setUp() {
-		fred = new Member("fred", "Fred", 0, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro1", "notes1", "444-444-4444", "", "fred@example.com", false, false, true, false);
-		amy = new Member("amy", "Amy", 10, DateHelpers.toTimestamp("1987/10/15 00:00:00"), "f", "intro2", "notes2", "222-222-222", "", "amy@example.com", false, true, false, false);
-		juan = new Member("juan", "Juan", 100, DateHelpers.toTimestamp("1992/02/25 00:00:00"), "", "intro3", "notes3", "111-111-1111", "999-999-9999", "juan@example.com", true, false, false, false);
+		fred = new Member("fred", "Fred", 0.0f, DateHelpers.toTimestamp("1976/06/05 00:00:00"), "m", "intro1", "notes1", "444-444-4444", "", "fred@example.com", false, false, true, false);
+		amy = new Member("amy", "Amy", -10.0f, DateHelpers.toTimestamp("1987/10/15 00:00:00"), "f", "intro2", "notes2", "222-222-222", "", "amy@example.com", false, true, false, false);
+		juan = new Member("juan", "Juan", 100.0f, DateHelpers.toTimestamp("1992/02/25 00:00:00"), "", "intro3", "notes3", "111-111-1111", "999-999-9999", "juan@example.com", true, false, false, false);
 	}
 
 	@Test
@@ -135,6 +135,17 @@ class MemberTests {
 	}
 
 	@Test
+	void testCredits() {
+		
+		assertEquals(0.0f, fred.getCredits());
+		assertEquals(-10.0f, amy.getCredits());
+		assertEquals(100.0f, juan.getCredits());
+		juan.setCredits(null, 0, "Tester", "Testing credit setting.", 95.0f);
+		assertEquals(95.0f, juan.getCredits());
+
+	}
+
+	@Test
 	void testSetDisplayName() {
 		Exception ex = null;
 
@@ -231,9 +242,9 @@ class MemberTests {
 
 	@Test
 	void testSetInstructor() {
+		assertTrue(amy.getIsInstructor());
+		amy.setIsInstructor(false);
 		assertFalse(amy.getIsInstructor());
-		juan.setIsInstructor(true);
-		assertTrue(juan.getIsInstructor());
 	}
 
 	@Test
@@ -269,8 +280,9 @@ class MemberTests {
 		assertFalse(matt.equals(fred));
 		
 		assertFalse(matt.equals(new Member(12, "matt", "Matt", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
-		assertFalse(matt.equals(new Member(11,"maty", "Matt", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
-		assertFalse(matt.equals(new Member(11, "matt", "Matt", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
+		assertFalse(matt.equals(new Member(11, "maty", "Matt", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
+		assertFalse(matt.equals(new Member(11, "matt", "Math", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
+		assertFalse(matt.equals(new Member(11, "matt", "Matt", 10.0f, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
 		assertFalse(matt.equals(new Member(11, "matt", "Matt", 0, DateHelpers.toTimestamp("2020/08/15 00:00:00"), "m", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
 		assertFalse(matt.equals(new Member(11, "matt", "Matt", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "f", "Has a sick bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
 		assertFalse(matt.equals(new Member(11, "matt", "Matt", 0, DateHelpers.toTimestamp("2000/08/15 00:00:00"), "m", "Has a lame bike", "Needs more practice", "222-222-222", "", "mat@example.com", false, true, false, false)));
