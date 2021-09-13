@@ -63,3 +63,7 @@ Admin Viewing Appointments:
 
 ## Under contruction:
  - v1.0 Administrative add-ons, staging server rollout
+
+## Future features:
+ - v1.1 Polish everything, fill out docs, total automation
+ - v1.2 Multiple students per appointment, contract/payment notes
