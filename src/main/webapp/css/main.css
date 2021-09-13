@@ -27,7 +27,7 @@ th, td {
 }
 .main-title-text {
 	margin: 0 auto;
-	/* width: fit-content; */
+	/* width: max-content; */
 	height: 100px;
 	z-index: 1;
 	padding-bottom: 3rem;
@@ -324,7 +324,7 @@ header a, .buttonize-link {
 	background-color: var(--primaryHighlight);
 	text-align: center;
 	font-size: 1.8rem;
-	width: fit-content;
+	width: max-content;
 	padding: 10px 15px;
 	border-radius: 8px;
 	margin: 1rem auto;
@@ -494,7 +494,7 @@ header a, .buttonize-link {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	margin: 2.5rem auto;
-	width: fit-content;
+	width: max-content;
 	gap: 4rem;
 }
 
@@ -582,7 +582,7 @@ table.openings-calendar div.highlight {
 
 .buttoned-panel {
 	margin: 0 auto;
-    width: fit-content;
+    width: max-content;
 	display: grid;
 	grid-template-columns: max-content max-content;
 	column-gap: 2rem;
@@ -737,7 +737,7 @@ input[type=submit]:hover {
 	background-color: var(--primaryHighlight);
 	text-align: center;
 	font-size: 1.8rem;
-	width: fit-content;
+	width: max-content;
 	padding: 10px 15px;
 	border-radius: 8px;
 	margin: auto;
