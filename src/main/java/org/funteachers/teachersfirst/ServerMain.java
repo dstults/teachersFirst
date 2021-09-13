@@ -165,6 +165,8 @@ public class ServerMain extends HttpServlet {
 							logger.debug("Is Directory:     {}", file.isDirectory());
 							logger.debug("Sanitized Query:  {}", sanitizedQuery);
 							logger.debug("Page Path:        {}", pagePath);
+							//logger.debug("Search Path:      {}", "/var/www/");
+							//logger.debug("Working Dir:      {}", System.getProperty("user.dir"));
 							response.sendError(HttpServletResponse.SC_NOT_FOUND);
 							return; // Use above logging instead of standard logging
 						}
