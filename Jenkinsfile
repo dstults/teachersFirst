@@ -22,7 +22,7 @@ pipeline {
 		stage ("Build") {
 			steps {
 				echo 'Starting application build...';
-                sh 'mvn -B -DskipTests clean package';
+				sh 'mvn -B -DskipTests clean package';
 				echo 'Build completed!';
 			}
 		}
@@ -31,7 +31,7 @@ pipeline {
 			steps {
 				echo 'Starting application test...';
 				sh 'mvn test';
-				echo 'Testing completed (although not really)!';
+				echo 'Testing completed!';
 			}
 		}
 	
