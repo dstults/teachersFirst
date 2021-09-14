@@ -6,7 +6,7 @@ let allMemberData = null;
 let filteredMemberData = null;
 const memberRows = 10;
 
-fetch('https://funteachers.org/members?json').then(response => response.json()).then(data => {
+fetch('/members?json').then(response => response.json()).then(data => {
 	allMemberData = data;
 	filteredMemberData = allMemberData;
 	refreshAll();

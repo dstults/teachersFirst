@@ -37,7 +37,7 @@ const isSelf = _ => userId === memberId;
 const populateData = async _ => {
 	try {
 		const memberIdString = memberId ? 'memberId=' + memberId + '&' : '';
-		const response = await fetch('https://funteachers.org/profile?' + memberIdString + 'json');
+		const response = await fetch('/profile?' + memberIdString + 'json');
 
 		if (!response.ok) throw new Error('Status [' + response.status + ']' + (response.statusText ? ': [' + response.statusText + ']' : ''));
 

@@ -4,7 +4,7 @@ let allMembers;
 const instructorIdSelector = document.getElementById('instructorId');
 const studentIdSelector = document.getElementById('studentId');
 
-fetch('https://funteachers.org/members?json').then(response => response.json()).then(data => {
+fetch('/members?json').then(response => response.json()).then(data => {
 	allMembers = data;
 	populateSelectors();
 }).catch(err => console.error(err.message));
