@@ -154,12 +154,9 @@ public class NewAppointmentAction extends ActionRunner {
 		PlannedAppointment pa = new PlannedAppointment(studentIdInt, instructorIdInt,
 				year, month, day, startHour, startMinute, endDay, endHour, endMinute);
 	
-		// Might be very first appointment, in which case this is null
-		if (allAppointments != null) {
-			if (pa.hasConflictWithAppointments(allAppointments)) {
-				this.sendPostReply("/openings", "", "Appointment conflict detected: %5B" + pa.getResult() + "%5D!");
-				return;
-			}
+		if (pa.hasConflictWithAppointments(allAppointments)) {
+			this.sendPostReply("/openings", "", "Appointment conflict detected: %5B" + pa.getResult() + "%5D!");
+			return;
 		}
 
 		logger.debug("Attempting to create new appointment ...");
