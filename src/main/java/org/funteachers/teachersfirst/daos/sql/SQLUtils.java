@@ -20,12 +20,12 @@ public class SQLUtils {
 		PreparedStatement stmt;
 		try {
 			// Create schema			
-			query = "CREATE SCHEMA teachersFirst;";
+			query = "CREATE SCHEMA IF NOT EXISTS teachersFirst;";
 			stmt = conn.prepareStatement(query);
-			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			stmt.execute();
 			
 			// Create Members table
-			query = "CREATE TABLE teachersFirst.members (" +
+			query = "CREATE TABLE IF NOT EXISTS teachersFirst.members (" +
 					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
 					"    loginName           VARCHAR(40)       NOT NULL," +
 					"    passwordHash        CHAR(40)          DEFAULT NULL," +
@@ -47,7 +47,7 @@ public class SQLUtils {
 					"    UNIQUE KEY loginName_UNIQUE (loginName)" +
 					");";
 			stmt = conn.prepareStatement(query);
-			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			stmt.execute();
 			
 			// Create default Superuser
 			query = "INSERT INTO teachersFirst.members" + 
@@ -55,10 +55,10 @@ public class SQLUtils {
 					"	VALUES ('superuser', SHA1('password'), 'Superuser', '1800-01-01', " +
 					"		'This user has authority to perform administrative actions and cannot be deleted.', 1, 0, 0);";
 			stmt = conn.prepareStatement(query);
-			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			stmt.execute();
 		
 			// Create Appointments table
-			query = "CREATE TABLE teachersFirst.appointments (" +
+			query = "CREATE TABLE IF NOT EXISTS teachersFirst.appointments (" +
 					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
 					"    studentID           INT(11)           NOT NULL," +
 					"    instructorID        INT(11)           NOT NULL," +
@@ -69,10 +69,10 @@ public class SQLUtils {
 					"    PRIMARY KEY (recID)" +
 					");";
 			stmt = conn.prepareStatement(query);
-			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			stmt.execute();
 		
 			// Create Openings table
-			query = "CREATE TABLE teachersFirst.openings (" +
+			query = "CREATE TABLE IF NOT EXISTS teachersFirst.openings (" +
 					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
 					"    instructorID        INT(11)           NOT NULL," +
 					"    startTime           DATETIME          NOT NULL," +
@@ -80,10 +80,10 @@ public class SQLUtils {
 					"    PRIMARY KEY (recID)" +
 					");";
 			stmt = conn.prepareStatement(query);
-			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			stmt.execute();
 		
 			// Create LoggedEvents table
-			query = "CREATE TABLE teachersFirst.loggedEvents (" +
+			query = "CREATE TABLE IF NOT EXISTS teachersFirst.loggedEvents (" +
 					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
 					"    operator            INT(11)           NOT NULL," +
 					"    date                DATETIME          NOT NULL," +
@@ -91,7 +91,7 @@ public class SQLUtils {
 					"    PRIMARY KEY (recID)" +
 					");";
 			stmt = conn.prepareStatement(query);
-			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			stmt.execute();
 			
 			return true;
 		} catch (SQLException e) {

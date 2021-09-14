@@ -1,6 +1,7 @@
 -- Set up database:
 
 CREATE SCHEMA teachersFirst;
+CREATE SCHEMA IF NOT EXISTS teachersFirst;
 USE teachersFirst;
 
 -- Default Admin Account (be sure to change the password 'abcDEF123'):
