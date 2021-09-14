@@ -9,6 +9,97 @@ public class SQLUtils {
 
 	private static final Logger logger = LogManager.getLogger();
 
+	public static boolean buildDatabase(Connection conn) {
+		// 
+		// 
+		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		logger.debug("  ATTEMPTING TO BUILD DATABASE FROM SCRATCH");
+		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		
+		String query = "";
+		PreparedStatement stmt;
+		try {
+			// Create schema			
+			query = "CREATE SCHEMA teachersFirst;";
+			stmt = conn.prepareStatement(query);
+			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			
+			// Create Members table
+			query = "CREATE TABLE teachersFirst.members (" +
+					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
+					"    loginName           VARCHAR(40)       NOT NULL," +
+					"    passwordHash        CHAR(40)          DEFAULT NULL," +
+					"    token               CHAR(40)          DEFAULT NULL," +
+					"    displayName         VARCHAR(60)       NOT NULL," +
+					"    credits             FLOAT             NOT NULL DEFAULT 0," +
+					"    birthdate           DATE              NOT NULL DEFAULT '1800-01-01'," +
+					"    gender              VARCHAR(1)        NOT NULL DEFAULT ''," +
+					"    selfIntroduction    VARCHAR(800)      NOT NULL DEFAULT ''," +
+					"    instructorNotes     VARCHAR(800)      NOT NULL DEFAULT ''," +
+					"    phone1              VARCHAR(20)       NOT NULL DEFAULT ''," +
+					"    phone2              VARCHAR(20)       NOT NULL DEFAULT ''," +
+					"    email               VARCHAR(40)       NOT NULL DEFAULT ''," +
+					"    isAdmin             TINYINT(1)        NOT NULL DEFAULT 0," +
+					"    isInstructor        TINYINT(1)        NOT NULL DEFAULT 0," +
+					"    isStudent           TINYINT(1)        NOT NULL DEFAULT 0," +
+					"    isDeleted           TINYINT(1)        NOT NULL DEFAULT 0," +
+					"    PRIMARY KEY (recID)," +
+					"    UNIQUE KEY loginName_UNIQUE (loginName)" +
+					");";
+			stmt = conn.prepareStatement(query);
+			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			
+			// Create default Superuser
+			query = "INSERT INTO teachersFirst.members" + 
+					"	(loginName, passwordHash, displayName, birthdate, instructorNotes, isAdmin, isInstructor, isStudent)" +
+					"	VALUES ('superuser', SHA1('password'), 'Superuser', '1800-01-01', " +
+					"		'This user has authority to perform administrative actions and cannot be deleted.', 1, 0, 0);";
+			stmt = conn.prepareStatement(query);
+			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+		
+			// Create Appointments table
+			query = "CREATE TABLE teachersFirst.appointments (" +
+					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
+					"    studentID           INT(11)           NOT NULL," +
+					"    instructorID        INT(11)           NOT NULL," +
+					"    startTime           DATETIME          NOT NULL," +
+					"    endTime             DATETIME          NOT NULL," +
+					"    schedulingVerified  TINYINT(1)        NOT NULL DEFAULT 0," +
+					"    completionState     TINYINT(1)        NOT NULL DEFAULT -1," +
+					"    PRIMARY KEY (recID)" +
+					");";
+			stmt = conn.prepareStatement(query);
+			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+		
+			// Create Openings table
+			query = "CREATE TABLE teachersFirst.openings (" +
+					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
+					"    instructorID        INT(11)           NOT NULL," +
+					"    startTime           DATETIME          NOT NULL," +
+					"    endTime             DATETIME          NOT NULL," +
+					"    PRIMARY KEY (recID)" +
+					");";
+			stmt = conn.prepareStatement(query);
+			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+		
+			// Create LoggedEvents table
+			query = "CREATE TABLE teachersFirst.loggedEvents (" +
+					"    recID               INT(11)           NOT NULL AUTO_INCREMENT," +
+					"    operator            INT(11)           NOT NULL," +
+					"    date                DATETIME          NOT NULL," +
+					"    message             VARCHAR(200)      NOT NULL," +
+					"    PRIMARY KEY (recID)" +
+					");";
+			stmt = conn.prepareStatement(query);
+			if (!stmt.execute()) throw new SQLException("Failed to execute query.");
+			
+			return true;
+		} catch (SQLException e) {
+			logger.error("SQL Exception caught in BuildDatabase: " + query, e);
+			return false;
+		}
+	}
+
 	public static Connection connect(String initParams) {
 		// This has been turned off because it's a security risk (the password is in the initParams)
 		//logger.debug("Connecting to " + initParams + "...");
