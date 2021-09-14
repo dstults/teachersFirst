@@ -1,6 +1,6 @@
 -- Set up database:
 
-CREATE DATABASE teachersFirst;
+CREATE SCHEMA teachersFirst;
 USE teachersFirst;
 
 -- Default Admin Account (be sure to change the password 'abcDEF123'):
@@ -8,21 +8,16 @@ CREATE USER 'teachersFirst'@'%' IDENTIFIED BY 'abcDEF123';
 GRANT ALL PRIVILEGES ON *.* to 'teachersFirst'@'%' WITH GRANT OPTION;
 
 
-CREATE TABLE keepalive (
-    recID               INT               NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (recID)
-);
-INSERT INTO keepalive VALUES ();
-
-
 CREATE TABLE members (
-    recID               INT               NOT NULL AUTO_INCREMENT,
+    recID               INT(11)           NOT NULL AUTO_INCREMENT,
     loginName           VARCHAR(40)       NOT NULL,
     passwordHash        CHAR(40)          DEFAULT NULL,
     token               CHAR(40)          DEFAULT NULL,
     displayName         VARCHAR(60)       NOT NULL,
+    credits             FLOAT             NOT NULL,
     birthdate           DATE              NOT NULL,
     gender              VARCHAR(1)        NOT NULL,
+    selfIntroduction    VARCHAR(800)      NOT NULL,
     instructorNotes     VARCHAR(800)      NOT NULL,
     phone1              VARCHAR(20)       NOT NULL,
     phone2              VARCHAR(20)       NOT NULL,
@@ -30,42 +25,36 @@ CREATE TABLE members (
     isAdmin             TINYINT(1)        NOT NULL DEFAULT 0,
     isInstructor        TINYINT(1)        NOT NULL DEFAULT 0,
     isStudent           TINYINT(1)        NOT NULL DEFAULT 0,
+    isDeleted           TINYINT(1)        NOT NULL DEFAULT 0,
     PRIMARY KEY (recID),
-    CONSTRAINT loginName_UNIQUE UNIQUE (loginName)
+    UNIQUE KEY loginName_UNIQUE (loginName)
 );
 
 
 CREATE TABLE appointments (
-    recID               INT               NOT NULL AUTO_INCREMENT,
-    studentID           INT               NOT NULL,
-    instructorID        INT               NOT NULL,
+    recID               INT(11)           NOT NULL AUTO_INCREMENT,
+    studentID           INT(11)           NOT NULL,
+    instructorID        INT(11)           NOT NULL,
     startTime           DATETIME          NOT NULL,
     endTime             DATETIME          NOT NULL,
+    schedulingVerified  TINYINT(1)        NOT NULL DEFAULT 0,
+    completionState     TINYINT(1)        NOT NULL DEFAULT -1,
     PRIMARY KEY (recID)
 );
 
 
 CREATE TABLE openings (
-    recID               INT               NOT NULL AUTO_INCREMENT,
-    instructorID        INT               NOT NULL,
+    recID               INT(11)           NOT NULL AUTO_INCREMENT,
+    instructorID        INT(11)           NOT NULL,
     startTime           DATETIME          NOT NULL,
     endTime             DATETIME          NOT NULL,
     PRIMARY KEY (recID)
 );
 
 
-CREATE TABLE services (
-    recID               INT               NOT NULL AUTO_INCREMENT,
-    name                VARCHAR(45)       NOT NULL,
-    description         VARCHAR(200)      NOT NULL,
-    instructors         VARCHAR(45)       NOT NULL,
-    PRIMARY KEY (recID)
-);
-
-
 CREATE TABLE loggedEvents (
-    recID               INT               NOT NULL AUTO_INCREMENT,
-    operator            INT               NOT NULL,
+    recID               INT(11)           NOT NULL AUTO_INCREMENT,
+    operator            INT(11)           NOT NULL,
     date                DATETIME          NOT NULL,
     message             VARCHAR(200)      NOT NULL,
     PRIMARY KEY (recID)
