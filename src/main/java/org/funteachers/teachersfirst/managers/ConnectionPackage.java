@@ -48,10 +48,14 @@ public class ConnectionPackage {
 			if (this.connection != null) {
 				logger.warn("====================================== Warning");
 				logger.warn("|  WARNING, DATABASE NOT BUILT YET!  | Warning");
+				logger.warn("|    Attempting auto-build......     | Warning");
 				logger.warn("====================================== Warning");
-				System.out.println("ConnectionPackage initialized() new connection but found no schema!");
-				this.connectionStatusMessage = "WARNING: Database not built yet.";
-				return;
+				System.out.println("ConnectionPackage initialized() new connection but found no schema! Attempting auto-build...");
+				if (!SQLUtils.buildDatabase(this.connection)) {
+					this.connectionStatusMessage = "WARNING: Database not built yet, but unable to build.";
+					return;	
+				}
+				// else: build successful, continue to link up DAOs
 			} else {
 				logger.error("===================================== Error");
 				logger.error("| ERROR CONNECTING TO SQL DATABASE! | Error");
