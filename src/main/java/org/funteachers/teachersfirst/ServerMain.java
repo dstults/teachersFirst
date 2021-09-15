@@ -2,6 +2,7 @@ package org.funteachers.teachersfirst;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,7 +31,17 @@ public class ServerMain extends HttpServlet {
 	private static final String RESOURCES_DIR = "/WEB-INF/classes";
 
 	// Public
-	public static final Logger logger = LogManager.getLogger();
+	public static Logger logger; // = LogManager.getLogger();
+
+	public ServerMain() {
+
+		// Set up logger
+		String path = "/usr/share/tomcat9/logs";
+		if (!Files.exists(Paths.get(path))) path = "/var/log/tomcat9/";
+		System.setProperty("logfile.name", path);
+		ServerMain.logger = LogManager.getLogger();
+
+	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
