@@ -1,8 +1,8 @@
 package org.funteachers.teachersfirst.actions;
 
-import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import org.funteachers.teachersfirst.*;
@@ -31,11 +31,11 @@ public class NewOpeningsAction extends ActionRunner {
 			instructorIdInt = 0;
 		}
 		final boolean instructorExists = this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt) != null;
-		String startDateString = QueryHelpers.getPost(request, "startDate");
-		String endDateString = QueryHelpers.getPost(request, "endDate");
-		String daysOfWeekString = QueryHelpers.getPost(request, "daysOfWeek").toLowerCase(); // SuMoTuWdThFrSa
-		String startTimeString = QueryHelpers.getPost(request, "startTime");
-		String endTimeString = QueryHelpers.getPost(request, "endTime");
+		final String startDateString = QueryHelpers.getPost(request, "startDate");
+		final String endDateString = QueryHelpers.getPost(request, "endDate");
+		final String daysOfWeekString = QueryHelpers.getPost(request, "daysOfWeek").toLowerCase(); // SuMoTuWdThFrSa
+		final String startTimeString = QueryHelpers.getPost(request, "startTime");
+		final String endTimeString = QueryHelpers.getPost(request, "endTime");
 
 		final String retryString = "instructorId=" + instructorIdString + "&startDate=" + startDateString + "&endDate=" + endDateString + "&daysOfWeek=" + daysOfWeekString + "&startTime=" + startTimeString + "&endTime=" + endTimeString;
 
@@ -103,28 +103,41 @@ public class NewOpeningsAction extends ActionRunner {
 		}
 
 		logger.debug("Attempting to create batch openings ...");
-		DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 		
-		LocalDate startDate = LocalDate.parse(startDateString, formatter);
-		LocalDate today = startDate.plusDays(0);
-		LocalDate endDate = LocalDate.parse(endDateString, formatter);
-		Timestamp startDateTime;
-		Timestamp endDateTime;
+		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 		
+		final LocalDate startDate = LocalDate.parse(startDateString, formatter);
+		final LocalDate endDate = LocalDate.parse(endDateString, formatter);
 
 		if (endDate.compareTo(startDate) < 0) {
 			this.sendPostReply("/make_openings", retryString, "End date can't be before the start date.");
 			return;
 		}
 
-		//logger.debug("Start: " + startDate.toString());
-		//logger.debug("End:   " + endDate.toString());
+		// Temp vars, used to test addDay and in while loop:
+		LocalDate today = startDate.plusDays(0);
+		LocalDateTime startDateTime = today.atTime(startHour, startMinute);
+		LocalDateTime endDateTime = today.atTime(endHour, endMinute);
+		final boolean addDay = endDateTime.compareTo(startDateTime) < 0;
+		if (addDay) endDateTime = endDateTime.plusDays(1);
+
+		// Finally, test to make sure span is not greater than 14 hours or equal to zero, (note: it
+		// can't be "less than" zero because a day is added, just to be safe, still using lte):
+		long hours = ChronoUnit.HOURS.between(startDateTime, endDateTime);
+		if (hours >= 14) {
+			this.sendPostReply("/make_openings", retryString, "End time can't be more than 14 hours after the start time.");
+			return;
+		} else if (hours <= 0) {
+			this.sendPostReply("/make_openings", retryString, "Time span must be greater than zero hours.");
+			return;
+		}
+
 		while (today.compareTo(endDate) <= 0) {
-			//logger.debug("Today: " + today.toString());
 			dayOfWeek = today.getDayOfWeek();
 			if (openedDays.contains(dayOfWeek)) {
-				startDateTime = DateHelpers.toTimestamp(today.atTime(startHour, startMinute));
-				endDateTime = DateHelpers.toTimestamp(today.atTime(endHour, endMinute));
-				openingDAO.insert(new Opening(instructorIdInt, startDateTime, endDateTime));
+				startDateTime = today.atTime(startHour, startMinute);
+				endDateTime = today.atTime(endHour, endMinute);
+				if (addDay) endDateTime = endDateTime.plusDays(1);
+				openingDAO.insert(new Opening(instructorIdInt, DateHelpers.toTimestamp(startDateTime), DateHelpers.toTimestamp(endDateTime)));
 			}
 			today = today.plusDays(1);
 		}

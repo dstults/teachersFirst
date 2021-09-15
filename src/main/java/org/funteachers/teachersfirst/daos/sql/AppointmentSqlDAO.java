@@ -1,6 +1,7 @@
 package org.funteachers.teachersfirst.daos.sql;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.apache.logging.log4j.*;
@@ -93,9 +94,30 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Appointment> retrieveAll() {
 		logger.debug("Getting all appointments...");
 		
-		String query = "SELECT * FROM appointments ORDER BY startTime;";
+		String query = "SELECT * FROM appointments ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("No appointments found!");
+			return null;
+		}
+
+		List<Appointment> appointments = new ArrayList<>();
+		for (SQLRow row : rows) {
+			Appointment appointment = convertRowToAppointment(row);
+			appointments.add(appointment);
+		}
+		return appointments;
+	}
+	
+	public List<Appointment> retrieveAllBetweenDatetimeAndDatetime(LocalDateTime start, LocalDateTime end) {
+		final String startStringSql = DateHelpers.toSqlDatetimeString(start);
+		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
+		logger.debug("Getting all sppointments between {} and {}...", startStringSql, endStringSql);
+		
+		String query = "SELECT * FROM appointments WHERE startTime >= ? AND endTime <= ? ORDER BY startTime, instructorID, endTime;";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, startStringSql, endStringSql);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No appointments found!");
 			return null;
