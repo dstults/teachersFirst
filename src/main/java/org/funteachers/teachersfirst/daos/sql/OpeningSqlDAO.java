@@ -79,7 +79,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Opening> retrieveAll() {
 		logger.debug("Getting all openings...");
 		
-		String query = "SELECT * FROM openings ORDER BY startTime;";
+		String query = "SELECT * FROM openings ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -100,7 +100,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
 		logger.debug("Getting all openings between {} and {}...", startStringSql, endStringSql);
 		
-		String query = "SELECT * FROM openings WHERE startTime >= ? AND endTime <= ? ORDER BY startTime;";
+		String query = "SELECT * FROM openings WHERE startTime >= ? AND endTime <= ? ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query, startStringSql, endStringSql);
 		if (rows == null || rows.size() == 0) {

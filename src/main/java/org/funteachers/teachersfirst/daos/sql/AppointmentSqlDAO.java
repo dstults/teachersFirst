@@ -94,7 +94,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Appointment> retrieveAll() {
 		logger.debug("Getting all appointments...");
 		
-		String query = "SELECT * FROM appointments ORDER BY startTime;";
+		String query = "SELECT * FROM appointments ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -115,7 +115,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
 		logger.debug("Getting all sppointments between {} and {}...", startStringSql, endStringSql);
 		
-		String query = "SELECT * FROM appointments WHERE startTime >= ? AND endTime <= ? ORDER BY startTime;";
+		String query = "SELECT * FROM appointments WHERE startTime >= ? AND endTime <= ? ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query, startStringSql, endStringSql);
 		if (rows == null || rows.size() == 0) {
