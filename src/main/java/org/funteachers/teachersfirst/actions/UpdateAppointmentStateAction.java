@@ -32,7 +32,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.sendJsonMessage("Please sign in.");
+			this.sendJsonMessage("Please sign in.", false);
 			return;
 		}
 
@@ -42,35 +42,35 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 		try {
 			appointmentIdInt = Integer.parseInt(appointmentIdString);
 		} catch (NumberFormatException e) {
-			this.sendJsonMessage("Not a valid appointment ID.");
+			this.sendJsonMessage("Not a valid appointment ID.", false);
 			return;
 		}
 
 		// Verify connection to DB
 		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO();
 		if (appointmentDAO == null) {
-			this.sendJsonMessage("Could not connect to database, please try again.");
+			this.sendJsonMessage("Could not connect to database, please try again.", false);
 			return;
 		}
 
 		// Verify appointment exists
 		final Appointment appointment = appointmentDAO.retrieveByID(appointmentIdInt);
 		if (appointment == null) {
-			this.sendJsonMessage("Appointment " + appointmentIdString + " not found!");
+			this.sendJsonMessage("Appointment " + appointmentIdString + " not found!", false);
 			return;
 		}
 
 		// Appointment must be in past unless we are cancelling
 		if (newState != Appointment.STATE_CANCELLED) {
 			if (!DateHelpers.isInThePast(appointment.getEndTime().toLocalDateTime())) {
-				this.sendJsonMessage("Cannot update state of appointments that haven't happened yet.");
+				this.sendJsonMessage("Cannot update state of appointments that haven't happened yet.", false);
 				return;
 			}
 		}
 
 		// Make sure is admin or instructor modifying own class
 		if (!isAdmin && !(isInstructor && appointment.getIsMyAppointment(uid))) {
-			this.sendJsonMessage("Appointment state can only be modified by admin or instructor of class.");
+			this.sendJsonMessage("Appointment state can only be modified by admin or instructor of class.", false);
 			return;
 		}
 
@@ -79,13 +79,13 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 			
 			// Must be marked as missed
 			if (appointment.getWasCompleted()) {
-				this.sendJsonMessage("Cannot refund appointments that weren't missed.");
+				this.sendJsonMessage("Cannot refund appointments that weren't missed.", false);
 				return;
 			}
 	
 			// Must not be marked as already refunded if refunding
 			if (!appointment.hasRefundableValue()) {
-				this.sendJsonMessage("Cannot double-refund appointments that were already refunded.");
+				this.sendJsonMessage("Cannot double-refund appointments that were already refunded.", false);
 				return;
 			}
 
@@ -94,7 +94,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 			// Cannot update state of appointment that was refunded
 			// Note: This is here because I want a different error message than above
 			if (!appointment.hasRefundableValue()) {
-				this.sendJsonMessage("Cannot update appointment state for appointments that were refunded.");
+				this.sendJsonMessage("Cannot update appointment state for appointments that were refunded.", false);
 				return;
 			}
 
@@ -126,7 +126,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 				operationWord = "marked as state [" + newState + "]";
 				break;
 		}
-		this.sendJsonMessage("Appointment " + appointmentIdString + " " + operationWord + "!");
+		this.sendJsonMessage("Appointment " + appointmentIdString + " " + operationWord + "!", true);
 		return;
 	}
 	

@@ -14,7 +14,7 @@ public class DeleteMemberAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.sendJsonMessage("Please sign in or register to use this feature!");
+			this.sendJsonMessage("Please sign in or register to use this feature!", false);
 			return;
 		}
 
@@ -28,13 +28,13 @@ public class DeleteMemberAction extends ActionRunner {
 		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
 		final Member member = memberDAO.retrieveByID(memberIdInt);
 		if (member == null) {
-			this.sendJsonMessage("Member %5B" + memberIdString + "%5D not found!");
+			this.sendJsonMessage("Member %5B" + memberIdString + "%5D not found!", false);
 			return;
 		}
 
 		// Make sure the person has the authority
 		if (!Permissions.MemberCanDeleteMember(this.operator, member)) {
-			this.sendJsonMessage("You are not authorized to delete member.");
+			this.sendJsonMessage("You are not authorized to delete this member.", false);
 			return;
 		}
 
@@ -44,7 +44,7 @@ public class DeleteMemberAction extends ActionRunner {
 		//logger.info(DataManager.getMemberDAO().size() + " records total");
 		logger.debug("Soft-deleted member ID: [{}]", memberIdInt);
 		
-		this.sendJsonMessage("Member %5B" + memberIdString + "%5D, deleted!");
+		this.sendJsonMessage("Member %5B" + memberIdString + "%5D, deleted!", true, "/members");
 		return;
 	}
 	

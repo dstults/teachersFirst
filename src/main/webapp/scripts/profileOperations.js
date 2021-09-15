@@ -264,9 +264,8 @@ const editCredits = async _ => {
 	
 	const response = await sendPostData('credits', proposedCredits);
 	
-	if (!response.message.includes('Success!')) {
-		addError(response.message);
-	}
+	if (!response.success) addError(response.message);
+
 	populateData();
 };
 
@@ -293,7 +292,7 @@ const getStringPromptChain = async (dataType, postVarName, initialValue, maxLeng
 	const shortenedValue = parsed.length <= maxLength ? parsed : parsed.substr(0, maxLength - 1);
 
 	const response = await sendPostData(postVarName, shortenedValue);
-	if (!response.message.includes('Success!')) {
+	if (!response.success) {
 		addError(response.message);
 		return null;
 	}

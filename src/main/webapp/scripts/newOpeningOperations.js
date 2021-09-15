@@ -78,9 +78,8 @@ const handlePost = async _ => {
 		data.append('endTime', endTime);
 	
 		const response = await sendPostFetch(data);
-		if (response) {
-			window.location.href = response.responseURL;
-		}
+		addMessage(response.message);
+		if (response.success) window.location.href = response.redirect;
 	}
 
 }
