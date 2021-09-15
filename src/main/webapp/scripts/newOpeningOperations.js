@@ -1,4 +1,30 @@
 
+let allMembers;
+
+const instructorIdSelector = document.getElementById('instructorId');
+
+fetch('/members?json').then(response => response.json()).then(data => {
+	allMembers = data;
+	populateSelectors();
+}).catch(err => console.error(err.message));
+
+const populateSelectors = _ => {
+	for (const member of allMembers) {
+		if (!member.id || !member.displayName) continue; // Must have valid data
+		if (!member.isInstructor && !member.isAdmin) continue; // Must be an instructor (or admin -- meetings!)
+		if (!isAdmin && userId !== member.id) continue; // Must be an admin or self
+		const memberOption = document.createElement('option');
+		memberOption.value = member.id;
+		memberOption.innerText = member.id + ' | ' + member.displayName;
+		instructorIdSelector.appendChild(memberOption);
+		if (userId && userId === member.id) {
+			instructorIdSelector.value = userId;
+		}
+	}
+	// Remove the blank option if valid options exist
+	if (instructorIdSelector.childElementCount > 1) instructorIdSelector.removeChild(instructorIdSelector.firstElementChild);
+};
+
 const handlePost = () => {
 	const sunday = document.getElementById('sunday').checked ? document.getElementById('sunday').value : '';
 	const monday = document.getElementById('monday').checked ? document.getElementById('monday').value : '';
