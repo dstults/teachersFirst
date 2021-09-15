@@ -12,22 +12,18 @@ public class MakeOpeningsPage extends PageLoader {
 
 	@Override
 	public void loadPage() {
-		templateDataMap.put("title", "Register");
-		String instructorIdString = QueryHelpers.getGet(request, "instructorId", String.valueOf(uid));
-		String startDateString = QueryHelpers.getGet(request, "startDate");
-		String endDateString = QueryHelpers.getGet(request, "endDate");
-		String startTimeString = QueryHelpers.getGet(request, "startTime", "12:00");
-		String endTimeString = QueryHelpers.getGet(request, "endTime", "21:00");
+		templateDataMap.put("title", "Create Openings");
 
 		// Days of Week - Data & FreeMarker
 		String daysOfWeekString = QueryHelpers.getGet(request, "daysOfWeek"); // SuMoTuWdThFrSa
-		String sundayChecked = daysOfWeekString.contains("su") ? " checked" : "";
-		String mondayChecked = daysOfWeekString.contains("mo") ? " checked" : "";
-		String tuesdayChecked = daysOfWeekString.contains("tu") ? " checked" : "";
-		String wednesdayChecked = daysOfWeekString.contains("we") ? " checked" : "";
-		String thursdayChecked = daysOfWeekString.contains("th") ? " checked" : "";
-		String fridayChecked = daysOfWeekString.contains("fr") ? " checked" : "";
-		String saturdayChecked = daysOfWeekString.contains("sa") ? " checked" : "";
+		if (daysOfWeekString.isEmpty()) daysOfWeekString = DateHelpers.getDayOfWeekStringFromToday();
+		final String sundayChecked = daysOfWeekString.contains("su") ? " checked" : "";
+		final String mondayChecked = daysOfWeekString.contains("mo") ? " checked" : "";
+		final String tuesdayChecked = daysOfWeekString.contains("tu") ? " checked" : "";
+		final String wednesdayChecked = daysOfWeekString.contains("we") ? " checked" : "";
+		final String thursdayChecked = daysOfWeekString.contains("th") ? " checked" : "";
+		final String fridayChecked = daysOfWeekString.contains("fr") ? " checked" : "";
+		final String saturdayChecked = daysOfWeekString.contains("sa") ? " checked" : "";
 		templateDataMap.put("daysOfWeek", daysOfWeekString);
 		templateDataMap.put("sundayChecked", sundayChecked);
 		templateDataMap.put("mondayChecked", mondayChecked);
@@ -36,13 +32,6 @@ public class MakeOpeningsPage extends PageLoader {
 		templateDataMap.put("thursdayChecked", thursdayChecked);
 		templateDataMap.put("fridayChecked", fridayChecked);
 		templateDataMap.put("saturdayChecked", saturdayChecked);
-
-		// FreeMarker
-		templateDataMap.put("instructorId", instructorIdString);
-		templateDataMap.put("startDate", startDateString);
-		templateDataMap.put("endDate", endDateString);
-		templateDataMap.put("startTime", startTimeString);
-		templateDataMap.put("endTime", endTimeString);
 
 		// FreeMarker Template
 		templateName = "newOpenings.ftl";
