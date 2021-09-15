@@ -1,7 +1,20 @@
 
 let allMembers;
 
-const instructorIdSelector = document.getElementById('instructorId');
+const setDefaultDates = _ => {
+};
+
+// Get inputs
+const instructorIdSelector = document.getElementById('instructor-id');
+const startDateInput = document.getElementById('start-date');
+const startTimeInput = document.getElementById('start-time');
+const endDateInput = document.getElementById('end-date');
+const endTimeInput = document.getElementById('end-time');
+
+// Set defaults
+const nowDate = new Date().toISOString().substr(0, 10);
+startDateInput.value = nowDate;
+endDateInput.value = nowDate;
 
 fetch('/members?json').then(response => response.json()).then(data => {
 	allMembers = data;
@@ -25,7 +38,10 @@ const populateSelectors = _ => {
 	if (instructorIdSelector.childElementCount > 1) instructorIdSelector.removeChild(instructorIdSelector.firstElementChild);
 };
 
-const handlePost = () => {
+const handlePost = async _ => {
+	// Ensure user has already gotten data before attempting this
+	if (!allMembers) return;
+
 	const sunday = document.getElementById('sunday').checked ? document.getElementById('sunday').value : '';
 	const monday = document.getElementById('monday').checked ? document.getElementById('monday').value : '';
 	const tuesday = document.getElementById('tuesday').checked ? document.getElementById('tuesday').value : '';
@@ -40,21 +56,31 @@ const handlePost = () => {
 		return;
 	}
 
-	const instructorId = document.getElementById('instructorId').value;
-	const startDate = document.getElementById('startDate').value;
-	const startTime = document.getElementById('startTime').value;
-	const endDate = document.getElementById('endDate').value;
-	const endTime = document.getElementById('endTime').value;
+	const instructorId = instructorIdSelector.value;
+	const startDate = startDateInput.value;
+	const startTime = startTimeInput.value;
+	const endDate = endDateInput.value;
+	const endTime = endTimeInput.value;
 
 	if (confirm('Please confirm:' + 
-			'\nInstructor ID: ' + instructorId + '   Days of the Week: ' + daysOfWeek +
+			'\nInstructor: [' + instructorId + '] ' + allMembers.find(m => m.id === parseInt(instructorId)).displayName +
+			'\nDays of the Week: ' + daysOfWeek +
 			'\nDates: ' + startDate + ' - ' + endDate +
 			'\nTimes: ' + startTime + ' - ' + endTime)) {
 
-		const xhr = new XMLHttpRequest();
-		xhr.open('POST', '/');
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
-		xhr.send('action=make_openings&instructorId=' + instructorId + '&daysOfWeek=' + daysOfWeek + '&startDate=' + startDate + '&startTime=' + startTime + '&endDate=' + endDate + '&endTime=' + endTime);
+		const data = new URLSearchParams();
+		data.append('action', 'make_openings');
+		data.append('instructorId', instructorId);
+		data.append('daysOfWeek', daysOfWeek);
+		data.append('startDate', startDate);
+		data.append('startTime', startTime);
+		data.append('endDate', endDate);
+		data.append('endTime', endTime);
+	
+		const response = await sendPostFetch(data);
+		if (response) {
+			window.location.href = response.responseURL;
+		}
 	}
+
 }

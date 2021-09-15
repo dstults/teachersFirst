@@ -8,11 +8,10 @@
 	<#elseif isAdmin || isInstructor>
 	<h1>New Opening:</h1>
 	<br>
-	<form method="post" action="/" onsubmit = "return false;">
-		<input id="actionType" type="hidden" value="make_openings">
+	<form method="post" action="/" onsubmit="return false;">
 		<div class="form-grid-full-rows">
 			<p class="label">Instructor ID:</p>
-			<select id="instructorId" value="null">
+			<select id="instructor-id" value="null">
 				<option value="null">-</option>
 			</select>
 		</div>
@@ -36,13 +35,13 @@
 		<br>
 		<div class="form-grid-datetime-rows">
 			<p class="label">Start Date: </p>
-			<input type="date" id="startDate" value="${startDate}">
+			<input type="date" id="start-date">
 			<p class="label">Start Time: </p>
-			<input type="time" id="startTime" value="${startTime}">
+			<input type="time" id="start-time" value="12:00">
 			<p class="label">End Date: </p>
-			<input type="date" id="endDate" value="${endDate}">
+			<input type="date" id="end-date">
 			<p class="label">End Time: </p>
-			<input type="time" id="endTime" value="${endTime}">
+			<input type="time" id="end-time" value="21:00">
 		</div>
 		<br>
 		<div class="form-flex-row">
@@ -54,6 +53,9 @@
 	</#if>
 </div>
 </body>
+<#if userId gt 0>
 <script src="/dynamic.js"></script>
-<#if userId gt 0><script src="/scripts/newOpeningOperations.js"></script></#if>
+<script src="/scripts/utils.js"></script>
+<script src="/scripts/newOpeningOperations.js"></script>
+</#if>
 </html>
