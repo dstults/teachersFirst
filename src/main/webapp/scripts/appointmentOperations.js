@@ -15,7 +15,7 @@ const pastRows = 15;
 const populateData = async _ => {
 	//addMessage('Fetching appointment data.');
 	try {
-		const response = await fetch('https://funteachers.org/appointments?json');
+		const response = await fetch('/appointments?json');
 		if (response.ok) {
 			const json = await response.json();
 			[ allFutureData, allPastData ] = json;

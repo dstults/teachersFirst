@@ -41,14 +41,29 @@ public class ConnectionPackage {
 	}
 
 	public void initialize() {
-		String dbParameters = GlobalConfig.getInitParams();
-		this.connection = SQLUtils.connect(dbParameters);
+		this.connection = SQLUtils.connect(GlobalConfig.getInitParams());
 		if (this.connection == null) {
-			System.out.println("===================================== Error");
-			System.out.println("| ERROR CONNECTING TO SQL DATABASE! | Error");
-			System.out.println("===================================== Error");
-			logger.warn("ConnectionPackage failed to initialize() new connection!");
-			return;
+			this.isConnectionHealthy = false;
+			this.connection = SQLUtils.connect(GlobalConfig.getNewInitParams());
+			if (this.connection != null) {
+				logger.warn("====================================== Warning");
+				logger.warn("|  WARNING, DATABASE NOT BUILT YET!  | Warning");
+				logger.warn("|    Attempting auto-build......     | Warning");
+				logger.warn("====================================== Warning");
+				System.out.println("ConnectionPackage initialized() new connection but found no schema! Attempting auto-build...");
+				if (!SQLUtils.buildDatabase(this.connection)) {
+					this.connectionStatusMessage = "WARNING: Database not built yet, but unable to build.";
+					return;	
+				}
+				// else: build successful, continue to link up DAOs
+			} else {
+				logger.error("===================================== Error");
+				logger.error("| ERROR CONNECTING TO SQL DATABASE! | Error");
+				logger.error("===================================== Error");
+				System.out.println("ConnectionPackage failed to initialize() new connection!");
+				this.connectionStatusMessage = "ERROR: Database cannot be contacted.";
+				return;
+			}
 		}
 
 		memberDAO = new MemberSqlDAO(this.connection);
@@ -59,6 +74,9 @@ public class ConnectionPackage {
 		allDAOs.add(openingDAO);
 		loggedEventDAO = new LoggedEventSqlDAO(this.connection);
 		allDAOs.add(loggedEventDAO);
+
+		this.isConnectionHealthy = true;
+		this.connectionStatusMessage = "good";
 		
 	}
 
@@ -124,11 +142,6 @@ public class ConnectionPackage {
 	}
 
 	public boolean validate() {
-		if (this.connection == null) {
-			logger.warn("Attempted to validate non-initialized SQL connections. Force initializing!");
-			this.initialize();
-		}
-
 		this.isConnectionHealthy = true;
 		String comma = "";
 		if (this.connection == null) {
@@ -136,6 +149,8 @@ public class ConnectionPackage {
 			logger.error("ERROR: Failed to establish database connection!");
 			this.isConnectionHealthy = false;
 			comma = ",";
+			// If this error is thrown, all of the following must be thrown -- they're just redundant.
+			return this.isConnectionHealthy;
 		}
 		if (this.memberDAO == null) {
 			this.connectionStatusMessage += comma + "memberDAO == null";
@@ -161,7 +176,7 @@ public class ConnectionPackage {
 			this.isConnectionHealthy = false;
 			comma = ",";
 		}
-		if (this.memberDAO.retrieveByIndex(0) == null) {
+		if (this.memberDAO != null && this.memberDAO.retrieveByIndex(0) == null) {
 			this.connectionStatusMessage += comma + "memberDAO.retrieveByIndex(0) == null";
 			logger.error("ERROR: Database connection validation FAILED (memberDAO.retrieveByIndex(0) == null).");
 			this.isConnectionHealthy = false;

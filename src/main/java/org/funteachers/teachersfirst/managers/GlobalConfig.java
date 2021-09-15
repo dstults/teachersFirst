@@ -2,6 +2,7 @@ package org.funteachers.teachersfirst.managers;
 
 import java.io.*;
 
+import org.funteachers.teachersfirst.ServerMain;
 //import org.apache.logging.log4j.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -85,9 +86,20 @@ public class GlobalConfig {
 	}
 
 	public static String getInitParams() {
+		if (databaseSchema.equals("")) {
+			ServerMain.logger.warn("!!!!!!!! DB init params missing schema!");
+			return getNewInitParams();
+		}
+
 		return "jdbc:mariadb://" + databaseHostname + ":" + databasePort + "/" + databaseSchema +
 				"?useSSL=false&allowPublicKeyRetrieval=true" +
 				"&user=" + databaseUserID + "&password=" + databasePassword;
+	}
+
+	public static String getNewInitParams() {
+		return "jdbc:mariadb://" + databaseHostname + ":" + databasePort +
+			"?useSSL=false&allowPublicKeyRetrieval=true" +
+			"&user=" + databaseUserID + "&password=" + databasePassword;
 	}
 
 }

@@ -109,9 +109,12 @@ public class PlannedAppointment {
 	}
 
 	public boolean hasConflictWithAppointments(List<Appointment> list) {
-		for(Appointment iApt : list) {
-			//if (hasConflictWithAppointment(iApt, false)) return true;
-			if (hasConflictWithAppointment(iApt)) return true;
+		// Might be very first appointment, in which case this is null
+		if (list != null && list.size() > 0) {
+			for(Appointment iApt : list) {
+				//if (hasConflictWithAppointment(iApt, false)) return true;
+				if (hasConflictWithAppointment(iApt)) return true;
+			}
 		}
 
 		this.result = "OK!";

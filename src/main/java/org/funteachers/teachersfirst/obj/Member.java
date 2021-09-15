@@ -246,8 +246,10 @@ public class Member implements IJsonnable {
 	public void setCredits(ConnectionPackage cp, int operator, String operatorName, String method, float credits) {
 		float oldCredits = this.credits;
 		this.credits = credits;
-		cp.getMemberDAO().update(this); // Only try to log below if this succeeds.
-		LoggedEvent.log(cp, operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
+		if (cp != null && cp.getIsConnectionHealthy()) {
+			cp.getMemberDAO().update(this);
+			LoggedEvent.log(cp, operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
+		}
 	}
 
 	public void setBirthdate(int years, int months, int days, int hours, int minutes, int seconds) {
@@ -314,7 +316,7 @@ public class Member implements IJsonnable {
 	@Override
 	public String toString() {
 		String recordLogin = "(R:" + this.getRecID() + "/L:" + this.getLoginName() + ") ";
-		String permissions = (this.getIsStudent() ? "1" : "0") + "-" + (this.getIsInstructor() ? "1" : "0") + "-"	+ (this.getIsAdmin() ? "1" : "0");
+		String permissions = (this.getIsAdmin() ? "1" : "0") + "-" + (this.getIsInstructor() ? "1" : "0") + "-" + (this.getIsStudent() ? "1" : "0");
 		String ageGenderPermissions = " (A:" + this.getAge() + "/G:" + this.getGender()	+ "/P:" + permissions + ")";
 
 		return recordLogin + this.getDisplayName() + ageGenderPermissions;
@@ -330,6 +332,7 @@ public class Member implements IJsonnable {
 		if (this.recID != other.recID) return false;
 		if (!this.loginName.equals(other.loginName)) return false;
 		if (!this.displayName.equals(other.displayName)) return false;
+		if (this.credits != other.credits) return false;
 		if (!this.birthdate.equals(other.birthdate)) return false;
 		if (!this.gender.equals(other.gender)) return false;
 		if (!this.selfIntroduction.equals(other.selfIntroduction)) return false;

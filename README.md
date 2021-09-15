@@ -62,4 +62,8 @@ Admin Viewing Appointments:
  - v0.9 Attractive enhancements and security
 
 ## Under contruction:
- - v1.0 Administrative additions (create, modify and disable other accounts)
+ - v1.0 Administrative add-ons, staging server rollout
+
+## Future features:
+ - v1.1 Polish everything, fill out docs, total automation
+ - v1.2 Multiple students per appointment, contract/payment notes

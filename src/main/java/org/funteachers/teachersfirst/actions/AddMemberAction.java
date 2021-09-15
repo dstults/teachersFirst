@@ -63,6 +63,14 @@ public class AddMemberAction extends ActionRunner {
 			return;
 		}
 
+		// Finally, check DB if it's up:
+		if (this.connectionPackage == null || !this.connectionPackage.getIsConnectionHealthy()) {
+			this.sendPostReply(retryPage, retryString, "Sorry, there's been a catastrophic database failure. Please try again later.");
+			return;
+		}
+
+		// All checks passed, start the action...
+
 		logger.debug(displayName + " attempting to register...");
 		
 		// Making sure unique login name

@@ -101,7 +101,7 @@ public class OpeningsPage extends PageLoader {
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
 		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
 		boolean noConnection = this.connectionPackage.getConnection() == null || openingDAO == null;
-		boolean noOpenings = openingDAO.retrieveByIndex(0) == null;
+		boolean noOpenings = openingDAO != null && openingDAO.retrieveByIndex(0) == null;
 		if (noConnection || noOpenings) {
 			templateName = "openings.ftl";
 			templateDataMap.put("batchEnabled", false);
