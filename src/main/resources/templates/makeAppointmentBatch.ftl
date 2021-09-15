@@ -59,5 +59,5 @@
 </div>
 </body>
 <script src="/dynamic.js"></script>
-<script src="/scripts/batchAppointmentOperations.js"></script>
+<#if userId gt 0><script src="/scripts/batchAppointmentOperations.js"></script></#if>
 </html>
