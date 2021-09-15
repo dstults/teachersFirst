@@ -96,11 +96,13 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 
 	public List<Opening> retrieveAllBetweenDatetimeAndDatetime(LocalDateTime start, LocalDateTime end) {
-		logger.debug("Getting all openings...");
+		final String startStringSql = DateHelpers.toSqlDatetimeString(start);
+		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
+		logger.debug("Getting all openings between {} and {}...", startStringSql, endStringSql);
 		
 		String query = "SELECT * FROM openings WHERE startTime >= ? AND endTime <= ? ORDER BY startTime;";
 
-		List<SQLRow> rows = SQLUtils.executeSql(conn, query, DateHelpers.toSqlDatetimeString(start), DateHelpers.toSqlDatetimeString(end));
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, startStringSql, endStringSql);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No openings found!");
 			return null;
