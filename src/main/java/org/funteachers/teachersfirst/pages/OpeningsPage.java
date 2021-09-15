@@ -79,7 +79,8 @@ public class OpeningsPage extends PageLoader {
 			today = new PrettifiedDay(dateName, dateColor, openingsToday);
 			thisWeek.add(today);
 
-			// scan all openings for any that fall within the day
+			// Scan all openings for any that fall within the day:
+			// TODO: This can be made more efficient by pulling the openings out of the allOpenings as they get used
 			for (Opening iOpening : allOpenings) {
 				if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
 
@@ -100,8 +101,10 @@ public class OpeningsPage extends PageLoader {
 					);
 				}
 			}
+
+			// Letting the SQL database take care of this, so commented out:
+			//today.sortOpenings();
 		}
-		
 
 		// Go
 		if (this.jsonMode) {
