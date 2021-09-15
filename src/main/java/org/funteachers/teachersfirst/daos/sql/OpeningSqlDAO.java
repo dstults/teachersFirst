@@ -1,6 +1,7 @@
 package org.funteachers.teachersfirst.daos.sql;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.apache.logging.log4j.*;
@@ -81,6 +82,25 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		String query = "SELECT * FROM openings ORDER BY startTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("No openings found!");
+			return null;
+		}
+
+		List<Opening> openings = new ArrayList<>();
+		for (SQLRow row : rows) {
+			Opening opening = convertRowToOpening(row);
+			openings.add(opening);
+		}
+		return openings;
+	}
+
+	public List<Opening> retrieveAllBetweenDatetimeAndDatetime(LocalDateTime start, LocalDateTime end) {
+		logger.debug("Getting all openings...");
+		
+		String query = "SELECT * FROM openings WHERE startTime >= ? AND endTime <= ? ORDER BY startTime;";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, DateHelpers.toSqlDatetimeString(start), DateHelpers.toSqlDatetimeString(end));
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No openings found!");
 			return null;

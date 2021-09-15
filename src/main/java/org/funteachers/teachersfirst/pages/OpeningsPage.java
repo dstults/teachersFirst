@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.daos.sql.OpeningSqlDAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -83,47 +84,46 @@ public class OpeningsPage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Openings");
-
 		final String instructorName = QueryHelpers.getGet(request, "instructorName").toLowerCase();
 
-		LocalDateTime sundayTime = DateHelpers.previousSunday();
-		LocalDateTime saturdayTime = DateHelpers.nextSaturday();
+		// Get first and last days
 		final int weeksToShow = 5;
-		saturdayTime = saturdayTime.plusWeeks(weeksToShow - 1); // -1 because base 0
-		String sundayString = sundayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-		String saturdayString = saturdayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		final LocalDateTime startDateTime = DateHelpers.previousSunday();
+		final LocalDateTime endDateTime = DateHelpers.nextSaturday().plusWeeks(weeksToShow - 1); // -1 because base 0
+		final String startString = startDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		final String endString = endDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
-		//logger.debug(DateHelpers.getDateTimeString());
-		//logger.debug(DateHelpers.getSystemTimeZone());
-		//logger.debug(sundayTime.toString());
-		//logger.debug(saturdayTime.toString());
-
+		// Prepare "week" data for final or short-circuit response
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
-		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
+
+		// Test database connection and short-circuit if not connected
+		final OpeningSqlDAO openingDAO = (OpeningSqlDAO) this.connectionPackage.getOpeningDAO();
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
 		boolean noConnection = this.connectionPackage.getConnection() == null || openingDAO == null;
 		boolean noOpenings = openingDAO != null && openingDAO.retrieveByIndex(0) == null;
 		if (noConnection || noOpenings) {
 			templateName = "openings.ftl";
 			templateDataMap.put("batchEnabled", false);
-			templateDataMap.put("startDate", sundayString);
-			templateDataMap.put("endDate", saturdayString);
+			templateDataMap.put("startDate", startString);
+			templateDataMap.put("endDate", endString);
 			templateDataMap.put("weeks", weeks);
 			if (noConnection) {
 				templateDataMap.put("message", "Failed to contact database, please try again.");
 			} else if (noOpenings) {
-				templateDataMap.put("message", "No opening data.");
+				templateDataMap.put("message", "No openings found.");
 			}
 			trySendResponse();
 			return;
 		}
 
-		final List<Opening> allOpenings = openingDAO.retrieveAll();
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+		// Get all openings from the database
+		final List<Opening> allOpenings = openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime);
+
+		// Prepare iterative variables for constructing "prettified" openings
 		List<PrettifiedDay> thisWeek = null;
 		PrettifiedDay today;
 		LocalDateTime startTime;
 		LocalDateTime endTime;
-
 		for (int day = 0; day < 7 * weeksToShow; day++) {
 			// once every week
 			if (day % 7 == 0) {
@@ -131,7 +131,7 @@ public class OpeningsPage extends PageLoader {
 				weeks.add(thisWeek);
 			}
 			// get specific start and end milliseconds of scanned day
-			startTime = sundayTime.plusDays(day);
+			startTime = startDateTime.plusDays(day);
 			endTime = startTime.plusDays(1).minusSeconds(1);
 			//logger.debug(startTime.toString());
 			//logger.debug(endTime.toString());
@@ -186,8 +186,8 @@ public class OpeningsPage extends PageLoader {
 			templateName = "openings.ftl";
 			boolean enableBatch = !GlobalConfig.instructorAdminMakeAppointmentsRequiresOpening && (isAdmin || isInstructor);
 			templateDataMap.put("batchEnabled", enableBatch);
-			templateDataMap.put("startDate", sundayString);
-			templateDataMap.put("endDate", saturdayString);
+			templateDataMap.put("startDate", startString);
+			templateDataMap.put("endDate", endString);
 			templateDataMap.put("weeks", weeks);
 			trySendResponse();
 		}
