@@ -89,7 +89,9 @@ public class OpeningsPage extends PageLoader {
 		// Get first and last days
 		final int weeksToShow = 5;
 		final LocalDateTime startDateTime = DateHelpers.previousSunday();
-		final LocalDateTime endDateTime = DateHelpers.nextSaturday().plusWeeks(weeksToShow - 1); // -1 because base 0
+		// endDateTime => -1 because Sunday=0 and Saturday=0 is head and tail of same week
+		// endDateTime => +1s because nextSaturday is 23:59:59 and we need to include 00:00:00 of the next day
+		final LocalDateTime endDateTime = DateHelpers.nextSaturday().plusWeeks(weeksToShow - 1).plusSeconds(1);
 		final String startString = startDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		final String endString = endDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
