@@ -227,24 +227,7 @@ const sendPostData = async (varName, varValue) => {
 	data.append('memberId', memberId);
 	data.append(varName, encodeURIComponent(varValue));
 
-	let jsonReply;
-	try {
-		const response = await fetch('/', {
-			method: 'POST',
-			cache: 'no-cache',
-			body: data
-		});
-
-		if (response.ok) {
-			return await response.json();
-		} else {
-			throw new Error('Status code [' + response.status + ']: ' + response.statusText);
-		}
-	} catch (err) {
-		addError(err.message);
-	}
-
-	return undefined;
+	return sendPostFetch(data);
 };
 
 // Set up credits
@@ -281,9 +264,8 @@ const editCredits = async _ => {
 	
 	const response = await sendPostData('credits', proposedCredits);
 	
-	if (!response.message.includes('Success!')) {
-		addError(response.message);
-	}
+	if (!response.success) addError(response.message);
+
 	populateData();
 };
 
@@ -310,7 +292,7 @@ const getStringPromptChain = async (dataType, postVarName, initialValue, maxLeng
 	const shortenedValue = parsed.length <= maxLength ? parsed : parsed.substr(0, maxLength - 1);
 
 	const response = await sendPostData(postVarName, shortenedValue);
-	if (!response.message.includes('Success!')) {
+	if (!response.success) {
 		addError(response.message);
 		return null;
 	}

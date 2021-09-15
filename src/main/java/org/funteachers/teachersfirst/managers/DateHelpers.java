@@ -221,4 +221,9 @@ public class DateHelpers {
 		return startDateTime.plusMinutes(minutes).format(DateTimeFormatter.ofPattern("HH:mm"));
 	}
 
+	public static String getDayOfWeekStringFromToday() {
+		LocalDate today = LocalDate.now(defaultZone);
+		return today.getDayOfWeek().toString().substring(0, 2).toLowerCase();
+	}
+
 }

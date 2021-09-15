@@ -23,19 +23,19 @@
 		<br>
 		<div class="form-grid-days-of-week">
 			<label for="sunday">Sun</label>
-			<input type="checkbox" id="sunday" value="Su"${sundayChecked}>
+			<input type="checkbox" id="sunday" value="Su">
 			<label for="monday">Mon</label>
-			<input type="checkbox" id="monday" value="Mo"${mondayChecked}>
+			<input type="checkbox" id="monday" value="Mo">
 			<label for="tuesday">Tue</label>
-			<input type="checkbox" id="tuesday" value="Tu"${tuesdayChecked}>
+			<input type="checkbox" id="tuesday" value="Tu">
 			<label for="wednesday">Wed</label>
-			<input type="checkbox" id="wednesday" value="We"${wednesdayChecked}>
+			<input type="checkbox" id="wednesday" value="We">
 			<label for="thursday">Thu</label>
-			<input type="checkbox" id="thursday" value="Th"${thursdayChecked}>
+			<input type="checkbox" id="thursday" value="Th">
 			<label for="friday">Fri</label>
-			<input type="checkbox" id="friday" value="Fr"${fridayChecked}>
+			<input type="checkbox" id="friday" value="Fr">
 			<label for="saturday">Sat</label>
-			<input type="checkbox" id="saturday" value="Sa"${saturdayChecked}>
+			<input type="checkbox" id="saturday" value="Sa">
 		</div>
 		<br>
 		<div class="form-grid-datetime-rows">
@@ -59,5 +59,5 @@
 </div>
 </body>
 <script src="/dynamic.js"></script>
-<script src="/scripts/batchAppointmentOperations.js"></script>
+<#if userId gt 0><script src="/scripts/batchAppointmentOperations.js"></script></#if>
 </html>
