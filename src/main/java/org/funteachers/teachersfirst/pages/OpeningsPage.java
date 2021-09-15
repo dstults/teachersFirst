@@ -90,8 +90,7 @@ public class OpeningsPage extends PageLoader {
 		final int weeksToShow = 5;
 		final LocalDateTime startDateTime = DateHelpers.previousSunday();
 		// endDateTime => -1 because Sunday=0 and Saturday=0 is head and tail of same week
-		// endDateTime => +1s because nextSaturday is 23:59:59 and we need to include 00:00:00 of the next day
-		final LocalDateTime endDateTime = DateHelpers.nextSaturday().plusWeeks(weeksToShow - 1).plusSeconds(1);
+		final LocalDateTime endDateTime = DateHelpers.nextSaturday().plusWeeks(weeksToShow - 1);
 		final String startString = startDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		final String endString = endDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
@@ -119,7 +118,9 @@ public class OpeningsPage extends PageLoader {
 		}
 
 		// Get all openings from the database
-		final List<Opening> allOpenings = openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime);
+		// endDateTime => +1s because nextSaturday is hh:59:59 and we need to include hh++:00:00 for the final possible time slot
+		// endDateTime => +1d because if the opening spans several hours into the next day, we want to capture it on the previous
+		final List<Opening> allOpenings = openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime.plusSeconds(1).plusDays(1));
 
 		// Prepare iterative variables for constructing "prettified" openings
 		List<PrettifiedDay> thisWeek = null;
@@ -135,8 +136,6 @@ public class OpeningsPage extends PageLoader {
 			// get specific start and end milliseconds of scanned day
 			startTime = startDateTime.plusDays(day);
 			endTime = startTime.plusDays(1).minusSeconds(1);
-			//logger.debug(startTime.toString());
-			//logger.debug(endTime.toString());
 			String dateName = startTime.format(DateTimeFormatter.ofPattern("dd"));
 			String dateColor = DateHelpers.isInThePast(endTime) ? "graybg" : "whitebg";
 			String dateToday = startTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -144,7 +143,6 @@ public class OpeningsPage extends PageLoader {
 			today = new PrettifiedDay(dateName, dateColor, openingsToday);
 			thisWeek.add(today);
 
-			// TODO: Optimize SQL query: Should ignore deleted user openings and only search within start and end dates
 			// scan all openings for any that fall within the day
 			for (Opening iOpening : allOpenings) {
 				if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
