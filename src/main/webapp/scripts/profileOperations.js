@@ -227,24 +227,7 @@ const sendPostData = async (varName, varValue) => {
 	data.append('memberId', memberId);
 	data.append(varName, encodeURIComponent(varValue));
 
-	let jsonReply;
-	try {
-		const response = await fetch('/', {
-			method: 'POST',
-			cache: 'no-cache',
-			body: data
-		});
-
-		if (response.ok) {
-			return await response.json();
-		} else {
-			throw new Error('Status code [' + response.status + ']: ' + response.statusText);
-		}
-	} catch (err) {
-		addError(err.message);
-	}
-
-	return undefined;
+	return sendPostFetch(data);
 };
 
 // Set up credits

@@ -31,7 +31,7 @@ const deleteMember = async _ => {
 	data.append('action', 'delete_member');
 	data.append('memberID', memberData.id);
 
-	const response = await sendPost(data);
+	const response = await sendPostFetch(data);
+	addMessage(response);
 	console.log(response);
-
 };
