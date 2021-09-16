@@ -4,6 +4,10 @@ import org.funteachers.teachersfirst.obj.*;
 
 public class Permissions {
 	
+	public static boolean MemberCanSeeMember(Member actor, Member target) {
+		return actor.getIsAdmin() || actor.getIsInstructor() || target.getIsInstructor() || actor.getRecID() == target.getRecID();
+	}
+	
 	public static boolean MemberCanDeleteMember(Member actor, Member target) {
 		// Cannot delete self
 		if (actor == target) return false;
