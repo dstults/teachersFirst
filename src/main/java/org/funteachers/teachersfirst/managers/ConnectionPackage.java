@@ -19,6 +19,9 @@ public class ConnectionPackage {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private SecurityChecker security;
+
+	// For logging
+	final private String initialCaller;
 	
 	// Database-related
 	final private List<DAO<?>> allDAOs = new ArrayList<>();
@@ -38,9 +41,10 @@ public class ConnectionPackage {
 		this.request = request;
 		this.response = response;
 		if (this.request != null && this.response != null) this.security = new SecurityChecker(request, response, this);
+		this.initialCaller = request == null ? "SYS" : request.getPathInfo() == null ? "" : request.getPathInfo();
 	}
 
-	public void initialize(String reason) {
+	private void initialize(String reason) {
 		if (this.attemptedConnection) {
 			logger.warn("WARNING: Repeat connection attempted, aborting!");
 			return;
@@ -101,27 +105,37 @@ public class ConnectionPackage {
 	}
 
 	public Connection getConnection(String reason) {
+		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
 		return this.connection;
 	}
 
 	public DAO<Member> getMemberDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
 		return this.memberDAO;
 	}
 
 	public DAO<Appointment> getAppointmentDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
 		return this.appointmentDAO;
 	}
 
 	public DAO<Opening> getOpeningDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
 		return this.openingDAO;
 	}
 
 	public DAO<LoggedEvent> getLoggedEventDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:  [ {} ]", reason);
 		return this.loggedEventDAO;
 	}
 
