@@ -59,40 +59,7 @@ const populateData = async _ => {
 const tryReplaceProfilePicture = async _ => {
 	if (!memberId) return; // obtained during page load process
 	
-	try {
-		
-		// TODO: Needs server-side support to avoid error spam.
-		//       Can be addressed in issue to "make secure".
-		
-		// TRY ".png"
-		let imagePath = '/custom/profiles/u' + memberId + '/profile.png';
-		const response1 = await fetch(imagePath);
-		if (response1.ok) {
-			// Will automatically refresh with cached data
-			profilePicture.src = imagePath;
-			return;
-		}
-		
-		// TRY ".jpg"
-		imagePath = '/custom/profiles/u' + memberId + '/profile.jpg';
-		const response2 = await fetch(imagePath);
-		if (response2.ok) {
-			profilePicture.src = imagePath;
-			return;
-		}
-		
-		// TRY ".gif"
-		imagePath = '/custom/profiles/u' + memberId + '/profile.gif';
-		const response3 = await fetch(imagePath);
-		if (response3.ok) {
-			profilePicture.src = imagePath;
-			return;
-		}
-
-		console.log('User does not exist or does not have a profile image.');
-	} catch (err) {
-		// do nothing
-	}
+	profilePicture.src = '/custom/profiles/u' + memberId;
 };
 
 const profilePicture = document.getElementById('profile-picture');

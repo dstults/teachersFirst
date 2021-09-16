@@ -58,7 +58,7 @@ public class ProfilePage extends PageLoader {
 		}
 
 		// Check for authority to view profile
-		if (!this.operator.canViewMember(member)) {
+		if (!Permissions.MemberCanSeeMember(this.operator, member)) {
 			sendJsonMessage("Error retrieving member data.");
 			return;
 		}

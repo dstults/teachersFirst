@@ -39,7 +39,7 @@ public abstract class ActionRunner {
 		this.security = cp.getSecurity();
 
 		this.operator = security.getMemberFromRequestCookieToken();
-		if (operator != null) {
+		if (this.operator != null) {
 			this.uid = this.operator.getRecID();
 			this.isAdmin = this.operator.getIsAdmin();
 			this.isInstructor = this.operator.getIsInstructor();

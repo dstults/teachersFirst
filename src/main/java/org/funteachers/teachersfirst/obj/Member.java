@@ -223,10 +223,6 @@ public class Member implements IJsonnable {
 		return this.isDeleted ? " (DELETED)" : "";
 	}
 
-	public boolean canViewMember(Member other) {
-		return this.isAdmin || this.isInstructor || this.recID == other.recID || other.isInstructor;
-	}
-
 	// ----------------------------------------------------------------
 
 	public void setLoginName(String loginName) {
