@@ -15,7 +15,7 @@ public class Permissions {
 		if (target.getIsInstructor()) return true;
 
 		// Everyone can see themselves
-		if (actor.getRecID() == target.getRecID());
+		if (actor.getRecID() == target.getRecID()) return true;
 
 		return false;
 	}
