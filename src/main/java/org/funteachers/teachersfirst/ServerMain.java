@@ -48,15 +48,14 @@ public class ServerMain extends HttpServlet {
 		super.init(config);
 
 		logger.warn("");
-		logger.warn("===========================================================");
-		logger.warn("          " + SERVLET_NAME + " init() started");
-		logger.warn("               http://<team-server>");
-		logger.warn("===========================================================");
+		logger.warn("==================================================");
+		logger.warn("    Server init() started!");
+		logger.warn("==================================================");
 		logger.warn("");
 
 		getServletContext();
 		String resourcesDir = config.getServletContext().getRealPath(RESOURCES_DIR);
-		logger.info("resourcesDir = {}", resourcesDir);
+		logger.info("res.dir = {}", StringTools.left(resourcesDir, 40));
 
 		SecurityChecker.populateWhitelist();
 		logger.info("IP whitelist populated.");
@@ -73,9 +72,11 @@ public class ServerMain extends HttpServlet {
 		logger.info("Database connectivity tests complete.");
 
 
-		logger.warn("");
-		logger.warn("Servlet initialization complete!");
-		logger.warn("");
+		logger.info("");
+		logger.info("--------------------------------------------------");
+		logger.info("    Servlet initialization complete!");
+		logger.info("--------------------------------------------------");
+		logger.info("");
 	}
 
 	@Override
@@ -291,13 +292,21 @@ public class ServerMain extends HttpServlet {
 	@Override
 	public void destroy() {
 		
+		logger.warn("");
+		logger.warn("==================================================");
+		logger.warn("    Server destroy() started!");
+		logger.warn("==================================================");
+		logger.warn("");
+
+		deregisterLogger();
 		deregisterJdbcDrivers();
 		
-		logger.warn("-----------------------------------------");
-		logger.warn("  " + SERVLET_NAME + " destroy() completed!");
-		logger.warn("-----------------------------------------");
-		logger.warn(" ");
-	
+		logger.info("");
+		logger.info("--------------------------------------------------");
+		logger.info("    Server destruction complete!");
+		logger.info("--------------------------------------------------");
+		logger.info("");
+
 	}
 
 	@Override
@@ -307,22 +316,30 @@ public class ServerMain extends HttpServlet {
 
 	// =================================================================
 
+	private void deregisterLogger() {
+		// TODO: De-register logger.
+		logger.info("Deregistering log4j2 loggers...");
+	}
+
 	private void deregisterJdbcDrivers() {
-		// Deregister driver:
+		logger.info("Deregistering JDBC drivers...");
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		String result = "";
 		while (drivers.hasMoreElements()) {
 			Driver driver = drivers.nextElement();
 			if (driver.getClass().getClassLoader() == cl) {
 				try {
-					logger.info("Deregistering JDBC driver {}", driver);
 					DriverManager.deregisterDriver(driver);
+					result = "deregistered";
 				} catch (SQLException ex) {
-					logger.error("Error deregistering JDBC driver {}", driver, ex);
+					result = "error";
 				}
 			} else {
-				logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader", driver);
+				//logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader", driver);
+				result = "ignored";
 			}
+			logger.debug("...{}...{}!", driver, result);
 		}
 	}
 

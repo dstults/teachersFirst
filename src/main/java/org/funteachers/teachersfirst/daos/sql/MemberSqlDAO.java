@@ -21,7 +21,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 
 	public int insert(Member member) {
-		logger.debug("Inserting " + member + "...");
+		logger.debug("Member INSERT [LogN: '{}' ] ...", member.getLoginName());
 
 		if (member.getRecID() != -1) {
 			logger.error("Error: Cannot add previously added Member: " + member);
@@ -31,7 +31,8 @@ public class MemberSqlDAO implements DAO<Member> {
 		final String query = "INSERT INTO members (loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
 		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsAdmin(), member.getIsInstructor(), member.getIsStudent());
-		logger.debug("Member successfully inserted with ID = " + recID);
+		
+		logger.debug("Member INSERT ... [ID: {} ]", recID);
 		return recID;
 	}
 
