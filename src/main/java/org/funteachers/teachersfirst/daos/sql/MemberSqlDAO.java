@@ -65,7 +65,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		final String query = "SELECT * FROM members WHERE recID=" + recID + ";";
 
 		Member member = getMemberQuery(query);
-		if (member == null) logger.debug("retrieveByID [ {} ] failed", recID);
+		if (member == null) logger.warn("retrieveByID [ {} ] failed", recID);
 		return member ;
 	}
 
