@@ -31,10 +31,10 @@ public class SecurityChecker {
 	}
 
 	public static void populateWhitelist() {
-		// Manual entries:		
+		// Manual entries:
 		//whitelistIp("");
 
-		// Automatic entries:		
+		// Automatic entries:
 		// WARNING: GitHub build fails this test, so cannot use:
 		//whitelistIp(nsLookup("dstults.net"));
 	}
@@ -115,14 +115,26 @@ public class SecurityChecker {
 
 	private Cookie getCookieByName(String name) {
 		final Cookie[] cookies = request.getCookies();
+		Cookie found = null;
 
 		if (cookies == null || cookies.length == 0)
 			return null;
 
-		for (Cookie cookie : cookies)
-			if (cookie.getName().equals(name)) return cookie;
+		//logger.debug("Cookie search [ {} ]...", name);
+		for (Cookie cookie : cookies) {
+			//logger.debug("...Name: [ {} ]...Path: [ {} ]", cookie.getName() != null ? cookie.getName() : "null", cookie.getPath() != null ? cookie.getPath() : "null");
+			if (cookie.getName().equals(name)) {
+				//if (found == null) logger.debug("First matching cookie found!");
+				if (found != null) logger.error("Error: Multiple matching cookies found!");
+				found = cookie;
+			} else {
+				logger.debug("Clearing Cookie!");
+				// Clear all other cookies
+				//clearCookie(cookie);
+			}
+		}
 
-		return null;
+		return found;
 	}
 
 	private String getCookieValueByName(String name) {
@@ -191,6 +203,7 @@ public class SecurityChecker {
 		
 		// Set new cookie
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." +token);
+		tokenCookie.setPath("/");
 		tokenCookie.setMaxAge(60 * 60 * 24 * 90); // Expires in 90 days
 		tokenCookie.setSecure(true);
 		tokenCookie.setHttpOnly(true);
@@ -208,8 +221,17 @@ public class SecurityChecker {
 
 		// Update cookie to expire
 		final Cookie tokenCookie = new Cookie("token", "");
+		tokenCookie.setPath("/");
 		tokenCookie.setMaxAge(-1); // Expires in the past by 1 second
 		response.addCookie(tokenCookie);
+	}
+
+	// This is to clear out rogue cookies
+	private void clearCookie(Cookie oldCookie) {
+		final Cookie newCookie = new Cookie(oldCookie.getName(), "");
+		newCookie.setPath(oldCookie.getPath());
+		newCookie.setMaxAge(-1); // Expires in the past by 1 second
+		response.addCookie(newCookie);
 	}
 
 	private void refreshCookie(Member member, String token) {
@@ -218,6 +240,7 @@ public class SecurityChecker {
 
 		// Refresh cookie with new expiration
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." + token);
+		tokenCookie.setPath("/");
 		tokenCookie.setMaxAge(60 * 60 * 24 * 90); // Expires in 90 days
 		tokenCookie.setSecure(true);
 		tokenCookie.setHttpOnly(true);
@@ -259,23 +282,5 @@ public class SecurityChecker {
 
 		return member;
 	}
-
-	// This was replaced by the token method:
-	/*
-	public int getUserId(HttpServletRequest request) {
-		
-		// USER ID
-		if (request.getSession().getAttribute("USER_ID") == null) return 0;
-		if (request.getSession().getAttribute("USER_ID").toString() == null) return 0;
-		if (request.getSession().getAttribute("USER_ID").toString().isEmpty()) return 0;
-		String uid = request.getSession().getAttribute("USER_ID").toString();
-		try {
-			return Integer.parseInt(uid);
-		} catch (NumberFormatException e) {
-			logger.fatal("SECURITY RISK: Invalid data stored in session's USER_ID value!");
-		}
-		return 0;
-	}
-	*/
 
 }
