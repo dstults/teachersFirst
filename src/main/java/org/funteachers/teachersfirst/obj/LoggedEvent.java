@@ -47,7 +47,7 @@ public class LoggedEvent implements IJsonnable {
 			ServerMain.logger.warn("Could not log message to database (no connection package): [{}]", message);
 			return;
 		}
-		DAO<LoggedEvent> daoLe = cp.getLoggedEventDAO();
+		DAO<LoggedEvent> daoLe = cp.getLoggedEventDAO("LoggedEvent STATIC");
 		if (daoLe == null) {
 			ServerMain.logger.warn("Could not log message to database (no database connection): [{}]", message);
 			return;
