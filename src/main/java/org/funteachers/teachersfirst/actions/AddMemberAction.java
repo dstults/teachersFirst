@@ -74,7 +74,8 @@ public class AddMemberAction extends ActionRunner {
 		logger.debug(displayName + " attempting to register...");
 		
 		// Making sure unique login name
-		List<Member> members = this.connectionPackage.getMemberDAO().retrieveAll();
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().toString());
+		List<Member> members = memberDAO.retrieveAll();
 		for (Member member : members) {
 			if (member.getLoginName() == loginName) {
 				this.sendPostReply(retryPage, retryString, "Login name '" + loginName + "' already taken, please try another.");
@@ -84,7 +85,6 @@ public class AddMemberAction extends ActionRunner {
 
 		// TODO: Birthdates
 
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
 		final Member member = new Member(loginName, displayName, 0, gender, "", "", phone1, phone2, email, false, false, true);
 		final int newMemberRecordId = memberDAO.insert(member);
 		member.setRecID(newMemberRecordId);

@@ -4,6 +4,7 @@ import java.time.*;
 import java.util.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -27,7 +28,8 @@ public class NewAppointmentAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			openingIdInt = 0;
 		}
-		final Opening referralOpening = this.connectionPackage.getOpeningDAO().retrieveByID(openingIdInt);
+		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO(this.getClass().toString());
+		final Opening referralOpening = openingDAO.retrieveByID(openingIdInt);
 		if (referralOpening == null) {
 			this.sendPostReply("/openings", "", "Opening with ID %5B" + openingIdString + "%5D does not exist!");
 			return;
@@ -41,7 +43,8 @@ public class NewAppointmentAction extends ActionRunner {
 			this.sendPostReply("/openings", "", "Could not parse student ID!");
 			return;
 		}
-		final Member student = this.connectionPackage.getMemberDAO().retrieveByID(studentIdInt);
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().toString());
+		final Member student = memberDAO.retrieveByID(studentIdInt);
 		if (student == null) {
 			this.sendPostReply("/openings", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
@@ -54,7 +57,7 @@ public class NewAppointmentAction extends ActionRunner {
 			this.sendPostReply("/openings", "", "Could not parse instructor ID!");
 			return;
 		}
-		if (this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt) == null) {
+		if (memberDAO.retrieveByID(instructorIdInt) == null) {
 			this.sendPostReply("/openings", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
 		} else if (studentIdInt == instructorIdInt) {
@@ -150,7 +153,8 @@ public class NewAppointmentAction extends ActionRunner {
 		}
 
 		// Make sure no conflicting appointments
-		List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO().retrieveAll();
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().toString());
+		final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
 		PlannedAppointment pa = new PlannedAppointment(studentIdInt, instructorIdInt,
 				year, month, day, startHour, startMinute, endDay, endHour, endMinute);
 	
@@ -163,9 +167,9 @@ public class NewAppointmentAction extends ActionRunner {
 		
 		// Create appointment
 		Appointment appointment = new Appointment(pa);
-		this.connectionPackage.getAppointmentDAO().insert(appointment);
+		appointmentDAO.insert(appointment);
 		logger.debug("Created new appointment: [{}]", appointment);
-		logger.info(this.connectionPackage.getAppointmentDAO().size() + " records total");
+		logger.info(appointmentDAO.size() + " records total");
 
 		// Update credits for student
 		float credits = student.getCredits();

@@ -1,6 +1,7 @@
 package org.funteachers.teachersfirst.actions;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -24,7 +25,7 @@ public class DeleteOpeningAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			openingIdInt = 0;
 		}
-		final Opening opening = this.connectionPackage.getOpeningDAO().retrieveByID(openingIdInt);
+		final Opening opening = this.connectionPackage.getOpeningDAO(this.getClass().toString()).retrieveByID(openingIdInt);
 		if (opening == null) {
 			this.sendPostReply("/openings", "", "Opening %5B" + openingIdString + "%5D not found!");
 			return;
@@ -38,7 +39,8 @@ public class DeleteOpeningAction extends ActionRunner {
 
 		logger.debug("Attempting to delete opening " + opening.toString() + " ...");
 		
-		this.connectionPackage.getOpeningDAO().delete(openingIdInt);
+		DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO(this.getClass().toString());
+		openingDAO.delete(openingIdInt);
 		//logger.info(DataManager.getOpeningDAO().size() + " records total");
 		logger.debug("Deleted opening ID: [{}]", openingIdInt);
 		

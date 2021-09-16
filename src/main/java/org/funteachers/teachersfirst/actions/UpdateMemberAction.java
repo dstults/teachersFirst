@@ -46,7 +46,7 @@ public class UpdateMemberAction extends ActionRunner {
 		}
 		
 		// Check connection to database
-		DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+		DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().toString());
 		if (memberDAO == null) {
 			this.sendJsonMessage("Error connecting to database, try again!", false);
 			return;
