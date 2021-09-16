@@ -6,5 +6,5 @@
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/messageConsole.css">
 	<script src="/scripts/dragElement.js"></script>
-	<#include dynamic-css.ftl />
+	<#include "dynamic-css.ftl">
 </head>

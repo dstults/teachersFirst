@@ -147,10 +147,6 @@ public class ServerMain extends HttpServlet {
 					connectionPackage.terminate();
 					return; // don't log
 
-				case "/dynamic.css":
-					new DynamicCssFile(connectionPackage).loadPage();
-					connectionPackage.terminate();
-					return; // don't log
 				case "/dynamic.js":
 					new DynamicJsFile(connectionPackage).loadPage();
 					connectionPackage.terminate();
