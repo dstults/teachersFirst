@@ -33,11 +33,16 @@ public class OpeningsPage extends PageLoader {
 		// Prepare "week" data for final or short-circuit response
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
 
-		// Test database connection and short-circuit if not connected
-		final OpeningSqlDAO openingDAO = (OpeningSqlDAO) this.connectionPackage.getOpeningDAO();
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
-		boolean noConnection = this.connectionPackage.getConnection() == null || openingDAO == null;
-		boolean noOpenings = openingDAO != null && openingDAO.retrieveByIndex(0) == null;
+		// Test database connection
+		final boolean noConnection = this.connectionPackage.getConnection() == null;
+		final OpeningSqlDAO openingDAO = noConnection ? null : (OpeningSqlDAO) this.connectionPackage.getOpeningDAO();
+		// Get all openings from the database
+		// endDateTime => +1s because nextSaturday is hh:59:59 and we need to include hh++:00:00 for the final possible time slot
+		// endDateTime => +1d because if the opening spans several hours into the next day, we want to capture it on the previous
+		final List<Opening> allOpenings = openingDAO == null ? null : openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime.plusSeconds(1).plusDays(1));
+
+		// Short circuit if no connection or no openings
+		final boolean noOpenings = allOpenings == null || allOpenings.size() == 0;
 		if (noConnection || noOpenings) {
 			templateName = "openings.ftl";
 			templateDataMap.put("batchEnabled", false);
@@ -53,10 +58,8 @@ public class OpeningsPage extends PageLoader {
 			return;
 		}
 
-		// Get all openings from the database
-		// endDateTime => +1s because nextSaturday is hh:59:59 and we need to include hh++:00:00 for the final possible time slot
-		// endDateTime => +1d because if the opening spans several hours into the next day, we want to capture it on the previous
-		final List<Opening> allOpenings = openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime.plusSeconds(1).plusDays(1));
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+		final List<Member> allMembers = memberDAO.retrieveAll();
 
 		// Prepare iterative variables for constructing "prettified" openings
 		List<PrettifiedDay> thisWeek = null;
@@ -84,7 +87,7 @@ public class OpeningsPage extends PageLoader {
 			for (Opening iOpening : allOpenings) {
 				if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
 
-					Member member = memberDAO.retrieveByID(iOpening.getInstructorID());
+					Member member = MemberHelpers.FindByID(allMembers, iOpening.getInstructorID());
 					if (member == null || member.getIsDeleted()) continue;
 					String iName = member.getDisplayName();
 					boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
