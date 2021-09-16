@@ -50,6 +50,7 @@ public class ServerMain extends HttpServlet {
 		logger.warn("");
 		logger.warn("==================================================");
 		logger.warn("    Server init() started!");
+		logger.warn("    SERVLET: " + SERVLET_NAME);
 		logger.warn("==================================================");
 		logger.warn("");
 
