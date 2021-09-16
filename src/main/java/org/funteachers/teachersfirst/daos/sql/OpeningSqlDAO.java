@@ -22,7 +22,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 
 	public int insert(Opening opening) {
-		logger.debug("Inserting " + opening + "...");
+		logger.debug("Opening INSERT [DT: '{}' ] ...", opening.getDateFormatted() + " " + opening.getStartTimeFormatted());
 
 		if (opening.getRecID() != -1) {
 			logger.error("Error: Cannot add previously added Opening: " + opening);
@@ -33,7 +33,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 
 		int recID = SQLUtils.executeSqlOpeningInsert(conn, query, opening.getRecID(), opening.getInstructorID(), opening.getStartTime(), opening.getEndTime());    
 		
-		logger.debug("Opening successfully inserted with ID = " + recID);
+		logger.debug("Opening INSERT ... [ID: {} ]", recID);
 		return recID;
 	}
 

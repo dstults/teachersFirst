@@ -145,7 +145,7 @@ public class UpdateMemberAction extends ActionRunner {
 			logger.debug("Updated: [{}]", member);
 		}
 		
-		// Log user into session
+		// Log user in
 		this.sendJsonMessage("Success!", true);
 		return;
 	}

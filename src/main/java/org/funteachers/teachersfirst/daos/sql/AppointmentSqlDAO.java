@@ -22,7 +22,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	}
 
 	public int insert(Appointment appointment) {
-		logger.debug("Inserting " + appointment + "...");
+		logger.debug("Appointment INSERT [DT: '{}' ] ...", appointment.getDateFormatted() + " " + appointment.getStartTimeFormatted());
 
 		if (appointment.getRecID() != -1) {
 			logger.error("Error: Cannot add previously added Appointment: " + appointment);
@@ -33,7 +33,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 
 		int recID = SQLUtils.executeSqlAppointmentInsert(conn, query, appointment.getRecID(), appointment.getStudentID(), appointment.getInstructorID(), appointment.getStartTime(), appointment.getEndTime(), appointment.getSchedulingVerified(), appointment.getCompletionState());    
 		
-		logger.debug("Appointment successfully inserted with ID = " + recID);
+		logger.debug("Appointment INSERT ... [ID: {} ]", recID);
 		return recID;
 	}
 

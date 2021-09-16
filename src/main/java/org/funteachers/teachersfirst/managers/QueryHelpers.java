@@ -69,18 +69,4 @@ public class QueryHelpers {
 		return sanitizeForWeb(request.getParameter(keyName));
 	}
 
-	// Session data is no longer used, cookies and database queries are used instead.
-	/*
-	public static String getSessionValue(HttpServletRequest request, String sessionArg) {
-		return getSessionValue(request, sessionArg, "");
-	}
-
-	public static String getSessionValue(HttpServletRequest request, String sessionArg, String defaultValue) {
-		if (request.getSession().getAttribute(sessionArg) == null) return defaultValue;
-		if (request.getSession().getAttribute(sessionArg).toString() == null) return defaultValue;
-		if (request.getSession().getAttribute(sessionArg).toString().isEmpty()) return defaultValue;
-		return request.getSession().getAttribute(sessionArg).toString();
-	}
-	*/
-
 }

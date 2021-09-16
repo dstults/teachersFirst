@@ -1,6 +1,7 @@
 package org.funteachers.teachersfirst.obj;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 import org.funteachers.teachersfirst.managers.*;
 
@@ -73,6 +74,20 @@ public class Opening {
 
 	public String getName() {
 		return this.toString();
+	}
+
+	// ----------------------------------------------------------------
+
+	public String getStartTimeFormatted() {
+		return this.startTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+	}
+
+	public String getEndTimeFormatted() {
+		return this.endTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+	}
+
+	public String getDateFormatted() {
+		return this.startTime.toLocalDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 	}
 
 	// ----------------------------------------------------------------
