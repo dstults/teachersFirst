@@ -71,7 +71,6 @@ public class ServerMain extends HttpServlet {
 		connectionPackage.terminate();
 		logger.info("Database connectivity tests complete.");
 
-
 		logger.info("");
 		logger.info("--------------------------------------------------");
 		logger.info("    Servlet initialization complete!");

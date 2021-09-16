@@ -91,7 +91,7 @@ public class SecurityChecker {
 	}
 
 	public Member checkPassword(String loginName, String password) {
-		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Checking Password");
 		Member member = memberDAO.retrieveByLoginNameAndPassword(loginName, password);
 
 		if (member == null) {
@@ -190,7 +190,7 @@ public class SecurityChecker {
 
 	private void giveTokenCookie(Member member) {
 		// Check for an already existing token
-		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Give Token");
 		String token = memberDAO.retrieveToken(member.getRecID());
 		
 		// Make new token if none exists
@@ -214,7 +214,7 @@ public class SecurityChecker {
 
 		// Update database if member provided
 		if (member != null && allDevices) {
-			MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+			MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Clear Token");
 			memberDAO.updateToken(member, null);
 			logger.debug("Clearing token for member [ ({}) {} ]", member.getRecID(), member.getLoginName());
 		}
@@ -270,7 +270,7 @@ public class SecurityChecker {
 		}
 		final String token = matcher.group(2);
 
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Get Member from Token");
 		final Member member = memberDAO.retrieveByIdAndToken(uid, token);
 
 		if (member == null) {

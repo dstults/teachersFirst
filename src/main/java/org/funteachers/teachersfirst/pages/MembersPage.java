@@ -37,7 +37,7 @@ public class MembersPage extends PageLoader {
 			sendJsonMessage("Error: You are not logged in.");
 			return;
 		}
-		boolean connectedToDatabase = this.connectionPackage.getConnection() != null;
+		boolean connectedToDatabase = this.connectionPackage.getConnection(this.getClass().getSimpleName()) != null;
 		if (!connectedToDatabase) {
 			sendJsonMessage("Error: Failed to contact database, please try again.");
 			return;
@@ -46,7 +46,7 @@ public class MembersPage extends PageLoader {
 		final boolean showDeleted = QueryHelpers.getGetBool(request, "deleted");
 
 		// Get data from DAO
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final List<Member> members;
 		if (isAdmin || isInstructor) {
 			if (showDeleted) {

@@ -4,6 +4,7 @@ import java.time.*;
 import java.util.*;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -13,12 +14,6 @@ public class NewAppointmentBatchAction extends ActionRunner {
 
 	@Override
 	public void runAction() {
-
-		// INPUT: {action: make_appointment_batch}, {instructorId: 1}, {studentId: 2}, {daysOfWeek: SuMoWeThSa}, {startDate: 2021-05-02}, {startTime: 09:00}, {endDate: 2021-05-08}, {endTime: 10:00}
-		// OUTPUT: Invalid value for MonthOfYear (Line 164)
-		// Fixed.
-		// INPUT: {action: make_appointment_batch}, {instructorId: 1}, {studentId: 2}, {daysOfWeek: MoTuWeFrSa}, {startDate: 2021-05-02}, {startTime: 09:00}, {endDate: 2021-05-08}, {endTime: 10:00}
-		// OUTPUT: Froze somewhere at or after List<Appointment> allAppointments = DataManager.getAppointmentDAO().retrieveAll();
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
@@ -37,7 +32,8 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.sendPostReply("/make_appointment_batch", "", "Could not parse student ID!");
 			return;
 		}
-		final Member student = this.connectionPackage.getMemberDAO().retrieveByID(studentIdInt);
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
+		final Member student = memberDAO.retrieveByID(studentIdInt);
 		if (student == null) {
 			this.sendPostReply("/make_appointment_batch", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
 			return;
@@ -51,7 +47,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.sendPostReply("/make_appointment_batch", "", "Could not parse instructor ID!");
 			return;
 		}
-		final Member instructor = this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt);
+		final Member instructor = memberDAO.retrieveByID(instructorIdInt);
 		if (instructor == null) {
 			this.sendPostReply("/make_appointment_batch", "", "Instructor with ID %5B" + instructorIdString + "%5D does not exist!");
 			return;
@@ -170,7 +166,8 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		}
 
 		// Make sure no conflicting appointments
-		List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO().retrieveAll();
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName());
+		final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
 		logger.debug("APPOINTMENTS GOT: " + allAppointments.size());
 
 		// Might be very first appointment, in which case this is null
@@ -193,7 +190,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			if (plan.getResult().contains("OK")) {
 				successCount++;
 				Appointment appointment = new Appointment(plan);
-				this.connectionPackage.getAppointmentDAO().insert(appointment);
+				appointmentDAO.insert(appointment);
 				sb.append("OK: %5B").append(appointment.getDateFormatted()).append("%5D//");
 				logger.debug("Created new appointment: [{}]", appointment);
 			} else {
@@ -210,7 +207,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			student.setCredits(this.connectionPackage, uid, operator.getLoginName(), "batch create " + successCount + " @ " + lengthEach + " hrs", credits);
 		}
 
-		logger.info(this.connectionPackage.getAppointmentDAO().size() + " records total");
+		logger.info(appointmentDAO.size() + " records total");
 		this.sendPostReply("/appointments", "", sb.toString());
 		return;
 	}

@@ -30,7 +30,8 @@ public class NewOpeningsAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			instructorIdInt = 0;
 		}
-		final boolean instructorExists = this.connectionPackage.getMemberDAO().retrieveByID(instructorIdInt) != null;
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
+		final boolean instructorExists = memberDAO.retrieveByID(instructorIdInt) != null;
 		final String startDateString = QueryHelpers.getPost(request, "startDate");
 		final String endDateString = QueryHelpers.getPost(request, "endDate");
 		final String daysOfWeekString = QueryHelpers.getPost(request, "daysOfWeek").toLowerCase(); // SuMoTuWdThFrSa
@@ -112,7 +113,7 @@ public class NewOpeningsAction extends ActionRunner {
 		}
 
 		logger.debug("Attempting to create batch openings ...");
-		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
+		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO(this.getClass().getSimpleName());
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 		
 		final LocalDate startDate = LocalDate.parse(startDateString, formatter);
 		final LocalDate endDate = LocalDate.parse(endDateString, formatter);

@@ -36,15 +36,15 @@ public class AppointmentsPage extends PageLoader {
 			sendJsonMessage("Error: You are not logged in.");
 			return;
 		}
-		boolean connectedToDatabase = this.connectionPackage.getConnection() != null;
+		boolean connectedToDatabase = this.connectionPackage.getConnection(this.getClass().getSimpleName()) != null;
 		if (!connectedToDatabase) {
 			sendJsonMessage("Error: Failed to contact database, please try again.");
 			return;
 		}
 
 		// Get data from DAOs
-		final List<Member> allMembers = this.connectionPackage.getMemberDAO().retrieveAll();
-		final List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO().retrieveAll();
+		final List<Member> allMembers = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName()).retrieveAll();
+		final List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName()).retrieveAll();
 
 		// Filter into these categories
 		final List<Appointment> futureAppointments = new ArrayList<Appointment>();		

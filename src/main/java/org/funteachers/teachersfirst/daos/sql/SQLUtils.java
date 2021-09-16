@@ -100,10 +100,10 @@ public class SQLUtils {
 		}
 	}
 
-	public static Connection connect(String initParams) {
+	public static Connection connect(String initParams, String reason) {
 		// This has been turned off because it's a security risk (the password is in the initParams)
 		//logger.debug("Connecting to " + initParams + "...");
-		logger.debug("Connecting to database...");
+		logger.debug("DATABASE CONNECT: [ {} ]", reason);
 
 		String driverClass = "org.mariadb.jdbc.Driver";
 		try {

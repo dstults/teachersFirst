@@ -34,11 +34,11 @@ public class OpeningsPage extends PageLoader {
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
 
 		// Test database connection
-		final boolean noConnection = this.connectionPackage.getConnection() == null;
-		final OpeningSqlDAO openingDAO = noConnection ? null : (OpeningSqlDAO) this.connectionPackage.getOpeningDAO();
+		final boolean noConnection = this.connectionPackage.getConnection(this.getClass().getSimpleName()) == null;
+		final OpeningSqlDAO openingDAO = noConnection ? null : (OpeningSqlDAO) this.connectionPackage.getOpeningDAO(this.getClass().getSimpleName());
 		// Get all openings from the database
 		// endDateTime => +1s because nextSaturday is hh:59:59 and we need to include hh++:00:00 for the final possible time slot
-		// endDateTime => +1d because if the opening spans several hours into the next day, we want to capture it on the previous
+		// endDateTime => +1d because if the opening spans several hours into the next day, we want to capture it onthis.getClass().getSimpleName() the previous
 		final List<Opening> allOpenings = openingDAO == null ? null : openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime.plusSeconds(1).plusDays(1));
 
 		// Short circuit if no connection or no openings
@@ -58,7 +58,7 @@ public class OpeningsPage extends PageLoader {
 			return;
 		}
 
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final List<Member> allMembers = memberDAO.retrieveAll();
 
 		// Prepare iterative variables for constructing "prettified" openings

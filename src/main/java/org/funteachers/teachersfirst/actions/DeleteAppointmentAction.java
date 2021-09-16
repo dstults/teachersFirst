@@ -33,7 +33,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 		}
 
 		// Check connection to database
-		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO();
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName());
 		if (appointmentDAO == null) {
 			this.sendJsonMessage("Could not connect to database, please try again.", false);
 			return;
@@ -83,7 +83,7 @@ public class DeleteAppointmentAction extends ActionRunner {
 		
 		// Update credits for student when applicable
 		if (giveRefund) {
-			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 			final Member student = memberDAO.retrieveByID(appointment.getStudentID());
 			final float length = appointment.getLength();
 			final float credits = student.getCredits() + length;

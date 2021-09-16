@@ -75,7 +75,7 @@ class DateHelpersTests {
 		assertEquals("02:00", endTime);
 
 		assertThrows(DateTimeParseException.class, () -> {
-			DateHelpers.convertDateStartTimeAndDurationToEndTime("poop", "fart", "nutsack");
+			DateHelpers.convertDateStartTimeAndDurationToEndTime("not a date", "also not a date", "still not a date");
 		});
 		endTime = DateHelpers.convertDateStartTimeAndDurationToEndTime("03/15/2021", "23:30", "2 hours 30 minutes");
 		assertEquals("02:00", endTime);

@@ -52,7 +52,7 @@ public class CustomServer {
 		boolean showRealProfilePic = false;
 		if (isProfilePic) {
 			int otherId = Integer.parseInt(matcher.group(1));
-			Member other = this.connectionPackage.getMemberDAO().retrieveByID(otherId);
+			Member other = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName()).retrieveByID(otherId);
 			if (Permissions.MemberCanSeeMember(this.operator, other)) {
 				showRealProfilePic = true;
 			}

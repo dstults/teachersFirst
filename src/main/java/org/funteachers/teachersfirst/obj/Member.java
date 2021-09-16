@@ -109,7 +109,7 @@ public class Member implements IJsonnable {
 	}
 
 	public boolean update(ConnectionPackage cp) {
-		return cp.getMemberDAO().update(this);
+		return cp.getMemberDAO(this.getClass().getSimpleName()).update(this);
 	}
 
 	// ----------------------------------------------------------------
@@ -243,7 +243,7 @@ public class Member implements IJsonnable {
 		float oldCredits = this.credits;
 		this.credits = credits;
 		if (cp != null && cp.getIsConnectionHealthy()) {
-			cp.getMemberDAO().update(this);
+			cp.getMemberDAO(this.getClass().getSimpleName()).update(this);
 			LoggedEvent.log(cp, operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
 		}
 	}

@@ -19,6 +19,9 @@ public class ConnectionPackage {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private SecurityChecker security;
+
+	// For logging
+	final private String initialCaller;
 	
 	// Database-related
 	final private List<DAO<?>> allDAOs = new ArrayList<>();
@@ -27,6 +30,7 @@ public class ConnectionPackage {
 	private DAO<Opening> openingDAO;
 	private DAO<LoggedEvent> loggedEventDAO;
 
+	private boolean attemptedConnection = false;
 	private Connection connection;
 	private String connectionStatusMessage = "";
 	private boolean isConnectionHealthy;
@@ -37,14 +41,20 @@ public class ConnectionPackage {
 		this.request = request;
 		this.response = response;
 		if (this.request != null && this.response != null) this.security = new SecurityChecker(request, response, this);
-		this.initialize();
+		this.initialCaller = request == null ? "SYS" : request.getPathInfo() == null ? "" : request.getPathInfo();
 	}
 
-	public void initialize() {
-		this.connection = SQLUtils.connect(GlobalConfig.getInitParams());
+	private void initialize(String reason) {
+		if (this.attemptedConnection) {
+			logger.warn("WARNING: Repeat connection attempted, aborting!");
+			return;
+		}
+
+		this.attemptedConnection = true;
+		this.connection = SQLUtils.connect(GlobalConfig.getInitParams(), reason);
 		if (this.connection == null) {
 			this.isConnectionHealthy = false;
-			this.connection = SQLUtils.connect(GlobalConfig.getNewInitParams());
+			this.connection = SQLUtils.connect(GlobalConfig.getNewInitParams(), reason);
 			if (this.connection != null) {
 				logger.warn("====================================== Warning");
 				logger.warn("|  WARNING, DATABASE NOT BUILT YET!  | Warning");
@@ -83,34 +93,49 @@ public class ConnectionPackage {
 	// ================ GETTERS ================
 
 	public HttpServletRequest getRequest() {
-		return request;
+		return this.request;
 	}
 
 	public HttpServletResponse getResponse() {
-		return response;
+		return this.response;
 	}
 
 	public SecurityChecker getSecurity() {
-		return security;
+		return this.security;
 	}
 
-	public Connection getConnection() {
-		return connection;
+	public Connection getConnection(String reason) {
+		reason = this.initialCaller + ":" + reason;
+		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
+		return this.connection;
 	}
 
-	public DAO<Member> getMemberDAO() {
+	public DAO<Member> getMemberDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
+		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
 		return this.memberDAO;
 	}
 
-	public DAO<Appointment> getAppointmentDAO() {
+	public DAO<Appointment> getAppointmentDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
+		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
 		return this.appointmentDAO;
 	}
 
-	public DAO<Opening> getOpeningDAO() {
+	public DAO<Opening> getOpeningDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
+		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:   [ {} ]", reason);
 		return this.openingDAO;
 	}
 
-	public DAO<LoggedEvent> getLoggedEventDAO() {
+	public DAO<LoggedEvent> getLoggedEventDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
+		if (this.connection == null) this.initialize(reason);
+		else logger.debug("DATABASE RECON:  [ {} ]", reason);
 		return this.loggedEventDAO;
 	}
 
@@ -126,10 +151,10 @@ public class ConnectionPackage {
 
 	}
 
-	public boolean reset() {
+	public boolean reset(String reason) {
 		this.terminate();
 		//this.allDAOs.clear();
-		this.initialize();
+		this.initialize(reason);
 		return this.connection != null;
 	}
 
