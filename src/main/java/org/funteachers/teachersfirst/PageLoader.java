@@ -51,7 +51,7 @@ public abstract class PageLoader {
 		this.security = cp.getSecurity();
 
 		this.operator = security.getMemberFromRequestCookieToken();
-		if (operator != null) {
+		if (this.operator != null) {
 			this.uid = this.operator.getRecID();
 			this.userName = this.operator.getDisplayName();
 			this.isAdmin = this.operator.getIsAdmin();

@@ -22,7 +22,6 @@ public class LoggedEvent implements IJsonnable {
 	}
 
 	public LoggedEvent(int recID, int operator, Timestamp date, String message) {
-
 		if (recID < -1)
 			throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (operator < 0)
