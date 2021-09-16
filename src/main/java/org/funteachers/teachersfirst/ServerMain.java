@@ -54,6 +54,7 @@ public class ServerMain extends HttpServlet {
 		logger.warn("===========================================================");
 		logger.warn("");
 
+		getServletContext();
 		String resourcesDir = config.getServletContext().getRealPath(RESOURCES_DIR);
 		logger.info("resourcesDir = {}", resourcesDir);
 
@@ -169,24 +170,7 @@ public class ServerMain extends HttpServlet {
 				default:
 					//String filename = URLDecoder.decode(request.getPathInfo().substring(1), "UTF-8");
 					if (isValidCustomPath(pagePath)) {
-						String filename = pagePath;
-						File file = new File("/var/www/", filename);
-						if (!file.exists() || file.isDirectory()) {
-							logger.debug("====================== CUSTOM FAIL ======================");
-							logger.debug("Is Directory:     {}", file.isDirectory());
-							logger.debug("Sanitized Query:  {}", sanitizedQuery);
-							logger.debug("Page Path:        {}", pagePath);
-							//logger.debug("Search Path:      {}", "/var/www/");
-							//logger.debug("Working Dir:      {}", System.getProperty("user.dir"));
-							response.sendError(HttpServletResponse.SC_NOT_FOUND);
-							return; // Use above logging instead of standard logging
-						}
-						response.setHeader("Content-Type", getServletContext().getMimeType(filename));
-						response.setHeader("Content-Length", String.valueOf(file.length()));
-						response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");						
-						// Cache for 30 days
-						response.setDateHeader("Expires", System.currentTimeMillis() + 30 * DateHelpers.millisecondsPerDay);
-						Files.copy(file.toPath(), response.getOutputStream());
+						new CustomServer(connectionPackage).serve(pagePath, sanitizedQuery, this.getServletContext());
 						break; // Use standard logging
 					}
 
@@ -361,19 +345,4 @@ public class ServerMain extends HttpServlet {
 		return true;
 	}
 	
-
-	/*
-	private static int parseInt(String s) {
-		int i = -1;
-		if (s != null) {
-			try {
-				i = Integer.parseInt(s);
-			} catch (NumberFormatException e) {
-				i = -2;
-			}
-		}
-		return i;
-	}
-	*/
-
 }
