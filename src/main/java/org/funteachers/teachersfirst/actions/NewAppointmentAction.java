@@ -28,7 +28,7 @@ public class NewAppointmentAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			openingIdInt = 0;
 		}
-		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO(this.getClass().toString());
+		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO(this.getClass().getSimpleName());
 		final Opening referralOpening = openingDAO.retrieveByID(openingIdInt);
 		if (referralOpening == null) {
 			this.sendPostReply("/openings", "", "Opening with ID %5B" + openingIdString + "%5D does not exist!");
@@ -43,7 +43,7 @@ public class NewAppointmentAction extends ActionRunner {
 			this.sendPostReply("/openings", "", "Could not parse student ID!");
 			return;
 		}
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().toString());
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final Member student = memberDAO.retrieveByID(studentIdInt);
 		if (student == null) {
 			this.sendPostReply("/openings", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
@@ -153,7 +153,7 @@ public class NewAppointmentAction extends ActionRunner {
 		}
 
 		// Make sure no conflicting appointments
-		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().toString());
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName());
 		final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
 		PlannedAppointment pa = new PlannedAppointment(studentIdInt, instructorIdInt,
 				year, month, day, startHour, startMinute, endDay, endHour, endMinute);

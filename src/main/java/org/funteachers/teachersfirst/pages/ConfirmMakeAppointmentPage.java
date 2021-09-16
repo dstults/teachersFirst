@@ -27,7 +27,7 @@ public class ConfirmMakeAppointmentPage extends PageLoader {
 			} catch (NumberFormatException e) {
 				studentIdInt = 0;
 			}
-			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().toString());
+			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 			final String studentName = studentIdInt > 0 ? memberDAO.retrieveByID(studentIdInt).getDisplayName() : "";
 			final String instructorIdString = QueryHelpers.getGet(request, "instructorId");
 			int instructorIdInt;

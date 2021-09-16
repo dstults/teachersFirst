@@ -74,7 +74,7 @@ public class AddMemberAction extends ActionRunner {
 		logger.debug(displayName + " attempting to register...");
 		
 		// Making sure unique login name
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().toString());
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		List<Member> members = memberDAO.retrieveAll();
 		for (Member member : members) {
 			if (member.getLoginName() == loginName) {

@@ -35,7 +35,7 @@ public class ProfilePage extends PageLoader {
 			sendJsonMessage("Error: You are not logged in.");
 			return;
 		}
-		boolean connectedToDatabase = this.connectionPackage.getConnection(this.getClass().toString()) != null;
+		boolean connectedToDatabase = this.connectionPackage.getConnection(this.getClass().getSimpleName()) != null;
 		if (!connectedToDatabase) {
 			sendJsonMessage("Error: Failed to contact database, please try again.");
 			return;
@@ -52,7 +52,7 @@ public class ProfilePage extends PageLoader {
 		// Get data from DAO
 		final Member member;
 		try {
-			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().toString());
+			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 			member = memberDAO.retrieveByID(memberId);
 		} catch (IndexOutOfBoundsException ex) {
 			sendJsonMessage("Error: Invalid member ID.");

@@ -47,7 +47,7 @@ public class UpdateAppointmentStateAction extends ActionRunner {
 		}
 
 		// Verify connection to DB
-		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().toString());
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName());
 		if (appointmentDAO == null) {
 			this.sendJsonMessage("Could not connect to database, please try again.", false);
 			return;

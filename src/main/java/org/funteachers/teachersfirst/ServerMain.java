@@ -67,7 +67,6 @@ public class ServerMain extends HttpServlet {
 		logger.info("Site data initialized.");
 
 		ConnectionPackage connectionPackage = new ConnectionPackage(null, null);
-		connectionPackage.initialize(this.getClass().toString());
 		LoggedEvent.log(connectionPackage, 0, "SERVER INIT");
 		connectionPackage.terminate();
 		logger.info("Database connectivity tests complete.");

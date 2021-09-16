@@ -25,7 +25,7 @@ public class DeleteMemberAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			memberIdInt = 0;
 		}
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().toString());
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final Member member = memberDAO.retrieveByID(memberIdInt);
 		if (member == null) {
 			this.sendJsonMessage("Member %5B" + memberIdString + "%5D not found!", false);

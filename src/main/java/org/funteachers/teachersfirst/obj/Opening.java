@@ -54,7 +54,7 @@ public class Opening {
 	}
 
 	public boolean update(ConnectionPackage cp) {
-		return cp.getOpeningDAO(this.getClass().toString()).update(this);
+		return cp.getOpeningDAO(this.getClass().getSimpleName()).update(this);
 	}
 
 	// ----------------------------------------------------------------	

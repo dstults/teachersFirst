@@ -32,7 +32,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 			this.sendPostReply("/make_appointment_batch", "", "Could not parse student ID!");
 			return;
 		}
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().toString());
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final Member student = memberDAO.retrieveByID(studentIdInt);
 		if (student == null) {
 			this.sendPostReply("/make_appointment_batch", "", "Student with ID %5B" + studentIdString + "%5D does not exist!");
@@ -166,7 +166,7 @@ public class NewAppointmentBatchAction extends ActionRunner {
 		}
 
 		// Make sure no conflicting appointments
-		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().toString());
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName());
 		final List<Appointment> allAppointments = appointmentDAO.retrieveAll();
 		logger.debug("APPOINTMENTS GOT: " + allAppointments.size());
 
