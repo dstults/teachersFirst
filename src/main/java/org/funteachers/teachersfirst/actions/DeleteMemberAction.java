@@ -28,7 +28,7 @@ public class DeleteMemberAction extends ActionRunner {
 		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final Member member = memberDAO.retrieveByID(memberIdInt);
 		if (member == null) {
-			this.sendJsonMessage("Member %5B" + memberIdString + "%5D not found!", false);
+			this.sendJsonMessage("Member [ID: " + memberIdString + " ] not found!", false);
 			return;
 		}
 
@@ -38,13 +38,9 @@ public class DeleteMemberAction extends ActionRunner {
 			return;
 		}
 
-		logger.debug("Attempting to delete member " + member.toString() + " ...");
-		
 		memberDAO.softDelete(memberIdInt);
-		//logger.info(DataManager.getMemberDAO().size() + " records total");
-		logger.debug("Soft-deleted member ID: [{}]", memberIdInt);
 		
-		this.sendJsonMessage("Member %5B" + memberIdString + "%5D, deleted!", true, "/members");
+		this.sendJsonMessage("Member [ID: " + memberIdString + " ] deleted!", true, "/members");
 		return;
 	}
 	

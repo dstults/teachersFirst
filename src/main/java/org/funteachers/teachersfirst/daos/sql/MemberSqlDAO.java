@@ -249,7 +249,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 	public void softDelete(int recID) {
 		if (recID <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
-		logger.debug("Member DELETE [ID: {} ] ...", recID);
+		logger.debug("Member S-DELETE [ID: {} ] ...", recID);
 
 		final String query = "UPDATE members SET isDeleted = 1 WHERE recID = " + recID + ";";
 		SQLUtils.executeSql(conn, query);
@@ -257,7 +257,7 @@ public class MemberSqlDAO implements DAO<Member> {
 
 	public void softUndelete(int recID) {
 		if (recID <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
-		logger.debug("Member UNDELETE [ID: {} ] ...", recID);
+		logger.debug("Member S-UNDELETE [ID: {} ] ...", recID);
 
 		final String query = "UPDATE members SET isDeleted = 0 WHERE recID = " + recID + ";";
 		SQLUtils.executeSql(conn, query);
