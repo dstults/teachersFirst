@@ -100,10 +100,9 @@ public class SQLUtils {
 		}
 	}
 
-	public static Connection connect(String initParams, String reason) {
+	public static Connection connect(String initParams) {
 		// This has been turned off because it's a security risk (the password is in the initParams)
 		//logger.debug("Connecting to " + initParams + "...");
-		logger.debug("DATABASE CONNECT: [ {} ]", reason);
 
 		String driverClass = "org.mariadb.jdbc.Driver";
 		try {
@@ -321,7 +320,7 @@ public class SQLUtils {
 
 	// Generic Update
 	public static boolean executeSqlUpdate(Connection conn, String query, String... args) {
-		logger.debug("Executing SQL Update: " + query);
+		//logger.debug("Executing SQL Update: " + query);
 		
 		try {
 			PreparedStatement stmt = conn.prepareStatement(query);
@@ -345,7 +344,7 @@ public class SQLUtils {
 	//TODO: Switch to generic update
 	// Appointment Update
 	public static boolean executeSqlAppointmentUpdate(Connection conn, String query, boolean schedulingVerified, int completionState) {
-		logger.debug("Executing SQL Update to Appointment: " + query);
+		logger.debug("Appointment UPDATE [ {} / {} ]: ", schedulingVerified, completionState);
 		
 		try {
 			PreparedStatement stmt = conn.prepareStatement(query);

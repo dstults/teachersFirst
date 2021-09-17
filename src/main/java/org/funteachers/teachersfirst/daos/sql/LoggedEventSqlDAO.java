@@ -77,7 +77,7 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	}
 	
 	public List<LoggedEvent> retrieveAll() {
-		logger.debug("Getting all logged events...");
+		logger.debug("LoggedEvents SELECT [ * ] ...");
 		
 		String query = "SELECT * FROM loggedEvents ORDER BY recID;";
 
@@ -96,7 +96,7 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	}
 	
 	public List<Integer> retrieveAllIDs() {
-		logger.debug("Getting all LoggedEvent IDs...");
+		logger.debug("LoggedEvents SELECT [ *:id ] ...");
 
 		String query = "SELECT recID FROM loggedEvents ORDER BY recID;";
 

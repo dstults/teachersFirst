@@ -44,17 +44,17 @@ public class ConnectionPackage {
 		this.initialCaller = request == null ? "SYS" : request.getPathInfo() == null ? "" : request.getPathInfo();
 	}
 
-	private void initialize(String reason) {
+	private void initialize() {
 		if (this.attemptedConnection) {
 			logger.warn("WARNING: Repeat connection attempted, aborting!");
 			return;
 		}
 
 		this.attemptedConnection = true;
-		this.connection = SQLUtils.connect(GlobalConfig.getInitParams(), reason);
+		this.connection = SQLUtils.connect(GlobalConfig.getInitParams());
 		if (this.connection == null) {
 			this.isConnectionHealthy = false;
-			this.connection = SQLUtils.connect(GlobalConfig.getNewInitParams(), reason);
+			this.connection = SQLUtils.connect(GlobalConfig.getNewInitParams());
 			if (this.connection != null) {
 				logger.warn("====================================== Warning");
 				logger.warn("|  WARNING, DATABASE NOT BUILT YET!  | Warning");
@@ -106,36 +106,36 @@ public class ConnectionPackage {
 
 	public Connection getConnection(String reason) {
 		reason = this.initialCaller + ":" + reason;
-		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE GETCONN: [ {} ]", reason);
+		logger.debug("DATABASE Get-Conn: [ {} ]", reason);
+		if (this.connection == null) this.initialize();
 		return this.connection;
 	}
 
 	public DAO<Member> getMemberDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
-		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
+		logger.debug("DATABASE Members: [ {} ]", reason);
+		if (this.connection == null) this.initialize();
 		return this.memberDAO;
 	}
 
 	public DAO<Appointment> getAppointmentDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
-		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
+		logger.debug("DATABASE Appointments: [ {} ]", reason);
+		if (this.connection == null) this.initialize();
 		return this.appointmentDAO;
 	}
 
 	public DAO<Opening> getOpeningDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
-		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
+		logger.debug("DATABASE Openings: [ {} ]", reason);
+		if (this.connection == null) this.initialize();
 		return this.openingDAO;
 	}
 
 	public DAO<LoggedEvent> getLoggedEventDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
-		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
+		logger.debug("DATABASE LoggedEvents: [ {} ]", reason);
+		if (this.connection == null) this.initialize();
 		return this.loggedEventDAO;
 	}
 
@@ -151,12 +151,16 @@ public class ConnectionPackage {
 
 	}
 
+	// Unused
+	/*
 	public boolean reset(String reason) {
 		this.terminate();
 		//this.allDAOs.clear();
-		this.initialize(reason);
+		this.initialize();
+		logger.debug("DATABASE Reset:   [ {} ]", reason);
 		return this.connection != null;
 	}
+	*/
 
 	public String getConnectionStatusMessage() {
 		return this.connectionStatusMessage;
