@@ -227,12 +227,15 @@ public class SecurityChecker {
 	}
 
 	// This is to clear out rogue cookies
+	// not needed anymore because the new setPath is working after all
+	/* 
 	private void clearCookie(Cookie oldCookie) {
 		final Cookie newCookie = new Cookie(oldCookie.getName(), "");
 		newCookie.setPath(oldCookie.getPath());
 		newCookie.setMaxAge(-1); // Expires in the past by 1 second
 		response.addCookie(newCookie);
 	}
+	*/
 
 	private void refreshCookie(Member member, String token) {
 		// Security warning: token should not actually be logged -- this has been removed though because it's spammy

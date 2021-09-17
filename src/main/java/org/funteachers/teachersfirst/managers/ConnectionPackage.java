@@ -107,35 +107,35 @@ public class ConnectionPackage {
 	public Connection getConnection(String reason) {
 		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE RECON:   [ {} ]", reason);
+		else logger.debug("DATABASE GETCONN: [ {} ]", reason);
 		return this.connection;
 	}
 
 	public DAO<Member> getMemberDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE RECON:   [ {} ]", reason);
+		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
 		return this.memberDAO;
 	}
 
 	public DAO<Appointment> getAppointmentDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE RECON:   [ {} ]", reason);
+		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
 		return this.appointmentDAO;
 	}
 
 	public DAO<Opening> getOpeningDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE RECON:   [ {} ]", reason);
+		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
 		return this.openingDAO;
 	}
 
 	public DAO<LoggedEvent> getLoggedEventDAO(String reason) {
 		reason = this.initialCaller + ":" + reason;
 		if (this.connection == null) this.initialize(reason);
-		else logger.debug("DATABASE RECON:  [ {} ]", reason);
+		else logger.debug("DATABASE GETDAO:  [ {} ]", reason);
 		return this.loggedEventDAO;
 	}
 

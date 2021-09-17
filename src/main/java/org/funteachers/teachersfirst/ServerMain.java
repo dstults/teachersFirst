@@ -50,6 +50,7 @@ public class ServerMain extends HttpServlet {
 		logger.warn("");
 		logger.warn("==================================================");
 		logger.warn("    Server init() started!");
+		logger.warn("    SERVLET: " + SERVLET_NAME);
 		logger.warn("==================================================");
 		logger.warn("");
 
@@ -146,10 +147,6 @@ public class ServerMain extends HttpServlet {
 					connectionPackage.terminate();
 					return; // don't log
 
-				case "/dynamic.css":
-					new DynamicCssFile(connectionPackage).loadPage();
-					connectionPackage.terminate();
-					return; // don't log
 				case "/dynamic.js":
 					new DynamicJsFile(connectionPackage).loadPage();
 					connectionPackage.terminate();

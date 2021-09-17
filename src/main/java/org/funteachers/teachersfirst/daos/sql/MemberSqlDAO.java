@@ -214,10 +214,11 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, token);
 
-		if (success)
-			logger.debug("TOKEN for member [ {} ] successfully updated.", member.getRecID());
-		else
+		if (success) {
+			//logger.debug("TOKEN for member [ {} ] successfully updated.", member.getRecID());
+		} else {
 			logger.error("!! TOKEN for member [ {} ] failed to update !!", member.getRecID());
+		}
 		
 		return success;
 	}
@@ -229,10 +230,11 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, password);
 
-		if (success)
-			logger.debug("PASSWORD for member [ {} ] successfully updated.", member.getRecID());
-		else
+		if (success) {
+			//logger.debug("PASSWORD for member [ {} ] successfully updated.", member.getRecID());
+		} else {
 			logger.error("!! PASSWORD for member [ {} ] failed to update !!", member.getRecID());
+		}
 		
 		return success;
 	}

@@ -63,18 +63,17 @@ public class AddMemberAction extends ActionRunner {
 			return;
 		}
 
-		// Finally, check DB if it's up:
-		if (this.connectionPackage == null || !this.connectionPackage.getIsConnectionHealthy()) {
+		// Check if database is connected:
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
+		if (memberDAO == null) {
 			this.sendPostReply(retryPage, retryString, "Sorry, there's been a catastrophic database failure. Please try again later.");
 			return;
 		}
 
 		// All checks passed, start the action...
-
-		logger.debug(displayName + " attempting to register...");
+		logger.debug(" Attempting to register [ {} ]...", displayName);
 		
 		// Making sure unique login name
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		List<Member> members = memberDAO.retrieveAll();
 		for (Member member : members) {
 			if (member.getLoginName() == loginName) {
