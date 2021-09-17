@@ -15,6 +15,7 @@ import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.actions.*;
+import org.funteachers.teachersfirst.actions.admin.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 import org.funteachers.teachersfirst.pages.*;
@@ -230,6 +231,9 @@ public class ServerMain extends HttpServlet {
 					break;
 				case "delete_member":
 					new DeleteMemberAction(connectionPackage).runAction();
+					break;
+				case "undelete_member":
+					new UndeleteMemberAction(connectionPackage).runAction();
 					break;
 				case "make_openings":
 					new NewOpeningsAction(connectionPackage).runAction();

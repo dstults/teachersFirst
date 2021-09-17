@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst.actions;
+package org.funteachers.teachersfirst.actions.admin;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.managers.*;
@@ -28,23 +28,25 @@ public class DeleteMemberAction extends ActionRunner {
 		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final Member member = memberDAO.retrieveByID(memberIdInt);
 		if (member == null) {
-			this.sendJsonMessage("Member %5B" + memberIdString + "%5D not found!", false);
+			this.sendJsonMessage("Member [ID: " + memberIdString + " ] not found!", false);
 			return;
 		}
 
-		// Make sure the person has the authority
+		// Make sure the member is not deleted
+		if (member.getIsDeleted()) {
+			this.sendJsonMessage("Cannot delete, member already deleted.", false);
+			return;
+		}
+
+		// Make sure the operator has the authority
 		if (!Permissions.MemberCanDeleteMember(this.operator, member)) {
 			this.sendJsonMessage("You are not authorized to delete this member.", false);
 			return;
 		}
 
-		logger.debug("Attempting to delete member " + member.toString() + " ...");
-		
 		memberDAO.softDelete(memberIdInt);
-		//logger.info(DataManager.getMemberDAO().size() + " records total");
-		logger.debug("Soft-deleted member ID: [{}]", memberIdInt);
 		
-		this.sendJsonMessage("Member %5B" + memberIdString + "%5D, deleted!", true, "/members");
+		this.sendJsonMessage("Member [ID: " + memberIdString + " ] deleted!", true, "/members");
 		return;
 	}
 	

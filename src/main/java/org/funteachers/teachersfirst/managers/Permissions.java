@@ -20,9 +20,28 @@ public class Permissions {
 		return false;
 	}
 	
+	public static boolean MemberCanUndeleteMember(Member actor, Member target) {
+		// Null checks
+		if (actor == null || target == null) return false;
+
+		// Cannot undelete the non-deleted
+		if (!target.getIsDeleted()) return false;
+
+		// Cannot undelete self -- shouldn't be possible, but just in case...
+		if (actor.getRecID() == target.getRecID()) return false;
+
+		// Must be admin -- deleting can be done by instructor, undeleting only by admin
+		if (!actor.getIsAdmin()) return false;
+
+		return true;
+	}
+
 	public static boolean MemberCanDeleteMember(Member actor, Member target) {
 		// Null checks
 		if (actor == null || target == null) return false;
+
+		// Cannot delete the already deleted
+		if (target.getIsDeleted()) return false;
 
 		// Cannot delete self -- could use obj.equals(obj) but recID is faster and safer
 		if (actor.getRecID() == target.getRecID()) return false;
