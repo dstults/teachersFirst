@@ -625,13 +625,22 @@ table.openings-calendar div.highlight {
 	cursor: default;
 }
 .buttoned-panel-buttons>a.red {
-	background-color: hsla(0, 100%, 80%, 70%);
+	background-color: hsla(0, 100%, 80%, 0.7);
 	color: darkred;
 	font-weight: bold;
 }
 .buttoned-panel-buttons>a.red:hover {
 	background-color: hsl(0, 100%, 90%);
 	color: red;
+}
+.buttoned-panel-buttons>a.green {
+	background-color: hsla(120, 100%, 80%, 0.7);
+	color: darkgreen;
+	font-weight: bold;
+}
+.buttoned-panel-buttons>a.green:hover {
+	background-color: hsl(153, 100%, 90%);
+	color: hsl(120, 73%, 33%);
 }
 
 .profile-page-nodata {
