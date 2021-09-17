@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst.actions;
+package org.funteachers.teachersfirst.actions.admin;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
