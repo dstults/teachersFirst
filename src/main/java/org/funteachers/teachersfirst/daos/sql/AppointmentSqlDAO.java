@@ -92,7 +92,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	}
 	
 	public List<Appointment> retrieveAll() {
-		logger.debug("Getting all appointments...");
+		logger.debug("Appointments SELECT [ * ] ...");
 		
 		String query = "SELECT * FROM appointments ORDER BY startTime, instructorID, endTime;";
 
@@ -113,7 +113,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	public List<Appointment> retrieveAllBetweenDatetimeAndDatetime(LocalDateTime start, LocalDateTime end) {
 		final String startStringSql = DateHelpers.toSqlDatetimeString(start);
 		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
-		logger.debug("Getting all sppointments between {} and {}...", startStringSql, endStringSql);
+		logger.debug("Appointments SELECT [{}]-[{}] ...", startStringSql, endStringSql);
 		
 		String query = "SELECT * FROM appointments WHERE startTime >= ? AND endTime <= ? ORDER BY startTime, instructorID, endTime;";
 
@@ -132,7 +132,7 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	}
 	
 	public List<Integer> retrieveAllIDs() {
-		logger.debug("Getting all Appointment IDs...");
+		logger.debug("Appointments SELECT [*:id] ...");
 
 		String query = "SELECT recID FROM appointments ORDER BY recID;";
 

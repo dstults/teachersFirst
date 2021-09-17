@@ -110,7 +110,7 @@ public class SecurityChecker {
 
 	public void logout(Member member, String info, boolean allDevices) {
 		clearTokenCookie(member, allDevices);
-		logger.debug("User [ ({}) {} ] logged out: [{}]", member.getRecID(), member.getLoginName(), info);
+		logger.debug("User [ ({}) {} ] logged out: [ {} ]", member.getRecID(), member.getLoginName(), info);
 	}
 
 	private Cookie getCookieByName(String name) {
@@ -199,7 +199,7 @@ public class SecurityChecker {
 			// Update database if token generated
 			memberDAO.updateToken(member, token);
 		}
-		logger.debug("Giving token [ {} ] to member [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
+		logger.debug("Giving token to [ ({}) {} ]", member.getRecID(), member.getLoginName());
 		
 		// Set new cookie
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." +token);
@@ -238,9 +238,6 @@ public class SecurityChecker {
 	*/
 
 	private void refreshCookie(Member member, String token) {
-		// Security warning: token should not actually be logged -- this has been removed though because it's spammy
-		//logger.debug("Refreshing token maxAge for memberID [ ({}) {} ]", member.getRecID(), member.getLoginName());
-
 		// Refresh cookie with new expiration
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." + token);
 		tokenCookie.setPath("/");

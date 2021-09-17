@@ -77,7 +77,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 	
 	public List<Opening> retrieveAll() {
-		logger.debug("Getting all openings...");
+		logger.debug("Openings SELECT [ * ] ...");
 		
 		String query = "SELECT * FROM openings ORDER BY startTime, instructorID, endTime;";
 
@@ -98,8 +98,8 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	public List<Opening> retrieveAllBetweenDatetimeAndDatetime(LocalDateTime start, LocalDateTime end) {
 		final String startStringSql = DateHelpers.toSqlDatetimeString(start);
 		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
-		logger.debug("Getting all openings between {} and {}...", startStringSql, endStringSql);
-		
+		logger.debug("Openings SELECT [{}]-[{}] ...", startStringSql, endStringSql);
+
 		String query = "SELECT * FROM openings WHERE startTime >= ? AND endTime <= ? ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query, startStringSql, endStringSql);
@@ -117,7 +117,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 	
 	public List<Integer> retrieveAllIDs() {
-		logger.debug("Getting all Opening IDs...");
+		logger.debug("Openings SELECT [*:id] ...");
 
 		String query = "SELECT recID FROM openings ORDER BY recID;";
 
