@@ -1,7 +1,8 @@
 
-window.onload = _ => {
-	populateData();
+window.onload = async _ => {
+	await populateData();
 	tryReplaceProfilePicture();
+	if (refreshButtons) refreshButtons();
 }
 
 const parseQuery = (queryString) => {
