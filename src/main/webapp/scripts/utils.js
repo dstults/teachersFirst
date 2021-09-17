@@ -7,11 +7,10 @@ const sendPostFetch = async data => {
 			body: data
 		});
 
-		if (!response.ok) throw new Error('Post failed, status: [' + response.status + ']');
+		if (!response.ok) throw new Error('Post failed, status code: [' + response.status + ']');
 		
 		return await response.json();
 	} catch (err) {
-		addError(err.message);
-		return undefined;
+		return { message: err.message, success: false };
 	}
 };
