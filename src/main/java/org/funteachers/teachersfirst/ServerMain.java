@@ -294,7 +294,6 @@ public class ServerMain extends HttpServlet {
 		logger.warn("==================================================");
 		logger.warn("");
 
-		deregisterLogger();
 		deregisterJdbcDrivers();
 		
 		logger.info("");
@@ -311,11 +310,6 @@ public class ServerMain extends HttpServlet {
 	}
 
 	// =================================================================
-
-	private void deregisterLogger() {
-		// TODO: De-register logger.
-		logger.info("Deregistering log4j2 loggers...");
-	}
 
 	private void deregisterJdbcDrivers() {
 		logger.info("Deregistering JDBC drivers...");
