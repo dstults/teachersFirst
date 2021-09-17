@@ -2,7 +2,6 @@
 window.onload = async _ => {
 	await populateData();
 	tryReplaceProfilePicture();
-	if (refreshButtons) refreshButtons();
 }
 
 const parseQuery = (queryString) => {
@@ -108,6 +107,7 @@ const notesBox = document.getElementById('instructor-notes');
 const notesButton = document.getElementById('instructor-notes-button');
 
 const refreshAll = _ => {
+	if (refreshButtons) refreshButtons();
 	if (!memberData) {
 		// visibilities
 		creditsRow.style.display = 'none';
