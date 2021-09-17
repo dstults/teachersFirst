@@ -32,7 +32,13 @@ public class UndeleteMemberAction extends ActionRunner {
 			return;
 		}
 
-		// Make sure the person has the authority
+		// Make sure the member is actually deleted
+		if (!member.getIsDeleted()) {
+			this.sendJsonMessage("Cannot undelete, member is not deleted.", false);
+			return;
+		}
+
+		// Make sure the operator has the authority
 		if (!Permissions.MemberCanUndeleteMember(this.operator, member)) {
 			this.sendJsonMessage("You are not authorized to undelete this member.", false);
 			return;

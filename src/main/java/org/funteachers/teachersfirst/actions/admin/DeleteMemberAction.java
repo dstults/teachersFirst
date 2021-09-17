@@ -32,7 +32,13 @@ public class DeleteMemberAction extends ActionRunner {
 			return;
 		}
 
-		// Make sure the person has the authority
+		// Make sure the member is not deleted
+		if (member.getIsDeleted()) {
+			this.sendJsonMessage("Cannot delete, member already deleted.", false);
+			return;
+		}
+
+		// Make sure the operator has the authority
 		if (!Permissions.MemberCanDeleteMember(this.operator, member)) {
 			this.sendJsonMessage("You are not authorized to delete this member.", false);
 			return;
