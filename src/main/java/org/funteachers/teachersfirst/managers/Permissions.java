@@ -14,7 +14,7 @@ public class Permissions {
 		// Instructors can be seen by anyone
 		if (target.getIsInstructor()) return true;
 
-		// Everyone can see themselves
+		// Everyone can see themselves -- could use obj.equals(obj) but recID is faster and safer
 		if (actor.getRecID() == target.getRecID()) return true;
 
 		return false;
@@ -24,8 +24,8 @@ public class Permissions {
 		// Null checks
 		if (actor == null || target == null) return false;
 
-		// Cannot delete self
-		if (actor == target) return false;
+		// Cannot delete self -- could use obj.equals(obj) but recID is faster and safer
+		if (actor.getRecID() == target.getRecID()) return false;
 
 		// Must be instructor or admin
 		if (!actor.getIsAdmin() && !actor.getIsInstructor()) return false;
