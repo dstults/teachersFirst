@@ -370,7 +370,8 @@ public class Member implements IJsonnable {
 				"\"email\":\"" + this.getEmail() + "\"," +
 				"\"isAdmin\":" + this.getIsAdmin() + "," +
 				"\"isInstructor\":" + this.getIsInstructor() + "," +
-				"\"isStudent\":" + this.getIsStudent() +
+				"\"isStudent\":" + this.getIsStudent() + "," +
+				"\"isDeleted\":" + this.getIsDeleted() +
 				"}";
 	}
 
