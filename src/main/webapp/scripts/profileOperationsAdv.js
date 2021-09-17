@@ -6,12 +6,10 @@ const refreshButtons = _ => {
 			deleteButton.innerText = 'Undelete';
 			deleteButton.classList.remove('red');
 			deleteButton.classList.add('green');
-			deleteButton.href = 'javascript:undeleteMember()';
 		} else {
 			deleteButton.innerText = 'Delete\nMember';
 			deleteButton.classList.remove('green');
 			deleteButton.classList.add('red');
-			deleteButton.href = 'javascript:deleteMember()';
 		}
 	}
 }
@@ -24,60 +22,54 @@ const subtractCredits = async _ => {
 	console.debug('TODO');
 };
 
+const adminAction = async (verbCommand, verbPresent, verbPast) => {
+	if (!memberData) {
+		console.error(`No user loaded, cannot ${verbPresent}.`);
+		return;
+	}
+
+	const data = new URLSearchParams();
+	data.append('action', verbCommand + '_member');
+	data.append('memberID', memberData.id);
+
+	const response = await sendPostFetch(data);
+	//console.log(response);
+	if (response.success) {
+		addMessage(`User successfully ${verbPast}!`);
+		await populateData();
+	} else {
+		addMessage(`Failed to ${verbPresent} user. ${response.message}`);
+	}
+};
+
 const toggleStudent = async _ => {
-	console.debug('TODO');
+	if (memberData.isStudent) {
+		await adminAction('unstudent', 'unmake student', 'unmade student');
+	} else {
+		await adminAction('student', 'make student', 'made student');
+	}	
 };
 
 const toggleInstructor = async _ => {
-	console.debug('TODO');
+	if (memberData.isInstructor) {
+		await adminAction('uninstructor', 'unmake instructor', 'unmade instructor');
+	} else {
+		await adminAction('instructor', 'make instructor', 'made instructor');
+	}
 };
 
 const toggleAdmin = async _ => {
-	console.debug('TODO');
-};
-
-const deleteMember = async _ => {
-	if (!memberData) {
-		console.error('No user loaded, cannot delete.');
-		return;
-	}
-
-	//console.log('Attempting to delete user...');
-
-	const data = new URLSearchParams();
-	data.append('action', 'delete_member');
-	data.append('memberID', memberData.id);
-
-	const response = await sendPostFetch(data);
-	console.log(response);
-	if (response.success) {
-		memberData.isDeleted = true;
-		addMessage('User successfully undeleted: ' + response.message);
-		refreshButtons();
+	if (memberData.isAdmin) {
+		await adminAction('unadmin', 'unmake admin', 'unmade admin');
 	} else {
-		addMessage('Failed to undelete user: ' + response.message);
+		await adminAction('admin', 'make admin', 'made admin');
 	}
 };
 
-const undeleteMember = async _ => {
-	if (!memberData) {
-		console.error('No user loaded, cannot undelete.');
-		return;
-	}
-
-	console.log('Attempting to undelete user...');
-
-	const data = new URLSearchParams();
-	data.append('action', 'undelete_member');
-	data.append('memberID', memberData.id);
-
-	const response = await sendPostFetch(data);
-	console.log(response);
-	if (response.success) {
-		memberData.isDeleted = false;
-		addMessage('User successfully undeleted: ' + response.message);
-		refreshButtons();
+const toggleDelete = async _ => {
+	if (memberData.isDeleted) {
+		await adminAction('undelete', 'undelete', 'undeleted');
 	} else {
-		addMessage('Failed to undelete user: ' + response.message);
+		await adminAction('delete', 'delete', 'deleted');
 	}
 };

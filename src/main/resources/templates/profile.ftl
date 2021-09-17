@@ -12,7 +12,7 @@
 			<#if isAdmin || isInstructor><a id="student-toggle" href="javascript:toggleStudent();" class="panel-button">Make<br>Student</a></#if>
 			<#if isAdmin><a id="instructor-toggle" href="javascript:toggleInstructor();" class="panel-button">Make<br>Instructor</a></#if>
 			<#if isAdmin><a id="admin-toggle" href="javascript:toggleAdmin();" class="panel-button">Make<br>Admin</a></#if>
-			<#if isAdmin || isInstructor><a id="delete-member" href="javascript:deleteMember();" class="panel-button red last">Delete<br>Member</a></#if>
+			<#if isAdmin || isInstructor><a id="delete-member" href="javascript:toggleDelete();" class="panel-button red last">Delete<br>Member</a></#if>
 		</div>
 		<table class="profile-box buttoned-panel-main">
 			<tr>
