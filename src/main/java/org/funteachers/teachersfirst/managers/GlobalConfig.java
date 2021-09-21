@@ -121,17 +121,20 @@ public class GlobalConfig {
 	}
 
 	private static String getDefaultConfigText() {
+		// Note about quotation marks around variables that don't need them:
+		// They're like that because all of the variables get passed into a string eventually so it's
+		// more predictable if they're that way to begin with.
 		return "{\n" +
 		"{\n" +
 		"	\"websiteTitle\": \"Example.com\",\n" +
 		"	\"websiteSubtitle\": \"A catchy slogan!\",\n" +
 		"	\"databaseHostname\": \"databaseaddress.com\",\n" +
-		"	\"databasePort\": 3306,\n" +
+		"	\"databasePort\": \"3306\",\n" +
 		"	\"databaseUserID\": \"adminid\",\n" +
 		"	\"databasePassword\": \"secretpassword\",\n" +
 		"	\"databaseSchema\": \"teachersFirst\",\n" +
-		"	\"enableOpenRegistration\": false,\n" +
-		"	\"instructorAdminMakeAppointmentsRequiresOpening\": false\n" +
+		"	\"enableOpenRegistration\": \"false\",\n" +
+		"	\"instructorAdminMakeAppointmentsRequiresOpening\": \"false\"\n" +
 		"}";
 	}
 
