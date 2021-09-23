@@ -732,10 +732,20 @@ table.profile-box td {
 	background-color: var(--primaryHighlightDark);
 }
 .availability-chart .quarter {
+	padding: 2px 4px 8px 2px;
 	font-size: 2rem;
 	border: 1px solid black;
 	text-align: center;
-	background-color: var(--primaryHighlight)
+	background-color: var(--primaryHighlight);
+	user-select: none;
+	cursor: pointer;
+}
+.availability-chart .open {
+	color: black;
+}
+.availability-chart .busy {
+	color: hsl(300, 100%, 90%);
+	background-color: hsl(300, 38%, 15%);
 }
 .select {
 	display: block;

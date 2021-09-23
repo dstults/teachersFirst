@@ -10,10 +10,10 @@
 <div class="availability-chart">
 	<#list 0..23 as i>
 	<div class="hour">
-		<p class="opening">${i?string("00")}:00</p>
-		<p class="opening">${i?string("00")}:15</p>
-		<p class="opening">${i?string("00")}:30</p>
-		<p class="opening">${i?string("00")}:45</p>
+		<div class="quarter open">${i?string("00")}:00</div>
+		<div class="quarter open">${i?string("00")}:15</div>
+		<div class="quarter open">${i?string("00")}:30</div>
+		<div class="quarter busy">${i?string("00")}:45</div>
 	</div>
 	</#list>
 </div>
