@@ -707,7 +707,7 @@ table.profile-box td {
 	margin-right: 1rem;
 }
 .availability-chart {
-	width: 80%;
+	width: fit-content;
 	margin: 0 auto;
 	border: 2px solid black;
 	padding: 4px;
@@ -718,6 +718,7 @@ table.profile-box td {
 	justify-items: center;
 }
 .availability-chart div {
+	font-size: 2rem;
 	width: 7rem;
 	height: 8rem;
 	border: 1px solid black;
