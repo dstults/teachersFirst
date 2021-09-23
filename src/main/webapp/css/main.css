@@ -706,6 +706,22 @@ table.profile-box td {
 .make-appointment label {
 	margin-right: 1rem;
 }
+.availability-chart {
+	width: 80%;
+	margin: 0 auto;
+	border: 2px solid black;
+	padding: 4px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	gap: 2px;
+	align-items: center;
+	justify-items: center;
+}
+.availability-chart div {
+	width: 10rem;
+	height: 10rem;
+	border: 1px solid black;
+}
 .select {
 	display: block;
 	float: left;

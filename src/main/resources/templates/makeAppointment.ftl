@@ -1,10 +1,22 @@
 <#include "head.ftl">
 <body>
 <#include "header.ftl">
+<#if userId lte 0>
 <div class="page-content-550">
-	<#if userId lte 0>
 	<#include "please_login.ftl">
-	<#else>
+</div>
+<#else>
+<p>TODO:</p>
+<div class="availability-chart">
+	<#list 0..23 as i>
+	<div class="opening">${i?string("00")}:00<br>-<br>${i?string("00")}:15</div>
+	<div class="opening">${i?string("00")}:15<br>-<br>${i?string("00")}:30</div>
+	<div class="opening">${i?string("00")}:30<br>-<br>${i?string("00")}:45</div>
+	<div class="opening">${i?string("00")}:45<br>-<br>${(i+1)?string("00")}:00</div>
+	</#list>
+</div>
+<br>
+<div class="page-content-550">
 	<h1>Make Appointment:</h1>
 	<br>
 	<form method="get" action="/confirm_make_appointment">
