@@ -9,10 +9,12 @@
 <p>TODO:</p>
 <div class="availability-chart">
 	<#list 0..23 as i>
-	<div class="opening">${i?string("00")}:00<br>-<br>${i?string("00")}:15</div>
-	<div class="opening">${i?string("00")}:15<br>-<br>${i?string("00")}:30</div>
-	<div class="opening">${i?string("00")}:30<br>-<br>${i?string("00")}:45</div>
-	<div class="opening">${i?string("00")}:45<br>-<br>${(i+1)?string("00")}:00</div>
+	<div class="hour">
+		<p class="opening">${i?string("00")}:00</p>
+		<p class="opening">${i?string("00")}:15</p>
+		<p class="opening">${i?string("00")}:30</p>
+		<p class="opening">${i?string("00")}:45</p>
+	</div>
 	</#list>
 </div>
 <br>

@@ -712,17 +712,30 @@ table.profile-box td {
 	border: 2px solid black;
 	padding: 4px;
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
 	gap: 2px;
 	align-items: center;
 	justify-items: center;
+	background-color: var(--backgroundColor);
+	box-shadow: 2px 2px 2px black;
 }
-.availability-chart div {
+.availability-chart .hour {
+	width: fit-content;
+	margin: 0 auto;
+	border: 1px solid black;
+	padding: 1px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	gap: 2px;
+	align-items: center;
+	justify-items: center;
+	background-color: var(--primaryHighlightDark);
+}
+.availability-chart .quarter {
 	font-size: 2rem;
-	width: 7rem;
-	height: 8rem;
 	border: 1px solid black;
 	text-align: center;
+	background-color: var(--primaryHighlight)
 }
 .select {
 	display: block;
