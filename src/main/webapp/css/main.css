@@ -718,9 +718,10 @@ table.profile-box td {
 	justify-items: center;
 }
 .availability-chart div {
-	width: 10rem;
-	height: 10rem;
+	width: 7rem;
+	height: 8rem;
 	border: 1px solid black;
+	text-align: center;
 }
 .select {
 	display: block;
