@@ -42,6 +42,8 @@ public class AppointmentsPage extends PageLoader {
 			return;
 		}
 
+		boolean conflictsOnly = QueryHelpers.getGetBool(request, "conflicts");
+
 		// Get data from DAOs
 		final List<Member> allMembers = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName()).retrieveAll();
 		final List<Appointment> allAppointments = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName()).retrieveAll();
@@ -50,6 +52,7 @@ public class AppointmentsPage extends PageLoader {
 		final List<Appointment> futureAppointments = new ArrayList<Appointment>();		
 		final List<Appointment> pastAppointments= new ArrayList<Appointment>();
 
+		// TODO: Merge the member query into a hybrid query
 		// TODO: Simplify this process into two queries
 		for (Appointment appointment : allAppointments) {
 			// Make sure we're either an admin (sees everything) or one of the members of the appointment
