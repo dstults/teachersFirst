@@ -44,9 +44,13 @@ public class HybridDAO {
 		return appointments;
 	}
 
-	public List<Appointment> getAppointmentsWithMemberNamesBetweenDatetimeAndDatetime(LocalDateTime start, LocalDateTime end) {
+	public List<Appointment> getAppointmentsWithMemberNamesBetweenDatetimes(LocalDateTime start, LocalDateTime end) {
 		final String startStringSql = DateHelpers.toSqlDatetimeString(start);
 		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
+		return getAppointmentsWithMemberNamesBetweenDatetimes(startStringSql, endStringSql);
+	}
+
+	public List<Appointment> getAppointmentsWithMemberNamesBetweenDatetimes(String startStringSql, String endStringSql) {
 		logger.debug("Appointments SELECT [ * ] ...");
 		
 		String query = "SELECT a.recID, a.studentID, m1.displayName AS 'studentName', a.instructorID, m2.displayName AS 'instructorName', " +
@@ -71,7 +75,6 @@ public class HybridDAO {
 		return appointments;
 	}
 
-			
 	private Appointment convertRowToPrettifiedAppointment(SQLRow row) {
 		//logger.debug("Converting " + row + " to Appointment...");
 		int recID = Integer.parseInt(row.getItem("recID"));
