@@ -159,7 +159,6 @@ const markSlotsBusy = (slot1, slot2) => {
 		slotElement.classList.remove('open');
 		if (!slotElement.classList.contains('closed')) slotElement.classList.add('busy');
 		slot1 = (slot1 + 1) % 96;
-		console.log(slotElement, slot1, slot2);
 		if (slot1 === slot2) break;
 	}
 };

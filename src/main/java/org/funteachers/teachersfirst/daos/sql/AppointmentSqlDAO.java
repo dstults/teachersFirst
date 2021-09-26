@@ -141,12 +141,13 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		// wouldn't be able to see relevant appointment information.
 		String query = "SELECT recID, 0 AS 'studentID', 0 AS 'instructorID', startTime, endTime, 0 AS 'schedulingVerified', 0 AS 'completionState' " +
 							"FROM appointments " +
-							"WHERE (startTime >= ? AND startTime < ? OR endTime > ? AND endTime <= ?) " +
+							"WHERE (startTime >= ? AND startTime < ? OR endTime > ? AND endTime <= ? " +
+								"OR startTime < ? AND endTime > ?) " + // Catches case where an appointment completely envelopes the range
 								"AND (instructorID = ? OR instructorID = ? OR studentID = ? OR studentID = ?) " +
 								"AND completionState <> 2 " + // Cancelled appointments don't conflict
 							"ORDER BY startTime, endTime;";
 
-		List<SQLRow> rows = SQLUtils.executeSql(conn, query, start, end, start, end, u1s, u2s, u1s, u2s);
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, start, end, start, start, start, end, u1s, u2s, u1s, u2s);
 		if (rows == null || rows.size() == 0) {
 			logger.debug("No appointments found!");
 			return null;
