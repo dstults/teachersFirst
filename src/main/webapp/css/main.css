@@ -767,6 +767,7 @@ table.profile-box td {
     height: 3rem;
 }
 .availability-chart .first {
+	font-size: 80%;
 	border-top-left-radius: 0.5rem;
 	border-bottom-left-radius: 0.5rem;
 }
