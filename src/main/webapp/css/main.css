@@ -784,6 +784,7 @@ table.profile-box td {
 .availability-chart .closed {
 	color: gray;
 	background-color: hsl(0, 0%, 20%);
+	opacity: 0.5;
 }
 .select {
 	display: block;
