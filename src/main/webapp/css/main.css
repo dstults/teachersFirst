@@ -207,7 +207,7 @@ header a, .buttonize-link {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-items: center;
-	/* align-items: center; */
+	align-items: center;
 	width: fit-content;
 	margin: 0 auto;
 	gap: 4rem;
@@ -733,9 +733,9 @@ table.profile-box td {
 	margin: 0 auto;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	gap: 2px;
 	align-items: center;
 	justify-items: center;
+	gap: 0.6rem;
 	/*
 	border: 2px solid black;
 	padding: 4px;
@@ -746,30 +746,44 @@ table.profile-box td {
 .availability-chart .hour {
 	width: fit-content;
 	margin: 0 auto;
-	border: 1px solid black;
 	padding: 1px;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr;
-	gap: 2px;
 	align-items: center;
 	justify-items: center;
-	background-color: var(--primaryHighlightDark);
 }
 .availability-chart .quarter {
-	padding: 2px 4px 8px 2px;
-	font-size: 2rem;
-	border: 1px solid black;
-	text-align: center;
 	background-color: var(--primaryHighlight);
+	padding: 0.4rem;
 	user-select: none;
-	cursor: pointer;
+	justify-content: center;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-items: center;
+	font-size: 1.2rem;
+	width: 6rem;
+    height: 3rem;
+}
+.availability-chart .first {
+	border-top-left-radius: 0.5rem;
+	border-bottom-left-radius: 0.5rem;
+}
+.availability-chart .last {
+	border-top-right-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
 }
 .availability-chart .open {
+	background-color: white;
 	color: black;
 }
 .availability-chart .busy {
-	color: hsl(300, 100%, 90%);
-	background-color: hsl(300, 38%, 15%);
+	color: white;
+}
+.availability-chart .closed {
+	color: gray;
+	background-color: hsl(0, 0%, 20%);
 }
 .select {
 	display: block;

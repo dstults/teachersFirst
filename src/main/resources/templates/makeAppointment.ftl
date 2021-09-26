@@ -58,10 +58,10 @@
 		<div class="availability-chart">
 			<#list 0..23 as i>
 			<div class="hour">
-				<div class="quarter open">${i?string("00")}:00</div>
-				<div class="quarter open">${i?string("00")}:15</div>
-				<div class="quarter open">${i?string("00")}:30</div>
-				<div class="quarter busy">${i?string("00")}:45</div>
+				<div class="quarter first open">${i?string("00")}:00</div>
+				<div class="quarter busy">:15</div>
+				<div class="quarter busy">:30</div>
+				<div class="quarter last closed">:45</div>
 			</div>
 			</#list>
 		</div>
