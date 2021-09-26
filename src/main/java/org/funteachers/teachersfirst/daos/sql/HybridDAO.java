@@ -24,7 +24,11 @@ public class HybridDAO {
 	public List<Appointment> getAppointmentsWithMemberNames() {
 		logger.debug("Appointments SELECT [ * ] ...");
 		
-		String query = "SELECT * FROM appointments ORDER BY startTime, instructorID, endTime;";
+		String query = "SELECT a.recID, a.studentID, m1.displayName AS 'studentName', a.instructorID, m2.displayName AS 'instructorName', " +
+						"a.startTime, a.endTime, a.schedulingVerified, a.completionState " +
+						"FROM appointments a " +
+						"LEFT JOIN members m1 ON a.studentID = m1.recID " +
+						"LEFT JOIN members m2 ON a.instructorID = m2.recID;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -50,9 +54,9 @@ public class HybridDAO {
 		Timestamp endTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("endTime"));
 		Boolean schedulingVerified = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("schedulingVerified")));
 		int completionState = Integer.parseInt(row.getItem("completionState"));
-		Appointment appointment = new Appointment(recID,studentID, instructorID, startTime, endTime, schedulingVerified, completionState);
-		appointment.setInstructorName("Bobbery");
-		appointment.setStudentName("Bobbery");
+		Appointment appointment = new Appointment(recID, studentID, instructorID, startTime, endTime, schedulingVerified, completionState);
+		appointment.setInstructorName(row.getItem("instructorName"));
+		appointment.setStudentName(row.getItem("studentName"));
 		return appointment;
 	}
 }
