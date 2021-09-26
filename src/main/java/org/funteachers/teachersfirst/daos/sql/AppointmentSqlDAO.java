@@ -131,6 +131,37 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		return appointments;
 	}
 	
+	public List<Appointment> getConflictsBetweenDatetimes(int uid1, int uid2, String start, String end) {
+		logger.debug("App LJ Mem2 SELECT [ * @ ID-ID @ Dt-Dt ] ...");
+		String u1s = String.valueOf(uid1);
+		String u2s = String.valueOf(uid2);
+
+		// Returning values of zero are a security measure, this is to prevent leaking information
+		// as conflict returns are not associated with names, yet can be seen by people who otherwise
+		// wouldn't be able to see relevant appointment information.
+		String query = "SELECT recID, 0 AS 'studentID', 0 AS 'instructorID', startTime, endTime, 0 AS 'schedulingVerified', 0 AS 'completionState' " +
+							"FROM appointments " +
+							"WHERE (startTime >= ? AND startTime < ? OR endTime > ? AND endTime <= ? " +
+								"OR startTime < ? AND endTime > ?) " + // Catches case where an appointment completely envelopes the range
+								"AND (instructorID = ? OR instructorID = ? OR studentID = ? OR studentID = ?) " +
+								"AND completionState <> 2 " + // Cancelled appointments don't conflict
+							"ORDER BY startTime, endTime;";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, start, end, start, start, start, end, u1s, u2s, u1s, u2s);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("No appointments found!");
+			return null;
+		}
+
+		List<Appointment> appointments = new ArrayList<>();
+		for (SQLRow row : rows) {
+			Appointment appointment = convertRowToAppointment(row);
+			appointments.add(appointment);
+		}
+		return appointments;
+
+	}
+
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Appointments SELECT [*:id] ...");
 
@@ -195,7 +226,6 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 	// =====================================================================
 
 	private Appointment convertRowToAppointment(SQLRow row) {
-		// Disabled due to log pollution 2021/04/29
 		//logger.debug("Converting " + row + " to Appointment...");
 		int recID = Integer.parseInt(row.getItem("recID"));
 		int studentID = Integer.parseInt(row.getItem("studentID"));
@@ -204,6 +234,6 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		Timestamp endTime = DateHelpers.fromSqlDatetimeToTimestamp(row.getItem("endTime"));
 		Boolean schedulingVerified = SQLUtils.integerToBoolean(Integer.parseInt(row.getItem("schedulingVerified")));
 		int completionState = Integer.parseInt(row.getItem("completionState"));
-		return new Appointment(recID,studentID, instructorID, startTime, endTime, schedulingVerified, completionState);
+		return new Appointment(recID, studentID, instructorID, startTime, endTime, schedulingVerified, completionState);
 	}
 }

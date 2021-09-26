@@ -12,11 +12,11 @@
 	<div class="page-content-550 floating-box">
 		<form method="get" action="/confirm_make_appointment">
 			<input type="hidden" name="openingId" value="${openingId}">
-			<input type="hidden" name="studentId" value="${studentId}">
-			<input type="hidden" name="instructorId" value="${instructorId}">
-			<input type="hidden" name="date" value="${date}">
-			<input type="hidden" name="openingStartTime" value="${openingStartTime}">
-			<input type="hidden" name="openingEndTime" value="${openingEndTime}">
+			<input id="input-student-id" type="hidden" name="studentId" value="${studentId}">
+			<input id="input-instructor-id" type="hidden" name="instructorId" value="${instructorId}">
+			<input id="input-date" type="hidden" name="date" value="${date}">
+			<input id="input-start-time" type="hidden" name="openingStartTime" value="${openingStartTime}">
+			<input id="input-end-time" type="hidden" name="openingEndTime" value="${openingEndTime}">
 
 			<div class="form-grid-full-rows">
 				<p class="label">Student:</p><p><a href="/profile?memberId=${studentId}">${studentName}</a></p>
@@ -56,12 +56,13 @@
 	</div>
 	<div class="page-content-550">
 		<div class="availability-chart">
+			<#assign j = 0>
 			<#list 0..23 as i>
 			<div class="hour">
-				<div class="quarter first open">${i?string("00")}:00</div>
-				<div class="quarter busy">:15</div>
-				<div class="quarter busy">:30</div>
-				<div class="quarter last closed">:45</div>
+				<div id="slot-${j}" class="quarter first">${i?string("00")}:00</div><#assign j++>
+				<div id="slot-${j}" class="quarter">:15</div><#assign j++>
+				<div id="slot-${j}" class="quarter">:30</div><#assign j++>
+				<div id="slot-${j}" class="quarter last">:45</div><#assign j++>
 			</div>
 			</#list>
 		</div>
@@ -96,6 +97,72 @@ const adjustDurations = (timeSelector) => {
 		durationSelector.options[durationIndex].selected = true;
 	}
 }
+
+const uid1 = document.getElementById('input-student-id').value;
+const uid2 = document.getElementById('input-instructor-id').value;
+const date = document.getElementById('input-date').value;
+const startTime = document.getElementById('input-start-time').value;
+const endTime = document.getElementById('input-end-time').value;
+
+const slotToStartTime = slot => { 
+	return {
+		hours: Math.trunc(slot / 4),
+		minutes: 15 * Math.trunc(slot % 4),
+	};
+};
+const timeToSlot = time => {
+	const [ hours, minutes ] = time.split(':');
+	return Math.trunc(hours * 4 + minutes / 15);
+};
+
+const slotCount = 24 * 4;
+const startSlot = timeToSlot(startTime);
+const endSlot = timeToSlot(endTime);
+
+const slots = [];
+
+const populateOpenings = _ => {
+	for (let i = 0; i < slotCount; i++) {
+		slots.push(document.getElementById('slot-' + i));
+		if (i < startSlot || i >= endSlot) slots[i].classList.add('closed');
+		else slots[i].classList.add('open');
+	}
+};
+
+populateOpenings();
+
+let blockers = [];
+const getBlockers = async _ => {
+	try {
+		const response = await fetch('/conflicts?uid1=' + uid1 + '&uid2=' + uid2 + '&date=' + date + '&startTime=' + startTime + '&endTime=' + endTime);
+		const json = await response.json();
+		blockers = json;
+		populateBlocks();
+	} catch(err) {
+		console.error(err.name, err.message);
+	} 
+}
+getBlockers();
+
+const populateBlocks = _ => {
+	for (const blocker of blockers) {
+		const slot1 = timeToSlot(blocker.startTimeFormatted);
+		const slot2 = timeToSlot(blocker.endTimeFormatted);
+		markSlotsBusy(slot1, slot2);
+	}
+};
+
+const markSlotsBusy = (slot1, slot2) => {
+	let slotElement;
+	while (true) {
+		slotElement = document.getElementById('slot-' + slot1);
+		slotElement.classList.remove('open');
+		if (!slotElement.classList.contains('closed')) slotElement.classList.add('busy');
+		slot1 = (slot1 + 1) % 96;
+		if (slot1 === slot2) break;
+	}
+};
+
 </script>
 </#if>
 </html>

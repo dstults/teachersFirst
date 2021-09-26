@@ -1,7 +1,6 @@
 package org.funteachers.teachersfirst.managers;
 
 import java.sql.*;
-import java.util.*;
 
 import javax.servlet.http.*;
 
@@ -24,11 +23,11 @@ public class ConnectionPackage {
 	final private String initialCaller;
 	
 	// Database-related
-	final private List<DAO<?>> allDAOs = new ArrayList<>();
 	private DAO<Member> memberDAO;
 	private DAO<Appointment> appointmentDAO;
 	private DAO<Opening> openingDAO;
 	private DAO<LoggedEvent> loggedEventDAO;
+	private HybridDAO hybridDAO;
 
 	private boolean attemptedConnection = false;
 	private Connection connection;
@@ -77,13 +76,10 @@ public class ConnectionPackage {
 		}
 
 		memberDAO = new MemberSqlDAO(this.connection);
-		allDAOs.add(memberDAO);
 		appointmentDAO = new AppointmentSqlDAO(this.connection);
-		allDAOs.add(appointmentDAO);
 		openingDAO = new OpeningSqlDAO(this.connection);
-		allDAOs.add(openingDAO);
 		loggedEventDAO = new LoggedEventSqlDAO(this.connection);
-		allDAOs.add(loggedEventDAO);
+		hybridDAO = new HybridDAO(this.connection);
 
 		this.isConnectionHealthy = true;
 		this.connectionStatusMessage = "good";
@@ -139,28 +135,23 @@ public class ConnectionPackage {
 		return this.loggedEventDAO;
 	}
 
+	public HybridDAO getHybridDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
+		logger.debug("DATABASE Hybrid: [ {} ]", reason);
+		if (this.connection == null) this.initialize();
+		return this.hybridDAO;
+	}
+
 	// ================ METHODS ================
 
 	public void terminate() {
 		if (this.connection == null) {
-
+			// I should probably log something here but it doesn't break anything
 		}
-		// memberDAO.terminate();
 		SQLUtils.disconnect(this.connection);
 		this.connection = null;
 
 	}
-
-	// Unused
-	/*
-	public boolean reset(String reason) {
-		this.terminate();
-		//this.allDAOs.clear();
-		this.initialize();
-		logger.debug("DATABASE Reset:   [ {} ]", reason);
-		return this.connection != null;
-	}
-	*/
 
 	public String getConnectionStatusMessage() {
 		return this.connectionStatusMessage;
@@ -177,7 +168,7 @@ public class ConnectionPackage {
 			this.connectionStatusMessage += comma + "Cannot establish connection";
 			logger.error("ERROR: Failed to establish database connection!");
 			this.isConnectionHealthy = false;
-			comma = ",";
+			comma = ", ";
 			// If this error is thrown, all of the following must be thrown -- they're just redundant.
 			return this.isConnectionHealthy;
 		}
@@ -185,13 +176,13 @@ public class ConnectionPackage {
 			this.connectionStatusMessage += comma + "memberDAO == null";
 			logger.warn("WARNING: Database connection validation FAILED (memberDAO == null).");
 			this.isConnectionHealthy = false;
-			comma = ",";
+			comma = ", ";
 		}
 		if (this.appointmentDAO == null) {
 			this.connectionStatusMessage += comma + "appointmentDAO == null";
 			logger.warn("WARNING: Database connection validation FAILED (appointmentDAO == null).");
 			this.isConnectionHealthy = false;
-			comma = ",";
+			comma = ", ";
 		} 
 		if (this.openingDAO == null) {
 			this.connectionStatusMessage += comma + "openingDAO == null";
@@ -203,13 +194,19 @@ public class ConnectionPackage {
 			this.connectionStatusMessage += comma + "loggedEventDAO == null";
 			logger.warn("WARNING: Database connection validation FAILED (loggedEventDAO == null).");
 			this.isConnectionHealthy = false;
-			comma = ",";
+			comma = ", ";
 		}
 		if (this.memberDAO != null && this.memberDAO.retrieveByIndex(0) == null) {
 			this.connectionStatusMessage += comma + "memberDAO.retrieveByIndex(0) == null";
 			logger.error("ERROR: Database connection validation FAILED (memberDAO.retrieveByIndex(0) == null).");
 			this.isConnectionHealthy = false;
-			comma = ",";
+			comma = ", ";
+		}
+		if (this.hybridDAO == null) {
+			this.connectionStatusMessage += comma + "this.hybridDAO == null";
+			logger.error("ERROR: Database connection validation FAILED (this.hybridDAO == null).");
+			this.isConnectionHealthy = false;
+			comma = ", ";
 		}
 
 		if (this.isConnectionHealthy) this.connectionStatusMessage = "good";

@@ -153,12 +153,14 @@ public class SQLUtils {
 
 				// Execute the SELECT query
 				ResultSet sqlResults = stmt.executeQuery();
-
+				
 				// Get the column names
 				ResultSetMetaData md = sqlResults.getMetaData();
 				List<String> columns = new ArrayList<>();
 				for (int i=0; i < md.getColumnCount(); i++) {
-					columns.add(md.getColumnName(i+1));
+					// Use getColumnLabel instead of getColumnName
+					// getColumnName ignores AS renames making redundant column names appear
+					columns.add(md.getColumnLabel(i + 1));
 				}
 
 				// Store each row in a List

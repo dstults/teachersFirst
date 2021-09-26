@@ -265,10 +265,12 @@ public class Appointment implements IJsonnable {
 	}
 
 	public void setStudentName(String value) {
+		if (value == null || value.equals("")) throw new IllegalArgumentException("Null argument: setStudentName");
 		this.studentName = value;
 	}
 
 	public void setInstructorName(String value) {
+		if (value == null || value.equals("")) throw new IllegalArgumentException("Null argument: setInstructorName");
 		this.instructorName = value;
 	}
 
