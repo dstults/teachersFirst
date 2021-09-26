@@ -135,6 +135,13 @@ public class ConnectionPackage {
 		return this.loggedEventDAO;
 	}
 
+	public HybridDAO getHybridDAO(String reason) {
+		reason = this.initialCaller + ":" + reason;
+		logger.debug("DATABASE Hybrid: [ {} ]", reason);
+		if (this.connection == null) this.initialize();
+		return this.hybridDAO;
+	}
+
 	// ================ METHODS ================
 
 	public void terminate() {
