@@ -136,12 +136,14 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		String u1s = String.valueOf(uid1);
 		String u2s = String.valueOf(uid2);
 
-		// Returning values of zero for IDs as a security measure, this is to prevent leaking information
-		// as conflict returns are not associated with names, while still using the Appointment class.
-		String query = "SELECT recID, 0 AS 'studentID', 0 AS 'instructorID', startTime, endTime, schedulingVerified, completionState " +
+		// Returning values of zero are a security measure, this is to prevent leaking information
+		// as conflict returns are not associated with names, yet can be seen by people who otherwise
+		// wouldn't be able to see relevant appointment information.
+		String query = "SELECT recID, 0 AS 'studentID', 0 AS 'instructorID', startTime, endTime, 0 AS 'schedulingVerified', 0 AS 'completionState' " +
 							"FROM appointments " +
 							"WHERE (startTime >= ? AND startTime < ? OR endTime > ? AND endTime <= ?) " +
 								"AND (instructorID = ? OR instructorID = ? OR studentID = ? OR studentID = ?) " +
+								"AND completionState <> 2 " + // Cancelled appointments don't conflict
 							"ORDER BY startTime, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query, start, end, start, end, u1s, u2s, u1s, u2s);
