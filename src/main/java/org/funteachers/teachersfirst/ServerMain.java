@@ -105,6 +105,9 @@ public class ServerMain extends HttpServlet {
 				case "/appointments":
 					new AppointmentsPage(connectionPackage).loadPage();
 					break;
+				case "/conflicts":
+					new AppointmentConflicts(connectionPackage).loadPage();
+					break;
 				case "/make_appointment_batch":
 					new MakeAppointmentBatchPage(connectionPackage).loadPage();
 					break;

@@ -131,6 +131,34 @@ public class AppointmentSqlDAO implements DAO<Appointment> {
 		return appointments;
 	}
 	
+	public List<Appointment> getConflictsBetweenDatetimes(int uid1, int uid2, String start, String end) {
+		logger.debug("App LJ Mem2 SELECT [ * @ ID-ID @ Dt-Dt ] ...");
+		String u1s = String.valueOf(uid1);
+		String u2s = String.valueOf(uid2);
+
+		// Returning values of zero for IDs as a security measure, this is to prevent leaking information
+		// as conflict returns are not associated with names, while still using the Appointment class.
+		String query = "SELECT recID, 0 AS 'studentID', 0 AS 'instructorID', startTime, endTime, schedulingVerified, completionState " +
+							"FROM appointments " +
+							"WHERE (startTime >= ? AND startTime < ? OR endTime > ? AND endTime <= ?) " +
+								"AND (instructorID = ? OR instructorID = ? OR studentID = ? OR studentID = ?) " +
+							"ORDER BY startTime, endTime;";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, start, end, start, end, u1s, u2s, u1s, u2s);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("No appointments found!");
+			return null;
+		}
+
+		List<Appointment> appointments = new ArrayList<>();
+		for (SQLRow row : rows) {
+			Appointment appointment = convertRowToAppointment(row);
+			appointments.add(appointment);
+		}
+		return appointments;
+
+	}
+
 	public List<Integer> retrieveAllIDs() {
 		logger.debug("Appointments SELECT [*:id] ...");
 
