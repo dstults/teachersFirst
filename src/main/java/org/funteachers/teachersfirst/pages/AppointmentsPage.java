@@ -44,7 +44,8 @@ public class AppointmentsPage extends PageLoader {
 		}
 
 		// Get data from DAOs
-		final List<Appointment> allAppointments = this.connectionPackage.getHybridDAO(this.getClass().getSimpleName()).getAppointmentsWithMemberNames();
+		final List<Appointment> allAppointments =
+			this.connectionPackage.getHybridDAO(this.getClass().getSimpleName()).getAppointmentsWithMemberNames();
 
 		// Filter into these categories
 		final List<Appointment> futureAppointments = new ArrayList<Appointment>();		

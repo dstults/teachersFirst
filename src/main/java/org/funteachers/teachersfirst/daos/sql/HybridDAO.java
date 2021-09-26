@@ -51,15 +51,15 @@ public class HybridDAO {
 	}
 
 	public List<Appointment> getAppointmentsWithMemberNamesBetweenDatetimes(String startStringSql, String endStringSql) {
-		logger.debug("Appointments SELECT [ * ] ...");
+		logger.debug("Appointments LJ Members*2 SELECT [ * ] ...");
 		
 		String query = "SELECT a.recID, a.studentID, m1.displayName AS 'studentName', a.instructorID, m2.displayName AS 'instructorName', " +
-						"a.startTime, a.endTime, a.schedulingVerified, a.completionState " +
-						"FROM appointments a " +
-						"LEFT JOIN members m1 ON a.studentID = m1.recID " +
-						"LEFT JOIN members m2 ON a.instructorID = m2.recID " +
-						"WHERE startTime >= ? AND endTime <= ? " +
-						"ORDER BY startTime, instructorID, endTime;";
+							"a.startTime, a.endTime, a.schedulingVerified, a.completionState " +
+							"FROM appointments a " +
+							"LEFT JOIN members m1 ON a.studentID = m1.recID " +
+							"LEFT JOIN members m2 ON a.instructorID = m2.recID " +
+							"WHERE startTime >= ? AND endTime <= ? " +
+							"ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query, startStringSql, endStringSql);
 		if (rows == null || rows.size() == 0) {
