@@ -27,7 +27,8 @@ public class HybridDAO {
 						"a.startTime, a.endTime, a.schedulingVerified, a.completionState " +
 						"FROM appointments a " +
 						"LEFT JOIN members m1 ON a.studentID = m1.recID " +
-						"LEFT JOIN members m2 ON a.instructorID = m2.recID;";
+						"LEFT JOIN members m2 ON a.instructorID = m2.recID " +
+						"ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
