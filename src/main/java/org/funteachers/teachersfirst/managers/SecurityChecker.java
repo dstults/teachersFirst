@@ -271,6 +271,7 @@ public class SecurityChecker {
 		final String token = matcher.group(2);
 
 		final MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Get Member from Token");
+		if (memberDAO == null) return null;
 		final Member member = memberDAO.retrieveByIdAndToken(uid, token);
 
 		if (member == null) {
