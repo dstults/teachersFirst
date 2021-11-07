@@ -172,7 +172,7 @@ class MemberTests {
 
 		assertEquals("1992-02-25 00:00:00.0", juan.getBirthdate().toString());
 		assertEquals(45, fred.getAge());
-		assertEquals(33, amy.getAge());
+		assertEquals(34, amy.getAge());
 		assertEquals(29, juan.getAge());
 	
 		amy.setBirthdate(2000, 7, 15,6,30,0);

@@ -39,13 +39,13 @@
 		<br>
 		<div class="form-grid-datetime-rows">
 			<p class="label">Start Date: </p>
-			<input type="date" id="startDate" value="${startDate}">
+			<input type="date" id="startDate">
 			<p class="label">Start Time: </p>
-			<input type="time" id="startTime" value="${startTime}">
+			<input type="time" id="startTime">
 			<p class="label">End Date: </p>
-			<input type="date" id="endDate" value="${endDate}">
+			<input type="date" id="endDate">
 			<p class="label">End Time: </p>
-			<input type="time" id="endTime" value="${endTime}">
+			<input type="time" id="endTime">
 		</div>
 		<br>
 		<div class="form-flex-row">
