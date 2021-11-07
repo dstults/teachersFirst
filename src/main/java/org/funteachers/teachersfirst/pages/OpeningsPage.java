@@ -39,27 +39,10 @@ public class OpeningsPage extends PageLoader {
 		// Get all openings from the database
 		// endDateTime => +1s because nextSaturday is hh:59:59 and we need to include hh++:00:00 for the final possible time slot
 		// endDateTime => +1d because if the opening spans several hours into the next day, we want to capture it onthis.getClass().getSimpleName() the previous
-		final List<Opening> allOpenings = openingDAO == null ? null : openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime.plusSeconds(1).plusDays(1));
-
-		// Short circuit if no connection or no openings
+		final List<Opening> allOpenings = openingDAO == null ? new LinkedList<>() : openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime.plusSeconds(1).plusDays(1));
 		final boolean noOpenings = allOpenings == null || allOpenings.size() == 0;
-		if (noConnection || noOpenings) {
-			templateName = "openings.ftl";
-			templateDataMap.put("batchEnabled", false);
-			templateDataMap.put("startDate", startString);
-			templateDataMap.put("endDate", endString);
-			templateDataMap.put("weeks", weeks);
-			if (noConnection) {
-				templateDataMap.put("message", "Failed to contact database, please try again.");
-			} else if (noOpenings) {
-				templateDataMap.put("message", "No openings found.");
-			}
-			trySendResponse();
-			return;
-		}
-
 		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
-		final List<Member> allMembers = memberDAO.retrieveAll();
+		final List<Member> allMembers = memberDAO == null ? new LinkedList<>() : memberDAO.retrieveAll();
 
 		// Prepare iterative variables for constructing "prettified" openings
 		List<PrettifiedDay> thisWeek = null;
@@ -82,29 +65,32 @@ public class OpeningsPage extends PageLoader {
 			today = new PrettifiedDay(dateName, dateColor, openingsToday);
 			thisWeek.add(today);
 
-			// Scan all openings for any that fall within the day:
-			// TODO: This can be made more efficient by pulling the openings out of the allOpenings as they get used
-			for (Opening iOpening : allOpenings) {
-				if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
+			if (!noOpenings) {
+				// Scan all openings for any that fall within the day:
+				// TODO: This can be made more efficient by pulling the openings out of the allOpenings as they get used
+				// Note: This line throws a nullpointerexception for some reason when noOpenings is true
+				//       But I'm leaving it hear to enable the calendar to render properly without data.
+				for (Opening iOpening : allOpenings) {
+					if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
 
-					Member member = MemberHelpers.FindByID(allMembers, iOpening.getInstructorID());
-					if (member == null || member.getIsDeleted()) continue;
-					String iName = member.getDisplayName();
-					boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
-					//logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
+						Member member = MemberHelpers.FindByID(allMembers, iOpening.getInstructorID());
+						if (member == null || member.getIsDeleted()) continue;
+						String iName = member.getDisplayName();
+						boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
+						//logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
 
-					openingsToday.add(new PrettifiedOpening(
-						iOpening.getRecID(),
-						iOpening.getInstructorID(), // Freemarker likes to add commmas, I could add ?c to it too
-						iName,
-						dateToday,
-						iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-						iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-						iHighlight)
-					);
+						openingsToday.add(new PrettifiedOpening(
+							iOpening.getRecID(),
+							iOpening.getInstructorID(), // Freemarker likes to add commmas, I could add ?c to it too
+							iName,
+							dateToday,
+							iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+							iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+							iHighlight)
+						);
+					}
 				}
 			}
-
 			// Letting the SQL database take care of this, so commented out:
 			//today.sortOpenings();
 		}
@@ -131,6 +117,11 @@ public class OpeningsPage extends PageLoader {
 			templateDataMap.put("startDate", startString);
 			templateDataMap.put("endDate", endString);
 			templateDataMap.put("weeks", weeks);
+			if (noConnection) {
+				templateDataMap.put("message", "Failed to contact database, please try again.");
+			} else if (noOpenings) {
+				templateDataMap.put("message", "No openings found.");
+			}
 			trySendResponse();
 		}
 	}
