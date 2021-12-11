@@ -63,18 +63,18 @@ public class AddMemberAction extends ActionRunner {
 			return;
 		}
 
-		// Finally, check DB if it's up:
-		if (this.connectionPackage == null || !this.connectionPackage.getIsConnectionHealthy()) {
+		// Check if database is connected:
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
+		if (memberDAO == null) {
 			this.sendPostReply(retryPage, retryString, "Sorry, there's been a catastrophic database failure. Please try again later.");
 			return;
 		}
 
 		// All checks passed, start the action...
-
-		logger.debug(displayName + " attempting to register...");
+		logger.debug(" Attempting to register [ {} ]...", displayName);
 		
 		// Making sure unique login name
-		List<Member> members = this.connectionPackage.getMemberDAO().retrieveAll();
+		List<Member> members = memberDAO.retrieveAll();
 		for (Member member : members) {
 			if (member.getLoginName() == loginName) {
 				this.sendPostReply(retryPage, retryString, "Login name '" + loginName + "' already taken, please try another.");
@@ -84,7 +84,6 @@ public class AddMemberAction extends ActionRunner {
 
 		// TODO: Birthdates
 
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
 		final Member member = new Member(loginName, displayName, 0, gender, "", "", phone1, phone2, email, false, false, true);
 		final int newMemberRecordId = memberDAO.insert(member);
 		member.setRecID(newMemberRecordId);

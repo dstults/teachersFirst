@@ -73,17 +73,17 @@ public class TestPage1 extends PageLoader {
 		final Map<String, String[]> headerItems = dumpHeaderToMap(request);
 		final List<Map<String, String>> cookieItems = dumpCookiesToMap(request);
 
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final String memberDaoCheckNull = memberDAO != null ? "Member DAO Found" : "NULL MEMBER DAO";
 		final Member member = memberDAO != null ? memberDAO.retrieveByIndex(0) : null;
 		final String memberDaoCheckGet = member != null ? "Member Item Found" : "NO MEMBER ITEM COULD BE RETRIEVED";
 
-		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
+		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO(this.getClass().getSimpleName());
 		final String openingDaoCheckNull = openingDAO != null ? "Opening DAO Found" : "NULL OPENING DAO";
 		final Opening opening = openingDAO != null ? openingDAO.retrieveByIndex(0) : null;
 		final String openingDaoCheckGet = opening != null ? "Opening Item Found" : "NO OPENING ITEM COULD BE RETRIEVED";
 
-		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO();
+		final DAO<Appointment> appointmentDAO = this.connectionPackage.getAppointmentDAO(this.getClass().getSimpleName());
 		final String appointmentDaoCheckNull = appointmentDAO != null ? "Appointment DAO Found" : "NULL APPOINTMENT DAO";
 		final Appointment appointment = appointmentDAO != null ? appointmentDAO.retrieveByIndex(0) : null;
 		final String appointmentDaoCheckGet = appointment != null ? "Appointment Item Found" : "NO APPOINTMENT ITEM COULD BE RETRIEVED";

@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst.actions;
+package org.funteachers.teachersfirst.actions.admin;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.*;
@@ -27,7 +27,7 @@ public class UpdateMemberAction extends ActionRunner {
 
 		// Check if logged in
 		if (uid <= 0) {
-			this.sendJsonMessage("You must be signed in to do this!");
+			this.sendJsonMessage("You must be signed in to do this!", false);
 			return;
 		}
 
@@ -37,25 +37,25 @@ public class UpdateMemberAction extends ActionRunner {
 		try {
 			memberId = Integer.parseInt(memberIdRaw);
 		} catch (NumberFormatException e) {
-			this.sendJsonMessage("Couldn't parse the memberId!");
+			this.sendJsonMessage("Couldn't parse the memberId!", false);
 			return;
 		}
 		if (memberId <= 0) {
-			this.sendJsonMessage("Invalid memberId!");
+			this.sendJsonMessage("Invalid memberId!", false);
 			return;
 		}
 		
 		// Check connection to database
-		DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+		DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		if (memberDAO == null) {
-			this.sendJsonMessage("Error connecting to database, try again!");
+			this.sendJsonMessage("Error connecting to database, try again!", false);
 			return;
 		}
 
 		// Ensure member exists
 		Member member = memberDAO.retrieveByID(memberId);
 		if (member == null) {
-			this.sendJsonMessage("Invalid memberId!");
+			this.sendJsonMessage("Invalid memberId!", false);
 			return;
 		}
 		final boolean memberIsStudent = member.getIsStudent();
@@ -73,7 +73,7 @@ public class UpdateMemberAction extends ActionRunner {
 		try {
 			credits = Float.parseFloat(creditsRaw);
 		} catch (NumberFormatException e) {
-			this.sendJsonMessage("Couldn't parse credits: [ " + creditsRaw + " ]!");
+			this.sendJsonMessage("Couldn't parse credits: [ " + creditsRaw + " ]!", false);
 			return;
 		}
 
@@ -89,7 +89,7 @@ public class UpdateMemberAction extends ActionRunner {
 		}
 		// Abort operation if not allowed.
 		if (!actionAllowed) {
-			this.sendJsonMessage("Operation not allowed.");
+			this.sendJsonMessage("Operation not allowed.", false);
 			return;
 		}
 
@@ -133,7 +133,7 @@ public class UpdateMemberAction extends ActionRunner {
 			useGeneralUpdate = true;
 		}
 		if (!changesMade) {
-			this.sendJsonMessage("No changes detected, aborting!");
+			this.sendJsonMessage("No changes detected, aborting!", false);
 			return;
 		}
 
@@ -145,8 +145,8 @@ public class UpdateMemberAction extends ActionRunner {
 			logger.debug("Updated: [{}]", member);
 		}
 		
-		// Log user into session
-		this.sendJsonMessage("Success!");
+		// Log user in
+		this.sendJsonMessage("Success!", true);
 		return;
 	}
 	

@@ -13,7 +13,6 @@ import org.funteachers.teachersfirst.obj.*;
 import freemarker.template.*;
 
 public abstract class PageLoader {
-
 	// Declarations
 	
 	final protected static Logger logger = LogManager.getLogger();
@@ -51,7 +50,7 @@ public abstract class PageLoader {
 		this.security = cp.getSecurity();
 
 		this.operator = security.getMemberFromRequestCookieToken();
-		if (operator != null) {
+		if (this.operator != null) {
 			this.uid = this.operator.getRecID();
 			this.userName = this.operator.getDisplayName();
 			this.isAdmin = this.operator.getIsAdmin();
@@ -69,6 +68,7 @@ public abstract class PageLoader {
 		this.templateDataMap = new HashMap<>();
 		getGetMessage(); // Checks query for message data
 		this.jsonMode = QueryHelpers.getGetBool(request, "json");
+		if (!this.jsonMode) assignDynamicCss();
 
 		templateDataMap.put("canRegister", GlobalConfig.enableOpenRegistration);
 		templateDataMap.put("websiteTitle", GlobalConfig.websiteTitle);
@@ -172,6 +172,25 @@ public abstract class PageLoader {
 			out.println(fullJson);
 		} catch (IOException e) {
 			logger.error("IO Error: ", e);
+		}
+	}
+
+	private void assignDynamicCss() {
+		if (this.isAdmin) {
+			this.templateDataMap.putIfAbsent("primaryHighlight", GlobalConfig.primaryHighlightAdmin);
+			this.templateDataMap.putIfAbsent("primaryHighlightDark", GlobalConfig.primaryHighlightDarkAdmin);
+			this.templateDataMap.putIfAbsent("backgroundColor", GlobalConfig.backgroundColorAdmin);
+			this.templateDataMap.putIfAbsent("backgroundColorLight", GlobalConfig.backgroundColorLightAdmin);
+		} else if (this.isInstructor) {
+			this.templateDataMap.putIfAbsent("primaryHighlight", GlobalConfig.primaryHighlightInstructor);
+			this.templateDataMap.putIfAbsent("primaryHighlightDark", GlobalConfig.primaryHighlightDarkInstructor);
+			this.templateDataMap.putIfAbsent("backgroundColor", GlobalConfig.backgroundColorInstructor);
+			this.templateDataMap.putIfAbsent("backgroundColorLight", GlobalConfig.backgroundColorLightInstructor);
+		} else {
+			this.templateDataMap.putIfAbsent("primaryHighlight", GlobalConfig.primaryHighlightGeneral);
+			this.templateDataMap.putIfAbsent("primaryHighlightDark", GlobalConfig.primaryHighlightDarkGeneral);
+			this.templateDataMap.putIfAbsent("backgroundColor", GlobalConfig.backgroundColorGeneral);	
+			this.templateDataMap.putIfAbsent("backgroundColorLight", GlobalConfig.backgroundColorLightGeneral);
 		}
 	}
 

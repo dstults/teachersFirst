@@ -109,7 +109,7 @@ public class Member implements IJsonnable {
 	}
 
 	public boolean update(ConnectionPackage cp) {
-		return cp.getMemberDAO().update(this);
+		return cp.getMemberDAO(this.getClass().getSimpleName()).update(this);
 	}
 
 	// ----------------------------------------------------------------
@@ -223,10 +223,6 @@ public class Member implements IJsonnable {
 		return this.isDeleted ? " (DELETED)" : "";
 	}
 
-	public boolean canViewMember(Member other) {
-		return this.isAdmin || this.isInstructor || this.recID == other.recID || other.isInstructor;
-	}
-
 	// ----------------------------------------------------------------
 
 	public void setLoginName(String loginName) {
@@ -247,7 +243,7 @@ public class Member implements IJsonnable {
 		float oldCredits = this.credits;
 		this.credits = credits;
 		if (cp != null && cp.getIsConnectionHealthy()) {
-			cp.getMemberDAO().update(this);
+			cp.getMemberDAO(this.getClass().getSimpleName()).update(this);
 			LoggedEvent.log(cp, operator, operatorName + " > CHANGE CREDITS (" + method + ") > " + this.displayName + " -- [" + oldCredits + "] > [" + credits + "]");
 		}
 	}
@@ -374,7 +370,8 @@ public class Member implements IJsonnable {
 				"\"email\":\"" + this.getEmail() + "\"," +
 				"\"isAdmin\":" + this.getIsAdmin() + "," +
 				"\"isInstructor\":" + this.getIsInstructor() + "," +
-				"\"isStudent\":" + this.getIsStudent() +
+				"\"isStudent\":" + this.getIsStudent() + "," +
+				"\"isDeleted\":" + this.getIsDeleted() +
 				"}";
 	}
 

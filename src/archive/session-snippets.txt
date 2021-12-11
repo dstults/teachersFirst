@@ -1,0 +1,31 @@
+
+	// From main router:
+
+	public static String getSessionValue(HttpServletRequest request, String sessionArg) {
+		return getSessionValue(request, sessionArg, "");
+	}
+
+	public static String getSessionValue(HttpServletRequest request, String sessionArg, String defaultValue) {
+		if (request.getSession().getAttribute(sessionArg) == null) return defaultValue;
+		if (request.getSession().getAttribute(sessionArg).toString() == null) return defaultValue;
+		if (request.getSession().getAttribute(sessionArg).toString().isEmpty()) return defaultValue;
+		return request.getSession().getAttribute(sessionArg).toString();
+	}
+
+
+	// From security module:
+
+	public int getUserId(HttpServletRequest request) {
+		
+		// USER ID
+		if (request.getSession().getAttribute("USER_ID") == null) return 0;
+		if (request.getSession().getAttribute("USER_ID").toString() == null) return 0;
+		if (request.getSession().getAttribute("USER_ID").toString().isEmpty()) return 0;
+		String uid = request.getSession().getAttribute("USER_ID").toString();
+		try {
+			return Integer.parseInt(uid);
+		} catch (NumberFormatException e) {
+			logger.fatal("SECURITY RISK: Invalid data stored in session's USER_ID value!");
+		}
+		return 0;
+	}

@@ -1,4 +1,4 @@
-package org.funteachers.teachersfirst.actions;
+package org.funteachers.teachersfirst.actions.admin;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.managers.*;
@@ -14,7 +14,7 @@ public class DeleteMemberAction extends ActionRunner {
 
 		// This should not be possible for anyone not logged in.
 		if (uid <= 0) {
-			this.sendJsonMessage("Please sign in or register to use this feature!");
+			this.sendJsonMessage("Please sign in or register to use this feature!", false);
 			return;
 		}
 
@@ -25,26 +25,28 @@ public class DeleteMemberAction extends ActionRunner {
 		} catch (NumberFormatException e) {
 			memberIdInt = 0;
 		}
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO();
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
 		final Member member = memberDAO.retrieveByID(memberIdInt);
 		if (member == null) {
-			this.sendJsonMessage("Member %5B" + memberIdString + "%5D not found!");
+			this.sendJsonMessage("Member [ID: " + memberIdString + " ] not found!", false);
 			return;
 		}
 
-		// Make sure the person has the authority
+		// Make sure the member is not deleted
+		if (member.getIsDeleted()) {
+			this.sendJsonMessage("Cannot delete, member already deleted.", false);
+			return;
+		}
+
+		// Make sure the operator has the authority
 		if (!Permissions.MemberCanDeleteMember(this.operator, member)) {
-			this.sendJsonMessage("You are not authorized to delete member.");
+			this.sendJsonMessage("You are not authorized to delete this member.", false);
 			return;
 		}
 
-		logger.debug("Attempting to delete member " + member.toString() + " ...");
-		
 		memberDAO.softDelete(memberIdInt);
-		//logger.info(DataManager.getMemberDAO().size() + " records total");
-		logger.debug("Soft-deleted member ID: [{}]", memberIdInt);
 		
-		this.sendJsonMessage("Member %5B" + memberIdString + "%5D, deleted!");
+		this.sendJsonMessage("Member [ID: " + memberIdString + " ] deleted!", true, "/members");
 		return;
 	}
 	

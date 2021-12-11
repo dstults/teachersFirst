@@ -91,7 +91,7 @@ public class Appointment implements IJsonnable {
 	}
 
 	public boolean update(ConnectionPackage cp) {
-		return cp.getAppointmentDAO().update(this);
+		return cp.getAppointmentDAO(this.getClass().getSimpleName()).update(this);
 	}
 
 	// ----------------------------------------------------------------
@@ -159,17 +159,17 @@ public class Appointment implements IJsonnable {
 
 	public void setSchedulingVerified(ConnectionPackage cp, boolean value) {
 		this.schedulingVerified = value;
-		cp.getAppointmentDAO().update(this);
+		cp.getAppointmentDAO(this.getClass().getSimpleName()).update(this);
 	}
 
 	public boolean setCompletionState(ConnectionPackage cp, int value, int operator, String operatorName) {
 		if (!this.hasRefundableValue()) return false;
 
 		this.completionState = value;
-		cp.getAppointmentDAO().update(this);
+		cp.getAppointmentDAO(this.getClass().getSimpleName()).update(this);
 		
 		if (!this.hasRefundableValue()) {
-			final Member student = cp.getMemberDAO().retrieveByID(this.studentId);
+			final Member student = cp.getMemberDAO(this.getClass().getSimpleName()).retrieveByID(this.studentId);
 			final String refundProcess;
 			if (value == STATE_CANCELLED) {
 				refundProcess = "cancel auto-refund";
@@ -265,10 +265,12 @@ public class Appointment implements IJsonnable {
 	}
 
 	public void setStudentName(String value) {
+		if (value == null || value.equals("")) throw new IllegalArgumentException("Null argument: setStudentName");
 		this.studentName = value;
 	}
 
 	public void setInstructorName(String value) {
+		if (value == null || value.equals("")) throw new IllegalArgumentException("Null argument: setInstructorName");
 		this.instructorName = value;
 	}
 

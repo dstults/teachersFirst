@@ -15,6 +15,7 @@ import javax.servlet.annotation.*;
 
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.actions.*;
+import org.funteachers.teachersfirst.actions.admin.*;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 import org.funteachers.teachersfirst.pages.*;
@@ -48,14 +49,15 @@ public class ServerMain extends HttpServlet {
 		super.init(config);
 
 		logger.warn("");
-		logger.warn("===========================================================");
-		logger.warn("          " + SERVLET_NAME + " init() started");
-		logger.warn("               http://<team-server>");
-		logger.warn("===========================================================");
+		logger.warn("==================================================");
+		logger.warn("    Server init() started!");
+		logger.warn("    SERVLET: " + SERVLET_NAME);
+		logger.warn("==================================================");
 		logger.warn("");
 
+		getServletContext();
 		String resourcesDir = config.getServletContext().getRealPath(RESOURCES_DIR);
-		logger.info("resourcesDir = {}", resourcesDir);
+		logger.info("res.dir = {}", StringTools.left(resourcesDir, 40));
 
 		SecurityChecker.populateWhitelist();
 		logger.info("IP whitelist populated.");
@@ -71,10 +73,11 @@ public class ServerMain extends HttpServlet {
 		connectionPackage.terminate();
 		logger.info("Database connectivity tests complete.");
 
-
-		logger.warn("");
-		logger.warn("Servlet initialization complete!");
-		logger.warn("");
+		logger.info("");
+		logger.info("--------------------------------------------------");
+		logger.info("    Servlet initialization complete!");
+		logger.info("--------------------------------------------------");
+		logger.info("");
 	}
 
 	@Override
@@ -101,6 +104,9 @@ public class ServerMain extends HttpServlet {
 					break;
 				case "/appointments":
 					new AppointmentsPage(connectionPackage).loadPage();
+					break;
+				case "/conflicts":
+					new AppointmentConflicts(connectionPackage).loadPage();
 					break;
 				case "/make_appointment_batch":
 					new MakeAppointmentBatchPage(connectionPackage).loadPage();
@@ -145,10 +151,6 @@ public class ServerMain extends HttpServlet {
 					connectionPackage.terminate();
 					return; // don't log
 
-				case "/dynamic.css":
-					new DynamicCssFile(connectionPackage).loadPage();
-					connectionPackage.terminate();
-					return; // don't log
 				case "/dynamic.js":
 					new DynamicJsFile(connectionPackage).loadPage();
 					connectionPackage.terminate();
@@ -169,24 +171,7 @@ public class ServerMain extends HttpServlet {
 				default:
 					//String filename = URLDecoder.decode(request.getPathInfo().substring(1), "UTF-8");
 					if (isValidCustomPath(pagePath)) {
-						String filename = pagePath;
-						File file = new File("/var/www/", filename);
-						if (!file.exists() || file.isDirectory()) {
-							logger.debug("====================== CUSTOM FAIL ======================");
-							logger.debug("Is Directory:     {}", file.isDirectory());
-							logger.debug("Sanitized Query:  {}", sanitizedQuery);
-							logger.debug("Page Path:        {}", pagePath);
-							//logger.debug("Search Path:      {}", "/var/www/");
-							//logger.debug("Working Dir:      {}", System.getProperty("user.dir"));
-							response.sendError(HttpServletResponse.SC_NOT_FOUND);
-							return; // Use above logging instead of standard logging
-						}
-						response.setHeader("Content-Type", getServletContext().getMimeType(filename));
-						response.setHeader("Content-Length", String.valueOf(file.length()));
-						response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");						
-						// Cache for 30 days
-						response.setDateHeader("Expires", System.currentTimeMillis() + 30 * DateHelpers.millisecondsPerDay);
-						Files.copy(file.toPath(), response.getOutputStream());
+						new CustomServer(connectionPackage).serve(pagePath, sanitizedQuery, this.getServletContext());
 						break; // Use standard logging
 					}
 
@@ -250,6 +235,9 @@ public class ServerMain extends HttpServlet {
 				case "delete_member":
 					new DeleteMemberAction(connectionPackage).runAction();
 					break;
+				case "undelete_member":
+					new UndeleteMemberAction(connectionPackage).runAction();
+					break;
 				case "make_openings":
 					new NewOpeningsAction(connectionPackage).runAction();
 					break;
@@ -307,13 +295,20 @@ public class ServerMain extends HttpServlet {
 	@Override
 	public void destroy() {
 		
+		logger.warn("");
+		logger.warn("==================================================");
+		logger.warn("    Server destroy() started!");
+		logger.warn("==================================================");
+		logger.warn("");
+
 		deregisterJdbcDrivers();
 		
-		logger.warn("-----------------------------------------");
-		logger.warn("  " + SERVLET_NAME + " destroy() completed!");
-		logger.warn("-----------------------------------------");
-		logger.warn(" ");
-	
+		logger.info("");
+		logger.info("--------------------------------------------------");
+		logger.info("    Server destruction complete!");
+		logger.info("--------------------------------------------------");
+		logger.info("");
+
 	}
 
 	@Override
@@ -324,21 +319,24 @@ public class ServerMain extends HttpServlet {
 	// =================================================================
 
 	private void deregisterJdbcDrivers() {
-		// Deregister driver:
+		logger.info("Deregistering JDBC drivers...");
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		String result = "";
 		while (drivers.hasMoreElements()) {
 			Driver driver = drivers.nextElement();
 			if (driver.getClass().getClassLoader() == cl) {
 				try {
-					logger.info("Deregistering JDBC driver {}", driver);
 					DriverManager.deregisterDriver(driver);
+					result = "deregistered";
 				} catch (SQLException ex) {
-					logger.error("Error deregistering JDBC driver {}", driver, ex);
+					result = "error";
 				}
 			} else {
-				logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader", driver);
+				//logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader", driver);
+				result = "ignored";
 			}
+			logger.debug("...{}...{}!", driver, result);
 		}
 	}
 
@@ -361,19 +359,4 @@ public class ServerMain extends HttpServlet {
 		return true;
 	}
 	
-
-	/*
-	private static int parseInt(String s) {
-		int i = -1;
-		if (s != null) {
-			try {
-				i = Integer.parseInt(s);
-			} catch (NumberFormatException e) {
-				i = -2;
-			}
-		}
-		return i;
-	}
-	*/
-
 }

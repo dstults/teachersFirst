@@ -3,13 +3,13 @@ package org.funteachers.teachersfirst.managers;
 import java.io.*;
 
 import org.funteachers.teachersfirst.ServerMain;
-//import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class GlobalConfig {
 	
-	//private static final Logger logger = LogManager.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 
 	// WEBSITE CUSTOMIZABLE COLORS
 	public static String primaryHighlightAdmin = "#96bbff";
@@ -28,8 +28,8 @@ public class GlobalConfig {
 	public static String backgroundColorLightGeneral = "#ffe5dd";
 
 	// WEBSITE CUSTOMIZABLE VARIABLES
-	public static String websiteTitle = "CoolTutors.org";
-	public static String websiteSubtitle = "The coolest tutors on the web!";
+	public static String websiteTitle = "A Teachers First Site";
+	public static String websiteSubtitle = "Get yours today!";
 
 	// WEBSITE RIGHTS TOGGLES
 	public static boolean enableOpenRegistration = true;
@@ -45,12 +45,30 @@ public class GlobalConfig {
 	// Meta "construct" and "destruct" (and "reset")
 
 	public static void initializeSiteData() {
+		// Check if file exists -- if it doesn't, create with default values
+		File serverConfigFile = new File("/etc/tomcat9/myserver.conf");
+		if (!serverConfigFile.exists()) {
+			logger.debug("Config not found, creating one!");
+			try {
+				serverConfigFile.createNewFile();
+				FileWriter fw = new FileWriter(serverConfigFile);
+				fw.write(getDefaultConfigText());
+				fw.close();
+			} catch (IOException ex) {
+				logger.debug("Failed to create config file, reason: {}", ex.getMessage());
+				return;
+			}
+		}
+
+		// Load Data into JSON object:
 		JSONParser parser = new JSONParser();
 		// A JSON object. Key value pairs are unordered. JSONObject supports java.util.Map interface.
 		JSONObject jsonObject;
 		try {
-			Object obj = parser.parse(new FileReader("/etc/tomcat9/myserver.conf"));
+			FileReader reader = new FileReader(serverConfigFile);
+			Object obj = parser.parse(reader);
 			jsonObject = (JSONObject) obj;
+			reader.close();
 		} catch (FileNotFoundException ex) {
 			websiteTitle = "Howdy!"; // low key/plain sight error message
 			ex.printStackTrace();
@@ -100,6 +118,24 @@ public class GlobalConfig {
 		return "jdbc:mariadb://" + databaseHostname + ":" + databasePort +
 			"?useSSL=false&allowPublicKeyRetrieval=true" +
 			"&user=" + databaseUserID + "&password=" + databasePassword;
+	}
+
+	private static String getDefaultConfigText() {
+		// Note about quotation marks around variables that don't need them:
+		// They're like that because all of the variables get passed into a string eventually so it's
+		// more predictable if they're that way to begin with.
+		return "{\n" +
+		"{\n" +
+		"	\"websiteTitle\": \"Example.com\",\n" +
+		"	\"websiteSubtitle\": \"A catchy slogan!\",\n" +
+		"	\"databaseHostname\": \"databaseaddress.com\",\n" +
+		"	\"databasePort\": \"3306\",\n" +
+		"	\"databaseUserID\": \"adminid\",\n" +
+		"	\"databasePassword\": \"secretpassword\",\n" +
+		"	\"databaseSchema\": \"teachersFirst\",\n" +
+		"	\"enableOpenRegistration\": \"false\",\n" +
+		"	\"instructorAdminMakeAppointmentsRequiresOpening\": \"false\"\n" +
+		"}";
 	}
 
 }

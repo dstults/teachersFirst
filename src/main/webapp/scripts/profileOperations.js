@@ -1,6 +1,6 @@
 
-window.onload = _ => {
-	populateData();
+window.onload = async _ => {
+	await populateData();
 	tryReplaceProfilePicture();
 }
 
@@ -59,40 +59,7 @@ const populateData = async _ => {
 const tryReplaceProfilePicture = async _ => {
 	if (!memberId) return; // obtained during page load process
 	
-	try {
-		
-		// TODO: Needs server-side support to avoid error spam.
-		//       Can be addressed in issue to "make secure".
-		
-		// TRY ".png"
-		let imagePath = '/custom/profiles/u' + memberId + '/profile.png';
-		const response1 = await fetch(imagePath);
-		if (response1.ok) {
-			// Will automatically refresh with cached data
-			profilePicture.src = imagePath;
-			return;
-		}
-		
-		// TRY ".jpg"
-		imagePath = '/custom/profiles/u' + memberId + '/profile.jpg';
-		const response2 = await fetch(imagePath);
-		if (response2.ok) {
-			profilePicture.src = imagePath;
-			return;
-		}
-		
-		// TRY ".gif"
-		imagePath = '/custom/profiles/u' + memberId + '/profile.gif';
-		const response3 = await fetch(imagePath);
-		if (response3.ok) {
-			profilePicture.src = imagePath;
-			return;
-		}
-
-		console.log('User does not exist or does not have a profile image.');
-	} catch (err) {
-		// do nothing
-	}
+	profilePicture.src = '/custom/profiles/u' + memberId;
 };
 
 const profilePicture = document.getElementById('profile-picture');
@@ -140,6 +107,7 @@ const notesBox = document.getElementById('instructor-notes');
 const notesButton = document.getElementById('instructor-notes-button');
 
 const refreshAll = _ => {
+	if (refreshButtons) refreshButtons();
 	if (!memberData) {
 		// visibilities
 		creditsRow.style.display = 'none';
@@ -227,24 +195,7 @@ const sendPostData = async (varName, varValue) => {
 	data.append('memberId', memberId);
 	data.append(varName, encodeURIComponent(varValue));
 
-	let jsonReply;
-	try {
-		const response = await fetch('/', {
-			method: 'POST',
-			cache: 'no-cache',
-			body: data
-		});
-
-		if (response.ok) {
-			return await response.json();
-		} else {
-			throw new Error('Status code [' + response.status + ']: ' + response.statusText);
-		}
-	} catch (err) {
-		addError(err.message);
-	}
-
-	return undefined;
+	return sendPostFetch(data);
 };
 
 // Set up credits
@@ -281,9 +232,8 @@ const editCredits = async _ => {
 	
 	const response = await sendPostData('credits', proposedCredits);
 	
-	if (!response.message.includes('Success!')) {
-		addError(response.message);
-	}
+	if (!response.success) addError(response.message);
+
 	populateData();
 };
 
@@ -310,7 +260,7 @@ const getStringPromptChain = async (dataType, postVarName, initialValue, maxLeng
 	const shortenedValue = parsed.length <= maxLength ? parsed : parsed.substr(0, maxLength - 1);
 
 	const response = await sendPostData(postVarName, shortenedValue);
-	if (!response.message.includes('Success!')) {
+	if (!response.success) {
 		addError(response.message);
 		return null;
 	}

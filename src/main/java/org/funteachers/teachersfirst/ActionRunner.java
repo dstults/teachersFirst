@@ -39,7 +39,7 @@ public abstract class ActionRunner {
 		this.security = cp.getSecurity();
 
 		this.operator = security.getMemberFromRequestCookieToken();
-		if (operator != null) {
+		if (this.operator != null) {
 			this.uid = this.operator.getRecID();
 			this.isAdmin = this.operator.getIsAdmin();
 			this.isInstructor = this.operator.getIsInstructor();
@@ -59,9 +59,15 @@ public abstract class ActionRunner {
 
 	// Protected Methods (shared magic between all actions)
 
-	protected void sendJsonMessage(String message) {
+	protected void sendJsonMessage(String message, boolean success) {
+		sendJsonMessage(message, success, "");
+	}
+
+	protected void sendJsonMessage(String message, boolean success, String redirect) {
 		final String messageJson = "\"message\": \"" + message.trim() + "\""; // include message even if empty
-		final String fullJson = "{ " + messageJson + " }";
+		final String successJson = ", \"success\": " + (success ? "true" : "false"); // indicate if operation succeeded or failed
+		final String redirectJson = !redirect.isEmpty() ? ", \"redirect\": \"" + redirect.trim() + "\"" : ""; // include if redirect link provided
+		final String fullJson = "{ " + messageJson + successJson + redirectJson + " }";
 
 		// send json:
 		//logger.debug("Attempting to send JSON POST reply...");

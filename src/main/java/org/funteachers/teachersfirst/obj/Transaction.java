@@ -11,8 +11,7 @@ public class Transaction {
 
 	// ----------------------------------------------------------------	
 
-	public Transaction(int recID, Timestamp transactionDate, int  operatorID, String transactionMessage){
-
+	public Transaction(int recID, Timestamp transactionDate, int  operatorID, String transactionMessage) {
 		if (recID < -1) throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (transactionDate == null) throw new IllegalArgumentException("Invalid argument: transactionDate is null");
 		if (operatorID < -1) throw new IllegalArgumentException("Invalid argument: operatorID < -1");

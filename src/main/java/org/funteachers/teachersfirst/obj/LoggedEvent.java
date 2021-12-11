@@ -22,7 +22,6 @@ public class LoggedEvent implements IJsonnable {
 	}
 
 	public LoggedEvent(int recID, int operator, Timestamp date, String message) {
-
 		if (recID < -1)
 			throw new IllegalArgumentException("Invalid argument: recID < -1");
 		if (operator < 0)
@@ -48,7 +47,7 @@ public class LoggedEvent implements IJsonnable {
 			ServerMain.logger.warn("Could not log message to database (no connection package): [{}]", message);
 			return;
 		}
-		DAO<LoggedEvent> daoLe = cp.getLoggedEventDAO();
+		DAO<LoggedEvent> daoLe = cp.getLoggedEventDAO("LoggedEvent STATIC");
 		if (daoLe == null) {
 			ServerMain.logger.warn("Could not log message to database (no database connection): [{}]", message);
 			return;

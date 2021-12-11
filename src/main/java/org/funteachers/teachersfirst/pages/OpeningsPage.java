@@ -6,74 +6,11 @@ import java.util.*;
 
 import org.funteachers.teachersfirst.*;
 import org.funteachers.teachersfirst.daos.DAO;
+import org.funteachers.teachersfirst.daos.sql.OpeningSqlDAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
 public class OpeningsPage extends PageLoader {
-
-	// Helper class
-
-	public class PrettifiedDay implements IJsonnable {
-		
-		private final String name;
-		private final String color;
-		private final List<PrettifiedOpening> openings;
-		
-		public PrettifiedDay(String name, String color, List<PrettifiedOpening> openings) {
-			this.name = name;
-			this.color = color;
-			this.openings = openings;
-		}
-		
-		public String getName() { return this.name; }
-		public String getColor() { return this.color; }
-		public List<PrettifiedOpening> getOpenings() { return this.openings; }
-		@Override public String toJson() {
-			return "{\"name\":\"" + this.name +
-					"\",\"color\":\"" + this.color +
-					"\",\"openings\":" + JsonUtils.BuildArrays(openings) +
-					"}";
-		}
-	}
-
-	public class PrettifiedOpening implements IJsonnable {
-
-		private int id;
-		private int instructorId;
-		private String instructorName;
-		private String date;
-		private String startTime;
-		private String endTime;
-		private boolean highlight;
-
-		public PrettifiedOpening(int id, int instructorId, String instructorName, String date, String startTime, String endTime, boolean highlight) {
-			this.id = id;
-			this.instructorId = instructorId;
-			this.instructorName = instructorName;
-			this.date = date;
-			this.startTime = startTime;
-			this.endTime = endTime;
-			this.highlight = highlight;
-		}
-
-		public int getId() { return id; }
-		public int getInstructorId() { return instructorId; }
-		public String getInstructorName() { return instructorName; }
-		public String getDate() { return date; }
-		public String getStartTime() { return startTime; }
-		public String getEndTime() { return endTime; }
-		public String getHighlight() { return highlight ? "highlight" : ""; }
-		@Override public String toJson() {
-			return "{\"id\":\"" + this.id +
-					"\",\"instructorId\":\"" + this.instructorId +
-					"\",\"instructorName\":\"" + this.instructorName +
-					"\",\"date\":\"" + this.date +
-					"\",\"startTime\":\"" + this.startTime +
-					"\",\"endTime\":\"" + this.endTime +
-					"\",\"highlight\":\"" + this.highlight +
-					"\"}";
-		}
-	}
 
 	// Constructor
 	public OpeningsPage(ConnectionPackage cp) { super(cp); }
@@ -83,47 +20,35 @@ public class OpeningsPage extends PageLoader {
 	@Override
 	public void loadPage() {
 		templateDataMap.put("title", "Openings");
-
 		final String instructorName = QueryHelpers.getGet(request, "instructorName").toLowerCase();
 
-		LocalDateTime sundayTime = DateHelpers.previousSunday();
-		LocalDateTime saturdayTime = DateHelpers.nextSaturday();
+		// Get first and last days
 		final int weeksToShow = 5;
-		saturdayTime = saturdayTime.plusWeeks(weeksToShow - 1); // -1 because base 0
-		String sundayString = sundayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-		String saturdayString = saturdayTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		final LocalDateTime startDateTime = DateHelpers.previousSunday();
+		// endDateTime => -1 because Sunday=0 and Saturday=0 is head and tail of same week
+		final LocalDateTime endDateTime = DateHelpers.nextSaturday().plusWeeks(weeksToShow - 1);
+		final String startString = startDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		final String endString = endDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
-		//logger.debug(DateHelpers.getDateTimeString());
-		//logger.debug(DateHelpers.getSystemTimeZone());
-		//logger.debug(sundayTime.toString());
-		//logger.debug(saturdayTime.toString());
-
+		// Prepare "week" data for final or short-circuit response
 		List<List<PrettifiedDay>> weeks = new LinkedList<>();
-		final DAO<Opening> openingDAO = this.connectionPackage.getOpeningDAO();
-		boolean noConnection = this.connectionPackage.getConnection() == null || openingDAO == null;
-		boolean noOpenings = openingDAO != null && openingDAO.retrieveByIndex(0) == null;
-		if (noConnection || noOpenings) {
-			templateName = "openings.ftl";
-			templateDataMap.put("batchEnabled", false);
-			templateDataMap.put("startDate", sundayString);
-			templateDataMap.put("endDate", saturdayString);
-			templateDataMap.put("weeks", weeks);
-			if (noConnection) {
-				templateDataMap.put("message", "Failed to contact database, please try again.");
-			} else if (noOpenings) {
-				templateDataMap.put("message", "No opening data.");
-			}
-			trySendResponse();
-			return;
-		}
 
-		final List<Opening> allOpenings = openingDAO.retrieveAll();
-		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO();
+		// Test database connection
+		final boolean noConnection = this.connectionPackage.getConnection(this.getClass().getSimpleName()) == null;
+		final OpeningSqlDAO openingDAO = noConnection ? null : (OpeningSqlDAO) this.connectionPackage.getOpeningDAO(this.getClass().getSimpleName());
+		// Get all openings from the database
+		// endDateTime => +1s because nextSaturday is hh:59:59 and we need to include hh++:00:00 for the final possible time slot
+		// endDateTime => +1d because if the opening spans several hours into the next day, we want to capture it onthis.getClass().getSimpleName() the previous
+		final List<Opening> allOpenings = openingDAO == null ? new LinkedList<>() : openingDAO.retrieveAllBetweenDatetimeAndDatetime(startDateTime, endDateTime.plusSeconds(1).plusDays(1));
+		final boolean noOpenings = allOpenings == null || allOpenings.size() == 0;
+		final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
+		final List<Member> allMembers = memberDAO == null ? new LinkedList<>() : memberDAO.retrieveAll();
+
+		// Prepare iterative variables for constructing "prettified" openings
 		List<PrettifiedDay> thisWeek = null;
 		PrettifiedDay today;
 		LocalDateTime startTime;
 		LocalDateTime endTime;
-
 		for (int day = 0; day < 7 * weeksToShow; day++) {
 			// once every week
 			if (day % 7 == 0) {
@@ -131,10 +56,8 @@ public class OpeningsPage extends PageLoader {
 				weeks.add(thisWeek);
 			}
 			// get specific start and end milliseconds of scanned day
-			startTime = sundayTime.plusDays(day);
+			startTime = startDateTime.plusDays(day);
 			endTime = startTime.plusDays(1).minusSeconds(1);
-			//logger.debug(startTime.toString());
-			//logger.debug(endTime.toString());
 			String dateName = startTime.format(DateTimeFormatter.ofPattern("dd"));
 			String dateColor = DateHelpers.isInThePast(endTime) ? "graybg" : "whitebg";
 			String dateToday = startTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -142,30 +65,35 @@ public class OpeningsPage extends PageLoader {
 			today = new PrettifiedDay(dateName, dateColor, openingsToday);
 			thisWeek.add(today);
 
-			// TODO: Optimize SQL query: Should ignore deleted user openings and only search within start and end dates
-			// scan all openings for any that fall within the day
-			for (Opening iOpening : allOpenings) {
-				if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
+			if (!noOpenings) {
+				// Scan all openings for any that fall within the day:
+				// TODO: This can be made more efficient by pulling the openings out of the allOpenings as they get used
+				// Note: This line throws a nullpointerexception for some reason when noOpenings is true
+				//       But I'm leaving it hear to enable the calendar to render properly without data.
+				for (Opening iOpening : allOpenings) {
+					if (DateHelpers.timeIsBetweenTimeAndTime(iOpening.getStartTime().toLocalDateTime(), startTime, endTime)) {
 
-					Member member = memberDAO.retrieveByID(iOpening.getInstructorID());
-					if (member == null || member.getIsDeleted()) continue;
-					String iName = member.getDisplayName();
-					boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
-					//logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
+						Member member = MemberHelpers.FindByID(allMembers, iOpening.getInstructorID());
+						if (member == null || member.getIsDeleted()) continue;
+						String iName = member.getDisplayName();
+						boolean iHighlight = !instructorName.isEmpty() && iName.toLowerCase().contains(instructorName);
+						//logger.debug(iName + " is " + (iHighlight ? "" : "not ") + "highlighted");
 
-					openingsToday.add(new PrettifiedOpening(
-						iOpening.getRecID(),
-						iOpening.getInstructorID(), // Freemarker likes to add commmas, I could add ?c to it too
-						iName,
-						dateToday,
-						iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-						iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-						iHighlight)
-					);
+						openingsToday.add(new PrettifiedOpening(
+							iOpening.getRecID(),
+							iOpening.getInstructorID(), // Freemarker likes to add commmas, I could add ?c to it too
+							iName,
+							dateToday,
+							iOpening.getStartTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+							iOpening.getEndTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+							iHighlight)
+						);
+					}
 				}
 			}
+			// Letting the SQL database take care of this, so commented out:
+			//today.sortOpenings();
 		}
-		
 
 		// Go
 		if (this.jsonMode) {
@@ -186,9 +114,14 @@ public class OpeningsPage extends PageLoader {
 			templateName = "openings.ftl";
 			boolean enableBatch = !GlobalConfig.instructorAdminMakeAppointmentsRequiresOpening && (isAdmin || isInstructor);
 			templateDataMap.put("batchEnabled", enableBatch);
-			templateDataMap.put("startDate", sundayString);
-			templateDataMap.put("endDate", saturdayString);
+			templateDataMap.put("startDate", startString);
+			templateDataMap.put("endDate", endString);
 			templateDataMap.put("weeks", weeks);
+			if (noConnection) {
+				templateDataMap.put("message", "Failed to contact database, please try again.");
+			} else if (noOpenings) {
+				templateDataMap.put("message", "No openings found.");
+			}
 			trySendResponse();
 		}
 	}

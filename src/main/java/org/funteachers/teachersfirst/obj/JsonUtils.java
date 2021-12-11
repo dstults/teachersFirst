@@ -46,6 +46,7 @@ public class JsonUtils {
 				// Crashes during unit tests:
 				//ServerMain.logger.error("JsonUtils.BuildArrays 'joLists' passed a null list at iterator [ " + j + " ]!");
 				System.out.println("JsonUtils.BuildArrays 'joLists' passed a null list at iterator [ " + j + " ]!");
+				sb.append("[]");
 				continue;
 			}
 			if (j > 0) sb.append(",");

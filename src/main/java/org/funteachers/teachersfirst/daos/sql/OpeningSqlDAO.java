@@ -1,6 +1,7 @@
 package org.funteachers.teachersfirst.daos.sql;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.apache.logging.log4j.*;
@@ -21,7 +22,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 
 	public int insert(Opening opening) {
-		logger.debug("Inserting " + opening + "...");
+		logger.debug("Opening INSERT [DT: '{}' ] ...", opening.getDateFormatted() + " " + opening.getStartTimeFormatted());
 
 		if (opening.getRecID() != -1) {
 			logger.error("Error: Cannot add previously added Opening: " + opening);
@@ -32,7 +33,7 @@ public class OpeningSqlDAO implements DAO<Opening> {
 
 		int recID = SQLUtils.executeSqlOpeningInsert(conn, query, opening.getRecID(), opening.getInstructorID(), opening.getStartTime(), opening.getEndTime());    
 		
-		logger.debug("Opening successfully inserted with ID = " + recID);
+		logger.debug("Opening INSERT ... [ID: {} ]", recID);
 		return recID;
 	}
 
@@ -76,9 +77,9 @@ public class OpeningSqlDAO implements DAO<Opening> {
 	}
 	
 	public List<Opening> retrieveAll() {
-		logger.debug("Getting all openings...");
+		logger.debug("Openings SELECT [ * ] ...");
 		
-		String query = "SELECT * FROM openings ORDER BY startTime;";
+		String query = "SELECT * FROM openings ORDER BY startTime, instructorID, endTime;";
 
 		List<SQLRow> rows = SQLUtils.executeSql(conn, query);
 		if (rows == null || rows.size() == 0) {
@@ -93,9 +94,30 @@ public class OpeningSqlDAO implements DAO<Opening> {
 		}
 		return openings;
 	}
+
+	public List<Opening> retrieveAllBetweenDatetimeAndDatetime(LocalDateTime start, LocalDateTime end) {
+		final String startStringSql = DateHelpers.toSqlDatetimeString(start);
+		final String endStringSql = DateHelpers.toSqlDatetimeString(end);
+		logger.debug("Openings SELECT [{}]-[{}] ...", startStringSql, endStringSql);
+
+		String query = "SELECT * FROM openings WHERE startTime >= ? AND endTime <= ? ORDER BY startTime, instructorID, endTime;";
+
+		List<SQLRow> rows = SQLUtils.executeSql(conn, query, startStringSql, endStringSql);
+		if (rows == null || rows.size() == 0) {
+			logger.debug("No openings found!");
+			return null;
+		}
+
+		List<Opening> openings = new ArrayList<>();
+		for (SQLRow row : rows) {
+			Opening opening = convertRowToOpening(row);
+			openings.add(opening);
+		}
+		return openings;
+	}
 	
 	public List<Integer> retrieveAllIDs() {
-		logger.debug("Getting all Opening IDs...");
+		logger.debug("Openings SELECT [*:id] ...");
 
 		String query = "SELECT recID FROM openings ORDER BY recID;";
 

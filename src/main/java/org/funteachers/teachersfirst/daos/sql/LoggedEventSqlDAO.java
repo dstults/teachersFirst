@@ -6,6 +6,7 @@ import java.util.*;
 import org.apache.logging.log4j.*;
 import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.DateHelpers;
+import org.funteachers.teachersfirst.managers.StringTools;
 import org.funteachers.teachersfirst.obj.*;
 
 public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
@@ -21,7 +22,7 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	}
 
 	public int insert(LoggedEvent loggedEvent) {
-		logger.debug("Inserting " + loggedEvent + "...");
+		logger.debug("LoggedEvent INSERT [MSG: '{}' ] ...", StringTools.left(loggedEvent.getMessage(), 15));
 
 		if (loggedEvent.getRecID() != -1) {
 			logger.error("Error: Cannot add previously added logged event: " + loggedEvent);
@@ -32,7 +33,7 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 
 		int recID = SQLUtils.executeSqlInsert(conn, query, String.valueOf(loggedEvent.getRecID()), String.valueOf(loggedEvent.getOperator()), loggedEvent.getDate().toString(), loggedEvent.getMessage());
 		
-		logger.debug("Logged event successfully inserted with ID = " + recID);
+		logger.debug("LoggedEvent INSERT ... [ID: {} ]", recID);
 		return recID;
 	}
 
@@ -76,7 +77,7 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	}
 	
 	public List<LoggedEvent> retrieveAll() {
-		logger.debug("Getting all logged events...");
+		logger.debug("LoggedEvents SELECT [ * ] ...");
 		
 		String query = "SELECT * FROM loggedEvents ORDER BY recID;";
 
@@ -95,7 +96,7 @@ public class LoggedEventSqlDAO implements DAO<LoggedEvent> {
 	}
 	
 	public List<Integer> retrieveAllIDs() {
-		logger.debug("Getting all LoggedEvent IDs...");
+		logger.debug("LoggedEvents SELECT [ *:id ] ...");
 
 		String query = "SELECT recID FROM loggedEvents ORDER BY recID;";
 

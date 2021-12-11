@@ -1,6 +1,5 @@
 
-const sendPost = async data => {
-
+const sendPostFetch = async data => {
 	try {
 		const response = await fetch('/', {
 			method: 'POST',
@@ -8,11 +7,10 @@ const sendPost = async data => {
 			body: data
 		});
 
-		if (!response.ok) throw new Error('Post failed: [' + response.status + ']');
-	
-		addMessage(await response.json());
+		if (!response.ok) throw new Error('Post failed, status code: [' + response.status + ']');
+		
+		return await response.json();
 	} catch (err) {
-		addError(err.message);
+		return { message: err.message, success: false };
 	}
-	
 };

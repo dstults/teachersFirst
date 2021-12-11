@@ -265,8 +265,6 @@ const handleResponse = (xhr) => {
 	}
 };
 
-// Olde response method (inside each xhr creation):
-//xhr.onload = () => { if (xhr.status === 200) window.location.href = xhr.responseURL; };
 const confirmDeleteAppointment = (isPast, appointmentId, row) => {
 	if (!confirm('Are you sure you want to delete appointment #' + appointmentId + ' ?')) return;
 

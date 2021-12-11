@@ -21,7 +21,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 
 	public int insert(Member member) {
-		logger.debug("Inserting " + member + "...");
+		logger.debug("Member INSERT [LogN: '{}' ] ...", member.getLoginName());
 
 		if (member.getRecID() != -1) {
 			logger.error("Error: Cannot add previously added Member: " + member);
@@ -31,7 +31,8 @@ public class MemberSqlDAO implements DAO<Member> {
 		final String query = "INSERT INTO members (loginName, displayName, credits, birthdate, gender, selfIntroduction, instructorNotes, phone1, phone2, email, isAdmin, isInstructor, isStudent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
 		int recID = SQLUtils.executeSqlMemberInsert(conn, query, member.getRecID(), member.getLoginName(), member.getDisplayName(), member.getCredits(), member.getBirthdate(), member.getGender(), member.getSelfIntroduction(), member.getInstructorNotes(), member.getPhone1(), member.getPhone2(), member.getEmail(), member.getIsAdmin(), member.getIsInstructor(), member.getIsStudent());
-		logger.debug("Member successfully inserted with ID = " + recID);
+		
+		logger.debug("Member INSERT ... [ID: {} ]", recID);
 		return recID;
 	}
 
@@ -64,7 +65,7 @@ public class MemberSqlDAO implements DAO<Member> {
 		final String query = "SELECT * FROM members WHERE recID=" + recID + ";";
 
 		Member member = getMemberQuery(query);
-		if (member == null) logger.debug("retrieveByID [ {} ] failed", recID);
+		if (member == null) logger.warn("retrieveByID [ {} ] failed", recID);
 		return member ;
 	}
 
@@ -113,7 +114,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 	
 	public List<Member> retrieveAll() {
-		logger.debug("Getting all members...");
+		logger.debug("Members SELECT [ * ] ...");
 		
 		final String query = "SELECT * FROM members ORDER BY recID;";
 
@@ -132,7 +133,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 	
 	public List<Member> retrieveAllUndeleted() {
-		logger.debug("Getting all undeleted members...");
+		logger.debug("Members SELECT [ *:undeleted ] ...");
 		
 		final String query = "SELECT * FROM members WHERE isDeleted=0 ORDER BY recID;";
 
@@ -151,7 +152,7 @@ public class MemberSqlDAO implements DAO<Member> {
 	}
 	
 	public List<Integer> retrieveAllIDs() {
-		logger.debug("Getting all Member IDs...");
+		logger.debug("Members SELECT [ *:id ] ...");
 
 		final String query = "SELECT recID FROM members ORDER BY recID;";
 
@@ -213,10 +214,11 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, token);
 
-		if (success)
-			logger.debug("TOKEN for member [ {} ] successfully updated.", member.getRecID());
-		else
+		if (success) {
+			//logger.debug("TOKEN for member [ {} ] successfully updated.", member.getRecID());
+		} else {
 			logger.error("!! TOKEN for member [ {} ] failed to update !!", member.getRecID());
+		}
 		
 		return success;
 	}
@@ -228,10 +230,11 @@ public class MemberSqlDAO implements DAO<Member> {
 
 		boolean success = SQLUtils.executeSqlUpdate(conn, query, password);
 
-		if (success)
-			logger.debug("PASSWORD for member [ {} ] successfully updated.", member.getRecID());
-		else
+		if (success) {
+			//logger.debug("PASSWORD for member [ {} ] successfully updated.", member.getRecID());
+		} else {
 			logger.error("!! PASSWORD for member [ {} ] failed to update !!", member.getRecID());
+		}
 		
 		return success;
 	}
@@ -246,20 +249,18 @@ public class MemberSqlDAO implements DAO<Member> {
 
 	public void softDelete(int recID) {
 		if (recID <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
-		logger.debug("Trying to soft delete Member with ID: " + recID);
+		logger.debug("Member S-DELETE [ID: {} ] ...", recID);
 
 		final String query = "UPDATE members SET isDeleted = 1 WHERE recID = " + recID + ";";
 		SQLUtils.executeSql(conn, query);
-		logger.debug("Should have soft deleted! Be sure to check (and delete this message if it worked)!");
 	}
 
 	public void softUndelete(int recID) {
 		if (recID <= 0) throw new IllegalArgumentException("Illegal Argument: cannot update member with recID <= 0");
-		logger.debug("Trying to soft undelete Member with ID: " + recID);
+		logger.debug("Member S-UNDELETE [ID: {} ] ...", recID);
 
 		final String query = "UPDATE members SET isDeleted = 0 WHERE recID = " + recID + ";";
 		SQLUtils.executeSql(conn, query);
-		logger.debug("Should have soft deleted! Be sure to check (and delete this message if it worked)!");
 	}
 
 /*

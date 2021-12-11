@@ -31,10 +31,10 @@ public class SecurityChecker {
 	}
 
 	public static void populateWhitelist() {
-		// Manual entries:		
+		// Manual entries:
 		//whitelistIp("");
 
-		// Automatic entries:		
+		// Automatic entries:
 		// WARNING: GitHub build fails this test, so cannot use:
 		//whitelistIp(nsLookup("dstults.net"));
 	}
@@ -91,7 +91,7 @@ public class SecurityChecker {
 	}
 
 	public Member checkPassword(String loginName, String password) {
-		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Checking Password");
 		Member member = memberDAO.retrieveByLoginNameAndPassword(loginName, password);
 
 		if (member == null) {
@@ -110,19 +110,31 @@ public class SecurityChecker {
 
 	public void logout(Member member, String info, boolean allDevices) {
 		clearTokenCookie(member, allDevices);
-		logger.debug("User [ ({}) {} ] logged out: [{}]", member.getRecID(), member.getLoginName(), info);
+		logger.debug("User [ ({}) {} ] logged out: [ {} ]", member.getRecID(), member.getLoginName(), info);
 	}
 
 	private Cookie getCookieByName(String name) {
 		final Cookie[] cookies = request.getCookies();
+		Cookie found = null;
 
 		if (cookies == null || cookies.length == 0)
 			return null;
 
-		for (Cookie cookie : cookies)
-			if (cookie.getName().equals(name)) return cookie;
+		//logger.debug("Cookie search [ {} ]...", name);
+		for (Cookie cookie : cookies) {
+			//logger.debug("...Name: [ {} ]...Path: [ {} ]", cookie.getName() != null ? cookie.getName() : "null", cookie.getPath() != null ? cookie.getPath() : "null");
+			if (cookie.getName().equals(name)) {
+				//if (found == null) logger.debug("First matching cookie found!");
+				if (found != null) logger.error("Error: Multiple matching cookies found!");
+				found = cookie;
+			} else {
+				logger.debug("Clearing Cookie!");
+				// Clear all other cookies
+				//clearCookie(cookie);
+			}
+		}
 
-		return null;
+		return found;
 	}
 
 	private String getCookieValueByName(String name) {
@@ -178,7 +190,7 @@ public class SecurityChecker {
 
 	private void giveTokenCookie(Member member) {
 		// Check for an already existing token
-		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+		MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Give Token");
 		String token = memberDAO.retrieveToken(member.getRecID());
 		
 		// Make new token if none exists
@@ -187,10 +199,11 @@ public class SecurityChecker {
 			// Update database if token generated
 			memberDAO.updateToken(member, token);
 		}
-		logger.debug("Giving token [ {} ] to member [ ({}) {} ]", token, member.getRecID(), member.getLoginName());
+		logger.debug("Giving token to [ ({}) {} ]", member.getRecID(), member.getLoginName());
 		
 		// Set new cookie
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." +token);
+		tokenCookie.setPath("/");
 		tokenCookie.setMaxAge(60 * 60 * 24 * 90); // Expires in 90 days
 		tokenCookie.setSecure(true);
 		tokenCookie.setHttpOnly(true);
@@ -201,23 +214,33 @@ public class SecurityChecker {
 
 		// Update database if member provided
 		if (member != null && allDevices) {
-			MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+			MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Clear Token");
 			memberDAO.updateToken(member, null);
 			logger.debug("Clearing token for member [ ({}) {} ]", member.getRecID(), member.getLoginName());
 		}
 
 		// Update cookie to expire
 		final Cookie tokenCookie = new Cookie("token", "");
+		tokenCookie.setPath("/");
 		tokenCookie.setMaxAge(-1); // Expires in the past by 1 second
 		response.addCookie(tokenCookie);
 	}
 
-	private void refreshCookie(Member member, String token) {
-		// Security warning: token should not actually be logged -- this has been removed though because it's spammy
-		//logger.debug("Refreshing token maxAge for memberID [ ({}) {} ]", member.getRecID(), member.getLoginName());
+	// This is to clear out rogue cookies
+	// not needed anymore because the new setPath is working after all
+	/* 
+	private void clearCookie(Cookie oldCookie) {
+		final Cookie newCookie = new Cookie(oldCookie.getName(), "");
+		newCookie.setPath(oldCookie.getPath());
+		newCookie.setMaxAge(-1); // Expires in the past by 1 second
+		response.addCookie(newCookie);
+	}
+	*/
 
+	private void refreshCookie(Member member, String token) {
 		// Refresh cookie with new expiration
 		final Cookie tokenCookie = new Cookie("token", member.getRecID() + "." + token);
+		tokenCookie.setPath("/");
 		tokenCookie.setMaxAge(60 * 60 * 24 * 90); // Expires in 90 days
 		tokenCookie.setSecure(true);
 		tokenCookie.setHttpOnly(true);
@@ -247,7 +270,8 @@ public class SecurityChecker {
 		}
 		final String token = matcher.group(2);
 
-		final MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO();
+		final MemberSqlDAO memberDAO = (MemberSqlDAO) connectionPackage.getMemberDAO("Get Member from Token");
+		if (memberDAO == null) return null;
 		final Member member = memberDAO.retrieveByIdAndToken(uid, token);
 
 		if (member == null) {
@@ -259,23 +283,5 @@ public class SecurityChecker {
 
 		return member;
 	}
-
-	// This was replaced by the token method:
-	/*
-	public int getUserId(HttpServletRequest request) {
-		
-		// USER ID
-		if (request.getSession().getAttribute("USER_ID") == null) return 0;
-		if (request.getSession().getAttribute("USER_ID").toString() == null) return 0;
-		if (request.getSession().getAttribute("USER_ID").toString().isEmpty()) return 0;
-		String uid = request.getSession().getAttribute("USER_ID").toString();
-		try {
-			return Integer.parseInt(uid);
-		} catch (NumberFormatException e) {
-			logger.fatal("SECURITY RISK: Invalid data stored in session's USER_ID value!");
-		}
-		return 0;
-	}
-	*/
 
 }

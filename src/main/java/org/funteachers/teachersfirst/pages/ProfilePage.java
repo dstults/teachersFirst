@@ -1,6 +1,7 @@
 package org.funteachers.teachersfirst.pages;
 
 import org.funteachers.teachersfirst.*;
+import org.funteachers.teachersfirst.daos.DAO;
 import org.funteachers.teachersfirst.managers.*;
 import org.funteachers.teachersfirst.obj.*;
 
@@ -34,7 +35,7 @@ public class ProfilePage extends PageLoader {
 			sendJsonMessage("Error: You are not logged in.");
 			return;
 		}
-		boolean connectedToDatabase = this.connectionPackage.getConnection() != null;
+		boolean connectedToDatabase = this.connectionPackage.getConnection(this.getClass().getSimpleName()) != null;
 		if (!connectedToDatabase) {
 			sendJsonMessage("Error: Failed to contact database, please try again.");
 			return;
@@ -51,14 +52,15 @@ public class ProfilePage extends PageLoader {
 		// Get data from DAO
 		final Member member;
 		try {
-			member = this.connectionPackage.getMemberDAO().retrieveByID(memberId);
+			final DAO<Member> memberDAO = this.connectionPackage.getMemberDAO(this.getClass().getSimpleName());
+			member = memberDAO.retrieveByID(memberId);
 		} catch (IndexOutOfBoundsException ex) {
 			sendJsonMessage("Error: Invalid member ID.");
 			return;
 		}
 
 		// Check for authority to view profile
-		if (!this.operator.canViewMember(member)) {
+		if (!Permissions.MemberCanSeeMember(this.operator, member)) {
 			sendJsonMessage("Error retrieving member data.");
 			return;
 		}
